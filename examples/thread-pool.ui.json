@@ -1,12 +1,12 @@
 {
   "version": "gen-ui-demo/v1",
-  "title": "Java 线程池配置器",
-  "description": "拖动滑块观察演示公式，最大线程数 = 核心线程数 × 2，非生产通用推荐值。",
+  "title": "Java Thread-Pool Configurator",
+  "description": "Adjust the slider to explore the teaching-only rule: maximum threads = core threads × 2.",
   "controls": [
     {
       "id": "core",
       "type": "slider",
-      "label": "核心线程数",
+      "label": "Core threads",
       "min": 1,
       "max": 16,
       "step": 1,
@@ -15,17 +15,17 @@
   ],
   "metrics": [
     {
-      "label": "核心线程数",
+      "label": "Core threads",
       "source": "core",
       "multiplier": 1,
-      "suffix": " 线程"
+      "suffix": " threads"
     },
     {
-      "label": "最大线程数（示例）",
+      "label": "Maximum threads (example)",
       "source": "core",
       "multiplier": 2,
-      "suffix": " 线程"
+      "suffix": " threads"
     }
   ],
-  "note": "实际线程池容量还需考虑任务类型、队列容量、拒绝策略及压测结果。"
+  "note": "Real sizing depends on workload, queue capacity, rejection strategy, and load testing."
 }

@@ -1,82 +1,104 @@
 ---
 name: gen-ui
-description: 使 Codex、Claude Code、DeepSeek 等 Coding Agent 按客户端渲染能力输出高可读性 Markdown；仅在宿主具备受控组件 Renderer 时输出结构化 UI。适用于技术方案、代码审查、实施测试验收与工程汇报。
+description: Use when a coding agent needs to present technical answers, implementation plans, code reviews, tests, acceptance reports, or UI-aware explanations clearly. Produce evidence-based Markdown by default; generate controlled interactive UI data only if the host explicitly supports a trusted renderer.
 ---
 
-# Gen UI · Coding Agent 输出 Skill
+# Gen UI — Presentation Skill for Coding Agents
 
-## 目标
+## Purpose and priority
 
-在当前输出媒介中，优先提供清晰、紧凑、可验证的用户体验，避免纯文字墙；不改变 Agent 的任务执行规则。
+Gen UI helps coding agents turn technical information into clear, useful responses **without changing how the underlying task is executed**. It is a presentation contract, not a tool runner, code review replacement, or official ChatGPT UI/DIL runtime.
 
-**重要边界：** Markdown 美化与真正可交互 UI 是两回事。本 Skill 不是 ChatGPT 原生交互 UI / DIL 的官方实现，也不能靠 Prompt 使 CLI、VSCode 终端出现按钮或滑块。真实交互需要宿主提供 Renderer / Webview。
+Follow the user's language unless explicitly requested otherwise. The normative rules in this file are in English; Chinese answers and examples remain supported.
 
-## 能力分级（输出前必须判断）
+**Authority:** user instructions and project-specific safety, coding, review, and test requirements take precedence over this presentation Skill. Never conceal failures, skip verification, or invent tool results to make an answer look polished.
 
-| 媒介 | 可安全假定的能力 | 输出 |
+## 1. Detect host capabilities before choosing a format
+
+| Host | Safe assumption | Preferred output |
 | --- | --- | --- |
-| 终端、CLI、日志 | 普通文本、有限 Markdown | 纯 Markdown；所有结论有文本说明 |
-| GitHub / Markdown 阅读器 | GFM 表格、清单；Mermaid 因平台而异 | GFM 优先；图表附文本解释 |
-| IDE Markdown 预览 | 因插件而异 | 渐进增强，不依赖内联 JS/CSS |
-| 自有 Web / Webview + 已声明的 UI Renderer | 特定组件白名单、数据绑定 | 受控 UI JSON + 完整 Markdown 降级 |
+| Plain terminal, Codex CLI, Claude Code CLI, logs | Text and limited Markdown | Structured Markdown / plain text |
+| GitHub, IDE Markdown preview | GFM; Mermaid only when available | Markdown, accessible fallback for diagrams |
+| Explicitly configured Web or Webview Renderer | Only components declared by host | Validated UI data **plus** complete Markdown fallback |
+| Unknown | Markdown only | Never emit pretend interactive controls |
 
-宿主能力未知时，只输出标准 Markdown。**禁止伪造可点击控件**；不要将一段 UI JSON 声称为已渲染界面。
+**Decision:** If the host has not explicitly declared a trusted renderer and its accepted schema, do not output UI protocol JSON as the primary answer. Do not assume that a Skill, a prompt, or a Markdown viewer can activate functional sliders, charts, forms, or buttons.
 
-## 结构与排版
+## 2. Choose layouts by information needs
 
-1. **先结论再展开**：复杂回答先写结论、约束、当前结果，再给方案、验证、风险。
-2. **选择合适结构**：对比用短表格；流程用有序步骤；状态用 checklist；命令用代码围栏；可选 Mermaid 必有文字回退。
-3. **避免装饰性卡片堆砌**：标题通常从二级开始，层级不超过三级；表格最多约 5 列，过宽则拆分。
-4. **有限视觉强调**：用加粗标记真正关键的结论；颜色和 emoji 不能单独表示成功、失败或警告。
-5. **可访问性**：图片有替代文字；链接文字说明目标；图表必须配文字结论。
-6. **事实与验证**：未执行的命令不得写成已验证；未观察的 Git 推送不得写成成功；不编造数据、链接和工具结果。
+- **Summary and conclusion:** start with the answer and the most important limitation.
+- **Comparisons:** use a short table (ideally five columns or fewer); avoid wide, nested tables.
+- **Procedures:** use numbered steps, with clear inputs and expected outcomes.
+- **Progress / acceptance:** distinguish planned, implemented, validated, failed, and unverified states in words.
+- **Architecture / flow:** use a compact sequence, code block, or Mermaid if supported; provide an equivalent text explanation.
+- **Code:** use language-tagged fenced blocks and runnable commands when appropriate.
+- **Warnings / emphasis:** use descriptive text, not emoji or color alone. Avoid decorative card overload.
+- **Accessibility:** use descriptive links, meaningful labels, alt text for images, and text explanations of charts.
 
-## 工作步骤
+Use headings sparingly. Prefer a concise, scannable answer over maximizing component count.
 
-### 对技术方案或评审
+## 3. Evidence contract for coding work
 
-- 结论与边界（1 段）
-- 现状 / 差距（必要时表格）
-- 变更范围与步骤（编号）
-- 风险与回退（简短）
-- 测试验收（逐项可执行）
+Never confuse an intended action with one that was actually executed. An example result is not a measured result.
 
-### 对代码修改
+For implementation or review work, include only fields useful to the task:
 
-输出简短的实际证据：
+- **Goal:** what was requested
+- **Changed files / scope:** actual paths or explicitly "none"
+- **Validation:** exact commands/tests run and their observed outcomes; "not run" when applicable
+- **Risks:** up to three meaningful caveats
+- **Manual acceptance:** up to five reproducible checks
+- **Conclusion:** verified / needs follow-up / unverified
 
-- 【目标】本次完成的内容
-- 【改动文件】真实路径
-- 【自测结果】实际命令与观察结果；区分执行检查与静态检查
-- 【风险】最多 3 条
-- 【必须验收】最多 5 项
-- 【结论】验证通过 / 需补强 / 未验证
+For code review, prioritize severity, affected location, evidence, and corrective action. Do not claim "merge-ready" without required project tests and evidence. Keep implementation facts separate from sample output.
 
-### 对支持交互的客户端
+## 4. Optional interactive UI contract
 
-只有宿主**显式启用本仓库示例 Renderer**，才能使用 references/renderer-contract.md 定义的演示 JSON 协议：
+Only generate the example protocol when the **host specifically confirms** support for `gen-ui-demo/v1` and a trusted renderer.
 
-- 组件白名单：纯文本、slider、只读指标、note。
-- JSON 只能作为**数据**传递；严禁模型提供可执行 JS、HTML、CSS、任意事件或网络地址。
-- 输出时另附等价 Markdown，明确静态默认值和演示公式。
-- 状态只能由宿主 Renderer 更新；有副作用的操作必须走宿主授权、审计和确认机制。
-- 如果要接入 OpenUI/A2UI，需单独针对其正式 Schema 开发适配，不得把示例协议改名冒充兼容。
+Read [references/renderer-contract.md](references/renderer-contract.md) before producing demo JSON.
 
-## 输出前检查
+- Model output is **data**, never executable HTML, CSS, JavaScript, or arbitrary event handlers.
+- The host validates the schema, allowed components, field lengths, references, and numeric bounds.
+- All interactive state lives in the host renderer; the demo may only update local slider-driven metrics.
+- The model cannot authorize network calls, file writes, deployments, deletes, or other side effects.
+- Always accompany the UI data with an equivalent Markdown fallback containing default values and formula meaning.
+- If validation fails, fall back to Markdown with a clear error; never silently execute an unrecognized component.
 
-- 没有 Renderer 时，读者能否完整理解结果？
-- 是否把“计划中、已执行、已测试、未验证”区分清楚？
-- 每个图表、表格、交互是否适配目标宿主？
-- 文档是否清楚、紧凑且没有大量无意义布局？
-- 所有关键结论和外部行为是否有真实证据？
+**Protocol scope:** `gen-ui-demo/v1` is an illustrative repository-local format, **not** OpenUI Lang, Google A2UI, or OpenAI DIL. Integrations require their actual schemas and adapters.
 
-## 参考文件
+## 5. Quick routing examples
 
-- README.md：安装与使用
-- references/renderer-contract.md：演示协议与安全边界
-- examples/thread-pool.md：Markdown 回退
-- examples/thread-pool.ui.json：示例结构化 UI 数据
-- demo/index.html：交互式浏览器演示
-- scripts/test-skill.ps1：静态检查
+**Prompt:** "Review this Java concurrency change. The client is a terminal."
 
-本 Skill 只规范**回答呈现**，不能替代项目已有的实施、代码评审与测试验收规则。
+**Response strategy:** findings by severity, files/lines, evidence, remaining risks, and concise Markdown. No simulated GUI controls. See [examples/code-review.md](examples/code-review.md).
+
+**Prompt:** "Write an implementation and test acceptance plan. No tests have been run."
+
+**Response strategy:** an actionable checklist and explicit `Not run` status. Do not invent passing tests. See [examples/acceptance-plan.md](examples/acceptance-plan.md).
+
+**Prompt:** "Explain Java thread pool sizing using a Markdown-only client."
+
+**Response strategy:** static comparison table, formula and limits, with no slider. See [examples/thread-pool.md](examples/thread-pool.md).
+
+**Prompt:** "Show a thread-count slider; my Webview supports the Gen UI demo schema."
+
+**Response strategy:** validated JSON using [examples/thread-pool.ui.json](examples/thread-pool.ui.json), plus equivalent Markdown and clear note that the formula is educational.
+
+## 6. Final self-check
+
+1. Is the answer useful without any special renderer?
+2. Is the chosen format supported by the actual host, with a complete fallback?
+3. Are claims of implementation, testing, pushing, or deployment supported by observed evidence?
+4. Are the important technical facts and limitations easy to find?
+5. Would any output execute untrusted model-provided code or imply unauthorized side effects? If yes, remove it.
+
+## Further reading
+
+- [README](README.md) · [中文说明](README.zh-CN.md)
+- [Renderer contract](references/renderer-contract.md)
+- [Host integration guidance](docs/integration.md)
+- [Manual behavior evaluation](evals/manual-evaluation.md)
+- [Local validation script](scripts/test-skill.ps1)
+
+Gen UI governs **presentation only**. Preserve existing engineering and verification requirements.
