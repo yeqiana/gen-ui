@@ -82,6 +82,23 @@ gen-ui/
 └── .github/workflows/          # CI
 ~~~
 
+## 实际工程场景
+
+以下案例用于展示真实 Coding 工作中常见的提问与输出格式，**属于可复用的示范，不代表已经检查了真实项目或完成了压测**。
+
+| 场景 | 示例文档 | 能解决的问题 |
+| --- | --- | --- |
+| [Java 代码审查](examples/code-review.md) | 严重程度、证据和复核步骤 | 不伪造测试通过 |
+| [功能实施验收](examples/acceptance-plan.md) | 目标、变更范围、验收清单 | 计划与已验证分离 |
+| [Java 线程池解释](examples/thread-pool.md) | 静态表格与公式 | 终端不支持 Renderer 也可用 |
+
+常见问题（CLI 能否交互、DeepSeek 兼容、与 OpenUI/A2UI 的区别）详见 [英文 FAQ](docs/faq.md)。
+
+## GEO / 搜索可发现性
+
+项目标准定位为 **Markdown-first Generative UI Skill for AI Coding Agents**，而非通用 UI 框架。[英文 GEO 文档](docs/geo.md) 和 [中文说明](docs/geo.zh-CN.md) 给出了 GitHub 仓库简介、Topics、链接结构与真实用例建议。[基线评测](evals/discovery-baseline.md) 初始状态为**未测量**，不能伪造 GEO 权重或 AI 引用率。
+
+README 不会自动设置 GitHub About，也不意味着 GitHub Pages 已经上线。仓库元数据需要通过 GitHub 设置或可授权接口更新后单独验收。
 ## 安全与边界
 
 - **只管输出，不替代工程规范：** 与项目现有代码审查、实施、测试验收规则兼容。

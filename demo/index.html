@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gen UI · 本地交互预览</title>
+  <title>Gen UI · Offline Interactive Demo</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, "Microsoft YaHei", sans-serif; }
     * { box-sizing: border-box; }
@@ -43,29 +43,29 @@
   <main>
     <header>
       <div class="eyebrow">LOCAL GENERATIVE UI · DEMO</div>
-      <h1>Gen UI 本地交互预览</h1>
-      <p class="muted">一个无需后端的安全组件渲染示例：AI 提供 JSON 数据，浏览器负责验证并渲染。它不是 ChatGPT 的原生 UI 引擎。</p>
+      <h1>Gen UI Offline Interactive Demo</h1>
+      <p class="muted">A browser-only renderer for untrusted declarative UI data. No backend needed. Not the ChatGPT UI runtime.</p>
     </header>
     <div class="layout">
-      <section class="panel" aria-label="生成的交互界面">
+      <section class="panel" aria-label="Rendered interactive demo">
         <div id="preview" aria-live="polite"></div>
       </section>
       <section class="panel" aria-labelledby="json-heading">
-        <h2 id="json-heading">UI 协议 JSON</h2>
-        <p class="muted">编辑受控 JSON，点击“渲染协议”，或从本地选择示例 JSON 文件。</p>
-        <label for="spec-input">协议内容</label>
+        <h2 id="json-heading">UI protocol JSON</h2>
+        <p class="muted">Edit the allowlisted JSON, click Render, or import a local JSON file.</p>
+        <label for="spec-input">Protocol content</label>
         <textarea id="spec-input" spellcheck="false" aria-describedby="status"></textarea>
         <div class="actions">
-          <button id="render-button" type="button">渲染协议</button>
-          <input type="file" id="file-input" accept=".json,application/json" aria-label="导入 JSON 文件">
+          <button id="render-button" type="button">Render protocol</button>
+          <input type="file" id="file-input" accept=".json,application/json" aria-label="Import JSON file">
         </div>
         <p id="status" class="status" role="status"></p>
       </section>
     </div>
     <section class="fallback" aria-labelledby="fallback-heading">
-      <h2 id="fallback-heading">Markdown 回退</h2>
-      <p>无交互能力的 CLI / Markdown 客户端可展示：核心线程数 <strong>4</strong>，最大线程数（演示公式）<strong>8</strong>。完整版本见 <code>examples/thread-pool.md</code>。</p>
-      <p class="muted">提示：最大线程数 = 核心线程数 × 2 只是交互演示公式，生产配置必须结合实际任务和压测。</p>
+      <h2 id="fallback-heading">Markdown fallback</h2>
+      <p>Without a renderer, a CLI/Markdown client can show core threads <strong>4</strong> and example maximum threads <strong>8</strong>. See <code>examples/thread-pool.md</code>.</p>
+      <p class="muted">Note: maximum threads = core threads × 2 is an educational rule, not production sizing advice.</p>
     </section>
   </main>
   <script src="./renderer.js" defer></script>

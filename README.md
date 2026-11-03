@@ -73,6 +73,23 @@ scripts/test-skill.ps1      # Validation entry point
 .github/workflows/          # CI
 ~~~
 
+## Realistic examples
+
+These examples model practical coding-assistant tasks; they are **illustrative**, not claims that a real repository was inspected or tests were executed.
+
+| Scenario | Output | What it demonstrates |
+| --- | --- | --- |
+| [Java code review](examples/code-review.md) | Severity-first findings, evidence, focused verification | No fake CI or merge-ready claims |
+| [Feature acceptance plan](examples/acceptance-plan.md) | Bounded implementation and manual test steps | Clear separation of planned vs verified |
+| [Java thread-pool explanation](examples/thread-pool.md) | Safe, readable Markdown fallback | Works in a terminal with no renderer |
+
+For common questions about CLI widgets, model compatibility, security, and OpenUI/A2UI differences, read the [FAQ](docs/faq.md).
+
+## Discovery and GEO
+
+The canonical positioning is **a Markdown-first Generative UI Skill for AI coding agents**—not a general-purpose UI framework. [The GEO foundation](docs/geo.md) documents truthful GitHub About suggestions, searchable use cases, and measurement boundaries. [The observation checklist](evals/discovery-baseline.md) begins in **not measured** state, not an invented ranking score.
+
+Adding README content does not automatically set repository Topics, launch a website, or guarantee search/AI citations. Repository metadata must be applied and verified separately. The project does not add an unnecessary `llms.txt` by default.
 ## Boundaries
 
 - **Presentation, not execution:** Does not replace implementation plans, coding guardrails, or verification processes.

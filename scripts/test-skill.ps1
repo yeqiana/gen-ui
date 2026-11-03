@@ -18,7 +18,17 @@ $required = @(
   "demo/index.html",
   "demo/renderer.js",
   "tests/renderer.test.mjs",
-  "tests/repository.test.mjs"
+  "tests/repository.test.mjs",
+  "tests/discovery.test.mjs",
+  "docs/faq.md",
+  "docs/geo.md",
+  "docs/geo.zh-CN.md",
+  "evals/discovery-baseline.md",
+  "examples/code-review.md",
+  "examples/acceptance-plan.md",
+  "examples/thread-pool.zh-CN.md",
+  "examples/thread-pool.ui.zh-CN.json",
+  "CHANGELOG.md"
 )
 foreach ($name in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $root $name) -PathType Leaf)) {
@@ -63,6 +73,6 @@ if ($null -eq $node) {
 if ($LASTEXITCODE -ne 0) { throw "Renderer JS 语法失败" }
 Write-Output "[PASS] Renderer JS 语法"
 
-& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs")
+& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"

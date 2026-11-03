@@ -1,25 +1,25 @@
-## Java 线程池参数配置 · 演示
+# Example: Java thread-pool sizing in Markdown-only hosts
 
-**结论：** 下表用于说明动态配置的原理，并不是生产环境通用推荐值。
+> **Illustrative output, not production sizing advice or a measured benchmark.** The fictional host is a terminal that supports Markdown but has no UI renderer.
 
-| 参数 | 演示默认值 | 说明 |
+## Conclusion
+
+Use a **bounded queue and an explicit rejection strategy**. Determine thread counts from workload classification, service-level requirements, and load testing rather than a universal formula.
+
+| Parameter | Demonstration default | Purpose |
 | --- | ---: | --- |
-| 核心线程数 | 4 | 预设核心线程 |
-| 最大线程数 | 8 | 采用示例公式：4 × 2 |
-| 队列长度 | 100 | 仅作说明；具体应基于负载选择 |
+| Core threads | 4 | Baseline active threads in this example |
+| Maximum threads | 8 | Teaching-only calculation: 4 × 2 |
+| Queue capacity | 100 | Illustrative bounded queue, not a recommended capacity |
 
-### 计算
+The example rule `maxThreads = coreThreads × 2` is for explaining the UI demo only. Real queueing and pool behavior depends on the task, queue type, executor settings, and resource constraints.
 
-~~~text
-核心线程数：4
-最大线程数：4 × 2 = 8
-~~~
+## Validation checklist
 
-### 配置前的验证清单
+- [ ] Characterize CPU-intensive versus blocking/IO-intensive work
+- [ ] Observe request rate, duration, queue wait time, memory and CPU
+- [ ] Choose and test a rejection policy with simulated overload
+- [ ] Verify shutdown, cancellation and recovery paths
+- [ ] Load-test P95/P99 latency and throughput on a representative environment
 
-- [ ] 区分 CPU 密集型和 IO 密集型任务
-- [ ] 评估队列长度、拒绝策略和异常处理
-- [ ] 压测真实吞吐、P95 延迟和资源占用
-- [ ] 验证告警与服务停机的恢复能力
-
-> **降级说明：** 在启用 demo Renderer 的浏览器中可以拖动滑块，实时查看示例公式结果。在 CLI 或普通 Markdown 中，以上静态默认值已经完整表达相同信息。
+**Host fallback:** a terminal shows the static table and formula. In an explicitly configured browser demo Renderer, the slider changes the value of the teaching-only formula locally. Neither the table nor slider performs a backend operation.
