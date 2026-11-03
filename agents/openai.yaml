@@ -1,0 +1,7 @@
+interface:
+  display_name: "Gen UI"
+  short_description: "Clear Markdown and safe progressive UI for coding agents."
+  default_prompt: "Use $gen-ui to adapt this response to the actual host: concise Markdown by default, verifiable implementation evidence, and controlled UI JSON only when a trusted Renderer is explicitly available."
+
+policy:
+  allow_implicit_invocation: true
