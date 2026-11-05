@@ -63,3 +63,13 @@ Open [demo/report.html](../demo/report.html) from the cloned repository with [re
 6. Confirm no network dependency in offline mode, responsive table overflow, keyboard focus, reduced-motion behavior, and accessible chart descriptions.
 
 Browser-level visual and accessibility checks require manual inspection; Node tests cover core logic and simulated DOM interactions only.
+
+### v1.2 评审修复复验（2026-11-05）
+
+1. 在 375px / 768px / 1440px Chrome 视口输入超长模块名，聚焦截断单元格，确认完整文本悬浮提示始终位于可见边界内；表格滚动或失焦后消失。
+2. 新增第 68 条记录：保存后应自动显示第 4 页（61–68 条），焦点落在新记录，且关闭弹窗后页面仍能看到“新增成功”提示；后续翻页后不保留过期提示。
+3. 从数据抽屉导入 1000 条合法数据，再次不修改直接提交应仍通过。覆盖长中文字段以及大量需 JSON 转义字符的边界输入；超过 **750000 字符**仍应拒绝且保留原数据。
+4. 当最终交付格式已确定为 HTML 时，无论用户是否直接说出 HTML 一词，都应应用 [HTML 规范](../references/html-report-contract.md)；普通 CLI 和 Markdown 回答保持 Markdown 优先。
+5. 使用键盘左右方向键及 Home/End 切换页内标签：当前面板、选中状态和焦点必须同步；键盘切换不能触发页面默认滚动。
+
+以上必须使用真实浏览器检查。Node 模拟 DOM 测试覆盖逻辑回归，但不能代替视觉/真实键盘交互验收。

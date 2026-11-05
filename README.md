@@ -47,7 +47,7 @@ Try the [offline Chinese HTML report](demo/report.html) with its [stylesheet](de
 
 
 
-When explicitly asked to produce **HTML**, Gen UI also specifies practical report layouts: left sidebar by default (top navigation optional), hierarchy-based section anchors, meaningful table filters, **20/50/100 rows per page**, success/failure KPI highlighting, appropriate pie/bar/line charts, and safe local forms/sliders. These features run in actual HTML, not in a plain terminal.
+When **HTML is the selected final deliverable** (explicitly requested or established by the current task), Gen UI specifies practical report layouts: left sidebar by default (top navigation optional), hierarchy-based section anchors, meaningful table filters, **20/50/100 rows per page**, success/failure KPI highlighting, appropriate pie/bar/line charts, and safe local forms/sliders. These features run in actual HTML, not in a plain terminal.
 
 Open the [offline HTML report](demo/report.html) (keep [report.js](demo/report.js) beside it) to try the 67-row illustrative dataset. Read the [HTML report contract](references/html-report-contract.md) for accessibility, data validation, pagination, and security constraints. This report format is separate from the existing lightweight UI protocol.
 

@@ -1,6 +1,6 @@
 # GEN-UI · HTML Report Contract (v1.2)
 
-This contract applies **only to explicitly requested HTML reports or pages**. The default CLI / Markdown output remains Markdown. The rules below govern the generated **user-facing HTML**, not the source-language of this normative document.
+This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
 ## 1. Chinese-first interface and semantic hierarchy
 
@@ -70,7 +70,7 @@ The report accepts a separate data-only protocol (`gen-ui-html-report/v1`), not 
 }
 ```
 
-Validation: at most 1000 rows, unique identifiers, bounded strings, status `success/failure/pending`, finite `durationMs` within [0,1000000], batch 1–12, no unknown fields, input size up to 200000 characters. A rejected import leaves the prior valid report unchanged.
+Validation: at most 1000 rows, unique identifiers, bounded strings, status `success/failure/pending`, finite `durationMs` within [0,1000000], batch 1–12, no unknown fields, input size up to 750000 characters, including worst-case escaped string content in the pretty-printed editor export. A rejected import leaves the prior valid report unchanged.
 
 Run the whole regression suite (including DOM event simulation):
 

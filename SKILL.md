@@ -69,7 +69,7 @@ Read [references/renderer-contract.md](references/renderer-contract.md) before p
 
 ## 5. When the requested output is HTML
 
-If the user explicitly requests an HTML report/page, follow [HTML report contract](references/html-report-contract.md):
+Whenever the final deliverable is HTML (explicitly requested or established by task context), follow [HTML report contract](references/html-report-contract.md). Do not change ordinary Markdown/CLI output into HTML without an HTML deliverable requirement:
 
 If the generated deliverable is HTML, apply these additional nonnegotiable rules:
 - **Chinese-first page**: all nonessential visible UI copy (headings, buttons, labels, messages, status names, chart descriptions) uses Simplified Chinese. Retain technical identifiers, JSON keys and real source names where necessary.

@@ -109,7 +109,8 @@
           <output id="threshold-value" for="threshold">600 毫秒</output>
           <label class="check" for="slow-only"><input type="checkbox" id="slow-only"> 仅看超过阈值的记录</label>
         </div>
-        <p id="filter-count" class="muted" role="status"></p>
+        <p id="page-notice" class="page-notice" role="status" aria-live="polite"></p>
+        <p id="filter-count" class="muted"></p>
         <div class="table-wrap" id="table-scroll" tabindex="0" role="region" aria-label="可横向滚动的执行记录表格">
           <table aria-label="工程执行记录">
             <colgroup><col class="col-id"><col class="col-module"><col class="col-status"><col class="col-duration"><col class="col-batch"><col class="col-action"></colgroup>

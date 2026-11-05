@@ -157,7 +157,9 @@ dialog.drawer { position: fixed; margin: 0 0 0 auto; right: 0; top: 0; bottom: 0
 #panel-rules { padding: 11px 0 15px; }
 #panel-rules h3 { margin-bottom: 9px; }
 #json-status[data-kind="error"], #create-status[data-kind="error"] { color: #b42318; }
-#json-status[data-kind="ok"], #create-status[data-kind="ok"] { color: #14753f; }
+#json-status[data-kind="ok"], #create-status[data-kind="ok"], .page-notice[data-kind="ok"] { color: #14753f; }
+.page-notice { margin: 8px 0; font-weight: 600; }
+.page-notice:empty { display: none; }
 .app[data-navigation="top"] { display: block; }
 .app[data-navigation="top"] .sidebar { position: sticky; height: auto; min-height: unset; width: 100%; z-index: 10;
   display: flex; flex-direction: row; align-items: center; gap: 22px; border-right: 0; padding: 7px 20px;
