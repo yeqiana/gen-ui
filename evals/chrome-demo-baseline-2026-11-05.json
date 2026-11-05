@@ -1,0 +1,62 @@
+{
+  "source": "demo/report.html",
+  "generatedByAgent": false,
+  "environment": "trusted local Chrome",
+  "observedAt": "2026-11-05T10:32:44.671Z",
+  "viewports": {
+    "375": {
+      "width": 375,
+      "rows": 20,
+      "extraFocus": 0,
+      "missingFocus": 0,
+      "buttons": 20,
+      "uniqueLabels": 20,
+      "documentOverflow": false
+    },
+    "768": {
+      "width": 768,
+      "rows": 20,
+      "extraFocus": 0,
+      "missingFocus": 0,
+      "buttons": 20,
+      "uniqueLabels": 20,
+      "documentOverflow": false
+    },
+    "1440": {
+      "width": 1440,
+      "rows": 20,
+      "extraFocus": 0,
+      "missingFocus": 0,
+      "buttons": 20,
+      "uniqueLabels": 20,
+      "documentOverflow": false
+    }
+  },
+  "sentinel": {
+    "values": [
+      "",
+      "网关",
+      "all"
+    ],
+    "only": "1",
+    "id": "X-1",
+    "allCount": "2",
+    "reset": ""
+  },
+  "tooltip": {
+    "before": {
+      "truncated": true,
+      "focus": 0
+    },
+    "short": -1,
+    "restored": 0,
+    "within": true
+  },
+  "create": {
+    "count": "68",
+    "last": "T-068",
+    "focus": true,
+    "notice": "新增成功：任务 T-068，已定位到第 4 页"
+  },
+  "result": "pass"
+}

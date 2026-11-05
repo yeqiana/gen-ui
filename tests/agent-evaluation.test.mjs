@@ -66,3 +66,45 @@ test("CLI 报告明确不验证 Agent 产物来源，不宣称功能测试成功
     assert.equal(bad.status,2,"未知用例需返回参数错误");
   }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
+
+
+test("CSS 静态门禁不被无关 nowrap/sticky 字样误导",()=>{
+  const markup=fs.readFileSync(path.join(repo,"demo/report.html"),"utf8");
+  const unrelated="body {white-space:nowrap;position:sticky;left:0} th {font-weight:bold} td {overflow:hidden}";
+  const r=evaluateOutput("HTML01",markup,unrelated);
+  assert.equal(r.staticGate,"fail");
+  assert.equal(r.checks.find(x=>x.id==="nowrap").passed,false);
+  assert.equal(r.checks.find(x=>x.id==="sticky").passed,false);
+  const headerOnly="th{white-space:nowrap} .floating{position:sticky;left:0}";
+  const r2=evaluateOutput("HTML01",markup,headerOnly);
+  assert.equal(r2.checks.find(x=>x.id==="nowrap").passed,false);
+  assert.equal(r2.checks.find(x=>x.id==="sticky").passed,false);
+  const matching="th,td{white-space:nowrap} td:first-child{position:sticky;left:0;}";
+  const r3=evaluateOutput("HTML01",markup,matching);
+  assert.equal(r3.checks.find(x=>x.id==="nowrap").passed,true);
+  assert.equal(r3.checks.find(x=>x.id==="sticky").passed,true);
+});
+
+test("SVG 事件属性也触发 HTML 静态脚本拒绝",()=>{
+  const html=fs.readFileSync(path.join(repo,"demo/report.html"),"utf8");
+  const mutated=html.replace("</body>",'<svg onfocus="alert(1)"></svg></body>');
+  const r=evaluateOutput("HTML01",mutated,
+    fs.readFileSync(path.join(repo,"demo/report.css"),"utf8"));
+  assert.equal(r.checks.find(x=>x.id==="no-inline-events").passed,false);
+});
+
+
+test("真实 Chrome 示例验收证据保留且明确声明非 Agent 生成",()=>{
+  const file=path.join(repo,"evals/chrome-demo-baseline-2026-11-05.json");
+  const baseline=JSON.parse(fs.readFileSync(file,"utf8"));
+  assert.equal(baseline.result,"pass");
+  assert.equal(baseline.generatedByAgent,false);
+  assert.equal(baseline.source,"demo/report.html");
+  assert.deepEqual(Object.keys(baseline.viewports).sort(),["1440","375","768"]);
+  for(const detail of Object.values(baseline.viewports)){
+    assert.equal(detail.rows,20);
+    assert.equal(detail.extraFocus,0);
+    assert.equal(detail.missingFocus,0);
+    assert.equal(detail.buttons,detail.uniqueLabels);
+  }
+});
