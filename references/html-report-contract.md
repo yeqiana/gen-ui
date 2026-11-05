@@ -16,12 +16,12 @@ This contract applies **whenever HTML is the chosen or required final deliverabl
 - **Table cells must never wrap**; truncate overflowing long content via `overflow: hidden; text-overflow: ellipsis; white-space: nowrap`.
 - Provide an **overflow tooltip that appears on pointer hover or keyboard focus and disappears on pointer leave or blur**. Only show it when the content is actually truncated (`scrollWidth > clientWidth`); use plain text, never model-provided HTML. Hide it when the table scrolls.
 - When the table is wider than the viewport, enable horizontal scrolling. For record tables, prefer a **sticky first column** (`position: sticky; left: 0`) with a solid background and correct stacking against the header. Sticky columns must not obscure user content. Use fixed/declared column widths as needed for stable truncation.
-- Do not sacrifice keyboard access: table-scroll region can be focused, clipped text can receive focus and tooltip text remains accessible.
+- Do not sacrifice keyboard access: table-scroll region can be focused. **Only truly truncated cells** should enter the sequential Tab order; recompute focusability after render and responsive layout changes. Keep full text accessible and use plain-text hover/focus tooltips.
 
 ## 3. Filters mapped to real column fields; pagination
 
 - Select relevant filters from the actual **key fields / column definitions**, not arbitrary global controls: text search for record identifier, selector for module / status / category, batch/date range for sequence/time columns, slider or numeric bounds for measured values.
-- Where reasonable, derive selector options from available data and refresh when the dataset changes. Never invent absent fields, statuses or API endpoints.
+- Where reasonable, derive selector options from available data and refresh when the dataset changes. Never invent absent fields, statuses or API endpoints. **Never use a sentinel value that can collide with actual field data**: e.g., an empty-string sentinel for nonempty module names; a real module called `all` must remain selectable.
 - Filtering, KPI counts, charts and pagination must derive from the **same dataset** and refresh together. Changing a filter or page size resets/clamps the current page.
 - For long tables, default to **20 rows per page** with optional 50 and 100; never configure a page size below 20. The last page or a filtered result set may naturally have fewer than 20 rows. Do not pad results. Provide accurate row counts and an empty state.
 
@@ -34,7 +34,7 @@ This contract applies **whenever HTML is the chosen or required final deliverabl
 
 ## 5. Components beyond list pages and unnecessary cards
 
-- Use forms for data entry, a modal dialog for discrete creation/confirmation, and a **right or left side drawer** for record details or data editing when it avoids destroying page context. Choose layout on usefulness, not ornamentation.
+- Use forms for data entry, a modal dialog for discrete creation/confirmation, and a **right or left side drawer** for record details or data editing when it avoids destroying page context. Choose layout on usefulness, not ornamentation. Repeated action buttons must have **record-specific accessible names** (e.g. “查看任务 T-001 的详情”) rather than identical labels.
 - Keep operations local for this offline example. Real side effects require the host's explicit authentication, permissions, review and confirmation.
 - Keep the semantic H1/H2/H3 structure independent of the chosen tab or panel state; restore logical focus on close where the browser provides it.
 - Minimize needless cards, duplicate KPI blocks, oversized shadows and decorative whitespace; a readable data interface is more important than a showcase of every component.
@@ -78,4 +78,4 @@ Run the whole regression suite (including DOM event simulation):
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 ```
 
-The Node tests cover logic, schema, DOM event behavior and structural/static accessibility checks; **real Chrome visual and accessibility verification must still be performed separately**. Do not claim that a mocked DOM is a full browser acceptance test.
+The Node tests cover logic, schema, DOM event behavior and structural/static accessibility checks; **real Chrome visual and accessibility verification must still be performed separately**. Do not claim that a mocked DOM is a full browser acceptance test. The [Agent output evaluation matrix](../evals/agent-evaluation.md) supplies repeatable prompts and a static gate; it **does not claim** that Codex, Claude or any model was executed or complied.

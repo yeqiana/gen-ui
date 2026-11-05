@@ -1,0 +1,110 @@
+{
+  "version": "gen-ui-agent-eval/v1",
+  "description": "Coding Agent 真实输出回归用例。必须实际运行 Agent 并保留证据，才能宣称模型通过。",
+  "cases": [
+    {
+      "id": "HTML01",
+      "name": "中文工程测试报告",
+      "format": "html",
+      "prompt": "使用 $gen-ui，基于给定的 48 条模拟测试数据生成可离线打开的中文 HTML 工程测试报告（可另行输出样式和脚本资源）。数据：任务编号 T-001 至 T-048，所属模块按网关/鉴权/订单循环，执行状态按成功/失败/待处理循环，批次 1-4。包含列字段筛选、至少每页 20 条、概览数字颜色、按需图表、左侧导航。数字必须标注模拟，不得伪称实测。",
+      "checks": [
+        "doctype",
+        "chinese",
+        "one-h1",
+        "nav",
+        "table",
+        "nowrap",
+        "sticky",
+        "filter",
+        "pagination",
+        "status",
+        "no-inline-events"
+      ],
+      "manual": [
+        "浏览器验证筛选联动、分页、数字统计和图表一致性",
+        "视口 375/768/1440px 及键盘可访问性"
+      ]
+    },
+    {
+      "id": "HTML02",
+      "name": "长文本与筛选哨兵边界",
+      "format": "html",
+      "prompt": "使用 $gen-ui 输出中文 HTML 表格，至少 25 条模拟数据。模块名称包含合法值 all 和另一个模块，并有超长模块名。要求表头与单元格不换行、固定首列、水平滚动、仅实际截断时提供浮动全文；只有真正截断的文本可 Tab 聚焦。模块名 all 必须能单独筛选。",
+      "checks": [
+        "doctype",
+        "chinese",
+        "one-h1",
+        "table",
+        "nowrap",
+        "sticky",
+        "filter",
+        "pagination",
+        "no-inline-events"
+      ],
+      "manual": [
+        "all 模块筛选结果与数量正确",
+        "无截断单元格不产生键盘焦点",
+        "手机长文本浮层不越界、滚动失焦后消失"
+      ]
+    },
+    {
+      "id": "HTML03",
+      "name": "标签、表单与抽屉交互",
+      "format": "html",
+      "prompt": "使用 $gen-ui 制作中文离线管理页面，采用左侧导航，适当使用页内标签、表单、新增弹窗和详情抽屉，至少 20 条模拟记录。页内标签与“新标签页打开”链接必须有可见文字区分；详情按钮有记录专属无障碍名称；输入校验失败保留合法数据。",
+      "checks": [
+        "doctype",
+        "chinese",
+        "one-h1",
+        "nav",
+        "table",
+        "filter",
+        "dialog",
+        "tabs",
+        "external",
+        "no-inline-events"
+      ],
+      "manual": [
+        "新增成功后记录可见且有反馈",
+        "抽屉/弹窗/页内标签真实行为与键盘焦点",
+        "外部链接真正新建标签页，内页不导航"
+      ]
+    },
+    {
+      "id": "HTML04",
+      "name": "未出现 HTML 字样的网页交付任务",
+      "format": "html",
+      "prompt": "请使用 $gen-ui 创建一个离线可以双击打开的中文网页质量验收看板，交付网页文件以及需要的本地样式脚本。内容包含模拟表格、状态统计、筛选与导航，不要后端，所有数据都必须明确标注为模拟。",
+      "checks": [
+        "doctype",
+        "chinese",
+        "one-h1",
+        "nav",
+        "table",
+        "nowrap",
+        "filter",
+        "status",
+        "no-inline-events"
+      ],
+      "manual": [
+        "确认没有因提示词未出现 HTML 三个字母而回退为 Markdown",
+        "真实浏览器打开并验证联动"
+      ]
+    },
+    {
+      "id": "MD01",
+      "name": "纯 Markdown 宿主回退",
+      "format": "markdown",
+      "prompt": "使用 $gen-ui，当前宿主仅是纯文本终端，无 Webview 或交互 Renderer。请给出 Java 并发代码审查与实施验收 Markdown 报告。不得假称实际运行测试，不得生成 HTML 按钮或交互滑块。",
+      "checks": [
+        "markdown-format",
+        "no-html-document",
+        "no-fake-widgets"
+      ],
+      "manual": [
+        "明确区分建议与实际已验证的内容",
+        "Markdown 文字在终端可读"
+      ]
+    }
+  ]
+}

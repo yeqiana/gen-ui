@@ -42,7 +42,11 @@ $required = @(
   "assets/icons/gen-ui-external.svg",
   "assets/icons/gen-ui-drawer.svg",
   "assets/icons/gen-ui-form.svg",
-  "tests/report.test.mjs"
+  "tests/report.test.mjs",
+  "evals/agent-cases.json",
+  "evals/agent-evaluation.md",
+  "scripts/evaluate-agent-output.mjs",
+  "tests/agent-evaluation.test.mjs"
 )
 foreach ($name in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $root $name) -PathType Leaf)) {
@@ -90,6 +94,6 @@ Write-Output "[PASS] Renderer JS 语法"
 if ($LASTEXITCODE -ne 0) { throw "HTML report JS syntax failed" }
 Write-Output "[PASS] HTML report JS syntax"
 
-& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs")
+& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"

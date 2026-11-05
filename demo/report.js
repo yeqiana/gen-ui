@@ -50,12 +50,12 @@
 
   function filterRows(rows, filter) {
     const keyword = String(filter.query || "").trim().toLowerCase();
-    const selectedModule = filter.module || "all";
+    const selectedModule = filter.module ?? "";
     const selectedBatch = filter.batch || "all";
     return rows.filter(row =>
       (!keyword || row.id.toLowerCase().includes(keyword) || row.module.toLowerCase().includes(keyword)) &&
       (!filter.status || filter.status === "all" || row.status === filter.status) &&
-      (selectedModule === "all" || row.module === selectedModule) &&
+      (selectedModule === "" || row.module === selectedModule) &&
       (selectedBatch === "all" || String(row.batch) === String(selectedBatch)) &&
       (!filter.slowOnly || row.durationMs > filter.threshold)
     );
@@ -141,7 +141,7 @@
   let report = sample();
   let page = 1;
   const filter = {
-    query: "", module: "all", status: "all", batch: "all",
+    query: "", module: "", status: "all", batch: "all",
     slowOnly: false, threshold: 600, size: 20
   };
 
@@ -262,8 +262,8 @@
   function clippedCell(value) {
     const cell = dom("td");
     const span = dom("span", value, "clip");
-    span.tabIndex = 0;
-    span.setAttribute("aria-label", value);
+    // Non-truncated text is already readable and should not create a Tab stop.
+    span.tabIndex = -1;
     span.addEventListener("mouseenter", () => revealTooltip(span, value));
     span.addEventListener("mouseleave", hideTooltip);
     span.addEventListener("focus", () => revealTooltip(span, value));
@@ -272,6 +272,16 @@
     return cell;
   }
 
+  function refreshClippedFocusability() {
+    const body = byId("report-rows");
+    if (!body || typeof body.querySelectorAll !== "function") return;
+    for (const cell of body.querySelectorAll(".clip")) {
+      const truncated = cell.scrollWidth > cell.clientWidth;
+      cell.tabIndex = truncated ? 0 : -1;
+      if (truncated) cell.setAttribute("aria-label", cell.textContent);
+      else cell.removeAttribute("aria-label");
+    }
+  }
   function openDialog(name) {
     const dialog = byId(name);
     if (typeof dialog.showModal === "function") dialog.showModal();
@@ -302,7 +312,7 @@
     mod.replaceChildren();
     bat.replaceChildren();
     const firstModule = dom("option", "全部模块");
-    firstModule.value = "all";
+    firstModule.value = "";
     mod.append(firstModule);
     modules.forEach(value => {
       const option = dom("option", value);
@@ -317,7 +327,7 @@
       option.value = String(value);
       bat.append(option);
     });
-    if (filter.module !== "all" && !modules.includes(filter.module)) filter.module = "all";
+    if (filter.module !== "" && !modules.includes(filter.module)) filter.module = "";
     if (filter.batch !== "all" && !batches.some(value => String(value) === String(filter.batch))) {
       filter.batch = "all";
     }
@@ -350,6 +360,7 @@
       const actionCell = dom("td");
       const detail = dom("button", "查看详情 · 站内抽屉", "inline-button");
       detail.type = "button";
+      detail.setAttribute("aria-label", "查看任务 " + row.id + " 的详情（站内抽屉）");
       detail.addEventListener("click", () => showRecord(row));
       actionCell.append(detail);
       tr.append(clippedCell(row.id), clippedCell(row.module), statusCell,
@@ -357,6 +368,7 @@
         clippedCell("第 " + row.batch + " 批"), actionCell);
       body.append(tr);
     }
+    refreshClippedFocusability();
     if (!paging.rows.length) {
       const tr = dom("tr"), cell = dom("td", "暂无符合条件的记录，请调整筛选条件");
       cell.colSpan = 6;
@@ -375,11 +387,11 @@
 
   function resetFilters() {
     Object.assign(filter, {
-      query: "", module: "all", status: "all", batch: "all",
+      query: "", module: "", status: "all", batch: "all",
       slowOnly: false, threshold: 600, size: 20
     });
     byId("keyword").value = "";
-    byId("module-filter").value = "all";
+    byId("module-filter").value = "";
     byId("status").value = "all";
     byId("batch-filter").value = "all";
     byId("slow-only").checked = false;
@@ -414,6 +426,12 @@
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", hideTooltip, true);
     window.addEventListener("keydown", event => { if (event.key === "Escape") hideTooltip(); });
+    window.addEventListener("resize", () => { hideTooltip(); refreshClippedFocusability(); });
+    if (typeof ResizeObserver === "function") {
+      const observer = new ResizeObserver(() => { hideTooltip(); refreshClippedFocusability(); });
+      observer.observe(byId("table-scroll"));
+    }
+    if (document.fonts?.ready) document.fonts.ready.then(refreshClippedFocusability);
   }
 
   function setTab(name) {

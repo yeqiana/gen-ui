@@ -2,6 +2,14 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
+## Unreleased — targeted accessibility and Agent evaluation fixes (2026-11-05)
+
+- Remove redundant Tab stops from untruncated table text and recompute after rendering or viewport resize.
+- Separate the "全部模块" filter sentinel from legitimate module name `all`.
+- Add per-record accessible names to repeated detail buttons.
+- Add five reusable real-Agent prompt cases and a safe offline output-quality checker, with pass/fail tests and explicit no-model-run provenance.
+- Keep original Markdown and HTML output contracts and verify existing functionality.
+
 ## Unreleased — reviewed HTML interaction fixes (2026-11-05)
 
 - Position long-text tooltips within actual mobile viewport bounds, measuring the rendered popup dimensions.

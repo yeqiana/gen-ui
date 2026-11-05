@@ -64,6 +64,13 @@ Open [demo/report.html](../demo/report.html) from the cloned repository with [re
 
 Browser-level visual and accessibility checks require manual inspection; Node tests cover core logic and simulated DOM interactions only.
 
+### 交互与 Agent 回归专项检查（2026-11-05）
+
+1. 默认 20 条与每页 100 条模式下，未截断的单元格不可产生多余 Tab 焦点；输入合法超长字段后，仅截断项进入 Tab 顺序，窗口宽度变化后焦点数量准确更新。
+2. 导入模块名恰好为 `all` 的合法 JSON 数据，验证“全部模块”与真实 `all` 模块可以分别选择；过滤统计、分页与重置均正确。
+3. 每一条“查看详情”按钮的辅助技术名称都包含具体任务编号，且按钮打开正确记录的抽屉。
+4. 对照 [Agent 提示词矩阵](agent-evaluation.md) 运行真实 Codex/Claude 等 Agent，将原始输出落盘，用离线门禁检测，并附真实浏览器/人工验收证据。未运行的用例不得写成 Agent 通过。
+
 ### v1.2 评审修复复验（2026-11-05）
 
 1. 在 375px / 768px / 1440px Chrome 视口输入超长模块名，聚焦截断单元格，确认完整文本悬浮提示始终位于可见边界内；表格滚动或失焦后消失。

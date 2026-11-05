@@ -41,7 +41,7 @@ Put the Skill under your project's `.claude/skills/gen-ui/` or your agent's docu
 
 ## HTML reports: filters, charts, and navigation
 
-For explicitly requested HTML reports, Gen UI applies a **Chinese-first interface** (except technical names and actual source data), nonwrapping headers/cells, horizontal scrolling with optional sticky first column, overflow tooltips on hover/focus, and column-specific filters. Internal tabs and new browser tabs are marked with different visible Chinese labels. Favor a lean report with forms, dialogs and drawers over decorative cards, and use the original [GEN-UI SVG icon set](assets/icons/README.md) in non-body locations.
+When HTML is the selected output, Gen UI applies a **Chinese-first interface** (except technical names and actual source data), nonwrapping headers/cells, horizontal scrolling with optional sticky first column, overflow tooltips on hover/focus, and column-specific filters. Internal tabs and new browser tabs are marked with different visible Chinese labels. Favor a lean report with forms, dialogs and drawers over decorative cards, and use the original [GEN-UI SVG icon set](assets/icons/README.md) in non-body locations.
 
 Try the [offline Chinese HTML report](demo/report.html) with its [stylesheet](demo/report.css), [JavaScript](demo/report.js) and [local brand icons](assets/icons/README.md). It demonstrates a 67-row **fictional** dataset; all controls are local and no server is contacted automatically. See [HTML report contract](references/html-report-contract.md).
 
@@ -67,7 +67,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 pwsh -NoProfile -File scripts/test-skill.ps1
 ~~~
 
-CI runs the same checks on pushes and pull requests. Static checks and Node tests do not prove the Skill is followed by every model or that a real browser has been manually tested. See [manual evaluation](evals/manual-evaluation.md).
+CI runs the same checks on pushes and pull requests. Static checks and Node tests do not prove the Skill is followed by every model or that a real browser has been manually tested. See [manual evaluation](evals/manual-evaluation.md) and the [real-Agent prompt matrix + offline static gate](evals/agent-evaluation.md). Static-gate success is **not** evidence that a model actually followed the Skill. No external model runs are claimed.
 
 ## Repository layout
 

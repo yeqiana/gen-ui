@@ -81,6 +81,17 @@ class FakeNode {
   append(...nodes) { this.children.push(...nodes); }
   replaceChildren(...nodes) { this.children=[...nodes]; }
   setAttribute(key,value) { this.attributes[key]=String(value); }
+  removeAttribute(key) { delete this.attributes[key]; }
+  querySelectorAll(selector) {
+    assert.equal(selector,".clip");
+    const results=[];
+    const visit=node=>{
+      if((node.className||"").split(/\s+/).includes("clip"))results.push(node);
+      for(const child of node.children)visit(child);
+    };
+    visit(this);
+    return results;
+  }
   addEventListener(type,callback) { this.listeners[type]=callback; }
   showModal() { this.open=true; }
   close() { this.open=false; }
@@ -94,6 +105,7 @@ class FakeNode {
 }
 function boot(viewport={width:900,height:700}) {
   const ids=new Map(), app=new FakeNode("app");
+  const win=new FakeNode("window");
   app.dataset.navigation="left";
   const doc={
     querySelector(selector) { assert.equal(selector,"[data-report-app]"); return app; },
@@ -101,8 +113,8 @@ function boot(viewport={width:900,height:700}) {
     createElement(tag) { return new FakeNode(tag); },
     createElementNS(_namespace,tag) { return new FakeNode(tag); }
   };
-  vm.runInNewContext(read("demo/report.js"), {document:doc,innerWidth:viewport.width,innerHeight:viewport.height}, {filename:"report.js"});
-  return {app,get:id=>doc.getElementById(id)};
+  vm.runInNewContext(read("demo/report.js"), {document:doc,window:win,innerWidth:viewport.width,innerHeight:viewport.height}, {filename:"report.js"});
+  return {app,win,get:id=>doc.getElementById(id)};
 }
 function dispatch(node,event,fields={}) {
   assert.equal(typeof node.listeners[event],"function",node.tagName+" lacks "+event);
@@ -170,7 +182,7 @@ test("过长内容仅在真正截断时显示浮层，移出与失焦隐藏", ()
   const {get}=boot();
   const span=get("report-rows").children[0].children[1].children[0];
   const tip=get("cell-tooltip");
-  assert.equal(span.tabIndex,0);
+  assert.equal(span.tabIndex,-1);
   span.scrollWidth=150;
   span.clientWidth=44;
   dispatch(span,"mouseenter");
@@ -379,4 +391,54 @@ test("最大 1000 条、含大量转义字符的合法报告仍可导入", () =>
   dispatch(get("apply-json"),"click");
   assert.equal(get("json-status").dataset.kind,"ok");
   assert.equal(Number(get("count-total").textContent.replaceAll(",","")),1000);
+});
+
+
+test("键盘只进入真正发生截断的单元格，窗口尺寸变化后重新计算", () => {
+  const {get, win}=boot();
+  const spans=get("report-rows").querySelectorAll(".clip");
+  assert.equal(spans.length,80);
+  assert.ok(spans.every(span=>span.tabIndex===-1));
+  const long=spans[1];
+  long.scrollWidth=240;
+  long.clientWidth=80;
+  dispatch(win,"resize");
+  assert.equal(long.tabIndex,0);
+  assert.equal(long.attributes["aria-label"],"网关服务");
+  assert.equal(spans.filter(span=>span.tabIndex===0).length,1);
+  long.clientWidth=300;
+  dispatch(win,"resize");
+  assert.equal(long.tabIndex,-1);
+  assert.equal("aria-label" in long.attributes,false);
+});
+
+test("模块名称 all 是合法数据，不可与“全部模块”筛选占位值冲突", () => {
+  const rows=[
+    {id:"X-1",module:"all",status:"success",durationMs:1,batch:1},
+    {id:"X-2",module:"网关服务",status:"failure",durationMs:2,batch:1}
+  ];
+  assert.deepEqual(ui.filterRows(rows,{module:"all"}).map(row=>row.id),["X-1"]);
+  assert.deepEqual(ui.filterRows(rows,{module:""}).map(row=>row.id),["X-1","X-2"]);
+  const {get}=boot();
+  get("report-json").value=JSON.stringify({version:"gen-ui-html-report/v1",title:"模块筛选边界测试",rows});
+  dispatch(get("apply-json"),"click");
+  const options=get("module-filter").children;
+  assert.equal(options[0].value,"");
+  assert.equal(options.filter(option=>option.value==="all").length,1);
+  dispatch(get("module-filter"),"change",{value:"all"});
+  assert.equal(Number(get("count-total").textContent),1);
+  assert.equal(get("report-rows").children[0].dataset.recordId,"X-1");
+  dispatch(get("reset-filters"),"click");
+  assert.equal(get("module-filter").value,"");
+  assert.equal(Number(get("count-total").textContent),2);
+});
+
+test("每条重复操作按钮有与记录关联的不同无障碍名称", () => {
+  const {get}=boot();
+  const rows=get("report-rows").children;
+  const names=rows.map(row=>row.children[5].children[0].attributes["aria-label"]);
+  assert.equal(names.length,20);
+  assert.equal(new Set(names).size,20);
+  for(let i=0;i<rows.length;i++)assert.match(names[i],new RegExp(rows[i].dataset.recordId));
+  assert.ok(names.every(name=>name.includes("站内抽屉")));
 });
