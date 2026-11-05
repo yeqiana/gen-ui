@@ -47,6 +47,12 @@ git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
 
 安装此 Skill 并不会修改本地 Runner 或替换模型客户端。
 
+## 真实浏览器与 Agent 基线
+
+新增 [可信示例 Chrome 自动复验脚本](tests/chrome-report-smoke.mjs)：在本地独立运行 `node tests/chrome-report-smoke.mjs`，覆盖 375/768/1440px、表格焦点、合法模块 `all` 筛选、超长文本提示和新增记录反馈。此脚本不会自动运行未知 Agent HTML，也不会调用模型。
+
+[2026-11-05 验证基线](evals/real-agent-baseline-2026-11-05.md)如实说明：本地 Runner 为 SYSTEM 身份，无法访问桌面已登录的 Codex，真实模型生成用例仍标记为**未执行**。
+
 ## Agent 输出回归评测
 
 新增 [真实 Agent 提示词矩阵与离线静态门禁](evals/agent-evaluation.md)：覆盖中文报告、模块名冲突、键盘无障碍、表单抽屉和 Markdown 回退。它不会自行调用模型、不会消耗 Agent 额度；只有真实执行 Agent、保留生成文件并通过人工浏览器验收后，才能宣称 Agent 输出符合规范。

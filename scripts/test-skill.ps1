@@ -43,6 +43,9 @@ $required = @(
   "assets/icons/gen-ui-drawer.svg",
   "assets/icons/gen-ui-form.svg",
   "tests/report.test.mjs",
+  "tests/chrome-report-smoke.mjs",
+  "evals/real-agent-baseline-2026-11-05.md",
+  "evals/chrome-demo-baseline-2026-11-05.json",
   "evals/agent-cases.json",
   "evals/agent-evaluation.md",
   "scripts/evaluate-agent-output.mjs",
@@ -93,6 +96,10 @@ Write-Output "[PASS] Renderer JS 语法"
 & node --check (Join-Path $root "demo/report.js")
 if ($LASTEXITCODE -ne 0) { throw "HTML report JS syntax failed" }
 Write-Output "[PASS] HTML report JS syntax"
+
+& node --check (Join-Path $root "tests/chrome-report-smoke.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Chrome smoke JS syntax failed" }
+Write-Output "[PASS] Chrome smoke JS syntax（浏览器实测请单独运行）"
 
 & node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }

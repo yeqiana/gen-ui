@@ -46,26 +46,42 @@ function localStyles(content,base){
   }
   return css;
 }
+function cssRules(css) {
+  // Heuristic selector/declaration gate; never interprets or executes CSS.
+  const withoutComments=css.replace(/\/\*[\s\S]*?\*\//g,"");
+  return [...withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match=>({
+    selector:match[1].trim(), declarations:match[2]
+  }));
+}
+function hasCssRule(rules, selector, required) {
+  return rules.some(rule=>selector.test(rule.selector)&&required.every(pattern=>pattern.test(rule.declarations)));
+}
 export function evaluateOutput(id,source,css=""){
   const spec=cases.get(id);
   if(!spec)throw Error("未知评测用例："+id);
   const markup=spec.format==="html"?source:"";
-  const cssNoWrap=/\bwhite-space\s*:\s*nowrap\b/i.test(css);
+  const styles=cssRules(css);
+  const nowrap=/\bwhite-space\s*:\s*nowrap\b/i;
+  const sticky=/\bposition\s*:\s*sticky\b/i;
+  const leftZero=/\bleft\s*:\s*0(?:px)?\s*(?:;|$)/i;
+  const hasTableNoWrap=hasCssRule(styles,/\bth\b/i,[nowrap]) &&
+    hasCssRule(styles,/\btd\b/i,[nowrap]);
+  const hasFirstColumn=hasCssRule(styles,/(?:\bth|\btd):(?:first-child|nth-child\(1\))/i,[sticky,leftZero]);
   const rules={
     doctype:/<!doctype\s+html\b/i.test(markup),
     chinese:/<html\b[^>]*lang=["']zh-CN["']/i.test(markup),
     "one-h1":(markup.match(/<h1\b/gi)||[]).length===1,
     nav:/<nav\b/i.test(markup),
     table:/<table\b/i.test(markup)&&/<th\b/i.test(markup),
-    nowrap:cssNoWrap && /\b(?:th|thead)\b[\s\S]{0,700}\bwhite-space\s*:\s*nowrap\b/i.test(css),
-    sticky:/\bposition\s*:\s*sticky\b/i.test(css)&&/\bleft\s*:\s*0(?:px)?\b/i.test(css),
+    nowrap:hasTableNoWrap,
+    sticky:hasFirstColumn,
     filter:/<(?:select|input)\b/i.test(markup)&&/(?:筛选|查询|搜索|状态|模块)/.test(markup),
     pagination:/<select\b[^>]*id=["'][^"']*(?:size|page)[^"']*["']/i.test(markup)&&/value=["']20["']/i.test(markup)&&/(?:上一页|下一页|分页)/.test(markup),
     status:/(?:成功|失败)/.test(markup),
     dialog:/<dialog\b/i.test(markup),
     tabs:/role=["']tablist["']/i.test(markup)&&/role=["']tabpanel["']/i.test(markup),
     external:/target=["']_blank["']/i.test(markup)&&/rel=["'][^"']*noopener[^"']*noreferrer/i.test(markup)&&/新标签页/.test(markup),
-    "no-inline-events":!/\bon(?:click|change|submit|error|load|mouseover)\s*=/i.test(markup),
+    "no-inline-events":!/\bon[a-z]+\s*=/i.test(markup),
     "markdown-format":/^(?:#{1,6}\s+|[-*]\s+|\d+\.\s+)/m.test(source),
     "no-html-document":!/<(?:!doctype\s+html|html\b|head\b|body\b)/i.test(source),
     "no-fake-widgets":!/<(?:button|input|select|dialog)\b/i.test(source)&&!/GenUI\.|role=["'](?:tab|slider)["']/i.test(source)

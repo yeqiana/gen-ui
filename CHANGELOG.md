@@ -2,6 +2,14 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
+## Unreleased — reproducible browser QA and evaluation guardrails (2026-11-05)
+
+- Add a dependency-free, real Chrome smoke suite for the trusted HTML demo at 375/768/1440px, including accessibility focus, module sentinel, tooltips and create feedback.
+- Strengthen the offline Agent artifact checker to require table-specific nowrap and first-column sticky declarations, reducing false positives from unrelated CSS; block arbitrary inline event attributes.
+- Add negative/positive unit tests for these CSS and script checks.
+- Record the actual environment limitation (SYSTEM Runner without Codex auth or a local model), leaving all real-Agent prompt results explicitly unexecuted and preserving quota.
+- Save the trusted-demo Chrome result as standalone machine-readable JSON evidence, without misrepresenting it as Agent-produced output.
+
 ## Unreleased — targeted accessibility and Agent evaluation fixes (2026-11-05)
 
 - Remove redundant Tab stops from untruncated table text and recompute after rendering or viewport resize.

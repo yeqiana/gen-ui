@@ -57,6 +57,16 @@ Open [demo/index.html](demo/index.html) in a browser. Drag the slider and inspec
 
 This demo uses its **own illustrative protocol** (`gen-ui-demo/v1`). It is not interchangeable with OpenUI, A2UI, or DIL. Read [the contract](references/renderer-contract.md) and [integration notes](docs/integration.md).
 
+## Real-browser acceptance and actual Agent evaluation
+
+Run a **real Chrome/Edge regression against the trusted repository demo** with Node.js (no model calls):
+
+~~~powershell
+node tests/chrome-report-smoke.mjs
+~~~
+
+The script checks three viewports, keyboard focus, table filtering, tooltips, and newly created records. It intentionally **does not accept arbitrary AI-generated HTML**. See the [local verification baseline](evals/real-agent-baseline-2026-11-05.md) and [saved Chrome evidence](evals/chrome-demo-baseline-2026-11-05.json) and [real-Agent evaluation instructions](evals/agent-evaluation.md). Current real-Agent generation status: **not executed** because the registered SYSTEM Runner cannot access the separately logged-in desktop Codex session.
+
 ## Checks
 
 ~~~powershell

@@ -32,6 +32,16 @@
 - **层 3 · 真实 Agent：** 从原始提示词重新生成产物，保留模型名称、输出与证据，按统一基线重复评审，才能评估退化。
 - **层 4 · 跨宿主：** 依据各 Agent 实际宿主渲染能力验证 Markdown/Webview 回退，不可从本地 HTML 示例推断其他宿主原生支持交互。
 
+## 可信示例的真实浏览器自动回归
+
+在本仓库根目录直接运行：
+
+    node tests/chrome-report-smoke.mjs
+
+本脚本通过本地真实 Chrome/Edge 检查自带演示页面的关键交互，不依赖外部服务、不执行模型生成的未知 HTML、不耗费 Codex/Claude 额度。结果也可使用 --report 参数输出 JSON。
+
+**当前 Runner 限制：** 2026-11-05 检查到本地 codex-cli 已安装，但 Runner 以 SYSTEM 身份运行且 Codex 未登录；未发现可用的 Ollama/LM Studio 本地模型服务。详情及真实测试边界见 [验证基线](real-agent-baseline-2026-11-05.md)。真实 Codex 生成评测目前并未执行。
+
 ## 当前实际状态
 
 - demo/report.html 为手写的离线示例，允许作为**静态门禁自身的正例**；它不构成真实 Coding Agent 的运行证据。
