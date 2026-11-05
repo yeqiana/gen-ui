@@ -1,210 +1,175 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Gen UI offline engineering report demo with searchable data, 20+ row pagination, charts, KPI highlights, and controlled JSON.">
-  <title>Gen UI · Interactive HTML Report Example</title>
-  <style>
-    :root { font: 15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; color:#243044; background:#f7f8fa; }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { margin:0; }
-    button,input,select,textarea { font:inherit; }
-    button,select,input[type="search"],textarea { border:1px solid #bdc7d5; border-radius:7px; padding:8px 10px; background:#fff; color:inherit; }
-    button { cursor:pointer; }
-    button:disabled { opacity:.45; cursor:not-allowed; }
-    button:hover:not(:disabled) { border-color:#5266c6; }
-    :focus-visible { outline:3px solid #5d76d7; outline-offset:2px; }
-    .skip { position:absolute; top:-100px; left:12px; z-index:10; background:#fff; padding:10px; }
-    .skip:focus { top:12px; }
-    .app { min-height:100vh; display:grid; grid-template-columns:245px minmax(0,1fr); }
-    aside { padding:25px 18px; border-right:1px solid #dfe5ed; background:#fff; position:sticky; top:0; height:100vh; overflow-y:auto; }
-    aside .brand { font-weight:800; font-size:1.14rem; letter-spacing:.04em; }
-    .nav-list { list-style:none; margin:20px 0 0; padding:0; }
-    .nav-list a { display:block; color:#42506a; padding:8px 10px; border-radius:6px; text-decoration:none; }
-    .nav-list a:hover { background:#edf1fb; color:#293fa6; }
-    .nav-list .sub a { padding-left:27px; font-size:.9rem; }
-    main { padding:28px clamp(16px,3vw,46px) 70px; min-width:0; width:100%; max-width:1550px; }
-    .masthead { display:flex; justify-content:space-between; align-items:start; gap:18px; border-bottom:1px solid #dce2eb; padding-bottom:22px; }
-    .eyebrow { font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#5266c6; }
-    h1 { line-height:1.25; font-size:clamp(1.6rem,2.7vw,2.25rem); margin:5px 0 8px; }
-    h2 { font-size:1.42rem; margin:34px 0 13px; line-height:1.35; }
-    h3 { font-size:1.06rem; margin:8px 0 13px; }
-    p { margin:8px 0; }
-    .muted { color:#627086; }
-    .jump { scroll-margin-top:30px; }
-    .nav-setting { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .nav-setting label { font-size:.9rem; }
-    .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:18px 0 14px; }
-    .kpi { background:#fff; padding:16px; border:1px solid #dee5ec; border-radius:8px; border-top:3px solid #c5cfde; }
-    .kpi dt { font-size:.85rem; color:#526077; }
-    .kpi dd { font-weight:800; font-size:2.05rem; margin:4px 0 0; font-variant-numeric:tabular-nums; }
-    .kpi.success { border-top-color:#16803a; }
-    .kpi.success dd { color:#166534; }
-    .kpi.failure { border-top-color:#d22d22; }
-    .kpi.failure dd { color:#b42318; }
-    .charts { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:15px; }
-    .chart-box { background:#fff; border:1px solid #dfe5ed; border-radius:9px; padding:14px 15px; min-width:0; }
-    .chart-box svg { width:100%; height:auto; max-height:250px; }
-    figcaption { color:#627086; font-size:.82rem; margin-top:3px; }
-    figure { margin:0; }
-    .filters { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:13px 0; }
-    .filters label { display:grid; gap:5px; font-size:.85rem; color:#46556b; }
-    input[type="search"] { min-width:185px; }
-    .check { display:flex !important; flex-direction:row; align-items:center; padding-bottom:9px; }
-    .check input { width:17px; height:17px; }
-    .range-row { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
-    .range-row input[type=range] { accent-color:#475cbb; width:min(100%,270px); }
-    .table-wrap { overflow-x:auto; border:1px solid #dce4ed; border-radius:8px; background:#fff; }
-    table { width:100%; border-collapse:collapse; min-width:640px; }
-    th,td { padding:10px 14px; border-bottom:1px solid #eef1f5; text-align:left; }
-    th { font-size:.84rem; color:#4d5b70; background:#f0f3f8; font-weight:700; }
-    tr:last-child td { border-bottom:0; }
-    tbody tr:nth-child(even) { background:#fafbfe; }
-    .status { padding:3px 9px; border-radius:999px; font-size:.82rem; font-weight:600; display:inline-block; }
-    .status.success { background:#eaf7ee; color:#166534; }
-    .status.failure { background:#fff0ef; color:#b42318; }
-    .status.pending { background:#eff2f6; color:#485569; }
-    .paging { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:13px; }
-    .paging-controls { display:flex; align-items:center; gap:9px; }
-    .panel { background:#fff; border:1px solid #dfe5ed; border-radius:9px; padding:18px; }
-    details > summary { cursor:pointer; font-weight:650; }
-    textarea { display:block; resize:vertical; width:100%; min-height:220px; font:12px/1.55 ui-monospace,Consolas,monospace; margin:14px 0 10px; }
-    .primary { color:#fff; background:#4256b7; border-color:#4256b7; }
-    [data-kind="error"] { color:#b42318; }
-    [data-kind="ok"] { color:#166534; }
-    .app[data-navigation="top"] { display:block; }
-    .app[data-navigation="top"] aside { position:sticky; width:100%; height:auto; z-index:3; padding:9px 24px; border-right:0; border-bottom:1px solid #dfe5ed; display:flex; align-items:center; gap:24px; }
-    .app[data-navigation="top"] .nav-list { display:flex; flex-wrap:wrap; gap:5px; margin:0; }
-    .app[data-navigation="top"] .nav-list .sub { display:none; }
-    .app[data-navigation="top"] main { margin:0 auto; }
-    @media(max-width:760px) {
-      .app { display:block; }
-      aside { position:relative; width:100%; height:auto; padding:10px 15px; border-right:0; border-bottom:1px solid #dfe5ed; }
-      .nav-list { display:flex; flex-wrap:wrap; margin:5px 0 0; }
-      .nav-list .sub { display:none; }
-      .masthead { flex-direction:column; }
-      .app[data-navigation="top"] aside { position:relative; display:block; padding:10px 15px; }
-    }
-    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
-  </style>
+  <meta name="description" content="GEN-UI 中文工程质量报告示例：表格列筛选、固定首列、截断浮层、抽屉、弹窗和可访问图表。">
+  <title>GEN-UI · 工程质量分析</title>
+  <link rel="icon" href="../assets/icons/gen-ui-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./report.css">
+  <script src="./report.js" defer></script>
 </head>
 <body>
-<a class="skip" href="#main">Skip to report content</a>
+<a class="skip" href="#main">跳到主要内容</a>
 <div class="app" data-report-app data-navigation="left">
-  <aside>
-    <div class="brand">Gen UI · HTML Report</div>
-    <nav aria-label="Report sections">
+  <aside class="sidebar" aria-label="侧边导航">
+    <div class="brand">
+      <img src="../assets/icons/gen-ui-mark.svg" width="44" height="44" alt="">
+      <span><strong>GEN-UI</strong><small>智能界面 · 实验室</small></span>
+    </div>
+    <nav aria-label="页面目录">
+      <p class="nav-caption">报告导航</p>
       <ul class="nav-list">
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#visuals">Charts</a></li>
-        <li class="sub"><a href="#status-distribution">Status distribution</a></li>
-        <li class="sub"><a href="#module-analysis">Module analysis</a></li>
-        <li class="sub"><a href="#batch-trend">Batch trend</a></li>
-        <li><a href="#records">Execution details</a></li>
-        <li><a href="#data">Controlled JSON</a></li>
+        <li><a href="#overview"><img src="../assets/icons/gen-ui-spark.svg" alt="">数据总览</a></li>
+        <li><a href="#visuals"><img src="../assets/icons/gen-ui-chart.svg" alt="">趋势与分布</a></li>
+        <li class="sub"><a href="#status-distribution">状态构成</a></li>
+        <li class="sub"><a href="#module-analysis">模块对比</a></li>
+        <li class="sub"><a href="#batch-trend">批次走势</a></li>
+        <li><a href="#records"><img src="../assets/icons/gen-ui-table.svg" alt="">执行明细</a></li>
+        <li><a href="#data"><img src="../assets/icons/gen-ui-drawer.svg" alt="">数据与交互</a></li>
       </ul>
     </nav>
+    <div class="sidebar-signature">
+      <img src="../assets/icons/gen-ui-mark.svg" width="48" height="48" alt="">
+      <strong>GEN-UI</strong>
+      <small>让输出更直观 · 更可交互</small>
+    </div>
   </aside>
   <main id="main">
     <header class="masthead">
-      <div>
-        <p class="eyebrow">Illustrative data · Offline report</p>
-        <h1 id="report-title">Build Verification Report</h1>
-        <p class="muted">KPI counts and charts recalculate from filtered records. Demo values are not production results.</p>
+      <div class="page-heading">
+        <p class="eyebrow">GEN-UI / 可交互报告示例</p>
+        <h1 id="report-title">工程质量分析</h1>
+        <p class="muted">以下均为模拟数据，非真实系统运行结果；所有操作仅在当前页面生效。</p>
       </div>
-      <div class="nav-setting">
-        <label for="nav-mode">Navigation</label>
-        <select id="nav-mode" aria-label="Navigation position">
-          <option value="left" selected>Left (default)</option>
-          <option value="top">Top</option>
-        </select>
+      <div class="masthead-actions">
+        <label class="inline-select" for="nav-mode">导航布局
+          <select id="nav-mode">
+            <option value="left" selected>左侧（默认）</option>
+            <option value="top">顶部</option>
+          </select>
+        </label>
+        <a class="text-action external-action" href="https://github.com/yeqiana/gen-ui/blob/main/references/html-report-contract.md" target="_blank" rel="noopener noreferrer">
+          <img src="../assets/icons/gen-ui-external.svg" alt="">规范文档 <span class="action-hint">新标签页打开</span>
+        </a>
       </div>
     </header>
 
-    <section id="overview" class="jump" aria-labelledby="overview-title">
-      <h2 id="overview-title">Overview</h2>
-      <dl class="kpis" aria-label="Filtered record counts">
-        <div class="kpi"><dt>Total</dt><dd id="count-total">–</dd></div>
-        <div class="kpi success"><dt>Success</dt><dd id="count-success">–</dd></div>
-        <div class="kpi failure"><dt>Failure</dt><dd id="count-failure">–</dd></div>
-        <div class="kpi"><dt>Pending</dt><dd id="count-pending">–</dd></div>
-        <div class="kpi"><dt>Above threshold</dt><dd id="count-slow">–</dd></div>
+    <section id="overview" class="jump" aria-labelledby="overview-heading">
+      <div class="section-title"><h2 id="overview-heading">一、执行概览</h2><span class="muted">指标随筛选结果实时联动</span></div>
+      <dl class="metrics">
+        <div class="metric"><dt>全部记录</dt><dd id="count-total">—</dd></div>
+        <div class="metric positive"><dt>成功</dt><dd id="count-success">—</dd></div>
+        <div class="metric negative"><dt>失败</dt><dd id="count-failure">—</dd></div>
+        <div class="metric"><dt>待处理</dt><dd id="count-pending">—</dd></div>
+        <div class="metric"><dt>超过耗时阈值</dt><dd id="count-slow">—</dd></div>
       </dl>
-      <p class="muted">Color supports meaning, but every KPI also has a text label. Counts are illustrative.</p>
     </section>
 
-    <section id="visuals" class="jump" aria-labelledby="visuals-title">
-      <h2 id="visuals-title">Charts</h2>
-      <p class="muted">Use pie, bar, and line charts when they add information; all are derived from filtered rows and include text summaries.</p>
-      <div class="charts">
-        <article class="chart-box jump" id="status-distribution">
-          <h3>Status distribution · Pie</h3>
-          <figure id="pie"></figure>
-        </article>
-        <article class="chart-box jump" id="module-analysis">
-          <h3>Module breakdown · Bar</h3>
-          <figure id="bar"></figure>
-        </article>
-        <article class="chart-box jump" id="batch-trend">
-          <h3>Batch trend · Line</h3>
-          <figure id="line"></figure>
-        </article>
+    <section id="visuals" class="jump" aria-labelledby="visuals-heading">
+      <div class="section-title"><h2 id="visuals-heading">二、趋势与分布</h2><span class="muted">同一筛选数据源 · 图表按需展示</span></div>
+      <div class="chart-layout">
+        <article id="status-distribution" class="chart-section jump"><h3>状态构成 · 饼图</h3><figure id="pie"></figure></article>
+        <article id="module-analysis" class="chart-section jump"><h3>模块对比 · 柱状图</h3><figure id="bar"></figure></article>
+        <article id="batch-trend" class="chart-section jump"><h3>批次走势 · 折线图</h3><figure id="line"></figure></article>
       </div>
     </section>
 
-    <section id="records" class="jump" aria-labelledby="records-title">
-      <h2 id="records-title">Execution details</h2>
-      <div class="filters">
-        <label for="keyword">Search ID / module <input type="search" id="keyword" placeholder="e.g. Gateway"></label>
-        <label for="status">Status
-          <select id="status">
-            <option value="all">All statuses</option>
-            <option value="success">Success</option>
-            <option value="failure">Failure</option>
-            <option value="pending">Pending</option>
-          </select>
-        </label>
-        <label for="page-size">Rows per page
-          <select id="page-size"><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select>
-        </label>
-        <label class="check" for="slow-only"><input type="checkbox" id="slow-only"> Only above threshold</label>
+    <section id="records" class="jump" aria-labelledby="records-heading">
+      <div class="section-title"><h2 id="records-heading">三、执行明细</h2><span class="muted">表头与内容均不换行 · 固定首列</span></div>
+      <div class="toolbar">
+        <div class="tab-list" role="tablist" aria-label="当前页面内的内容切换">
+          <button type="button" id="tab-records" role="tab" aria-controls="panel-records" aria-selected="true" tabindex="0" class="tab active">
+            <img src="../assets/icons/gen-ui-tab.svg" alt="">执行记录 <small>页内标签</small>
+          </button>
+          <button type="button" id="tab-rules" role="tab" aria-controls="panel-rules" aria-selected="false" tabindex="-1" class="tab">
+            筛选说明 <small>页内标签</small>
+          </button>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" id="open-create" class="primary"><img src="../assets/icons/gen-ui-form.svg" alt="">新增记录 <small>弹窗</small></button>
+          <button type="button" id="open-data-drawer"><img src="../assets/icons/gen-ui-drawer.svg" alt="">编辑数据 <small>右侧抽屉</small></button>
+        </div>
       </div>
-      <div class="range-row">
-        <label for="threshold">Slow threshold</label>
-        <input id="threshold" type="range" min="100" max="1200" step="50" value="600">
-        <output id="threshold-value" for="threshold">600 ms</output>
+
+      <div id="panel-records" role="tabpanel" aria-labelledby="tab-records">
+        <form id="filters" class="filters" autocomplete="off" role="search">
+          <label for="keyword">任务编号 / 关键字<input type="search" id="keyword" placeholder="按编号或模块搜索"></label>
+          <label for="module-filter">所属模块<select id="module-filter"><option value="all">全部模块</option></select></label>
+          <label for="status">执行状态
+            <select id="status"><option value="all">全部状态</option><option value="success">成功</option><option value="failure">失败</option><option value="pending">待处理</option></select>
+          </label>
+          <label for="batch-filter">执行批次<select id="batch-filter"><option value="all">全部批次</option></select></label>
+          <label for="page-size">每页条数<select id="page-size"><option value="20" selected>20 条</option><option value="50">50 条</option><option value="100">100 条</option></select></label>
+          <button type="button" id="reset-filters" class="secondary">重置筛选</button>
+        </form>
+        <div class="detail-filters">
+          <label for="threshold">耗时阈值</label>
+          <input type="range" id="threshold" min="100" max="1200" step="50" value="600">
+          <output id="threshold-value" for="threshold">600 毫秒</output>
+          <label class="check" for="slow-only"><input type="checkbox" id="slow-only"> 仅看超过阈值的记录</label>
+        </div>
+        <p id="filter-count" class="muted" role="status"></p>
+        <div class="table-wrap" id="table-scroll" tabindex="0" role="region" aria-label="可横向滚动的执行记录表格">
+          <table aria-label="工程执行记录">
+            <colgroup><col class="col-id"><col class="col-module"><col class="col-status"><col class="col-duration"><col class="col-batch"><col class="col-action"></colgroup>
+            <thead><tr><th scope="col">任务编号（固定）</th><th scope="col">所属模块</th><th scope="col">执行状态</th><th scope="col">耗时（毫秒）</th><th scope="col">执行批次</th><th scope="col">操作</th></tr></thead>
+            <tbody id="report-rows"></tbody>
+          </table>
+        </div>
+        <div class="paging">
+          <p id="page-info" class="muted" aria-live="polite"></p>
+          <div class="paging-actions"><button type="button" id="previous">上一页</button><button type="button" id="next">下一页</button></div>
+        </div>
+        <p class="help">可左右滚动查看完整列；长文本保留省略号，鼠标移入或键盘聚焦时显示完整内容。最后一页允许少于 20 条。</p>
       </div>
-      <p id="filter-count" class="muted" role="status"></p>
-      <div class="table-wrap">
-        <table aria-label="Filtered build verification records">
-          <thead><tr><th scope="col">Record ID</th><th scope="col">Module</th><th scope="col">Status</th><th scope="col">Duration</th><th scope="col">Batch</th></tr></thead>
-          <tbody id="report-rows"></tbody>
-        </table>
+      <div id="panel-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
+        <h3>筛选与查看规则</h3>
+        <p>编号支持模糊搜索；模块、状态和批次分别对应表格关键字段；阈值筛选与所有统计及图表实时联动。</p>
+        <p>“页内标签”仅切换当前页面内容；“新标签页打开”会在浏览器中新建标签，并明确显示跳转目标。</p>
       </div>
-      <div class="paging">
-        <p id="page-info" class="muted" aria-live="polite"></p>
-        <div class="paging-controls"><button id="previous" type="button">Previous</button><button id="next" type="button">Next</button></div>
-      </div>
-      <p class="muted">Pagination applies after filtering. Available page sizes are 20, 50, and 100; the final page may contain fewer than 20 remaining records.</p>
     </section>
 
-    <section id="data" class="jump" aria-labelledby="data-title">
-      <h2 id="data-title">Controlled JSON</h2>
-      <div class="panel">
-        <details>
-          <summary>Inspect or replace the local report dataset</summary>
-          <p class="muted">Only the allowlisted <code>gen-ui-html-report/v1</code> data fields are accepted. No arbitrary HTML, CSS, JavaScript or remote URLs are executed.</p>
-          <label for="report-json">Report JSON</label>
-          <textarea id="report-json" spellcheck="false" aria-describedby="json-status"></textarea>
-          <button id="apply-json" type="button" class="primary">Validate and apply JSON</button>
-          <p id="json-status" role="status" aria-live="polite"></p>
-        </details>
-      </div>
+    <section id="data" class="jump" aria-labelledby="data-heading">
+      <div class="section-title"><h2 id="data-heading">四、数据与交互</h2><span class="muted">无需后端或模型 API</span></div>
+      <p>示例支持页面内新增记录、侧边抽屉查看详情和更换经过校验的 JSON 数据。不会自动调用远程接口或修改真实项目数据。</p>
+      <button type="button" id="open-data-secondary">打开数据编辑抽屉 <span class="action-hint">当前页面内部</span></button>
     </section>
+    <footer class="page-footer"><img src="../assets/icons/gen-ui-spark.svg" width="18" height="18" alt="">GEN-UI · 让输出更直观、更可交互</footer>
   </main>
 </div>
-<script src="./report.js" defer></script>
+
+<div id="cell-tooltip" class="cell-tooltip" role="tooltip" hidden></div>
+
+<dialog id="create-dialog" aria-labelledby="create-heading" class="modal">
+  <form id="create-form" autocomplete="off">
+    <div class="dialog-head"><h2 id="create-heading">新增演示记录</h2><button type="button" id="close-create" aria-label="关闭新增弹窗">关闭</button></div>
+    <p class="muted">在当前页面临时增加一条记录，关闭页面后不保存。</p>
+    <div class="form-fields">
+      <label for="new-id">任务编号<input id="new-id" maxlength="40" required placeholder="例如：T-068"></label>
+      <label for="new-module">所属模块<input id="new-module" maxlength="40" required placeholder="例如：用户服务"></label>
+      <label for="new-status">执行状态<select id="new-status"><option value="success">成功</option><option value="failure">失败</option><option value="pending">待处理</option></select></label>
+      <label for="new-duration">耗时（毫秒）<input id="new-duration" type="number" min="0" max="1000000" value="250" required></label>
+      <label for="new-batch">执行批次<select id="new-batch"><option value="1">批次 1</option><option value="2">批次 2</option><option value="3">批次 3</option><option value="4">批次 4</option><option value="5">批次 5</option><option value="6">批次 6</option><option value="7">批次 7</option><option value="8">批次 8</option><option value="9">批次 9</option><option value="10">批次 10</option><option value="11">批次 11</option><option value="12">批次 12</option></select></label>
+    </div>
+    <p id="create-status" role="status" aria-live="polite"></p>
+    <div class="dialog-actions"><button type="button" id="cancel-create">取消</button><button class="primary" type="submit">添加到当前报告</button></div>
+  </form>
+</dialog>
+
+<dialog id="detail-drawer" class="drawer" aria-labelledby="detail-heading">
+  <div class="dialog-head"><h2 id="detail-heading">任务详情 · 站内抽屉</h2><button type="button" id="close-detail">关闭</button></div>
+  <dl id="detail-content" class="details"></dl>
+  <p class="help">仅展示当前报告数据，不会打开浏览器新标签页。</p>
+</dialog>
+
+<dialog id="data-drawer" class="drawer" aria-labelledby="json-heading">
+  <div class="dialog-head"><h2 id="json-heading">编辑受控数据 · 站内抽屉</h2><button type="button" id="close-data">关闭</button></div>
+  <p class="muted">仅允许 <code>gen-ui-html-report/v1</code> 数据字段。禁用脚本、HTML、事件属性和任意网络地址。</p>
+  <label for="report-json">报告 JSON</label>
+  <textarea id="report-json" spellcheck="false" aria-describedby="json-status"></textarea>
+  <div class="dialog-actions"><button type="button" class="primary" id="apply-json">校验并更新当前报告</button></div>
+  <p id="json-status" role="status" aria-live="polite"></p>
+</dialog>
 </body>
 </html>

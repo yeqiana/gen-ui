@@ -41,6 +41,12 @@ Put the Skill under your project's `.claude/skills/gen-ui/` or your agent's docu
 
 ## HTML reports: filters, charts, and navigation
 
+For explicitly requested HTML reports, Gen UI applies a **Chinese-first interface** (except technical names and actual source data), nonwrapping headers/cells, horizontal scrolling with optional sticky first column, overflow tooltips on hover/focus, and column-specific filters. Internal tabs and new browser tabs are marked with different visible Chinese labels. Favor a lean report with forms, dialogs and drawers over decorative cards, and use the original [GEN-UI SVG icon set](assets/icons/README.md) in non-body locations.
+
+Try the [offline Chinese HTML report](demo/report.html) with its [stylesheet](demo/report.css), [JavaScript](demo/report.js) and [local brand icons](assets/icons/README.md). It demonstrates a 67-row **fictional** dataset; all controls are local and no server is contacted automatically. See [HTML report contract](references/html-report-contract.md).
+
+
+
 When explicitly asked to produce **HTML**, Gen UI also specifies practical report layouts: left sidebar by default (top navigation optional), hierarchy-based section anchors, meaningful table filters, **20/50/100 rows per page**, success/failure KPI highlighting, appropriate pie/bar/line charts, and safe local forms/sliders. These features run in actual HTML, not in a plain terminal.
 
 Open the [offline HTML report](demo/report.html) (keep [report.js](demo/report.js) beside it) to try the 67-row illustrative dataset. Read the [HTML report contract](references/html-report-contract.md) for accessibility, data validation, pagination, and security constraints. This report format is separate from the existing lightweight UI protocol.

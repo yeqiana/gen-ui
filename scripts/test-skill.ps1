@@ -32,6 +32,16 @@ $required = @(
   "references/html-report-contract.md",
   "demo/report.html",
   "demo/report.js",
+  "demo/report.css",
+  "assets/icons/README.md",
+  "assets/icons/gen-ui-mark.svg",
+  "assets/icons/gen-ui-spark.svg",
+  "assets/icons/gen-ui-table.svg",
+  "assets/icons/gen-ui-chart.svg",
+  "assets/icons/gen-ui-tab.svg",
+  "assets/icons/gen-ui-external.svg",
+  "assets/icons/gen-ui-drawer.svg",
+  "assets/icons/gen-ui-form.svg",
   "tests/report.test.mjs"
 )
 foreach ($name in $required) {

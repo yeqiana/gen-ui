@@ -1,7 +1,7 @@
 interface:
   display_name: "Gen UI"
-  short_description: "Clear Markdown and safe, accessible HTML reports for coding agents."
-  default_prompt: "Use $gen-ui to adapt this response to the actual host: concise Markdown by default, verifiable implementation evidence, and controlled UI JSON only when a trusted Renderer is explicitly available."
+  short_description: "Clear Markdown and safe, Chinese-first interactive HTML reports for coding agents."
+  default_prompt: "Use $gen-ui to adapt this response to the actual host: concise Markdown by default, verifiable implementation evidence, and Chinese-first interactive HTML reports only when requested, and controlled UI JSON only with a trusted Renderer."
 
 policy:
   allow_implicit_invocation: true
