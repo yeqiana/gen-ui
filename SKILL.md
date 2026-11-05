@@ -1,6 +1,6 @@
 ---
 name: gen-ui
-description: Use when a coding agent needs to present technical answers, implementation plans, code reviews, tests, acceptance reports, or UI-aware explanations clearly. Produce evidence-based Markdown by default; generate controlled interactive UI data only if the host explicitly supports a trusted renderer.
+description: Use when a coding agent needs to present technical answers, implementation plans, code reviews, tests, acceptance reports, or explicitly requested interactive HTML reports clearly. Produce evidence-based Markdown by default; generate controlled interactive UI data only if the host explicitly supports a trusted renderer.
 ---
 
 # Gen UI — Presentation Skill for Coding Agents
@@ -67,7 +67,20 @@ Read [references/renderer-contract.md](references/renderer-contract.md) before p
 
 **Protocol scope:** `gen-ui-demo/v1` is an illustrative repository-local format, **not** OpenUI Lang, Google A2UI, or OpenAI DIL. Integrations require their actual schemas and adapters.
 
-## 5. Quick routing examples
+## 5. When the requested output is HTML
+
+If the user explicitly requests an HTML report/page, follow [HTML report contract](references/html-report-contract.md):
+
+- Multi-section HTML uses a real table of contents with **left navigation by default** (top allowed when requested or on narrow screens), following an **h1 → h2 → h3** hierarchy.
+- Data tables offer relevant filters when they help; long tables are paginated **20 rows per page by default**, optionally 50/100, with no page size below 20. The final page can contain fewer than 20 remaining records. Recompute page counts after filtering.
+- Highlight high-priority **success figures in green** and **failure figures in red** near the top; label each metric in text and avoid coloring ordinary values just for decoration.
+- Add pie/bar/line charts only when appropriate to composition/comparison/ordered trends. Charts and summary values must agree with displayed data and have accessible text equivalents.
+- Standalone HTML can include reviewed client-side JS for local **filters, controls, forms, sliders, charts and navigation**; untrusted JSON remains data under a strict allowlist. No executable AI-supplied HTML/JS, no invented API actions, and no fake test data.
+- Default terminal/Markdown output remains Markdown. An HTML file does not grant arbitrary UI capability inside the user's chat host.
+
+See the offline [HTML report example](demo/report.html) and [its renderer logic](demo/report.js). This is a **separate** illustrative data format (`gen-ui-html-report/v1`), not a breaking change to the existing `gen-ui-demo/v1` demo.
+
+## 6. Quick routing examples
 
 **Prompt:** "Review this Java concurrency change. The client is a terminal."
 
@@ -85,7 +98,7 @@ Read [references/renderer-contract.md](references/renderer-contract.md) before p
 
 **Response strategy:** validated JSON using [examples/thread-pool.ui.json](examples/thread-pool.ui.json), plus equivalent Markdown and clear note that the formula is educational.
 
-## 6. Final self-check
+## 7. Final self-check
 
 1. Is the answer useful without any special renderer?
 2. Is the chosen format supported by the actual host, with a complete fallback?
@@ -97,6 +110,7 @@ Read [references/renderer-contract.md](references/renderer-contract.md) before p
 
 - [README](README.md) · [中文说明](README.zh-CN.md)
 - [Renderer contract](references/renderer-contract.md)
+- [HTML report contract](references/html-report-contract.md)
 - [Host integration guidance](docs/integration.md)
 - [Manual behavior evaluation](evals/manual-evaluation.md)
 - [Local validation script](scripts/test-skill.ps1)

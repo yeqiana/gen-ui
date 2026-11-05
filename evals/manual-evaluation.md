@@ -38,3 +38,16 @@ Conclusion: Pass / Limited / Fail / Not tested
 ```
 
 **State:** This is an evaluation plan. It has not been executed against external AI models or manually inspected in a real browser.
+
+## HTML report manual acceptance (separate from the original demo)
+
+Open [demo/report.html](../demo/report.html) from the cloned repository with [report.js](../demo/report.js) beside it. This is an offline *illustrative* dataset, not a real deployment or observed test report.
+
+1. Default navigation is on the **left**; switching to **Top** preserves working section anchors. On mobile width, navigation remains usable. The headings follow h1 → h2 → h3.
+2. Start with 67 records. The table displays **20 records**, then 20, 20, and 7 across four pages. Page-size options are 20/50/100; no 10-row choice exists.
+3. Search by module and filter by status. Counts, pages, pie/bar/line charts, and empty-result message must agree with filtered data.
+4. The top **Success** metric is green and **Failure** metric is red, with labels; ordinary metrics remain neutral. Changing the slow-threshold slider updates the above-threshold count, and **Only above threshold** filters the table.
+5. Apply a valid `gen-ui-html-report/v1` JSON payload. A malformed payload or unexpected script field must be rejected without replacing the last valid report; a tag-like title must display as text.
+6. Confirm no network dependency in offline mode, responsive table overflow, keyboard focus, reduced-motion behavior, and accessible chart descriptions.
+
+Browser-level visual and accessibility checks require manual inspection; Node tests cover core logic and simulated DOM interactions only.

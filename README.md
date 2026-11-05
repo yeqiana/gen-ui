@@ -39,6 +39,12 @@ The current host supports Markdown only.
 
 Put the Skill under your project's `.claude/skills/gen-ui/` or your agent's documented Skills location. For systems without Skill discovery, provide `SKILL.md` as an instruction and reference files when appropriate. A Skill improves content organization; it does not install a visual runtime.
 
+## HTML reports: filters, charts, and navigation
+
+When explicitly asked to produce **HTML**, Gen UI also specifies practical report layouts: left sidebar by default (top navigation optional), hierarchy-based section anchors, meaningful table filters, **20/50/100 rows per page**, success/failure KPI highlighting, appropriate pie/bar/line charts, and safe local forms/sliders. These features run in actual HTML, not in a plain terminal.
+
+Open the [offline HTML report](demo/report.html) (keep [report.js](demo/report.js) beside it) to try the 67-row illustrative dataset. Read the [HTML report contract](references/html-report-contract.md) for accessibility, data validation, pagination, and security constraints. This report format is separate from the existing lightweight UI protocol.
+
 ## Interactive demo
 
 Open [demo/index.html](demo/index.html) in a browser. Drag the slider and inspect the read-only metrics. Paste [the example JSON](examples/thread-pool.ui.json) into the editor to test the safe Renderer. No server, API key, network access, or build is required.

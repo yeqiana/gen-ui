@@ -41,6 +41,10 @@ The included browser demo implements an **illustrative** `gen-ui-demo/v1` protoc
 
 **Not implemented.** A future WebCodex integration may introduce a separate UI message type and an optional frontend renderer without changing local Runner scheduling. A Markdown source view must remain accessible if UI parsing fails. All privileged operations must continue through existing authorization and review flows.
 
+## HTML report deliverables (explicit HTML requests)
+
+A user-requested HTML artifact is distinct from the ordinary Markdown response and the limited `gen-ui-demo/v1` Webview protocol. A report can contain **trusted authored JavaScript** to implement local navigation, filters, 20+ row pagination, SVG charts, and a schema-validated data editor. It must not execute untrusted model-provided JS/HTML. Follow the [HTML report contract](../references/html-report-contract.md) and inspect [the offline example](../demo/report.html).
+
 ## 5. Acceptance criteria
 
 - A terminal-only user receives all essential information in Markdown.
