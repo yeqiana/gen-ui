@@ -3,6 +3,7 @@
   "use strict";
 
   const SIZES = [20, 50, 100];
+  const MAX_JSON_CHARS = 750000;
   const STATUSES = ["success", "failure", "pending"];
   const STATUS_TEXT = { success: "成功", failure: "失败", pending: "待处理" };
   const SVG = "http://www.w3.org/2000/svg";
@@ -111,7 +112,7 @@
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = {
-      SIZES, STATUSES, STATUS_TEXT, validateReport, filterRows, paginateRows,
+      SIZES, MAX_JSON_CHARS, STATUSES, STATUS_TEXT, validateReport, filterRows, paginateRows,
       summarize, groupModules, batchSeries, sample
     };
   }
@@ -241,16 +242,22 @@
   }
   function revealTooltip(element, value) {
     if (!tooltip) return;
-    // Only show floating text when the cell is actually truncated.
+    // Only display overflowing text, and measure the actual painted bubble.
     if (!(element.scrollWidth > element.clientWidth)) return;
     tooltip.textContent = value;
     tooltip.hidden = false;
-    if (typeof element.getBoundingClientRect === "function" && tooltip.style) {
-      const rect = element.getBoundingClientRect();
-      const horizontal = Math.max(12, Math.min(rect.left, (typeof innerWidth === "number" ? innerWidth : 900) - 300));
-      tooltip.style.left = horizontal + "px";
-      tooltip.style.top = Math.max(10, rect.top - 50) + "px";
-    }
+    if (typeof element.getBoundingClientRect !== "function" || !tooltip.style) return;
+    const rect = element.getBoundingClientRect();
+    const bubble = tooltip.getBoundingClientRect();
+    const width = typeof innerWidth === "number" ? innerWidth : 900;
+    const height = typeof innerHeight === "number" ? innerHeight : 700;
+    const padding = 12;
+    const left = Math.max(padding, Math.min(rect.left, width - bubble.width - padding));
+    const above = rect.top - bubble.height - 8;
+    const desiredTop = above >= padding ? above : rect.bottom + 8;
+    const top = Math.max(padding, Math.min(desiredTop, height - bubble.height - padding));
+    tooltip.style.left = left + "px";
+    tooltip.style.top = top + "px";
   }
   function clippedCell(value) {
     const cell = dom("td");
@@ -319,6 +326,8 @@
   }
 
   function render() {
+    // Preserve success feedback after dialog close, but clear it on the next data/navigation update.
+    byId("page-notice").textContent = "";
     const rows = filterRows(report.rows, filter);
     const stats = summarize(rows, filter.threshold);
     byId("report-title").textContent = report.title;
@@ -335,6 +344,7 @@
     hideTooltip();
     for (const row of paging.rows) {
       const tr = dom("tr");
+      tr.dataset.recordId = row.id;
       const statusCell = dom("td");
       statusCell.append(dom("span", STATUS_TEXT[row.status], "status " + row.status));
       const actionCell = dom("td");
@@ -419,12 +429,20 @@
   }
   bind("tab-records", "click", () => setTab("records"));
   bind("tab-rules", "click", () => setTab("rules"));
-  bind("tab-records", "keydown", event => {
-    if (event.key === "ArrowRight") { setTab("rules"); byId("tab-rules").focus?.(); }
-  });
-  bind("tab-rules", "keydown", event => {
-    if (event.key === "ArrowLeft") { setTab("records"); byId("tab-records").focus?.(); }
-  });
+  function handleTabKeys(event) {
+    const selected = event.currentTarget?.id === "tab-records" ? "records" : "rules";
+    let target;
+    if (event.key === "Home") target = "records";
+    else if (event.key === "End") target = "rules";
+    else if (event.key === "ArrowRight" || event.key === "ArrowLeft")
+      target = selected === "records" ? "rules" : "records";
+    else return;
+    event.preventDefault();
+    setTab(target);
+    byId(target === "records" ? "tab-records" : "tab-rules").focus?.();
+  }
+  bind("tab-records", "keydown", handleTabKeys);
+  bind("tab-rules", "keydown", handleTabKeys);
 
   bind("open-create", "click", () => {
     byId("create-status").textContent = "";
@@ -452,10 +470,18 @@
       report = updated;
       updateColumnFilters();
       resetFilters();
+      // Append at the end, then show the page that contains the new record.
+      page = Math.ceil(report.rows.length / filter.size);
+      render();
       byId("report-json").value = JSON.stringify(report, null, 2);
       notice.textContent = "新增记录已加入当前页面";
       notice.dataset.kind = "ok";
       closeDialog("create-dialog");
+      const pageNotice = byId("page-notice");
+      pageNotice.textContent = "新增成功：任务 " + row.id + "，已定位到第 " + page + " 页";
+      pageNotice.dataset.kind = "ok";
+      const newRow = byId("report-rows").querySelector?.("tr:last-child .clip");
+      newRow?.focus?.();
     } catch (error) {
       notice.textContent = "无法新增：" + String(error.message || error);
       notice.dataset.kind = "error";
@@ -467,7 +493,7 @@
   bind("apply-json", "click", () => {
     const notice = byId("json-status");
     try {
-      if (json.value.length > 200000) throw Error("JSON 超过 200000 字符限制");
+      if (json.value.length > MAX_JSON_CHARS) throw Error("JSON 超过 " + MAX_JSON_CHARS + " 字符限制");
       const updated = validateReport(JSON.parse(json.value));
       report = updated;
       updateColumnFilters();

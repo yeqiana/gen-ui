@@ -2,6 +2,14 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
+## Unreleased — reviewed HTML interaction fixes (2026-11-05)
+
+- Position long-text tooltips within actual mobile viewport bounds, measuring the rendered popup dimensions.
+- After appending a record, show its destination page, move focus to the new record, and announce success outside the closing dialog.
+- Expand the JSON import/export limit to 750000 characters so even a valid 1000-row report with escaped strings can be re-imported after pretty printing.
+- Apply HTML rules whenever HTML is the selected artifact, not only when the user names HTML explicitly; retain Markdown as default.
+- Complete tab keyboard interactions with Arrow, Home, End and prevented default scrolling, backed by regression tests.
+
 ## Unreleased — Chinese HTML experience and GEN-UI branding (2026-11-05)
 
 - Enforce nowrap table headers and cells, sticky first column, horizontal scrolling and overflow-only hover/focus tooltips.

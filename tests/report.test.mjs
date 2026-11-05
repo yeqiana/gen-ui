@@ -85,25 +85,30 @@ class FakeNode {
   showModal() { this.open=true; }
   close() { this.open=false; }
   focus() { this.focused=true; }
+  querySelector(selector) {
+    if (selector === "tr:last-child .clip")
+      return this.children.at(-1)?.children[0]?.children[0] ?? null;
+    return null;
+  }
   getBoundingClientRect() { return {left:125,top:130,width:60,height:20}; }
 }
-function boot() {
+function boot(viewport={width:900,height:700}) {
   const ids=new Map(), app=new FakeNode("app");
   app.dataset.navigation="left";
   const doc={
     querySelector(selector) { assert.equal(selector,"[data-report-app]"); return app; },
-    getElementById(name) { if(!ids.has(name))ids.set(name,new FakeNode(name));return ids.get(name); },
+    getElementById(name) { if(!ids.has(name)) { const node=new FakeNode(name); node.id=name; ids.set(name,node); } return ids.get(name); },
     createElement(tag) { return new FakeNode(tag); },
     createElementNS(_namespace,tag) { return new FakeNode(tag); }
   };
-  vm.runInNewContext(read("demo/report.js"), {document:doc}, {filename:"report.js"});
+  vm.runInNewContext(read("demo/report.js"), {document:doc,innerWidth:viewport.width,innerHeight:viewport.height}, {filename:"report.js"});
   return {app,get:id=>doc.getElementById(id)};
 }
 function dispatch(node,event,fields={}) {
   assert.equal(typeof node.listeners[event],"function",node.tagName+" lacks "+event);
   let prevented=false;
   node.listeners[event]({
-    target:{...fields}, key:fields.key,
+    target:{...fields}, currentTarget:node, key:fields.key,
     preventDefault(){prevented=true;}
   });
   return prevented;
@@ -209,6 +214,14 @@ test("页内标签切换不跳转；详情使用右侧抽屉，新增记录使�
   assert.equal(get("create-dialog").open,false);
   assert.equal(Number(get("count-total").textContent),68);
   assert.ok(get("module-filter").children.some(option=>option.value==="新增模块"));
+  assert.match(get("page-info").textContent, /第 61–68 条/);
+  const last = get("report-rows").children.at(-1);
+  assert.equal(last.dataset.recordId, "T-068");
+  assert.equal(last.children[0].children[0].focused, true);
+  assert.match(get("page-notice").textContent, /新增成功.*T-068/);
+  assert.equal(get("page-notice").dataset.kind, "ok");
+  dispatch(get("previous"), "click");
+  assert.equal(get("page-notice").textContent, "", "切换页面后应清理过期的成功提示");
 });
 
 test("JSON 抽屉允许受控数据但拒绝脚本，保留上次合法内容", () => {
@@ -285,4 +298,85 @@ test("手工验收文档与严格 HTML 规范链接存在", () => {
   assert.match(doc,/HTML/);
   assert.match(read("README.zh-CN.md"),/HTML 报告/);
   assert.match(read("scripts/test-skill.ps1"),/tests\/report.test.mjs/);
+});
+
+test("移动端真实宽高测量后，长文本浮层不越过四周边界", () => {
+  const {get}=boot({width:375,height:812});
+  const span=get("report-rows").children[0].children[1].children[0];
+  const tip=get("cell-tooltip");
+  span.scrollWidth=600;
+  span.clientWidth=100;
+  span.getBoundingClientRect=()=>({left:75,top:130,bottom:150,width:100,height:20});
+  tip.getBoundingClientRect=()=>({left:0,top:0,width:351,height:60});
+  dispatch(span,"focus");
+  const x=Number.parseFloat(tip.style.left), y=Number.parseFloat(tip.style.top);
+  assert.equal(tip.hidden,false);
+  assert.ok(x>=12 && x+351<=363, "浮层右边界越界");
+  assert.ok(y>=12 && y+60<=800, "浮层垂直方向越界");
+  span.getBoundingClientRect=()=>({left:75,top:5,bottom:25,width:100,height:20});
+  dispatch(span,"focus");
+  assert.ok(Number.parseFloat(tip.style.top)>=12,"顶部空间不足时浮层应向下");
+});
+
+test("站内标签完整支持方向键、Home、End 与阻止默认滚动", () => {
+  const {get}=boot();
+  assert.equal(dispatch(get("tab-records"),"keydown",{key:"ArrowRight"}),true);
+  assert.equal(get("tab-rules").attributes["aria-selected"],"true");
+  assert.equal(get("tab-rules").focused,true);
+  assert.equal(dispatch(get("tab-rules"),"keydown",{key:"Home"}),true);
+  assert.equal(get("tab-records").attributes["aria-selected"],"true");
+  assert.equal(dispatch(get("tab-records"),"keydown",{key:"End"}),true);
+  assert.equal(get("tab-rules").attributes["aria-selected"],"true");
+  assert.equal(dispatch(get("tab-rules"),"keydown",{key:"ArrowLeft"}),true);
+  assert.equal(get("tab-records").attributes["aria-selected"],"true");
+  assert.equal(dispatch(get("tab-records"),"keydown",{key:"UnrelatedKey"}),false);
+});
+
+test("1000 条合法数据能够格式化后往返导入，同时保留 JSON 输入上限", () => {
+  const rows=Array.from({length:1000},(_,index)=>({
+    id:String(index).padStart(40,"0"),
+    module:"模".repeat(40),
+    status:"failure",durationMs:1000000,batch:12
+  }));
+  const data={version:"gen-ui-html-report/v1",title:"标".repeat(100),rows};
+  const json=JSON.stringify(ui.validateReport(data),null,2);
+  assert.ok(json.length>200000, "此用例必须复现旧的 20 万字符限制缺陷");
+  assert.ok(json.length<ui.MAX_JSON_CHARS);
+  const {get}=boot();
+  get("report-json").value=json;
+  dispatch(get("apply-json"),"click");
+  assert.equal(get("json-status").dataset.kind,"ok");
+  assert.equal(Number(get("count-total").textContent.replaceAll(",","")),1000);
+  dispatch(get("apply-json"),"click");
+  assert.equal(get("json-status").dataset.kind,"ok");
+  get("report-json").value="x".repeat(ui.MAX_JSON_CHARS+1);
+  dispatch(get("apply-json"),"click");
+  assert.equal(get("json-status").dataset.kind,"error");
+  assert.equal(Number(get("count-total").textContent.replaceAll(",","")),1000);
+});
+
+test("HTML 规范适用于最终 HTML 交付物，不改变默认 Markdown 路由",()=>{
+  const skill=read("SKILL.md"),contract=read("references/html-report-contract.md");
+  assert.match(skill,/Whenever the final deliverable is HTML/);
+  assert.match(contract,/whenever HTML is the chosen or required final deliverable/);
+  assert.match(skill,/Do not change ordinary Markdown/);
+  assert.match(contract,/Markdown remains the default/);
+});
+
+test("最大 1000 条、含大量转义字符的合法报告仍可导入", () => {
+  const padded="模" + "\u0000".repeat(39);
+  const rows=Array.from({length:1000}, (_,index)=>({
+    id:String(index).padStart(4,"0") + "\u0000".repeat(36),
+    module:padded, status:"failure", durationMs:1000000, batch:12
+  }));
+  const input=JSON.stringify(ui.validateReport({
+    version:"gen-ui-html-report/v1",title:"标".repeat(100),rows
+  }),null,2);
+  assert.ok(input.length>300000, "用例应覆盖大量转义字符导致的 JSON 膨胀");
+  assert.ok(input.length<ui.MAX_JSON_CHARS, "最大合法数据必须允许再导入");
+  const {get}=boot();
+  get("report-json").value=input;
+  dispatch(get("apply-json"),"click");
+  assert.equal(get("json-status").dataset.kind,"ok");
+  assert.equal(Number(get("count-total").textContent.replaceAll(",","")),1000);
 });
