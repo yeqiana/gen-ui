@@ -41,6 +41,18 @@ Conclusion: Pass / Limited / Fail / Not tested
 
 ## HTML report manual acceptance (separate from the original demo)
 
+### 中文 HTML 页面专项验收
+
+1. 表头和数据全部不换行；横向滚动时首列保持固定。让模块内容超长，验证省略号及悬浮全文：**只在实际截断时出现**，鼠标移出/失焦/表格滚动后隐藏，键盘聚焦同样可以查看。
+2. 编号搜索、模块、状态、批次与耗时阈值分别对应实际列字段；更新筛选后，数据量、成功/失败数量、图表与分页必须同步；每页 20/50/100，最后一页不补虚拟记录。
+3. “页内标签”按钮只切换当前面板；标注“新标签页打开”的链接确实设置 `target="_blank"`、`rel="noopener noreferrer"`。测试键盘焦点及左右方向键切换。
+4. 页面所有非必要可见文本使用中文，保留代码标识、品牌和原始数据。除非真正改善理解，不堆积正文卡片。
+5. 测试新增记录弹窗、详情抽屉、JSON 数据抽屉的打开/关闭、字段验证、非法数据拒绝与表格联动；不应有任意脚本执行或后台 API 调用。
+6. 验证 [8 个本地品牌 SVG 图标](../assets/icons/README.md) 加载正常，且仅在导航、页眉、工具区和页脚等非正文位置合理使用。
+7. 在真实浏览器进行 1440px、1024px、375px 三档视觉与键盘访问验收。**Node 模拟 DOM 测试不等于完成浏览器人工验收。**
+
+
+
 Open [demo/report.html](../demo/report.html) from the cloned repository with [report.js](../demo/report.js) beside it. This is an offline *illustrative* dataset, not a real deployment or observed test report.
 
 1. Default navigation is on the **left**; switching to **Top** preserves working section anchors. On mobile width, navigation remains usable. The headings follow h1 → h2 → h3.
