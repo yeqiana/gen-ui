@@ -51,7 +51,7 @@ git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
 
 新增 [可信示例 Chrome 自动复验脚本](tests/chrome-report-smoke.mjs)：在本地独立运行 `node tests/chrome-report-smoke.mjs`，覆盖 375/768/1440px、表格焦点、合法模块 `all` 筛选、超长文本提示和新增记录反馈。此脚本不会自动运行未知 Agent HTML，也不会调用模型。
 
-[2026-11-05 验证基线](evals/real-agent-baseline-2026-11-05.md)如实说明：本地 Runner 为 SYSTEM 身份，无法访问桌面已登录的 Codex，真实模型生成用例仍标记为**未执行**。
+[2026-11-05 验证基线](evals/real-agent-baseline-2026-11-05.md)已更新：桌面用户会话下 Codex CLI 登录**已验证成功**，但 [HTML04 真实生成尝试](evals/codex-user-session-attempt-2026-11-05.md)遭 Windows 命令执行策略拒绝，未生成产物；Agent 遵循率尚未测量。
 
 ## Agent 输出回归评测
 

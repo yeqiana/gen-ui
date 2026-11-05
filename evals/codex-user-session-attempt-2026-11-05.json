@@ -1,0 +1,45 @@
+{
+  "schema": "gen-ui-agent-attempt/v1",
+  "date": "2026-11-05",
+  "caseId": "HTML04",
+  "sourceCommit": "f98d673cd67b88f421c425f0e5b5cfbe48f75194",
+  "runtime": {
+    "codexCli": "0.162.1",
+    "interactiveWindowsSession": 1,
+    "accountRole": "interactive-user",
+    "cliAuthenticated": true,
+    "authProbeExitCode": 0
+  },
+  "attempt": {
+    "outcome": "blocked-by-execution-policy",
+    "agentStarted": true,
+    "modelTurnCompleted": true,
+    "artifactsGenerated": 0,
+    "staticGate": "not-run",
+    "browserAcceptance": "not-run",
+    "skillCompliance": "not-measured",
+    "toolErrorClass": "exec_command/CreateProcess blocked by policy before PowerShell launch",
+    "modelReported": "Could not read requested Skill or create files because the command tool was refused",
+    "observedStart": "2026-11-05T19:03:41+08:00",
+    "observedEnd": "2026-11-05T19:04:03+08:00",
+    "modelReportedTokenUsage": {
+      "inputTokens": 42650,
+      "outputTokens": 415,
+      "disclaimer": "Codex JSONL turn usage; not invoice or billing amount"
+    }
+  },
+  "safeguards": {
+    "sandbox": "workspace-write",
+    "ephemeralSession": true,
+    "ignoredGlobalUserConfig": true,
+    "copiedCredentials": false,
+    "bypassedPolicy": false,
+    "touchedSourceRepository": false,
+    "changedExistingTasks": false,
+    "dedicatedScheduledTaskRemoved": true
+  },
+  "upstreamAnalogy": "https://github.com/openai/codex/issues/59314",
+  "limit": "A similar public Windows issue is known, but the exact internal rejecting rule was not independently identified.",
+  "privateEvidence": "Original Codex JSONL/stderr/final message kept locally outside the public repository; not published.",
+  "verifiedPassRate": null
+}

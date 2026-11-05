@@ -65,7 +65,7 @@ Run a **real Chrome/Edge regression against the trusted repository demo** with N
 node tests/chrome-report-smoke.mjs
 ~~~
 
-The script checks three viewports, keyboard focus, table filtering, tooltips, and newly created records. It intentionally **does not accept arbitrary AI-generated HTML**. See the [local verification baseline](evals/real-agent-baseline-2026-11-05.md) and [saved Chrome evidence](evals/chrome-demo-baseline-2026-11-05.json) and [real-Agent evaluation instructions](evals/agent-evaluation.md). Current real-Agent generation status: **not executed** because the registered SYSTEM Runner cannot access the separately logged-in desktop Codex session.
+The script checks three viewports, keyboard focus, table filtering, tooltips, and newly created records. It intentionally **does not accept arbitrary AI-generated HTML**. See the [local verification baseline](evals/real-agent-baseline-2026-11-05.md) and [saved Chrome evidence](evals/chrome-demo-baseline-2026-11-05.json) and [real-Agent evaluation instructions](evals/agent-evaluation.md). Updated real-Agent status: the desktop user's Codex CLI login was **verified**, but the actual HTML04 attempt was **blocked by a Windows exec_command policy rejection** before any files could be produced. No Agent compliance score is claimed; see the [attempt evidence](evals/codex-user-session-attempt-2026-11-05.md).
 
 ## Checks
 

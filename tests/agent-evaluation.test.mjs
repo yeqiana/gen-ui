@@ -108,3 +108,21 @@ test("真实 Chrome 示例验收证据保留且明确声明非 Agent 生成",()=
     assert.equal(detail.buttons,detail.uniqueLabels);
   }
 });
+
+test("真实 Codex 调用记录不得伪装为 Skill 合规通过",()=>{
+  const file=path.join(repo,"evals/codex-user-session-attempt-2026-11-05.json");
+  const record=JSON.parse(fs.readFileSync(file,"utf8"));
+  assert.equal(record.schema,"gen-ui-agent-attempt/v1");
+  assert.equal(record.caseId,"HTML04");
+  assert.equal(record.runtime.cliAuthenticated,true);
+  assert.equal(record.attempt.agentStarted,true);
+  assert.equal(record.attempt.modelTurnCompleted,true);
+  assert.equal(record.attempt.artifactsGenerated,0);
+  assert.equal(record.attempt.staticGate,"not-run");
+  assert.equal(record.attempt.browserAcceptance,"not-run");
+  assert.equal(record.attempt.skillCompliance,"not-measured");
+  assert.equal(record.verifiedPassRate,null);
+  assert.equal(record.safeguards.copiedCredentials,false);
+  assert.equal(record.safeguards.bypassedPolicy,false);
+  assert.equal(record.safeguards.dedicatedScheduledTaskRemoved,true);
+});

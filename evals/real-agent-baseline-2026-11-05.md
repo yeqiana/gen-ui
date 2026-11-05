@@ -2,51 +2,45 @@
 
 ## 执行结果
 
-本基线严格区分仓库可信示例验证、静态检查工具和真实 Coding Agent 生成结果。
+本基线分别记录：可信仓库演示的功能验证、离线产物质量门禁、真实 Codex 用户会话验证、真实 Agent 交付物评测。四者不能混为一谈。
 
 | 验收对象 | 状态 | 证据 |
 | --- | --- | --- |
-| 仓库 Node 回归 | 通过 | scripts/test-skill.ps1 |
-| 仓库 demo 的真实 Chrome 交互 | 通过 | tests/chrome-report-smoke.mjs，原始结果：chrome-demo-baseline-2026-11-05.json |
-| Agent 产物静态门禁自测 | 通过 | tests/agent-evaluation.test.mjs |
-| HTML01、HTML02、HTML03、HTML04、MD01 真实 Agent 生成 | **未执行** | 不存在真实 Agent 产物，不能计算模型通过率 |
+| 仓库 Node 回归 | 通过 | `scripts/test-skill.ps1` |
+| 仓库 demo 的真实 Chrome 交互 | 通过 | `tests/chrome-report-smoke.mjs` 与 `chrome-demo-baseline-2026-11-05.json` |
+| Agent 产物静态门禁自测 | 通过 | `tests/agent-evaluation.test.mjs` |
+| 桌面用户会话 Codex CLI 登录 | **通过** | 用户会话 1、CLI `0.162.1`、登录退出码 0 |
+| `HTML04` 真实 Codex 生成任务 | **已启动，内部命令执行被策略阻止** | [执行记录](codex-user-session-attempt-2026-11-05.md) |
+| `HTML01`、`HTML02`、`HTML03`、`MD01` 的真实模型生成 | **未执行** | 未取得模型产物 |
+| 实际 Agent Skill 遵循率 | **未测量** | 无可以验收的真实 Agent HTML 交付物 |
 
 ## 浏览器基线
 
-对项目内自行编写、已审查的 demo/report.html，真实 Chrome 验证了：
+在本地 Chrome 对已审查的 `demo/report.html` 验证：375/768/1440px 页面宽度、20 条记录的键盘焦点与按钮名称、合法模块 `all` 的筛选与重置、截断提示的尺寸响应，以及新增第 68 条记录的定位与反馈。
 
-- 375 / 768 / 1440px 下：20 条数据、无无效文本键盘焦点，所有详情操作都有唯一辅助技术名称。
-- 合法模块名称 all 能与“全部模块”区分，独立筛选及重置正常。
-- 合法超长文本的截断焦点随布局更新，悬浮提示不越出移动端屏幕。
-- 新增第 68 条模拟记录后，记录可见、焦点正确、成功提示保留。
-
-复验命令：
+重新执行：
 
     node tests/chrome-report-smoke.mjs
-
-可选保存 JSON 证据：
-
     node tests/chrome-report-smoke.mjs --report "D:\temp\gen-ui-browser-report.json"
 
-此脚本只执行仓库可信示例，不允许向其传入任意 Agent 生成 HTML。不是完整 WCAG 人工验收。
+此脚本只操作可信示例，不执行外部未知 Agent 代码；并不等于完整的 WCAG 人工验收。
 
-## 本地 Codex 阻塞
+## Codex 环境验证的真实结论
 
-2026-11-05，在已注册的 WebCodex 本地 Runner 中观察到：
+2026-11-05 先前由后台 `SYSTEM` Runner 执行 `codex login status` 返回 `Not logged in`，但这**不能证明桌面用户未登录**。
 
-- codex-cli 0.162.1 已安装，但 codex login status 返回 Not logged in。
-- Runner 实际运行身份为 NT AUTHORITY\SYSTEM，与用户桌面登录会话并非同一个身份，不能据此判定桌面版 Codex 未登录。
-- 本地 Ollama / LM Studio 服务端口 11434 / 1234 未监听。
-- 未读取、复制、迁移任何登录凭据，也未启动任何消耗付费额度的模型生成任务。
+随后在桌面用户交互会话中建立了一次性、普通权限计划任务，运行同一 CLI 登录检查，退出码为 **0**，已证实登录成功，未复制 Token 或认证文件。
 
-因此尚无可信的真实 Agent 输出，不得声称模型合规率或 Agent 通过率。
+在该会话下真实启动了 `HTML04` Codex 生成任务，模型返回了完整轮次事件，但内部 `exec_command` 在启动 PowerShell 之前提示 `CreateProcess ... blocked by policy`，因此 **没有产生 `report.html` 等任何交付文件**。这属于执行环境受阻，不能算作 HTML 规范合规或不合规。
 
-## 后续真实 Agent 验收步骤
+[详细记录及脱敏机器可读证据](codex-user-session-attempt-2026-11-05.md)保留实际执行时间、模型用量和安全边界。此现象与公开的 [Windows CLI 问题 #59314](https://github.com/openai/codex/issues/59314) 相似，但尚未确认相同的底层拒绝规则。
 
-1. 在本人已登录的 Codex 用户会话中，按 evals/agent-cases.json 运行一组真实提示词并加载本仓库的 Skill。
-2. 将原始产物 HTML（及 CSS/JS）或 Markdown 保存在独立目录，不把 demo 示例伪装为模型生成物。
-3. 使用 scripts/evaluate-agent-output.mjs 对产物执行静态门禁，并保存输出 JSON。
-4. 审查生成代码安全后，再手动通过浏览器验证筛选、分页、图表和键盘行为，并保存截图。
-5. 记录模型版本、时间、提示词、生成文件、人工验收结论，未执行的项保留“未执行”。
+测试后已注销新增的临时计划任务；WebCodex 和 StoryOS 的原有任务未修改。
 
-这是一份真实且可重复的工程验证基线，不是模型生成效果报告。
+## 下一步准入条件
+
+待 Codex 自身在**不关闭沙盒、不绕过策略**的情况下能够正常执行受控的读取和文件写入后，再对 HTML04 重新生成，随后用 `scripts/evaluate-agent-output.mjs` 检查实际产物，并在安全审查后做真实浏览器验收。
+
+由于本次已有真实模型调用，不能再写“完全没有消耗模型额度”；Codex JSONL 已记录了实际模型 token 用量，但并未核实套餐计费/额度变化。
+
+这是工程验证记录，**不表示模型已经完成或通过 GEN-UI 页面生成测试**。
