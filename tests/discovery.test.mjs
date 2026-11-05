@@ -10,7 +10,7 @@ const docs = [
   "SKILL.md", "README.md", "README.zh-CN.md", "CHANGELOG.md",
   "docs/integration.md", "docs/faq.md", "docs/geo.md", "docs/geo.zh-CN.md",
   "evals/manual-evaluation.md", "evals/discovery-baseline.md",
-  "references/renderer-contract.md", "examples/code-review.md",
+  "references/renderer-contract.md", "references/html-report-contract.md", "examples/code-review.md",
   "examples/acceptance-plan.md", "examples/thread-pool.md",
   "examples/thread-pool.zh-CN.md"
 ];

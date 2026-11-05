@@ -47,6 +47,12 @@ git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
 
 安装此 Skill 并不会修改本地 Runner 或替换模型客户端。
 
+## HTML 报告增强能力
+
+当用户明确要求**生成 HTML 报告**时，Gen UI 会采用真正的网页交互能力：默认左侧目录导航（可切换顶部），按大标题、小标题建立锚点；表格按实际字段提供筛选，长表格默认 **每页 20 条**，可选 50/100（最后一页允许少于 20 条）；开头重点的成功数字用绿色、失败数字用红色突出，普通数值保持中性。可按数据需要使用饼图、柱状图、折线图，以及本地受控 JSON、表单和滑块。
+
+查看 [HTML 报告示例](demo/report.html)（需与 [report.js](demo/report.js) 放在一起）及 [英文 HTML 规范](references/html-report-contract.md)。示例使用 67 条**虚构数据**，仅用于验证分页、筛选与交互；不代表真实测试报告。没有明确 HTML 请求时继续遵循 Markdown 优先策略。
+
 ## 离线交互 Demo
 
 浏览器打开 [demo/index.html](demo/index.html)，调节核心线程数滑块即可实时更新演示指标。也可以把 [示例 JSON](examples/thread-pool.ui.json) 粘贴到编辑框，测试正常和非法协议的处理。

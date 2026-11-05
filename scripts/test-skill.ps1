@@ -28,7 +28,11 @@ $required = @(
   "examples/acceptance-plan.md",
   "examples/thread-pool.zh-CN.md",
   "examples/thread-pool.ui.zh-CN.json",
-  "CHANGELOG.md"
+  "CHANGELOG.md",
+  "references/html-report-contract.md",
+  "demo/report.html",
+  "demo/report.js",
+  "tests/report.test.mjs"
 )
 foreach ($name in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $root $name) -PathType Leaf)) {
@@ -72,7 +76,10 @@ if ($null -eq $node) {
 & node --check (Join-Path $root "demo/renderer.js")
 if ($LASTEXITCODE -ne 0) { throw "Renderer JS 语法失败" }
 Write-Output "[PASS] Renderer JS 语法"
+& node --check (Join-Path $root "demo/report.js")
+if ($LASTEXITCODE -ne 0) { throw "HTML report JS syntax failed" }
+Write-Output "[PASS] HTML report JS syntax"
 
-& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs")
+& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
