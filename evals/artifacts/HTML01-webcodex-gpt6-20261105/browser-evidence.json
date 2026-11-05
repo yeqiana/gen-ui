@@ -1,0 +1,71 @@
+{
+  "case": "HTML01",
+  "producer": "ChatGPT GPT-6 via WebCodex",
+  "localCodexCliUsed": false,
+  "viewports": {
+    "375": {
+      "width": 375,
+      "rows": 20,
+      "total": "48",
+      "success": "16",
+      "failure": "16",
+      "pending": "16",
+      "charts": 3,
+      "overflow": false,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "extraFocus": 0
+    },
+    "768": {
+      "width": 768,
+      "rows": 20,
+      "total": "48",
+      "success": "16",
+      "failure": "16",
+      "pending": "16",
+      "charts": 3,
+      "overflow": false,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "extraFocus": 0
+    },
+    "1440": {
+      "width": 1440,
+      "rows": 20,
+      "total": "48",
+      "success": "16",
+      "failure": "16",
+      "pending": "16",
+      "charts": 3,
+      "overflow": false,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "extraFocus": 0
+    }
+  },
+  "tests": {
+    "pagination": {
+      "rows": [
+        20,
+        20,
+        8
+      ],
+      "info": "第 3 / 3 页，共 48 条模拟记录"
+    },
+    "filter": {
+      "c": "16",
+      "s": "16",
+      "ids": [
+        "T-004"
+      ],
+      "reset": "48"
+    },
+    "pageSize": {
+      "rows": 48,
+      "info": "第 1 / 1 页，共 48 条模拟记录"
+    }
+  },
+  "timestamp": "2026-11-05T12:21:01.437Z",
+  "runtimeErrors": [],
+  "result": "pass"
+}

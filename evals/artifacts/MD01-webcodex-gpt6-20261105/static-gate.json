@@ -1,0 +1,33 @@
+{
+  "caseId": "MD01",
+  "caseName": "纯 Markdown 宿主回退",
+  "format": "markdown",
+  "staticGate": "pass",
+  "checks": [
+    {
+      "id": "markdown-format",
+      "label": "Markdown 标题或列表",
+      "passed": true
+    },
+    {
+      "id": "no-html-document",
+      "label": "没有 HTML 文档",
+      "passed": true
+    },
+    {
+      "id": "no-fake-widgets",
+      "label": "没有伪造的终端交互控件",
+      "passed": true
+    }
+  ],
+  "manualChecks": [
+    "明确区分建议与实际已验证的内容",
+    "Markdown 文字在终端可读"
+  ],
+  "caveat": "静态启发式检查不能证明模型实际运行、筛选联动、图表真实性、键盘体验或用户视觉质量。",
+  "artifact": "evals/artifacts/MD01-webcodex-gpt6-20261105/answer.md",
+  "claimedProducer": "ChatGPT GPT-6 via WebCodex (not local Codex CLI)",
+  "producerVerified": false,
+  "evaluatedAt": "2026-11-05T12:22:20.093Z",
+  "artifactPathRedacted": true
+}
