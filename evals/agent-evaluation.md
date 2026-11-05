@@ -46,7 +46,8 @@
 
 - demo/report.html 为手写的离线示例，允许作为**静态门禁自身的正例**；它不构成真实 Coding Agent 的运行证据。
 - tests/agent-evaluation.test.mjs 对门禁自身做正例、错误样例与路径安全测试。
-- **HTML04 已真实启动 Codex 模型，但执行工具阻塞、无有效产物；其他四组未执行，因此 Agent 合规率仍未测量。**
+- **本地 Codex CLI 的 HTML04 尝试仍受命令执行策略阻断，未获得交付文件；不得将其视为模型合规通过。**
+- **另有 WebCodex + ChatGPT GPT-6 链路下的 HTML01、MD01 两份真实生成物完成静态验收，HTML01 另通过 Chrome 交互回归。** 这不是本地 Codex CLI 的评测结果，其余三个用例仍未在该链路执行。详见 [WebCodex Agent 首轮基线](webcodex-agent-baseline-2026-11-05.md)。
 - 静态门禁仅采用启发式模式匹配，不解析或执行任意模型生成脚本，不调用网络。静态通过不代表图表数据、ARIA 交互或 WCAG 完全正确。
 
 建议每次调整 Skill 规范后，在相同模型、相同宿主与同一提示词下再次生成、人工审查并留证；不要把本地静态门禁的通过数当成模型效果数据。
