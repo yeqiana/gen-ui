@@ -2,6 +2,12 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
+## Unreleased — interactive-user Codex verification evidence (2026-11-05)
+
+- Confirm native Codex CLI authentication from a separate ordinary-permission Windows desktop-user session, correcting the misleading SYSTEM Runner login result.
+- Record a real HTML04 model attempt blocked by `exec_command` / Windows `CreateProcess` policy before local file generation; **do not** report a passing Agent benchmark.
+- Preserve sanitized machine-readable outcome and safe remediation guidance; leave original WebCodex/StoryOS services intact and unregister the temporary execution task.
+
 ## Unreleased — reproducible browser QA and evaluation guardrails (2026-11-05)
 
 - Add a dependency-free, real Chrome smoke suite for the trusted HTML demo at 375/768/1440px, including accessibility focus, module sentinel, tooltips and create feedback.
