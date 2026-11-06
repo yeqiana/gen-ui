@@ -28,6 +28,18 @@ test("CI runs every locally supported Chrome suite and all three new Agent cases
  assert.match(yaml,/node-version:\s*"22"/);
  assert.match(yaml,/persist-credentials:\s*false/);
 });
+test("HTML visual contract requires a persistent icon rail, image-text composition and restrained headings",()=>{
+ const skill=fs.readFileSync(new URL("../SKILL.md",import.meta.url),"utf8");
+ const contract=fs.readFileSync(new URL("../references/html-report-contract.md",import.meta.url),"utf8");
+ assert.match(skill,/Collapsed navigation is an icon rail, never a hidden sidebar/);
+ assert.match(skill,/Image-and-text first when visuals are supported/);
+ assert.match(skill,/typically 1–4 per page/);
+ assert.match(contract,/keep the expand control inside the rail/);
+ assert.match(contract,/Do not put a small subtitle immediately below the main H1/);
+ assert.match(contract,/image \+ concise Chinese explanation/);
+ assert.match(contract,/usually 1–4 meaningful anchors per page/);
+});
+
 test("Agent browser CLI malformed inputs fail closed (cannot be green by accident)",()=>{
  const res=spawnSync(process.execPath,[path.join(root,"tests/chrome-agent-output-smoke.mjs"),"--case","HTML02","--input","missing.html","--report","unused.json"],{encoding:"utf8",timeout:8000});
  assert.notEqual(res.status,0);

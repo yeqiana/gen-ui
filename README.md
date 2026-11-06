@@ -41,7 +41,7 @@ Put the Skill under your project's `.claude/skills/gen-ui/` or your agent's docu
 
 ## Multi-page directory portal (offline iframe shell)
 
-When the deliverable names a **directory**, Gen UI recursively discovers all eligible `.html` / `.htm` files in nested folders, preserves every original page and relative assets, and builds a lightweight entry with a **real iframe as the main content**. Page titles select independent documents; existing identified H2 headings can appear below each page as child links. The monochrome rail collapses on desktop and opens/closes on mobile. No giant concatenated HTML output or decorative gradient sidebar.
+When the deliverable names a **directory**, Gen UI recursively discovers all eligible `.html` / `.htm` files in nested folders, preserves every original page and relative assets, and builds a lightweight entry with a **real iframe as the main content**. Page titles select independent documents; existing identified H2 headings can appear below each page as child links. The monochrome rail collapses to a persistent single-column icon rail (never disappears); its expand/collapse control stays inside the rail in both states. No giant concatenated HTML output or decorative gradient sidebar.
 
 ~~~powershell
 node scripts/build-html-portal.mjs --dir "D:\\reports" --title "Project acceptance"
@@ -55,7 +55,7 @@ Try the [four-page offline portal](demo/portal-pages/index.html), inspect the [g
 
 ## HTML reports: filters, charts, and navigation
 
-When HTML is the selected output, Gen UI applies a **Chinese-first interface** (except technical names and actual source data), nonwrapping headers/cells, horizontal scrolling with optional sticky first column, overflow tooltips on hover/focus, and column-specific filters. Internal tabs and new browser tabs are marked with different visible Chinese labels. Favor a lean report with forms, dialogs and drawers over decorative cards, and use the original [GEN-UI SVG icon set](assets/icons/README.md) in non-body locations.
+When HTML is the selected output, Gen UI applies a **Chinese-first interface** (except technical names and actual source data), nonwrapping headers/cells, horizontal scrolling with optional sticky first column, overflow tooltips on hover/focus, and column-specific filters. Internal tabs and new browser tabs are marked with different visible Chinese labels. Favor a lean report with forms, dialogs and drawers over decorative cards. Keep one clear H1 with no subtitle directly below it, group related content, and prefer meaningful image-and-text explanations when visuals are supported. Use only a few meaningful emoji per page; never rely on them instead of labels. A collapsed sidebar remains as a vertical icon rail, with its toggle inside the rail. See the [GEN-UI visual and HTML rules](references/html-report-contract.md), [visual acceptance checklist](evals/visual-design-acceptance-2026-11-06.md), and [SVG icon set](assets/icons/README.md).
 
 Try the [offline Chinese HTML report](demo/report.html) with its [stylesheet](demo/report.css), [JavaScript](demo/report.js) and [local brand icons](assets/icons/README.md). It demonstrates a 67-row **fictional** dataset; all controls are local and no server is contacted automatically. See [HTML report contract](references/html-report-contract.md).
 

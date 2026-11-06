@@ -51,8 +51,8 @@ try{
  const targets=await cmd("Target.getTargets");const childTarget=targets.targetInfos?.find(x=>x.type==="iframe"&&x.url.includes(pageSwitch.after.split("#")[0].split("/").at(-1)));
  if(!childTarget)throw Error("iframe renderer not found for selected nested page");
  evidence.checks.nestedFrameLoaded=true;
- const collapsed=await evalJS("(()=>{const c=document.querySelector('#collapse'),app=document.querySelector('#portal');c.click();const hidden=app.classList.contains('is-collapsed');c.click();return{hidden,reopened:!app.classList.contains('is-collapsed')}})()");
- if(!collapsed.hidden||!collapsed.reopened)throw Error("collapse interaction "+JSON.stringify(collapsed));
+ const collapsed=await evalJS("(()=>{const c=document.querySelector('#collapse'),app=document.querySelector('#portal'),rail=document.querySelector('#rail');const inside=rail.contains(c);c.click();const links=[...rail.querySelectorAll('.page-link')],labels=[...rail.querySelectorAll('.page-link .label')];const iconRail={collapsed:app.classList.contains('is-collapsed'),visible:getComputedStyle(rail).display!=='none',width:rail.getBoundingClientRect().width,inside,buttonVisible:c.getBoundingClientRect().width>0,labelsHidden:labels.every(x=>getComputedStyle(x).display==='none'),iconsVisible:links.length===10&&links.every(x=>getComputedStyle(x.querySelector('.nav-glyph')).display!=='none')};c.click();return{iconRail,reopened:!app.classList.contains('is-collapsed')}})()");
+ if(!collapsed.iconRail.collapsed||!collapsed.iconRail.visible||collapsed.iconRail.width<=40||collapsed.iconRail.width>80||!collapsed.iconRail.inside||!collapsed.iconRail.buttonVisible||!collapsed.iconRail.labelsHidden||!collapsed.iconRail.iconsVisible||!collapsed.reopened)throw Error("icon rail interaction "+JSON.stringify(collapsed));
  evidence.checks.desktopCollapse=collapsed;
  if(evidence.errors.length)throw Error("browser runtime errors: "+evidence.errors.join(","));
  evidence.result="pass";

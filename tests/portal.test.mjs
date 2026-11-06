@@ -173,4 +173,11 @@ test("CLI 与图标全部为真正的独立源文件，且使用单色剪影",()
  const shell=fs.readFileSync(path.join(root,"assets/portal-shell.css"),"utf8");
  assert.match(shell,/\.portal\.is-collapsed/);
  assert.match(shell,/@media\(max-width:700px\)/);
+ assert.match(shell,/\.is-collapsed \.rail-head\{[^}]*flex-direction:column/);
+ assert.match(shell,/\.is-collapsed \.page-link\{[^}]*justify-content:center/);
+ assert.match(shell,/\.nav-glyph\[data-kind="table"\]/);
+ assert.match(shell,/\.nav-glyph\[data-kind="status"\]/);
+ assert.doesNotMatch(shell,/\.is-collapsed \.rail\s*\{\s*display:\s*none/);
+ const portal=fs.readFileSync(path.join(root,"demo/portal-pages/index.html"),"utf8");
+ assert.match(portal,/<aside class="rail" id="rail"[\s\S]*?<button class="icon-button rail-close" id="collapse"/);
 });
