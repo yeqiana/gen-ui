@@ -40,14 +40,16 @@
 
 本脚本通过本地真实 Chrome/Edge 检查自带演示页面的关键交互，不依赖外部服务、不执行模型生成的未知 HTML、不耗费 Codex/Claude 额度。结果也可使用 --report 参数输出 JSON。
 
-**更新（2026-11-05）：** 现已通过独立的普通权限桌面用户会话验证原生 Codex CLI 登录成功。真实启动了 HTML04 提示词，但其 `exec_command` 在执行 PowerShell 前被策略阻止，**0 个交付文件**。详见 [执行记录](codex-user-session-attempt-2026-11-05.md)。其他四个用例未运行，模型遵循率尚未测量。
+**历史记录（2026-11-05，原生 Codex CLI）：** 当时通过桌面用户会话验证登录成功，但 HTML04 的 `exec_command` 执行被策略阻止，**0 个交付文件**。详见 [执行记录](codex-user-session-attempt-2026-11-05.md)。这次失败与随后完成的 WebCodex + ChatGPT GPT-6 评测属于不同执行通道。
 
 ## 当前实际状态
 
 - demo/report.html 为手写的离线示例，允许作为**静态门禁自身的正例**；它不构成真实 Coding Agent 的运行证据。
 - tests/agent-evaluation.test.mjs 对门禁自身做正例、错误样例与路径安全测试。
 - **本地 Codex CLI 的 HTML04 尝试仍受命令执行策略阻断，未获得交付文件；不得将其视为模型合规通过。**
-- **另有 WebCodex + ChatGPT GPT-6 链路下的 HTML01、MD01 两份真实生成物完成静态验收，HTML01 另通过 Chrome 交互回归。** 这不是本地 Codex CLI 的评测结果，其余三个用例仍未在该链路执行。详见 [WebCodex Agent 首轮基线](webcodex-agent-baseline-2026-11-05.md)。
+- **WebCodex + ChatGPT GPT-6 路线已覆盖全部五组固定提示词。** HTML01、MD01 属于 [11 月 5 日的旧基线](webcodex-agent-baseline-2026-11-05.md)，HTML02–04 属于 11 月 6 日基于更新后 Skill 的 [第二轮评测](webcodex-agent-matrix-2026-11-06.md)。所有静态项通过，四组 HTML 有真实 Chrome 证据；**跨版本覆盖不等于单版本的模型遵循率**，也不是本地 Codex CLI 的评测结果。
 - 静态门禁仅采用启发式模式匹配，不解析或执行任意模型生成脚本，不调用网络。静态通过不代表图表数据、ARIA 交互或 WCAG 完全正确。
 
 建议每次调整 Skill 规范后，在相同模型、相同宿主与同一提示词下再次生成、人工审查并留证；不要把本地静态门禁的通过数当成模型效果数据。
+
+最新统一报告：[GEN-UI 五组 Agent 输出评测矩阵（2026-11-06）](webcodex-agent-matrix-2026-11-06.md)。
