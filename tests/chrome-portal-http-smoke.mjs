@@ -25,14 +25,15 @@ try{
  const portServer=net.createServer();
  await new Promise(res=>portServer.listen(0,"127.0.0.1",res));
  const port=portServer.address().port;await new Promise(res=>portServer.close(res));
- child=spawn(chrome,["--headless=new","--disable-extensions","--disable-gpu","--disable-background-networking","--no-proxy-server","--no-first-run","--remote-debugging-address=127.0.0.1","--remote-allow-origins=*","--remote-debugging-port="+port,"--user-data-dir="+profile,local.url],{stdio:"ignore",windowsHide:true});
+ child=spawn(chrome,["--headless=new","--disable-extensions","--disable-gpu","--disable-background-networking","--no-proxy-server","--no-first-run","--remote-debugging-address=127.0.0.1","--remote-allow-origins=*","--remote-debugging-port="+port,"--user-data-dir="+profile,"about:blank"],{stdio:"ignore",windowsHide:true});
  let pages;
  for(let n=0;n<100;n++){
   try{const r=await fetch("http://127.0.0.1:"+port+"/json");if(r.ok){pages=await r.json();break}}catch{}
   await sleep(100);
  }
  if(!pages)throw Error("Chrome CDP 未连接");
- const page=pages.find(x=>x.type==="page"&&x.url.startsWith(local.url.split("/").slice(0,3).join("/")))??pages.find(x=>x.type==="page");
+ // Launch a blank tab first; navigations racing with the startup URL can abort on CI.
+ const page=pages.find(x=>x.type==="page"&&x.url==="about:blank")??pages.find(x=>x.type==="page");
  if(!page)throw Error("缺少浏览器页面目标");
  ws=new WebSocket(page.webSocketDebuggerUrl);
  await new Promise((resolve,reject)=>{ws.addEventListener("open",resolve,{once:true});ws.addEventListener("error",reject,{once:true})});
@@ -42,7 +43,7 @@ try{
  async function ev(expression,sessionId){const r=await cmd("Runtime.evaluate",{expression,returnByValue:true,awaitPromise:true},sessionId);if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result?.value}
  await cmd("Page.enable");await cmd("Runtime.enable");
  const navigation=await cmd("Page.navigate",{url:local.url});
- // The CDP page target can appear before its first navigation finishes.
+ // Single CDP navigation avoids racing Chrome startup. A non-blank target is not trusted until ready.
  let ready=false;
  for(let attempts=0;attempts<70;attempts++){
   try{ready=!!(await ev("document.getElementById(\'page-frame\')?.getAttribute(\'src\')"));}catch{}
