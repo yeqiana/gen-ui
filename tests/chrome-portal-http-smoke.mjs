@@ -21,7 +21,12 @@ try{
  buildPortal({dir,title:"测试"});
  local=await startPortalServer({dir,port:0});
  const requestTrace=[];
- local.server.on("request",req=>{if(requestTrace.length<12)requestTrace.push({method:req.method,path:req.url,host:req.headers.host})});
+ local.server.on("request",(req,res)=>{
+  if(requestTrace.length>=15)return;
+  const item={method:req.method,path:req.url,host:req.headers.host};requestTrace.push(item);
+  res.once("finish",()=>{item.status=res.statusCode;item.contentType=res.getHeader("content-type")});
+  res.once("close",()=>{item.closed=true;item.writableFinished=res.writableFinished});
+ });
  const portServer=net.createServer();
  await new Promise(res=>portServer.listen(0,"127.0.0.1",res));
  const port=portServer.address().port;await new Promise(res=>portServer.close(res));
@@ -37,25 +42,39 @@ try{
  if(!page)throw Error("缺少浏览器页面目标");
  ws=new WebSocket(page.webSocketDebuggerUrl);
  await new Promise((resolve,reject)=>{ws.addEventListener("open",resolve,{once:true});ws.addEventListener("error",reject,{once:true})});
- let id=0;const pending=new Map();
- ws.addEventListener("message",e=>{const msg=JSON.parse(e.data);const item=pending.get(msg.id);if(!item)return;pending.delete(msg.id);msg.error?item.reject(Error(JSON.stringify(msg.error))):item.resolve(msg.result)});
+ let id=0;const pending=new Map(),networkEvents=[];
+ ws.addEventListener("message",e=>{const msg=JSON.parse(e.data);
+  if(msg.method?.startsWith("Network.")&&networkEvents.length<50){
+   const p=msg.params??{};
+   if(msg.method==="Network.responseReceived")networkEvents.push({kind:"response",url:p.response?.url,status:p.response?.status,mime:p.response?.mimeType});
+   if(msg.method==="Network.loadingFailed")networkEvents.push({kind:"failed",error:p.errorText,canceled:p.canceled,blocked:p.blockedReason});
+   if(msg.method==="Network.requestWillBeSent"&&p.request?.url?.startsWith("http://127.0.0.1"))networkEvents.push({kind:"request",url:p.request.url});
+  }
+  const item=pending.get(msg.id);if(!item)return;pending.delete(msg.id);msg.error?item.reject(Error(JSON.stringify(msg.error))):item.resolve(msg.result)});
  const cmd=(method,params={},sessionId)=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params,...(sessionId?{sessionId}:{})}))});
  async function ev(expression,sessionId){const r=await cmd("Runtime.evaluate",{expression,returnByValue:true,awaitPromise:true},sessionId);if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result?.value}
- await cmd("Page.enable");await cmd("Runtime.enable");
- const navigation=await cmd("Page.navigate",{url:local.url});
- // Single CDP navigation avoids racing Chrome startup. A non-blank target is not trusted until ready.
+ await cmd("Page.enable");await cmd("Runtime.enable");await cmd("Network.enable");
+ // First-time Chrome startup may reset an early navigation to about:blank on CI.
+ // Re-navigate at most three times, always re-checking the actual rendered portal.
+ await sleep(250);
+ const navigations=[];
  let ready=false;
- for(let attempts=0;attempts<70;attempts++){
-  try{ready=!!(await ev("document.getElementById(\'page-frame\')?.getAttribute(\'src\')"));}catch{}
-  if(ready)break;
-  await sleep(120);
+ for(let round=0;round<3&&!ready;round++){
+  const navigation=await cmd("Page.navigate",{url:local.url});
+  navigations.push(navigation);
+  for(let attempts=0;attempts<60;attempts++){
+   try{ready=!!(await ev("document.getElementById(\'page-frame\')?.getAttribute(\'src\')"));}catch{}
+   if(ready)break;
+   await sleep(120);
+  }
+  if(!ready)await sleep(450);
  }
  if(!ready){
   let browserPage;
   try{browserPage=await ev("(()=>({url:location.href,title:document.title,readyState:document.readyState,text:document.body?.innerText?.slice(0,220)}))()")}catch(error){browserPage={error:String(error)}}
   let nodeHttpStatus;
   try{nodeHttpStatus=(await fetch(local.url)).status}catch(error){nodeHttpStatus=String(error)}
-  throw Error("HTML portal did not finish loading in Chrome: "+JSON.stringify({navigation,browserPage,nodeHttpStatus,requests:requestTrace}));
+  throw Error("HTML portal did not finish loading in Chrome: "+JSON.stringify({navigations,browserPage,nodeHttpStatus,requests:requestTrace,networkEvents}));
  }
  const parent=await ev("(()=>{const f=document.getElementById('page-frame');return{sandbox:f.getAttribute('sandbox'),src:f.getAttribute('src'),mode:document.getElementById('preview-mode').textContent,childDOMReadable:!!f.contentDocument}})()");
  expect("HTTP frame sandbox",parent,parent.sandbox==="allow-scripts allow-forms"&&parent.mode.includes("交互")&&parent.src.endsWith(".html")&&!parent.childDOMReadable);
