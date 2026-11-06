@@ -9,6 +9,7 @@ import {fileURLToPath,pathToFileURL} from "node:url";
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const url=pathToFileURL(path.join(root,"demo/report.html")).href;
+const screenshotDir=process.env.GEN_UI_VISUAL_CAPTURE_DIR;
 const binaries=[
   process.env.GEN_UI_CHROME,
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -81,6 +82,11 @@ async function run(){
       const composition=await evaluate("(()=>{const h=document.querySelector('.page-heading h1'),img=document.querySelector('.overview-story img');return{noSubtitle:!h.nextElementSibling,imageAlt:img?.alt||'',imageLoaded:!!(img?.complete&&img?.naturalWidth>0),hasExplanation:!!document.querySelector('.overview-copy p'),emoji:document.querySelectorAll('.section-emoji').length}})()");
       check("图文布局与标题层级/"+width,composition,composition.noSubtitle&&composition.imageAlt.length>8&&composition.imageLoaded&&composition.hasExplanation&&composition.emoji===3);
       evidence.viewports[width].composition=composition;
+      const brand=await evaluate("(()=>{const imgs=[document.querySelector('#report-sidebar .brand img'),document.querySelector('.eyebrow .heading-mark'),document.querySelector('.page-footer img')];return{items:imgs.map(el=>({src:el?.getAttribute('src'),loaded:!!(el?.complete&&el?.naturalWidth>0),width:el?.getBoundingClientRect().width})),favicon:document.querySelector('link[rel=icon]')?.getAttribute('href')}})()");
+      check("品牌标识一致性/"+width,brand,brand.items.length===3&&brand.items.every(item=>item.src==="../assets/icons/gen-ui-mark.svg"&&item.loaded&&item.width>=16)&&brand.favicon==="../assets/icons/gen-ui-mark.svg");
+      evidence.viewports[width].brand=brand;
+      if(screenshotDir){fs.mkdirSync(screenshotDir,{recursive:true});const shot=await send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});fs.writeFileSync(path.join(screenshotDir,"report-"+width+".png"),Buffer.from(shot.data,"base64"));}
+
     }
     await reset(375);
     const sentinel=await evaluate("(()=>{const d={version:'gen-ui-html-report/v1',title:'筛选测试',rows:[{id:'X-1',module:'all',status:'success',durationMs:1,batch:1},{id:'X-2',module:'网关',status:'failure',durationMs:2,batch:2}]};document.getElementById('report-json').value=JSON.stringify(d);document.getElementById('apply-json').click();const s=document.getElementById('module-filter');const values=[...s.options].map(o=>o.value);s.value='all';s.dispatchEvent(new Event('change',{bubbles:true}));const only=document.getElementById('count-total').textContent;const id=document.querySelector('#report-rows tr').dataset.recordId;document.getElementById('reset-filters').click();return {values,only,id,allCount:document.getElementById('count-total').textContent,reset:s.value}})()");

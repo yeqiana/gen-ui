@@ -65,7 +65,7 @@ When a directory is specified, **do not generate only a standalone index that ig
 
 ## 7. GEN-UI personal IP icon set
 
-- Use the [GEN-UI monochrome SVG set](../assets/icons/README.md), featuring a highly abstract silhouette with one-color companion icons. Avoid purple gradients, colorful mascots, coral accents and decorative icon overload.
+- Use the [GEN-UI monochrome SVG set](../assets/icons/README.md). The personal mark must be one double-peak cat-ear stroke (one path only), without a full head, face details, frame or ornament; keep it legible at 16/20/24px. Functional icons should use at most 1–2 geometric primitives while preserving clear meaning and consistent visual weight. Avoid gradients, colorful mascots, coral accents and decorative icon overload.
 - Use icons selectively in the **sidebar, page header, toolbar or footer**, not in dense body paragraphs. Pair functional icons with clear Chinese text; use `alt=""` when icons are decorative.
 - Keep SVG assets local and reusable, do not embed untrusted external SVG. Avoid a large decorative brand watermark over the table or report findings.
 

@@ -120,6 +120,11 @@ export function buildPortal({dir,output,title}){
   if(!pages.length)fail("指定目录中没有可集成的 HTML 文件");
   const css=fs.readFileSync(path.join(packageRoot,"assets/portal-shell.css"),"utf8");
   const js=fs.readFileSync(path.join(packageRoot,"assets/portal-shell.js"),"utf8");
+  // Keep generated portals self-contained even when the target directory is elsewhere.
+  const brandMark=fs.readFileSync(path.join(packageRoot,"assets/icons/gen-ui-mark.svg"),"utf8").trim();
+  const inlineMark=brandMark.replace(/ role="img" aria-labelledby="title"/,' aria-hidden="true" focusable="false"')
+    .replace(/<title\b[^>]*>[\s\S]*?<\/title>/,"");
+  const favicon="data:image/svg+xml;base64,"+Buffer.from(brandMark,"utf8").toString("base64");
   const prefix=path.relative(path.dirname(target),root).split(path.sep).map(x=>encodeURIComponent(x)).join("/");
   // Output may be in a nested directory; keep links rooted at the scanned directory.
   const manifest={title:safeText(title||path.basename(root),70)||"报告目录",prefix,sourceCount:pages.length,pages:pages.map((p,i)=>({id:"p"+(i+1),title:p.title,href:p.href,sections:p.sections,parts:p.parts}))};
@@ -130,12 +135,13 @@ export function buildPortal({dir,output,title}){
   const frameSandbox=' sandbox="allow-same-origin"';
   const html=[AUTO_MARK,"<!doctype html>",'<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
     "<title>"+titleText+" · GEN-UI</title>",
+    '<link rel="icon" type="image/svg+xml" href="'+favicon+'">',
     "<style>"+css.replace(/<\/style/gi,"<\\/style")+"</style></head><body>",
     '<a class="skip-link" href="#page-frame">跳转到页面内容</a>',
     '<div class="portal" id="portal">',
-    '<aside class="rail" id="rail" aria-label="页面目录"><div class="rail-head"><span class="mark" aria-hidden="true"><svg viewBox="0 0 48 48" width="29" height="29"><path fill="currentColor" d="M8 20 7 8l12 8a20 20 0 0 1 10 0l12-8-1 12c4 5 5 12 1 17-6 8-28 8-34 0-4-5-3-12 1-17Z"/><path d="M18 28h12" stroke="white" stroke-linecap="round" stroke-width="3"/></svg></span><span class="rail-name">GEN-UI</span><button class="icon-button rail-close" id="collapse" type="button" aria-expanded="true" aria-controls="page-nav" title="折叠目录">‹<span class="sr-only">折叠目录</span></button></div><nav id="page-nav" aria-label="页面层级导航"></nav><div class="rail-foot"><span class="rail-foot-text">本地多页面目录</span><span class="rail-count" id="page-count"></span></div></aside>',
+    '<aside class="rail" id="rail" aria-label="页面目录"><div class="rail-head"><span class="mark" aria-hidden="true">'+inlineMark+'</span><span class="rail-name">GEN-UI</span><button class="icon-button rail-close" id="collapse" type="button" aria-expanded="true" aria-controls="page-nav" title="折叠目录">‹<span class="sr-only">折叠目录</span></button></div><nav id="page-nav" aria-label="页面层级导航"></nav><div class="rail-foot"><span class="rail-foot-label"><span class="rail-foot-mark" aria-hidden="true">'+inlineMark+'</span><span class="rail-foot-text">本地多页面目录</span></span><span class="rail-count" id="page-count"></span></div></aside>',
     '<div class="mobile-backdrop" id="backdrop" hidden></div>',
-    '<div class="workspace"><header class="workspace-header"><button class="icon-button menu-button" type="button" id="open-nav" aria-controls="page-nav" aria-expanded="false" aria-label="打开目录">☰</button><div class="workspace-titles"><p class="workspace-overline" id="breadcrumb"></p><h1 id="active-title" class="sr-only">页面目录</h1></div><a id="open-external" class="open-new" target="_blank" rel="noopener noreferrer" href="#" aria-label="在新标签页打开当前页面">新标签页打开 <span aria-hidden="true">↗</span></a><span class="preview-mode" id="preview-mode"></span></header>',
+    '<div class="workspace"><header class="workspace-header"><button class="icon-button menu-button" type="button" id="open-nav" aria-controls="page-nav" aria-expanded="false" aria-label="打开目录">☰</button><span class="workspace-brand-mark" aria-hidden="true">'+inlineMark+'</span><div class="workspace-titles"><p class="workspace-overline" id="breadcrumb"></p><h1 id="active-title" class="sr-only">页面目录</h1></div><a id="open-external" class="open-new" target="_blank" rel="noopener noreferrer" href="#" aria-label="在新标签页打开当前页面">新标签页打开 <span aria-hidden="true">↗</span></a><span class="preview-mode" id="preview-mode"></span></header>',
     '<div class="frame-area"><iframe id="page-frame" title="内容页面" loading="eager" referrerpolicy="no-referrer"'+frameSandbox+' src="about:blank"></iframe><p class="frame-status" id="frame-status" role="status" aria-live="polite"></p></div>',
     '</div></div>',
     '<script type="application/json" id="page-manifest">'+escaped+"</script>",

@@ -19,6 +19,28 @@ function manifestFrom(text){
  return JSON.parse(m[1]);
 }
 
+test("门户生成器在页眉、侧栏、页脚与 favicon 复用同一极简品牌标识",()=>{
+ const dir=tempDir();
+ try{
+  fs.writeFileSync(path.join(dir,"brand.html"),html("品牌验收"));
+  const output=buildPortal({dir,title:"品牌验收"}).output;
+  const source=fs.readFileSync(output,"utf8");
+  const brand=fs.readFileSync(path.join(root,"assets/icons/gen-ui-mark.svg"),"utf8").trim();
+  const glyph=brand.match(/<path d="([^"]+)"/)?.[1];
+  assert.ok(glyph);
+  const favicon=source.match(/<link rel="icon" type="image\/svg\+xml" href="data:image\/svg\+xml;base64,([^"]+)"/)?.[1];
+  assert.ok(favicon,"门户必须提供自包含 favicon");
+  assert.equal(Buffer.from(favicon,"base64").toString("utf8"),brand);
+  for(const klass of ["mark","workspace-brand-mark","rail-foot-mark"]){
+   assert.match(source,new RegExp('<span class="'+klass+'"[^>]*><svg[^>]+>'));
+  }
+  assert.equal(source.split('d="'+glyph+'"').length-1,3,"三个入口必须共享品牌路径");
+  assert.doesNotMatch(source,/M8 20 7 8l12 8/,"旧版猫脸 SVG 不得残留");
+  assert.match(source,/\.workspace-brand-mark\{/);
+  assert.match(source,/\.rail-foot-mark\{/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
 test("递归集成根目录与多级子目录的全部 HTML，不丢源文件",()=>{
  const dir=tempDir();
  try{

@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GEN-UI 示例 · GEN-UI</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsbGVkYnk9InRpdGxlIj48dGl0bGUgaWQ9InRpdGxlIj5HRU4tVUkg5Y+M5bOw54yr6ICz5qCH6K+GPC90aXRsZT48cGF0aCBkPSJNNSAyNCA5IDcgMTYgMTUgMjMgNyAyNyAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjIyIiBzdHJva2Utd2lkdGg9IjQuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+">
 <style>:root{color-scheme:light;font:14px/1.55 "Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;--ink:#252525;--muted:#737373;--line:#ececec;--paper:#fff;--hover:#f5f5f5;--frame:#fafafa;--focus:#333}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--paper);color:var(--ink)}
@@ -13,6 +14,11 @@ button{cursor:pointer}button:focus-visible,a:focus-visible,iframe:focus-visible,
 .rail{min-width:0;display:flex;flex-direction:column;background:#fafafa;border-right:1px solid var(--line);height:100dvh;min-height:320px;overflow:hidden}
 .rail-head{height:70px;padding:18px 15px 16px 21px;display:flex;gap:10px;align-items:center;flex-shrink:0}
 .mark{display:flex;color:#242424;align-items:center;justify-content:center;width:30px;height:30px;flex-shrink:0}
+.mark svg,.workspace-brand-mark svg,.rail-foot-mark svg{display:block;width:100%;height:100%}
+.workspace-brand-mark{display:inline-flex;align-items:center;justify-content:center;flex:0 0 20px;width:20px;height:20px}
+.rail-foot-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
+.rail-foot-mark{display:inline-flex;align-items:center;justify-content:center;flex:0 0 16px;width:16px;height:16px}
+.rail-foot-text{white-space:nowrap}
 .rail-name{font-size:14px;letter-spacing:.065em;font-weight:760;white-space:nowrap}
 .icon-button{border:0;background:transparent;border-radius:7px;color:#777;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-size:23px}
 .icon-button:hover{background:#eaeaea;color:#222}
@@ -66,14 +72,16 @@ button{cursor:pointer}button:focus-visible,a:focus-visible,iframe:focus-visible,
 .portal.is-collapsed .rail{width:min(286px,87vw)}.portal.is-collapsed .label,.portal.is-collapsed .rail-name,.portal.is-collapsed .group summary,.portal.is-collapsed .section-link,.portal.is-collapsed .rail-count,.portal.is-collapsed .rail-foot-text{display:initial}
 .portal.is-collapsed .rail-head{height:70px;justify-content:flex-start;flex-direction:row;flex-wrap:nowrap}.portal.is-collapsed .page-link{justify-content:flex-start;padding:9px 10px}
 .menu-button{display:inline-flex}.workspace{height:100dvh}.workspace-header{min-height:56px;padding:9px 15px;gap:12px}.workspace-header h1{font-size:16px}.open-new{font-size:11px}.frame-status{font-size:9px}
+.workspace-header{flex-wrap:wrap;row-gap:5px}
+.preview-mode{flex-basis:100%;text-align:right}
 }
 @media(prefers-reduced-motion:reduce){.rail,.group summary::before{transition:none}}
 </style></head><body>
 <a class="skip-link" href="#page-frame">跳转到页面内容</a>
 <div class="portal" id="portal">
-<aside class="rail" id="rail" aria-label="页面目录"><div class="rail-head"><span class="mark" aria-hidden="true"><svg viewBox="0 0 48 48" width="29" height="29"><path fill="currentColor" d="M8 20 7 8l12 8a20 20 0 0 1 10 0l12-8-1 12c4 5 5 12 1 17-6 8-28 8-34 0-4-5-3-12 1-17Z"/><path d="M18 28h12" stroke="white" stroke-linecap="round" stroke-width="3"/></svg></span><span class="rail-name">GEN-UI</span><button class="icon-button rail-close" id="collapse" type="button" aria-expanded="true" aria-controls="page-nav" title="折叠目录">‹<span class="sr-only">折叠目录</span></button></div><nav id="page-nav" aria-label="页面层级导航"></nav><div class="rail-foot"><span class="rail-foot-text">本地多页面目录</span><span class="rail-count" id="page-count"></span></div></aside>
+<aside class="rail" id="rail" aria-label="页面目录"><div class="rail-head"><span class="mark" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M5 24 9 7 16 15 23 7 27 24" fill="none" stroke="#222" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="rail-name">GEN-UI</span><button class="icon-button rail-close" id="collapse" type="button" aria-expanded="true" aria-controls="page-nav" title="折叠目录">‹<span class="sr-only">折叠目录</span></button></div><nav id="page-nav" aria-label="页面层级导航"></nav><div class="rail-foot"><span class="rail-foot-label"><span class="rail-foot-mark" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M5 24 9 7 16 15 23 7 27 24" fill="none" stroke="#222" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="rail-foot-text">本地多页面目录</span></span><span class="rail-count" id="page-count"></span></div></aside>
 <div class="mobile-backdrop" id="backdrop" hidden></div>
-<div class="workspace"><header class="workspace-header"><button class="icon-button menu-button" type="button" id="open-nav" aria-controls="page-nav" aria-expanded="false" aria-label="打开目录">☰</button><div class="workspace-titles"><p class="workspace-overline" id="breadcrumb"></p><h1 id="active-title" class="sr-only">页面目录</h1></div><a id="open-external" class="open-new" target="_blank" rel="noopener noreferrer" href="#" aria-label="在新标签页打开当前页面">新标签页打开 <span aria-hidden="true">↗</span></a><span class="preview-mode" id="preview-mode"></span></header>
+<div class="workspace"><header class="workspace-header"><button class="icon-button menu-button" type="button" id="open-nav" aria-controls="page-nav" aria-expanded="false" aria-label="打开目录">☰</button><span class="workspace-brand-mark" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M5 24 9 7 16 15 23 7 27 24" fill="none" stroke="#222" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="workspace-titles"><p class="workspace-overline" id="breadcrumb"></p><h1 id="active-title" class="sr-only">页面目录</h1></div><a id="open-external" class="open-new" target="_blank" rel="noopener noreferrer" href="#" aria-label="在新标签页打开当前页面">新标签页打开 <span aria-hidden="true">↗</span></a><span class="preview-mode" id="preview-mode"></span></header>
 <div class="frame-area"><iframe id="page-frame" title="内容页面" loading="eager" referrerpolicy="no-referrer" sandbox="allow-same-origin" src="about:blank"></iframe><p class="frame-status" id="frame-status" role="status" aria-live="polite"></p></div>
 </div></div>
 <script type="application/json" id="page-manifest">{"title":"GEN-UI 示例","prefix":"","sourceCount":4,"pages":[{"id":"p1","title":"工作区概览","href":"00-%E6%80%BB%E8%A7%88.html","sections":[{"id":"structure","title":"目录组织"},{"id":"navigation","title":"层级导航"}],"parts":["00-总览.html"]},{"id":"p2","title":"交付清单","href":"%E4%BA%A4%E4%BB%98/%E6%B8%85%E5%8D%95.html","sections":[{"id":"files","title":"集成内容"},{"id":"acceptance","title":"手动验收"}],"parts":["交付","清单.html"]},{"id":"p3","title":"记录明细","href":"%E8%B4%A8%E9%87%8F/%E6%98%8E%E7%BB%86.html","sections":[{"id":"list","title":"记录列表"},{"id":"footnote","title":"口径说明"}],"parts":["质量","明细.html"]},{"id":"p4","title":"质量状态","href":"%E8%B4%A8%E9%87%8F/%E7%8A%B6%E6%80%81.html","sections":[{"id":"summary","title":"状态概览"},{"id":"criteria","title":"验收标准"}],"parts":["质量","状态.html"]}]}</script>

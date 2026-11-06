@@ -47,20 +47,12 @@ function goto(page,section){
  }
  app.classList.remove("mobile-open");menu.setAttribute("aria-expanded","false");backdrop.hidden=true;
 }
-function iconKind(page){
- const name=[page.title,...page.parts].join(" / ");
- if(/总览|概览|首页|overview|summary/i.test(name))return "overview";
- if(/状态|质量|审核|验收|status|check/i.test(page.title))return "status";
- if(/明细|记录|列表|详情|table|detail/i.test(page.title))return "table";
- if(/交付|发布|清单|release|deliver/i.test(page.title))return "delivery";
- return ["overview","table","status","delivery"][(Number(page.id.slice(1))||1)%4];
-}
 function buttonFor(page,section){
  const btn=make("button",section?"section-link":"page-link");
  btn.type="button";
  btn.title=section?section.title:page.title;
  const key=page.id+(section?"#"+section.id:"");
- if(!section){const icon=make("span","nav-glyph");icon.dataset.kind=iconKind(page);icon.setAttribute("aria-hidden","true");btn.append(icon)}
+ if(!section){const icon=make("span","nav-glyph");icon.setAttribute("aria-hidden","true");btn.append(icon)}
  const label=make("span","label",section?section.title:page.title);btn.append(label);
  btn.setAttribute("aria-label",(section?"定位小节：":"打开页面：")+(section?section.title:page.title));
  btn.addEventListener("click",()=>goto(page,section));
