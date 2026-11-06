@@ -9,6 +9,14 @@ import {startPortalServer} from "../scripts/serve-html-portal.mjs";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 function fixture(){const dir=fs.mkdtempSync(path.join(os.tmpdir(),"genui-sec-"));fs.writeFileSync(path.join(dir,"index.html"),"<!doctype html><title>安全验收</title>");return dir;}
 function rawRequest(url,headers={}){return new Promise((resolve,reject)=>{const parsed=new URL(url);const req=http.get({host:"127.0.0.1",port:Number(parsed.port),path:parsed.pathname,headers},res=>{res.resume();res.on("end",()=>resolve(res.statusCode))});req.on("error",reject)})}
+test("监听 Host 在服务启动时固定，避免关闭阶段访问已失效的 server.address",()=>{
+ const source=fs.readFileSync(path.join(root,"scripts/serve-html-portal.mjs"),"utf8");
+ const handler=source.split("const server=http.createServer((req,res)=>{")[1]?.split("await new Promise((resolve,reject)=>{")[0]??"";
+ assert.ok(handler,"应找到 HTTP 请求处理函数");
+ assert.doesNotMatch(handler,/server\.address\(\)/);
+ assert.match(source,/expectedHost="127\.0\.0\.1:"\+address\.port/);
+});
+
 test("本机预览校验 Host，防止浏览器 DNS 重绑定",async()=>{
  const dir=fixture();
  try{
