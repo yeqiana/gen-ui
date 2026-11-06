@@ -422,6 +422,13 @@
   bind("nav-mode", "change", event => {
     app.dataset.navigation = event.target.value === "top" ? "top" : "left";
   });
+  const sidebarToggle = document.getElementById("toggle-sidebar");
+  sidebarToggle?.addEventListener("click", () => {
+    const collapsed = app.dataset.sidebarCollapsed !== "true";
+    app.dataset.sidebarCollapsed = String(collapsed);
+    sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+    sidebarToggle.textContent = collapsed ? "展开目录" : "收起目录";
+  });
   bind("table-scroll", "scroll", hideTooltip);
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", hideTooltip, true);

@@ -57,6 +57,22 @@ git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
 
 新增 [真实 Agent 提示词矩阵与离线静态门禁](evals/agent-evaluation.md)：覆盖中文报告、模块名冲突、键盘无障碍、表单抽屉和 Markdown 回退。它不会自行调用模型、不会消耗 Agent 额度；只有真实执行 Agent、保留生成文件并通过人工浏览器验收后，才能宣称 Agent 输出符合规范。
 
+## 目录递归集成与 iframe 多页面模式
+
+当指定一个包含 HTML 的目录时，GEN-UI 会在**生成阶段递归扫描所有子目录**，把每份 HTML 作为独立页面保留，并生成一个轻量入口。主展示区域采用真正的 **iframe**：左侧点击标题切换对应页面，带 `id` 的 H2 可自动作为子导航。侧栏默认黑白灰，可收起；手机上可打开、关闭。不会把内容硬塞进一个巨大的 `index.html`。
+
+~~~powershell
+# 目录不存在 index.html 或可覆盖 GEN-UI 已生成入口时
+node scripts/build-html-portal.mjs --dir "D:\\reports" --title "工程验收"
+
+# 目录已有自己维护的 index.html 时，输出独立入口避免覆盖
+node scripts/build-html-portal.mjs --dir "D:\\reports" --output "D:\\reports\\portal.html"
+~~~
+
+查看 [完整的四页面离线示例](demo/portal-pages/index.html)、[递归生成器源码](scripts/build-html-portal.mjs)及 [HTML 规范](references/html-report-contract.md)。目录中新添页面后重新运行生成器即可更新导航；浏览器不具备直接递归读取文件目录的权限。旧的单页报告仍可独立打开使用。
+
+**本地 iframe 兼容与安全：** 双击 `index.html` 使用静态预览模式，保留子页面外部 CSS，但禁用子页面 JavaScript。若需要原有页面的 JavaScript、筛选或表单，请运行 `node scripts/serve-html-portal.mjs --dir "D:\\reports"`，打开 `http://127.0.0.1:8765/`。本地 HTTP 模式使用 `sandbox="allow-scripts allow-forms"`，不授予 iframe 同源权限；没有取消沙盒的快捷选项。
+
 ## HTML 报告增强能力
 
 当最终交付物确定为 HTML 页面时（无论用户是否明确说出“HTML”），**默认使用简体中文展示**（标题、按钮、表头、状态、表单、提示等）；仅保留必要的品牌、技术名词、字段标识和原始数据。执行下列细则：
@@ -69,7 +85,7 @@ git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
 
 
 
-当最终交付物是 **HTML 报告**时，Gen UI 会采用真正的网页交互能力：默认左侧目录导航（可切换顶部），按大标题、小标题建立锚点；表格按实际字段提供筛选，长表格默认 **每页 20 条**，可选 50/100（最后一页允许少于 20 条）；开头重点的成功数字用绿色、失败数字用红色突出，普通数值保持中性。可按数据需要使用饼图、柱状图、折线图，以及本地受控 JSON、表单和滑块。
+当最终交付物是 **HTML 报告**时，单页保留原有交互和简洁的可收起目录；**多页面/指定目录交付必须使用递归集成 + iframe 主区域**，大标题映射到各独立页面，小标题可定位页面内部锚点。长表格默认 **每页 20 条**，可选 50/100；成功数字用绿色、失败数字用红色，其余元素优先黑白灰。可按数据需要使用饼图、柱状图、折线图，以及本地受控 JSON、表单和滑块。
 
 查看 [HTML 报告示例](demo/report.html)（需与 [report.js](demo/report.js) 放在一起）及 [英文 HTML 规范](references/html-report-contract.md)。示例使用 67 条**虚构数据**，仅用于验证分页、筛选与交互；不代表真实测试报告。未确定交付 HTML 时继续遵循 Markdown 优先策略。
 

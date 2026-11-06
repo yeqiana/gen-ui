@@ -44,6 +44,19 @@ $required = @(
   "assets/icons/gen-ui-form.svg",
   "tests/report.test.mjs",
   "tests/chrome-report-smoke.mjs",
+  "tests/chrome-portal-smoke.mjs",
+  "tests/portal.test.mjs",
+  "scripts/build-html-portal.mjs",
+  "scripts/serve-html-portal.mjs",
+  "tests/chrome-portal-http-smoke.mjs",
+  "assets/portal-shell.css",
+  "assets/portal-shell.js",
+  "demo/portal-pages/index.html",
+  "demo/portal-pages/section.css",
+  "demo/portal-pages/00-总览.html",
+  "demo/portal-pages/质量/状态.html",
+  "demo/portal-pages/质量/明细.html",
+  "demo/portal-pages/交付/清单.html",
   "evals/real-agent-baseline-2026-11-05.md",
   "evals/chrome-demo-baseline-2026-11-05.json",
   "evals/agent-cases.json",
@@ -96,11 +109,22 @@ Write-Output "[PASS] Renderer JS 语法"
 & node --check (Join-Path $root "demo/report.js")
 if ($LASTEXITCODE -ne 0) { throw "HTML report JS syntax failed" }
 Write-Output "[PASS] HTML report JS syntax"
+& node --check (Join-Path $root "scripts/build-html-portal.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Portal builder JS syntax failed" }
+Write-Output "[PASS] Multi-page portal builder JS syntax"
+& node --check (Join-Path $root "tests/chrome-portal-smoke.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Portal Chrome smoke JS syntax failed" }
+Write-Output "[PASS] Portal Chrome smoke JS syntax"
+& node --check (Join-Path $root "scripts/serve-html-portal.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Portal local HTTP server syntax failed" }
+& node --check (Join-Path $root "tests/chrome-portal-http-smoke.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Portal HTTP browser smoke syntax failed" }
+Write-Output "[PASS] Portal HTTP preview syntax"
 
 & node --check (Join-Path $root "tests/chrome-report-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Chrome smoke JS syntax failed" }
 Write-Output "[PASS] Chrome smoke JS syntax（浏览器实测请单独运行）"
 
-& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs")
+& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"

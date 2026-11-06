@@ -1,0 +1,17 @@
+{
+  "result": "pass",
+  "environment": "Chrome CDP + 127.0.0.1 loopback",
+  "parent": {
+    "sandbox": "allow-scripts allow-forms",
+    "src": "one.html",
+    "mode": "隔离交互预览",
+    "childDOMReadable": false
+  },
+  "child": {
+    "executed": "yes",
+    "background": "rgb(234, 238, 242)",
+    "font": "21px",
+    "href": "http://127.0.0.1:7245/one.html"
+  },
+  "at": "2026-11-05T16:20:43.770Z"
+}
