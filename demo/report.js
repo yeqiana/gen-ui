@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const SIZES = [20, 50, 100];
+  const SIZES = [10, 20, 50];
   const MAX_JSON_CHARS = 750000;
   const STATUSES = ["success", "failure", "pending"];
   const STATUS_TEXT = { success: "成功", failure: "失败", pending: "待处理" };
@@ -62,7 +62,7 @@
   }
 
   function paginateRows(rows, page, size) {
-    if (!SIZES.includes(size)) throw Error("每页条数只能是 20、50、100");
+    if (!SIZES.includes(size)) throw Error("每页条数只能是 10、20、50");
     const pages = Math.max(1, Math.ceil(rows.length / size));
     const current = Math.max(1, Math.min(pages, Math.trunc(page) || 1));
     const offset = (current - 1) * size;
@@ -142,7 +142,7 @@
   let page = 1;
   const filter = {
     query: "", module: "", status: "all", batch: "all",
-    slowOnly: false, threshold: 600, size: 20
+    slowOnly: false, threshold: 600, size: 10
   };
 
   function pie(rows) {
@@ -376,19 +376,34 @@
       body.append(tr);
     }
     byId("page-info").textContent =
-      "第 " + paging.first + "–" + paging.last + " 条 / 共 " +
-      paging.total + " 条 · 第 " + page + "/" + paging.pages + " 页";
+      "共 " + paging.total + " 条 · 第 " + paging.first + "–" + paging.last +
+      " 条 · " + page + "/" + paging.pages + " 页";
+    const jumpInput = byId("page-jump-input");
+    jumpInput.max = String(paging.pages);
+    jumpInput.value = String(page);
+    if (typeof window !== "undefined" && window.GenUIPager) {
+      window.GenUIPager.render(byId("page-numbers"), paging, nextPage => {
+        page = nextPage;
+        render();
+      });
+    }
     byId("previous").disabled = page <= 1;
     byId("next").disabled = page >= paging.pages;
-    pie(rows);
-    bar(rows);
-    line(rows);
+    if (typeof window !== "undefined" && window.GenUICharts) {
+      window.GenUICharts.pie(byId("pie"), stats);
+      window.GenUICharts.bar(byId("bar"), groupModules(rows));
+      window.GenUICharts.line(byId("line"), batchSeries(rows), rows.length);
+    } else {
+      pie(rows);
+      bar(rows);
+      line(rows);
+    }
   }
 
   function resetFilters() {
     Object.assign(filter, {
       query: "", module: "", status: "all", batch: "all",
-      slowOnly: false, threshold: 600, size: 20
+      slowOnly: false, threshold: 600, size: 10
     });
     byId("keyword").value = "";
     byId("module-filter").value = "";
@@ -396,7 +411,7 @@
     byId("batch-filter").value = "all";
     byId("slow-only").checked = false;
     byId("threshold").value = "600";
-    byId("page-size").value = "20";
+    byId("page-size").value = "10";
     page = 1;
     render();
   }
@@ -419,6 +434,16 @@
   bind("reset-filters", "click", resetFilters);
   bind("previous", "click", () => { page--; render(); });
   bind("next", "click", () => { page++; render(); });
+  const jumpPage = () => {
+    const input = Number(byId("page-jump-input").value);
+    if (!Number.isInteger(input) || input < 1) return;
+    page = input;
+    render();
+  };
+  bind("page-go", "click", jumpPage);
+  bind("page-jump-input", "keydown", event => {
+    if (event.key === "Enter") { event.preventDefault(); jumpPage(); }
+  });
   bind("nav-mode", "change", event => {
     app.dataset.navigation = event.target.value === "top" ? "top" : "left";
   });
@@ -430,7 +455,7 @@
     const label = collapsed ? "展开目录" : "收起目录";
     sidebarToggle.setAttribute("aria-label", label);
     sidebarToggle.title = label;
-    byId("sidebar-toggle-glyph").textContent = collapsed ? "›" : "‹";
+    byId("sidebar-toggle-glyph").style.transform = collapsed ? "rotate(180deg)" : "none";
     byId("sidebar-toggle-label").textContent = label;
   });
   bind("table-scroll", "scroll", hideTooltip);

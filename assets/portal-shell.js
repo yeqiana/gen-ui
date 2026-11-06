@@ -55,12 +55,25 @@ function iconKind(page){
  if(/交付|发布|清单|release|deliver/i.test(page.title))return "delivery";
  return ["overview","table","status","delivery"][(Number(page.id.slice(1))||1)%4];
 }
+function navIcon(kind){
+ const d={
+  overview:"M3 3h5v5H3z M10 3h5v5h-5z M3 10h5v5H3z M10 10h5v5h-5z",
+  table:"M3 4h12v10H3z M3 8h12 M8 4v10",
+  status:"M9 2a7 7 0 1 0 0 14a7 7 0 0 0 0-14z M5.5 9l2.1 2.1L12 7",
+  delivery:"M5 2h6l3 3v11H5z M11 2v4h3 M7 10h5 M7 13h4"
+ };
+ const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+ svg.setAttribute("viewBox","0 0 18 18");svg.setAttribute("aria-hidden","true");
+ const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+ path.setAttribute("d",d[kind]||d.overview);svg.append(path);return svg;
+}
+
 function buttonFor(page,section){
  const btn=make("button",section?"section-link":"page-link");
  btn.type="button";
  btn.title=section?section.title:page.title;
  const key=page.id+(section?"#"+section.id:"");
- if(!section){const icon=make("span","nav-glyph");icon.dataset.kind=iconKind(page);icon.setAttribute("aria-hidden","true");btn.append(icon)}
+ if(!section){const icon=make("span","nav-glyph");icon.dataset.kind=iconKind(page);icon.setAttribute("aria-hidden","true");icon.append(navIcon(icon.dataset.kind));btn.append(icon)}
  const label=make("span","label",section?section.title:page.title);btn.append(label);
  btn.setAttribute("aria-label",(section?"定位小节：":"打开页面：")+(section?section.title:page.title));
  btn.addEventListener("click",()=>goto(page,section));

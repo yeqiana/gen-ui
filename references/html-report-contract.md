@@ -12,8 +12,8 @@ This contract applies **whenever HTML is the chosen or required final deliverabl
 - Iconify a few familiar actions such as close, collapse, reset and open details. Keep text on important, destructive or unfamiliar actions; icon-only buttons need `aria-label` and a visible tooltip.
 - Use one clear H1. **Do not put a small subtitle immediately below the main H1**; move metadata above it or combine context with the first content group. Aggregate related metrics, explanations and actions into a few meaningful sections instead of scattering them into tiny panels or repeated micro-headings.
 - When the host supports visuals, prefer an **image + concise Chinese explanation** for important concepts: meaningful diagrams, screenshots, maps, charts or annotated illustrations. Use source-grounded/authored visuals, meaningful alt text and a textual takeaway. If image display is unsupported or no useful visual exists, use a concise text/table/Mermaid fallback; do not add decorative filler images.
-- Use emoji sparingly (usually 1–4 meaningful anchors per page), not in every row or sentence. Never rely on emoji alone for status or action; keep Chinese labels.
-- Aim for the restrained, readable feel of ChatGPT's interface: neutral surfaces, clear typography, calm spacing and subtle separators. Avoid card piles, heavy borders, large shadows, gradients and decorative clutter; do not copy proprietary assets or exact layouts.
+- Prefer consistent local SVG section icons to emoji; use emoji only where genuinely helpful, never as the only status or action indication. Keep Chinese labels.
+- Use clear hierarchy, compact controls, friendly accent colors, light borders and modest spacing. For the overview, a small grid of labelled metric cards improves scanning; avoid excessive decorative card layers, heavy shadows, gradients and clutter.
 
 ## Directory / multi-page portal contract
 
@@ -38,7 +38,7 @@ When a directory is specified, **do not generate only a standalone index that ig
 - Select relevant filters from the actual **key fields / column definitions**, not arbitrary global controls: text search for record identifier, selector for module / status / category, batch/date range for sequence/time columns, slider or numeric bounds for measured values.
 - Where reasonable, derive selector options from available data and refresh when the dataset changes. Never invent absent fields, statuses or API endpoints. **Never use a sentinel value that can collide with actual field data**: e.g., an empty-string sentinel for nonempty module names; a real module called `all` must remain selectable.
 - Filtering, KPI counts, charts and pagination must derive from the **same dataset** and refresh together. Changing a filter or page size resets/clamps the current page.
-- For long tables, default to **20 rows per page** with optional 50 and 100; never configure a page size below 20. The last page or a filtered result set may naturally have fewer than 20 rows. Do not pad results. Provide accurate row counts and an empty state.
+- For long tables, default to **10 rows per page** with optional 20 and 50. Use a compact numbered pager with previous/next, visible current page and optional jump-to-page control. The final page or filtered result can naturally have fewer than 10 rows. Do not pad results. Provide accurate row counts and an empty state.
 
 ## 4. Navigation intent: new browser tab versus current-page tab
 
@@ -52,12 +52,13 @@ When a directory is specified, **do not generate only a standalone index that ig
 - Use forms for data entry, a modal dialog for discrete creation/confirmation, and a **right or left side drawer** for record details or data editing when it avoids destroying page context. Choose layout on usefulness, not ornamentation. Repeated action buttons must have **record-specific accessible names** (e.g. “查看任务 T-001 的详情”) rather than identical labels.
 - Keep operations local for this offline example. Real side effects require the host's explicit authentication, permissions, review and confirmation.
 - Keep the semantic H1/H2/H3 structure independent of the chosen tab or panel state; restore logical focus on close where the browser provides it.
-- Minimize needless cards, duplicate KPI blocks, oversized shadows and decorative whitespace; a readable data interface is more important than a showcase of every component.
+- Keep compact, clearly labelled metric cards together in a visual overview, with bright but purposeful accents. Avoid duplicate KPI blocks, excessive card nesting, oversized shadows and decorative whitespace. Prefer compact controls around 30–34px tall unless touch accessibility requires larger targets.
 
 ## 6. Charts, metrics, controlled JSON and safety
 
-- At the top, meaningful **success** counts may be green and **failure** counts red; ordinary figures should remain neutral. Always include labels and units. No fabricated counts or tests.
-- Choose pie for composition, bar for categories and line for ordered sequence/trends. Add them only if useful. Include chart descriptions and a clear no-data state; charts should follow the table's current filter when meaningful.
+- At the top, meaningful **success** counts may use a fresh green and **failure** counts a friendly red; ordinary figures remain neutral. Where a status appears in a table, use a softly tinted text tag with a readable label and sufficient contrast. Always include labels and units. No fabricated counts or tests.
+- Choose pie for composition, bar for categories and line for ordered sequence/trends. Use a coordinated multi-color series palette, clear legends, readable axes, restrained grid lines and category-specific colors. Add them only if useful. Include chart descriptions and a clear no-data state; charts should follow the table's current filter when meaningful.
+- **Offline flow diagrams:** embed inline SVG when a flowchart materially helps. Provide labelled controls for fullscreen, zoom, fit-to-window and pointer drag/pan. Support Escape to exit fullscreen, keyboard access, a text description and no network requests.
 - Trusted static author-written JavaScript may implement real controls, slider updates, tabs, pagination, modal windows and drawers. Model-supplied **JSON is data**, strictly validated against an allowlist, bounds and size limits.
 - Never execute AI-supplied JavaScript, HTML, CSS, `eval`, `innerHTML`, event handlers or arbitrary remote URLs. No unsupported database/API/deployment action is implied by being in a browser.
 - A self-contained HTML file can inline **reviewed trusted code/assets** if the request explicitly requires a single file. Otherwise local CSS/JS/SVG assets are encouraged for maintenance.
