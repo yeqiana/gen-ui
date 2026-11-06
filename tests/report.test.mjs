@@ -11,6 +11,37 @@ const require = createRequire(import.meta.url);
 const ui = require("../demo/report.js");
 const read = file => fs.readFileSync(path.join(base, file), "utf8");
 
+test("侧边栏收起保留纵向图标栏，展开按钮始终位于侧栏内部", () => {
+  const {get,app}=boot();
+  const toggle=get("toggle-sidebar");
+  dispatch(toggle,"click");
+  assert.equal(app.dataset.sidebarCollapsed,"true");
+  assert.equal(toggle.attributes["aria-expanded"],"false");
+  assert.equal(toggle.attributes["aria-label"],"展开目录");
+  assert.equal(toggle.title,"展开目录");
+  assert.equal(get("sidebar-toggle-glyph").textContent,"›");
+  assert.equal(get("sidebar-toggle-label").textContent,"展开目录");
+  dispatch(toggle,"click");
+  assert.equal(app.dataset.sidebarCollapsed,"false");
+  assert.equal(toggle.attributes["aria-expanded"],"true");
+  assert.equal(toggle.attributes["aria-label"],"收起目录");
+  const html=read("demo/report.html");
+  const css=read("demo/report.css");
+  assert.match(html,/<aside id="report-sidebar"[\s\S]*?<button id="toggle-sidebar"/);
+  assert.match(css,/grid-template-columns:68px minmax\(0,1fr\)/);
+  assert.doesNotMatch(css,/\.app\[data-sidebar-collapsed="true"\]\s+\.sidebar\s*\{\s*display:\s*none/);
+});
+
+test("标题不带底部小标题，关键内容采用有说明的图文组合并控制 Emoji 数量", () => {
+  const html=read("demo/report.html");
+  const heading=html.match(/<div class="page-heading">([\s\S]*?)<\/div>/)?.[1] ?? "";
+  assert.match(heading,/<h1 id="report-title">工程质量分析<\/h1>\s*$/);
+  assert.match(html,/<div class="overview-story">[\s\S]*?<img[^>]+alt="[^"]+"[\s\S]*?<div class="overview-copy">/);
+  assert.equal((html.match(/class="section-emoji"/g) ?? []).length,3);
+  assert.doesNotMatch(html,/id="data"|open-data-secondary/);
+  assert.match(html,/class="icon-only" aria-label="关闭新增弹窗" title="关闭"/);
+});
+
 test("演示记录为中文模拟数据，20/50/100 分页不填充末页", () => {
   const report = ui.validateReport(ui.sample());
   assert.equal(report.rows.length, 67);
