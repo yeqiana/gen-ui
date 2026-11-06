@@ -1,0 +1,70 @@
+{
+  "case": "HTML04",
+  "producer": "ChatGPT GPT-6 via WebCodex Runner",
+  "localCodexCliUsed": false,
+  "at": "2026-11-06T01:03:33.122Z",
+  "viewports": {
+    "375": {
+      "width": 375,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": true
+    },
+    "768": {
+      "width": 768,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": true
+    },
+    "1440": {
+      "width": 1440,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": false
+    }
+  },
+  "checks": {
+    "initial-counts": {
+      "total": "39",
+      "passed": "13",
+      "failed": "13",
+      "pending": "13",
+      "rows": 20
+    },
+    "module-filter-chart": {
+      "total": "13",
+      "passed": "13",
+      "failed": "0",
+      "bar": "100%",
+      "rows": 13
+    },
+    "empty-filter": {
+      "count": "0",
+      "emptyVisible": true,
+      "rows": 0
+    },
+    "pagination": {
+      "first": 20,
+      "second": 19,
+      "all": 39
+    },
+    "search": {
+      "count": "1",
+      "id": "QA-039"
+    },
+    "no-runtime-exceptions": {
+      "count": 0
+    }
+  },
+  "runtimeErrors": [],
+  "result": "pass"
+}

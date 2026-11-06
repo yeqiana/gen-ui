@@ -1,0 +1,68 @@
+{
+  "case": "HTML02",
+  "producer": "ChatGPT GPT-6 via WebCodex Runner",
+  "localCodexCliUsed": false,
+  "at": "2026-11-06T01:03:23.474Z",
+  "viewports": {
+    "375": {
+      "width": 375,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": true
+    },
+    "768": {
+      "width": 768,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": true
+    },
+    "1440": {
+      "width": 1440,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": false
+    }
+  },
+  "checks": {
+    "mobile-tooltip-no-overflow": {
+      "found": true,
+      "visible": true,
+      "withinViewport": true,
+      "hiddenOnScroll": true
+    },
+    "pagination": {
+      "first": 20,
+      "second": 16,
+      "info": "第 2 / 2 页，共 36 条模拟记录"
+    },
+    "real-all-module": {
+      "count": "12",
+      "rows": 12,
+      "onlyAll": true
+    },
+    "keyboard-clipped-only": {
+      "truncated": 12,
+      "invalidTab": 0,
+      "missingTab": 0
+    },
+    "tooltip": {
+      "visible": true,
+      "insideViewport": true,
+      "hiddenOnScroll": true
+    },
+    "no-runtime-exceptions": {
+      "count": 0
+    }
+  },
+  "runtimeErrors": [],
+  "result": "pass"
+}

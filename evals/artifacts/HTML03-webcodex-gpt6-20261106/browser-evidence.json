@@ -1,0 +1,84 @@
+{
+  "case": "HTML03",
+  "producer": "ChatGPT GPT-6 via WebCodex Runner",
+  "localCodexCliUsed": false,
+  "at": "2026-11-06T01:03:28.511Z",
+  "viewports": {
+    "375": {
+      "width": 375,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": true
+    },
+    "768": {
+      "width": 768,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": true
+    },
+    "1440": {
+      "width": 1440,
+      "rows": 20,
+      "outerOverflow": false,
+      "h1": 1,
+      "nowrap": "nowrap",
+      "sticky": "sticky",
+      "innerScroll": false
+    }
+  },
+  "checks": {
+    "initial-and-accessible-detail": {
+      "count": 20,
+      "total": "24",
+      "uniqueDetailLabels": 20,
+      "external": [
+        {
+          "text": "新标签页打开示例站点 ↗",
+          "rel": "noopener noreferrer"
+        }
+      ]
+    },
+    "tabs-and-keyboard": {
+      "clicked": true,
+      "keyboard": true,
+      "focused": "tab-overview"
+    },
+    "invalid-preserve-valid-fields": {
+      "open": true,
+      "id": "NEW-025",
+      "group": "测试",
+      "error": "任务名称不能为空",
+      "focus": "new-name"
+    },
+    "added-record-visible": {
+      "open": false,
+      "total": "25",
+      "feedback": "已新增模拟记录 NEW-025，并定位到最新页",
+      "ids": [
+        "SIM-021",
+        "SIM-022",
+        "SIM-023",
+        "SIM-024",
+        "NEW-025"
+      ],
+      "page": "第 2 / 2 页，共 25 条模拟任务"
+    },
+    "drawer-and-focus": {
+      "opened": true,
+      "details": "编号SIM-021名称模拟任务 21分组运营状态已完成",
+      "closed": true,
+      "focusReturned": true
+    },
+    "no-runtime-exceptions": {
+      "count": 0
+    }
+  },
+  "runtimeErrors": [],
+  "result": "pass"
+}

@@ -1,0 +1,63 @@
+{
+  "caseId": "HTML04",
+  "caseName": "未出现 HTML 字样的网页交付任务",
+  "format": "html",
+  "staticGate": "pass",
+  "checks": [
+    {
+      "id": "doctype",
+      "label": "DOCTYPE 文档声明",
+      "passed": true
+    },
+    {
+      "id": "chinese",
+      "label": "中文页面声明",
+      "passed": true
+    },
+    {
+      "id": "one-h1",
+      "label": "唯一一级标题",
+      "passed": true
+    },
+    {
+      "id": "nav",
+      "label": "导航区域",
+      "passed": true
+    },
+    {
+      "id": "table",
+      "label": "语义表格",
+      "passed": true
+    },
+    {
+      "id": "nowrap",
+      "label": "表头与单元格不换行",
+      "passed": true
+    },
+    {
+      "id": "filter",
+      "label": "筛选控件",
+      "passed": true
+    },
+    {
+      "id": "status",
+      "label": "成功失败状态",
+      "passed": true
+    },
+    {
+      "id": "no-inline-events",
+      "label": "没有内联事件脚本",
+      "passed": true
+    }
+  ],
+  "manualChecks": [
+    "确认没有因提示词未出现 HTML 三个字母而回退为 Markdown",
+    "真实浏览器打开并验证联动"
+  ],
+  "caveat": "静态启发式检查不能证明模型实际运行、筛选联动、图表真实性、键盘体验或用户视觉质量。",
+  "artifact": "evals/artifacts/HTML04-webcodex-gpt6-20261106/report.html",
+  "claimedProducer": "ChatGPT GPT-6 via WebCodex (not local Codex CLI)",
+  "producerVerified": false,
+  "evaluatedAt": "2026-11-06T00:45:36.975Z",
+  "artifactPathRedacted": true
+}

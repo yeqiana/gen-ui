@@ -1,0 +1,69 @@
+{
+  "caseId": "HTML03",
+  "caseName": "标签、表单与抽屉交互",
+  "format": "html",
+  "staticGate": "pass",
+  "checks": [
+    {
+      "id": "doctype",
+      "label": "DOCTYPE 文档声明",
+      "passed": true
+    },
+    {
+      "id": "chinese",
+      "label": "中文页面声明",
+      "passed": true
+    },
+    {
+      "id": "one-h1",
+      "label": "唯一一级标题",
+      "passed": true
+    },
+    {
+      "id": "nav",
+      "label": "导航区域",
+      "passed": true
+    },
+    {
+      "id": "table",
+      "label": "语义表格",
+      "passed": true
+    },
+    {
+      "id": "filter",
+      "label": "筛选控件",
+      "passed": true
+    },
+    {
+      "id": "dialog",
+      "label": "弹窗或抽屉",
+      "passed": true
+    },
+    {
+      "id": "tabs",
+      "label": "页内标签语义",
+      "passed": true
+    },
+    {
+      "id": "external",
+      "label": "清晰标注的新标签页链接",
+      "passed": true
+    },
+    {
+      "id": "no-inline-events",
+      "label": "没有内联事件脚本",
+      "passed": true
+    }
+  ],
+  "manualChecks": [
+    "新增成功后记录可见且有反馈",
+    "抽屉/弹窗/页内标签真实行为与键盘焦点",
+    "外部链接真正新建标签页，内页不导航"
+  ],
+  "caveat": "静态启发式检查不能证明模型实际运行、筛选联动、图表真实性、键盘体验或用户视觉质量。",
+  "artifact": "evals/artifacts/HTML03-webcodex-gpt6-20261106/report.html",
+  "claimedProducer": "ChatGPT GPT-6 via WebCodex (not local Codex CLI)",
+  "producerVerified": false,
+  "evaluatedAt": "2026-11-06T00:45:34.227Z",
+  "artifactPathRedacted": true
+}

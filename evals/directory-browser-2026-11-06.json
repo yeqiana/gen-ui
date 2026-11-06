@@ -1,0 +1,50 @@
+{
+  "source": "actual GEN-UI repository file tree",
+  "at": "2026-11-06T01:03:51.507Z",
+  "viewports": {
+    "375": {
+      "pages": 10,
+      "iframe": true,
+      "sandbox": "allow-scripts allow-forms",
+      "hasOverflow": false,
+      "frameSrc": "../demo/index.html",
+      "readable": false,
+      "menu": true
+    },
+    "768": {
+      "pages": 10,
+      "iframe": true,
+      "sandbox": "allow-scripts allow-forms",
+      "hasOverflow": false,
+      "frameSrc": "../demo/index.html",
+      "readable": false,
+      "menu": true
+    },
+    "1440": {
+      "pages": 10,
+      "iframe": true,
+      "sandbox": "allow-scripts allow-forms",
+      "hasOverflow": false,
+      "frameSrc": "../demo/index.html",
+      "readable": false,
+      "menu": true
+    }
+  },
+  "checks": {
+    "iframeSwitch": {
+      "before": "../demo/index.html",
+      "after": "../demo/portal-pages/%E8%B4%A8%E9%87%8F/%E7%8A%B6%E6%80%81.html",
+      "different": true,
+      "selected": 1,
+      "externalSame": true
+    },
+    "nestedFrameLoaded": true,
+    "desktopCollapse": {
+      "hidden": true,
+      "reopened": true
+    }
+  },
+  "errors": [],
+  "sourceCount": 10,
+  "result": "pass"
+}
