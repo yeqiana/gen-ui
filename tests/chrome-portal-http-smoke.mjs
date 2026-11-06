@@ -20,10 +20,12 @@ try{
  fs.writeFileSync(path.join(dir,"one.html"),'<html lang="zh-CN"><head><title>交互测试</title><link rel="stylesheet" href="style.css"></head><body><h1>交互测试</h1><script>document.body.dataset.executed="yes"</script></body></html>');
  buildPortal({dir,title:"测试"});
  local=await startPortalServer({dir,port:0});
+ const requestTrace=[];
+ local.server.on("request",req=>{if(requestTrace.length<12)requestTrace.push({method:req.method,path:req.url,host:req.headers.host})});
  const portServer=net.createServer();
  await new Promise(res=>portServer.listen(0,"127.0.0.1",res));
  const port=portServer.address().port;await new Promise(res=>portServer.close(res));
- child=spawn(chrome,["--headless=new","--disable-extensions","--disable-gpu","--disable-background-networking","--no-first-run","--remote-debugging-address=127.0.0.1","--remote-allow-origins=*","--remote-debugging-port="+port,"--user-data-dir="+profile,local.url],{stdio:"ignore",windowsHide:true});
+ child=spawn(chrome,["--headless=new","--disable-extensions","--disable-gpu","--disable-background-networking","--no-proxy-server","--no-first-run","--remote-debugging-address=127.0.0.1","--remote-allow-origins=*","--remote-debugging-port="+port,"--user-data-dir="+profile,local.url],{stdio:"ignore",windowsHide:true});
  let pages;
  for(let n=0;n<100;n++){
   try{const r=await fetch("http://127.0.0.1:"+port+"/json");if(r.ok){pages=await r.json();break}}catch{}
@@ -39,7 +41,7 @@ try{
  const cmd=(method,params={},sessionId)=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params,...(sessionId?{sessionId}:{})}))});
  async function ev(expression,sessionId){const r=await cmd("Runtime.evaluate",{expression,returnByValue:true,awaitPromise:true},sessionId);if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result?.value}
  await cmd("Page.enable");await cmd("Runtime.enable");
- await cmd("Page.navigate",{url:local.url});
+ const navigation=await cmd("Page.navigate",{url:local.url});
  // The CDP page target can appear before its first navigation finishes.
  let ready=false;
  for(let attempts=0;attempts<70;attempts++){
@@ -47,21 +49,38 @@ try{
   if(ready)break;
   await sleep(120);
  }
- if(!ready)throw Error("HTML portal did not finish loading in Chrome");
+ if(!ready){
+  let browserPage;
+  try{browserPage=await ev("(()=>({url:location.href,title:document.title,readyState:document.readyState,text:document.body?.innerText?.slice(0,220)}))()")}catch(error){browserPage={error:String(error)}}
+  let nodeHttpStatus;
+  try{nodeHttpStatus=(await fetch(local.url)).status}catch(error){nodeHttpStatus=String(error)}
+  throw Error("HTML portal did not finish loading in Chrome: "+JSON.stringify({navigation,browserPage,nodeHttpStatus,requests:requestTrace}));
+ }
  const parent=await ev("(()=>{const f=document.getElementById('page-frame');return{sandbox:f.getAttribute('sandbox'),src:f.getAttribute('src'),mode:document.getElementById('preview-mode').textContent,childDOMReadable:!!f.contentDocument}})()");
  expect("HTTP frame sandbox",parent,parent.sandbox==="allow-scripts allow-forms"&&parent.mode.includes("交互")&&parent.src.endsWith(".html")&&!parent.childDOMReadable);
- let target;
+ let target,sameProcessFrame;
  for(let i=0;i<35;i++){
   const info=await cmd("Target.getTargets");
   target=info.targetInfos?.find(x=>x.type==="iframe"&&x.url.includes("one.html")&&x.parentId===page.id);
   if(target)break;
+  const tree=await cmd("Page.getFrameTree");
+  sameProcessFrame=tree.frameTree?.childFrames?.find(x=>x.frame?.url.includes("one.html"));
+  if(sameProcessFrame)break;
   await sleep(150);
  }
- expect("HTTP iframe target",target,!!target);
- const attached=await cmd("Target.attachToTarget",{targetId:target.targetId,flatten:true});
- const session=attached.sessionId;
- await cmd("Runtime.enable",{},session);
- const childState=await ev("(()=>({executed:document.body.dataset.executed,background:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontSize,href:location.href}))()",session);
+ const expression="(()=>({executed:document.body.dataset.executed,background:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontSize,href:location.href}))()";
+ let childState;
+ if(target){
+  const attached=await cmd("Target.attachToTarget",{targetId:target.targetId,flatten:true});
+  await cmd("Runtime.enable",{},attached.sessionId);
+  childState=await ev(expression,attached.sessionId);
+ }else if(sameProcessFrame){
+  const world=await cmd("Page.createIsolatedWorld",{frameId:sameProcessFrame.frame.id,worldName:"genui-http-inspection"});
+  const evaluated=await cmd("Runtime.evaluate",{expression,contextId:world.executionContextId,returnByValue:true});
+  if(evaluated.exceptionDetails)throw Error("Child inspection: "+evaluated.exceptionDetails.text);
+  childState=evaluated.result.value;
+ }else throw Error("HTTP iframe renderer not found: "+JSON.stringify((await cmd("Page.getFrameTree")).frameTree));
+
  expect("isolated child CSS and JS",childState,childState.executed==="yes"&&childState.background==="rgb(234, 238, 242)"&&childState.font==="21px");
  const result={result:"pass",environment:"Chrome CDP + 127.0.0.1 loopback",parent,child:childState,at:new Date().toISOString()};
  if(process.argv.length===4&&process.argv[2]==="--report"){
