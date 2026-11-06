@@ -8,6 +8,9 @@ import {spawn} from "node:child_process";
 import {pathToFileURL,fileURLToPath} from "node:url";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const report=path.join(root,"demo/portal-pages/index.html");
+const markSvg=fs.readFileSync(path.join(root,"assets/icons/gen-ui-mark.svg"),"utf8").trim();
+const markPath=markSvg.match(/<path d="([^"]+)"/)?.[1];
+const screenshotDir=process.env.GEN_UI_VISUAL_CAPTURE_DIR;
 const chrome=[
  process.env.GEN_UI_CHROME,
  "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -58,6 +61,11 @@ async function run(){
     const state=await evaluate("(()=>({width:innerWidth,pages:document.querySelectorAll('.page-link').length,subheadings:document.querySelectorAll('.section-link').length,iframe:!!document.querySelector('iframe#page-frame'),src:document.querySelector('iframe#page-frame')?.getAttribute('src'),sandbox:document.querySelector('iframe#page-frame')?.getAttribute('sandbox'),hasOverflow:document.documentElement.scrollWidth>innerWidth,railColor:getComputedStyle(document.getElementById('rail')).backgroundColor}))()");
     check("视口 "+width,state,state.pages===4&&state.subheadings>=6&&state.iframe&&state.src&&!state.src.startsWith("about:")&&state.sandbox==="allow-same-origin"&&!state.hasOverflow&&state.railColor==="rgb(250, 250, 250)");
     results.viewports[width]=state;
+    const brand=await evaluate("(()=>({marks:[...document.querySelectorAll('.rail-head .mark svg,.workspace-brand-mark svg,.rail-foot-mark svg')].map(svg=>({path:svg.querySelector('path')?.getAttribute('d'),size:svg.getBoundingClientRect().width,hidden:svg.getAttribute('aria-hidden')})),favicon:document.querySelector('link[rel=icon]')?.getAttribute('href'),headerVisible:document.querySelector('.workspace-brand-mark')?.getBoundingClientRect().width>0}))()");
+    check("品牌统一/"+width,brand,brand.marks.length===3&&brand.marks.every(x=>x.path===markPath&&x.size>=16&&x.hidden==="true")&&brand.headerVisible&&brand.favicon?.startsWith("data:image/svg+xml;base64,")&&Buffer.from(brand.favicon.split(",")[1],"base64").toString("utf8")===markSvg);
+    results.viewports[width].brand=brand;
+    if(screenshotDir){fs.mkdirSync(screenshotDir,{recursive:true});const shot=await send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});fs.writeFileSync(path.join(screenshotDir,"portal-"+width+".png"),Buffer.from(shot.data,"base64"));}
+
     // file:// pages are isolated across file origins, even with allow-same-origin.
     // Query the actual iframe renderer through CDP instead of the parent's contentDocument.
     const frameTree=await send("Page.getFrameTree");

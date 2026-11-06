@@ -427,11 +427,7 @@
     const collapsed = app.dataset.sidebarCollapsed !== "true";
     app.dataset.sidebarCollapsed = String(collapsed);
     sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
-    const label = collapsed ? "展开目录" : "收起目录";
-    sidebarToggle.setAttribute("aria-label", label);
-    sidebarToggle.title = label;
-    byId("sidebar-toggle-glyph").textContent = collapsed ? "›" : "‹";
-    byId("sidebar-toggle-label").textContent = label;
+    sidebarToggle.textContent = collapsed ? "展开目录" : "收起目录";
   });
   bind("table-scroll", "scroll", hideTooltip);
   if (typeof window !== "undefined") {
@@ -481,6 +477,7 @@
   bind("cancel-create", "click", () => closeDialog("create-dialog"));
   bind("close-detail", "click", () => closeDialog("detail-drawer"));
   bind("open-data-drawer", "click", () => openDialog("data-drawer"));
+  bind("open-data-secondary", "click", () => openDialog("data-drawer"));
   bind("close-data", "click", () => closeDialog("data-drawer"));
 
   bind("create-form", "submit", event => {

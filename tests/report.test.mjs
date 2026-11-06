@@ -325,6 +325,9 @@ test("8 个品牌 SVG 图标完整，文件和页面中的图标引用都存在"
     assert.match(svg,/<svg\b/);
     assert.match(svg,/<\/svg>/);
     assert.match(svg,/viewBox=/);
+    const primitives=svg.match(/<(?:path|rect|circle|ellipse|line|polyline|polygon)\b/g)??[];
+    assert.ok(primitives.length<=2,`${name} 应使用不超过 2 个主体几何元素`);
+    assert.doesNotMatch(svg,/linearGradient|radialGradient|filter\b/i);
   }
   const html=read("demo/report.html");
   for(const match of html.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)) {
@@ -332,7 +335,19 @@ test("8 个品牌 SVG 图标完整，文件和页面中的图标引用都存在"
     assert.ok(fs.existsSync(dest),"Missing icon "+match[1]);
   }
   assert.match(html,/<link rel="icon" href="\.\.\/assets\/icons\/gen-ui-mark\.svg"/);
+  assert.match(html,/<p class="eyebrow"><img class="heading-mark" src="\.\.\/assets\/icons\/gen-ui-mark\.svg"/);
+  assert.match(html,/<footer class="page-footer"><img src="\.\.\/assets\/icons\/gen-ui-mark\.svg"/);
+  assert.equal([...html.matchAll(/<img[^>]+src="\.\.\/assets\/icons\/gen-ui-mark\.svg"/g)].length,3);
+  assert.match(read("demo/report.css"),/\.eyebrow \.heading-mark/);
   assert.match(read("SKILL.md"),/HTML report contract/);
+  const mark=read("assets/icons/gen-ui-mark.svg");
+  assert.equal((mark.match(/<path\b/g)??[]).length,1,"个人 IP 只保留一条主体路径");
+  assert.doesNotMatch(mark,/<(?:circle|ellipse|rect|polygon)\b|linearGradient|radialGradient/i);
+  assert.match(mark,/viewBox="0 0 32 32"/);
+  const viewBoxWidth=Number(mark.match(/viewBox="0 0 (\d+) \d+"/)?.[1]);
+  const strokeWidth=Number(mark.match(/stroke-width="([\d.]+)"/)?.[1]);
+  for(const size of [16,20,24]) assert.ok(strokeWidth*size/viewBoxWidth>=2,`${size}px 下线条过细`);
+  assert.match(read("assets/icons/README.md"),/不绘制完整头部、五官或附加装饰/);
 });
 
 test("手工验收文档与严格 HTML 规范链接存在", () => {

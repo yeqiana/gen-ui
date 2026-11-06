@@ -9,6 +9,11 @@ button{cursor:pointer}button:focus-visible,a:focus-visible,iframe:focus-visible,
 .rail{min-width:0;display:flex;flex-direction:column;background:#fafafa;border-right:1px solid var(--line);height:100dvh;min-height:320px;overflow:hidden}
 .rail-head{height:70px;padding:18px 15px 16px 21px;display:flex;gap:10px;align-items:center;flex-shrink:0}
 .mark{display:flex;color:#242424;align-items:center;justify-content:center;width:30px;height:30px;flex-shrink:0}
+.mark svg,.workspace-brand-mark svg,.rail-foot-mark svg{display:block;width:100%;height:100%}
+.workspace-brand-mark{display:inline-flex;align-items:center;justify-content:center;flex:0 0 20px;width:20px;height:20px}
+.rail-foot-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
+.rail-foot-mark{display:inline-flex;align-items:center;justify-content:center;flex:0 0 16px;width:16px;height:16px}
+.rail-foot-text{white-space:nowrap}
 .rail-name{font-size:14px;letter-spacing:.065em;font-weight:760;white-space:nowrap}
 .icon-button{border:0;background:transparent;border-radius:7px;color:#777;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-size:23px}
 .icon-button:hover{background:#eaeaea;color:#222}
@@ -62,5 +67,7 @@ button{cursor:pointer}button:focus-visible,a:focus-visible,iframe:focus-visible,
 .portal.is-collapsed .rail{width:min(286px,87vw)}.portal.is-collapsed .label,.portal.is-collapsed .rail-name,.portal.is-collapsed .group summary,.portal.is-collapsed .section-link,.portal.is-collapsed .rail-count,.portal.is-collapsed .rail-foot-text{display:initial}
 .portal.is-collapsed .rail-head{height:70px;justify-content:flex-start;flex-direction:row;flex-wrap:nowrap}.portal.is-collapsed .page-link{justify-content:flex-start;padding:9px 10px}
 .menu-button{display:inline-flex}.workspace{height:100dvh}.workspace-header{min-height:56px;padding:9px 15px;gap:12px}.workspace-header h1{font-size:16px}.open-new{font-size:11px}.frame-status{font-size:9px}
+.workspace-header{flex-wrap:wrap;row-gap:5px}
+.preview-mode{flex-basis:100%;text-align:right}
 }
 @media(prefers-reduced-motion:reduce){.rail,.group summary::before{transition:none}}

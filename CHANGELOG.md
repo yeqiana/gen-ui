@@ -8,8 +8,6 @@ All changes are documented in this file. Versions describe repository content, n
 - Harden the local HTML server and iframe host boundary with reproducible security regression cases.
 - Extend the existing GitHub Actions workflow to execute real Chrome browser regressions, not just JavaScript syntax and Node unit tests; remote CI outcome requires separate verification.
 - Publish a bilingual release-readiness checklist, without claiming a Git Tag or Release was created.
-- Strengthen the visual contract: collapsed navigation remains a one-column icon rail with an in-rail toggle; simplify heading hierarchy and group related content.
-- Prefer meaningful image-and-text explanations, use a restrained number of emoji, and refresh the HTML example to demonstrate the intended ChatGPT-inspired minimal style.
 
 ## Unreleased — interactive-user Codex verification evidence (2026-11-05)
 

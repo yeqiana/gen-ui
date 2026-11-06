@@ -44,6 +44,8 @@ h2 { font-size: 1.25rem; margin: 0; line-height: 1.45; }
 h3 { font-size: 1.02rem; margin: 0 0 12px; }
 p { margin: 7px 0; }
 .eyebrow { color: #565656; font-size: .8rem; font-weight: 750; letter-spacing: .025em; }
+.eyebrow { display: flex; align-items: center; gap: 7px; }
+.eyebrow .heading-mark { display: block; flex: 0 0 20px; width: 20px; height: 20px; }
 .muted, .help { color: var(--muted); font-size: .86rem; }
 .page-heading { flex: 1; }
 .masthead-actions { display: flex; align-items: end; gap: 12px; flex-wrap: wrap; }
@@ -217,6 +219,8 @@ dialog.drawer { position: fixed; margin: 0 0 0 auto; right: 0; top: 0; bottom: 0
 .overview-copy p{max-width:56ch}
 .section-emoji{margin-right:7px;font-size:1em}
 .brand{min-width:0}
+.brand strong{white-space:nowrap}
+.brand .nav-toggle .toggle-label{display:none}
 .brand .nav-toggle{margin-left:auto}
 .nav-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:7px 9px;border:0;border-radius:6px;background:transparent;color:#666;white-space:nowrap}
 .nav-toggle:hover{background:#ededed;color:#222}

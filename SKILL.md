@@ -77,7 +77,7 @@ If the generated deliverable is HTML, apply these additional nonnegotiable rules
 - **Column-aware filtering**: provide conditions for the actual key fields (e.g. record ID search, module/status/batch selects, duration threshold). Filter, metrics, charts, and paging from one coherent dataset. Never use filter sentinels that collide with valid data (e.g. a module named `all`).
 - **Explicit navigation destination**: distinguish **“页内标签”** (current-page panel) from **“新标签页打开”** (real external target) with visible text and correct semantic controls; icons alone are insufficient.
 - **Lean presentation, richer interactions**: reduce decorative cards. Use forms, modal dialogs, side drawers, tabs and linked controls when they clarify the task; do not limit HTML to list pages. Repeated row actions need a unique record-specific accessible name.
-- **GEN-UI monochrome silhouette icon system**: use original [SVG assets](assets/icons/README.md) in a highly abstract one-color style. Avoid gradients, playful mascots, multiple accent colors and excessive icon decoration.
+- **GEN-UI monochrome icon system**: use original [SVG assets](assets/icons/README.md) in a restrained one-color style. The personal mark is a single double-peak cat-ear stroke (one path only), with no full head, facial features, frame or ornament; keep its silhouette clear at 16/20/24px. Functional icons should use at most 1–2 geometric primitives, consistent visual weight and recognizable meaning. Do not simplify away semantics. Avoid gradients, colorful mascots, multiple accent colors and excessive decoration.
 
 
 
