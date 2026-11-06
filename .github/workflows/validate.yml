@@ -28,7 +28,7 @@ jobs:
   browser:
     name: Browser QA (Chrome, 375/768/1440px)
     needs: validate
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
@@ -44,19 +44,29 @@ jobs:
         with:
           chrome-version: stable
       - name: Verify Chrome install
+        shell: pwsh
         env:
           GEN_UI_CHROME: ${{ steps.chrome.outputs.chrome-path }}
-        run: '"$GEN_UI_CHROME" --version'
+        run: '& $env:GEN_UI_CHROME --version'
       - name: Run actual Chrome smoke suites
-        shell: bash
+        shell: pwsh
         env:
           GEN_UI_CHROME: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          set -euo pipefail
-          node tests/chrome-report-smoke.mjs
-          node tests/chrome-portal-smoke.mjs
-          node tests/chrome-portal-http-smoke.mjs
-          node tests/chrome-portal-directory-smoke.mjs
-          for case_id in HTML02 HTML03 HTML04; do
-            node tests/chrome-agent-output-smoke.mjs --case "$case_id" --input "evals/artifacts/${case_id}-webcodex-gpt6-20261106/report.html" --report "$RUNNER_TEMP/${case_id}-browser-evidence.json"
-          done
+          $ErrorActionPreference = "Stop"
+          $scripts = @(
+            "tests/chrome-report-smoke.mjs",
+            "tests/chrome-portal-smoke.mjs",
+            "tests/chrome-portal-http-smoke.mjs",
+            "tests/chrome-portal-directory-smoke.mjs"
+          )
+          foreach ($script in $scripts) {
+            & node $script
+            if ($LASTEXITCODE -ne 0) { throw "Browser smoke failed: $script" }
+          }
+          foreach ($case_id in @("HTML02","HTML03","HTML04")) {
+            $inputPath = "evals/artifacts/${case_id}-webcodex-gpt6-20261106/report.html"
+            $reportPath = Join-Path $env:RUNNER_TEMP "${case_id}-browser-evidence.json"
+            & node tests/chrome-agent-output-smoke.mjs --case $case_id --input $inputPath --report $reportPath
+            if ($LASTEXITCODE -ne 0) { throw "Agent browser QA failed: $case_id" }
+          }
