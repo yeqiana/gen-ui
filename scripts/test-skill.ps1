@@ -67,7 +67,12 @@ $required = @(
   "tests/agent-evaluation.test.mjs",
   "tests/agent-evidence.test.mjs",
   "tests/chrome-agent-output-smoke.mjs",
-  "evals/webcodex-agent-matrix-2026-11-06.md"
+  "evals/webcodex-agent-matrix-2026-11-06.md",
+  "evals/codex-blind-gate-2026-11-06.md",
+  "docs/release-readiness-v1.4.0.md",
+  "scripts/check-codex-blind-env.ps1",
+  "tests/portal-security.test.mjs",
+  "tests/workflow-guard.test.mjs"
 )
 foreach ($name in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $root $name) -PathType Leaf)) {
@@ -131,11 +136,16 @@ Write-Output "[PASS] Real directory Chrome smoke syntax"
 & node --check (Join-Path $root "tests/chrome-agent-output-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Agent browser eval JS syntax failed" }
 Write-Output "[PASS] Agent browser smoke JS syntax"
+& node --check (Join-Path $root "tests/portal-security.test.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Portal security tests syntax failed" }
+& node --check (Join-Path $root "tests/workflow-guard.test.mjs")
+if ($LASTEXITCODE -ne 0) { throw "CI workflow guard tests syntax failed" }
+Write-Output "[PASS] Portal security / CI test syntax"
 
 & node --check (Join-Path $root "tests/chrome-report-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Chrome smoke JS syntax failed" }
 Write-Output "[PASS] Chrome smoke JS syntax（浏览器实测请单独运行）"
 
-& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs")
+& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"

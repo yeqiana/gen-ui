@@ -2,6 +2,13 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
+## Unreleased — v1.4.0 readiness work (2026-11-06)
+
+- Record the distinction between GPT-6 + WebCodex saved Agent samples and a **not-yet-completed** native Codex blind run; protect model quota and preserve honest evidence.
+- Harden the local HTML server and iframe host boundary with reproducible security regression cases.
+- Extend the existing GitHub Actions workflow to execute real Chrome browser regressions, not just JavaScript syntax and Node unit tests; remote CI outcome requires separate verification.
+- Publish a bilingual release-readiness checklist, without claiming a Git Tag or Release was created.
+
 ## Unreleased — interactive-user Codex verification evidence (2026-11-05)
 
 - Confirm native Codex CLI authentication from a separate ordinary-permission Windows desktop-user session, correcting the misleading SYSTEM Runner login result.

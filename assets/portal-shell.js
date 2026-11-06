@@ -8,7 +8,8 @@ const frame=document.getElementById("page-frame");
 // Local file preview: keep same-origin only for CSS, but disable page scripts.
 // HTTP preview: allow page scripts in a sandboxed opaque origin; never pair
 // allow-scripts with allow-same-origin, even for a user-provided HTML page.
-const interactive=location.protocol==="http:"||location.protocol==="https:";
+// A copy deployed to an arbitrary web origin must not run untrusted page scripts.
+const interactive=location.protocol==="http:"&&location.hostname==="127.0.0.1";
 frame.setAttribute("sandbox",interactive?"allow-scripts allow-forms":"allow-same-origin");
 document.getElementById("preview-mode").textContent=interactive?"隔离交互预览":"离线静态预览 · 脚本不可用";
 const title=document.getElementById("active-title");

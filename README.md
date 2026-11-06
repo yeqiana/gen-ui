@@ -82,6 +82,8 @@ node tests/chrome-report-smoke.mjs
 The script checks three viewports, keyboard focus, table filtering, tooltips, and newly created records. It intentionally **does not accept arbitrary AI-generated HTML**. See the [local verification baseline](evals/real-agent-baseline-2026-11-05.md) and [saved Chrome evidence](evals/chrome-demo-baseline-2026-11-05.json) and [real-Agent evaluation instructions](evals/agent-evaluation.md). Updated real-Agent status: the desktop user's Codex CLI login was **verified**, but the actual HTML04 attempt was **blocked by a Windows exec_command policy rejection** before any files could be produced. No Agent compliance score is claimed; see the [attempt evidence](evals/codex-user-session-attempt-2026-11-05.md).
 
 ## Checks
+Release note: no v1.4.0 Git Tag or GitHub Release has been created; see the [release readiness gate](docs/release-readiness-v1.4.0.md).
+
 
 ~~~powershell
 # Windows PowerShell 5.1+
@@ -91,7 +93,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 pwsh -NoProfile -File scripts/test-skill.ps1
 ~~~
 
-CI runs the same checks on pushes and pull requests. Static checks and Node tests do not prove the Skill is followed by every model or that a real browser has been manually tested. See [manual evaluation](evals/manual-evaluation.md) and the [real-Agent prompt matrix + offline static gate](evals/agent-evaluation.md). Static-gate success is **not** evidence that a model actually followed the Skill. No external model runs are claimed.
+The existing CI runs repository checks on pushes and pull requests; the browser CI job is now defined but still requires a verified remote GitHub Actions run. Static checks do not prove general model compliance. Five saved samples generated through ChatGPT GPT-6 + WebCodex across two Skill baselines have been tested, but the original Codex CLI independent blind test remains unverified. Read the [Agent evidence matrix](evals/webcodex-agent-matrix-2026-11-06.md), [Codex blind-test gate](evals/codex-blind-gate-2026-11-06.md), and [v1.4.0 release readiness checklist](docs/release-readiness-v1.4.0.md).
 
 ## Repository layout
 
