@@ -76,8 +76,17 @@ try{
   try{nodeHttpStatus=(await fetch(local.url)).status}catch(error){nodeHttpStatus=String(error)}
   throw Error("HTML portal did not finish loading in Chrome: "+JSON.stringify({navigations,browserPage,nodeHttpStatus,requests:requestTrace,networkEvents}));
  }
- const parent=await ev("(()=>{const f=document.getElementById('page-frame');return{sandbox:f.getAttribute('sandbox'),src:f.getAttribute('src'),mode:document.getElementById('preview-mode').textContent,childDOMReadable:!!f.contentDocument}})()");
- expect("HTTP frame sandbox",parent,parent.sandbox==="allow-scripts allow-forms"&&parent.mode.includes("交互")&&parent.src.endsWith(".html")&&!parent.childDOMReadable);
+ const readParent=()=>ev("(()=>{const f=document.getElementById('page-frame');return{sandbox:f.getAttribute('sandbox'),src:f.getAttribute('src'),mode:document.getElementById('preview-mode').textContent,childDOMReadable:!!f.contentDocument}})()");
+ const parentIsolated=value=>value?.sandbox==="allow-scripts allow-forms"&&value?.mode?.includes("交互")&&value?.src?.endsWith(".html")&&!value.childDOMReadable;
+ // The iframe src attribute can update before its first document commits.
+ // Until navigation commits, Chrome can still expose the initial about:blank document.
+ let parent;
+ for(let attempt=0;attempt<60;attempt++){
+  parent=await readParent();
+  if(parentIsolated(parent))break;
+  await sleep(120);
+ }
+ expect("HTTP frame sandbox",{parent,requests:requestTrace,networkEvents},parentIsolated(parent));
  let target,sameProcessFrame;
  for(let i=0;i<35;i++){
   const info=await cmd("Target.getTargets");
@@ -88,20 +97,30 @@ try{
   if(sameProcessFrame)break;
   await sleep(150);
  }
- const expression="(()=>({executed:document.body.dataset.executed,background:getComputedStyle(document.body).backgroundColor,font:getComputedStyle(document.body).fontSize,href:location.href}))()";
- let childState;
+ const expression="(()=>({executed:document.body?.dataset.executed,background:document.body&&getComputedStyle(document.body).backgroundColor,font:document.body&&getComputedStyle(document.body).fontSize,href:location.href,readyState:document.readyState}))()";
+ const isChildReady=value=>value?.executed==="yes"&&value?.background==="rgb(234, 238, 242)"&&value?.font==="21px";
+ let childState,readChild;
  if(target){
   const attached=await cmd("Target.attachToTarget",{targetId:target.targetId,flatten:true});
   await cmd("Runtime.enable",{},attached.sessionId);
-  childState=await ev(expression,attached.sessionId);
+  readChild=()=>ev(expression,attached.sessionId);
  }else if(sameProcessFrame){
   const world=await cmd("Page.createIsolatedWorld",{frameId:sameProcessFrame.frame.id,worldName:"genui-http-inspection"});
-  const evaluated=await cmd("Runtime.evaluate",{expression,contextId:world.executionContextId,returnByValue:true});
-  if(evaluated.exceptionDetails)throw Error("Child inspection: "+evaluated.exceptionDetails.text);
-  childState=evaluated.result.value;
+  readChild=async()=>{
+   const evaluated=await cmd("Runtime.evaluate",{expression,contextId:world.executionContextId,returnByValue:true});
+   if(evaluated.exceptionDetails)throw Error("Child inspection: "+evaluated.exceptionDetails.text);
+   return evaluated.result.value;
+  };
  }else throw Error("HTTP iframe renderer not found: "+JSON.stringify((await cmd("Page.getFrameTree")).frameTree));
-
- expect("isolated child CSS and JS",childState,childState.executed==="yes"&&childState.background==="rgb(234, 238, 242)"&&childState.font==="21px");
+ // The iframe target can exist before its CSS fetch and inline script finish.
+ // Poll the actual child DOM; do not bypass the CSS/JS assertion or hide a timeout.
+ let childLastError;
+ for(let attempt=0;attempt<60;attempt++){
+  try{childState=await readChild();childLastError=undefined}catch(error){childLastError=String(error)}
+  if(isChildReady(childState))break;
+  await sleep(120);
+ }
+ expect("isolated child CSS and JS",{childState,lastError:childLastError,requests:requestTrace,networkEvents},isChildReady(childState));
  const result={result:"pass",environment:"Chrome CDP + 127.0.0.1 loopback",parent,child:childState,at:new Date().toISOString()};
  if(process.argv.length===4&&process.argv[2]==="--report"){
    const output=path.resolve(process.argv[3]);fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(result,null,2)+"\n","utf8");
