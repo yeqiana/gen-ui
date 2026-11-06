@@ -7,6 +7,11 @@
   <title>GEN-UI · 工程质量分析</title>
   <link rel="icon" href="../assets/icons/gen-ui-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./report.css">
+  <link rel="stylesheet" href="./ui-refresh.css">
+  <link rel="stylesheet" href="./flow-viewer.css">
+  <script src="./chart-refresh.js" defer></script>
+  <script src="./pager-refresh.js" defer></script>
+  <script src="./flow-viewer.js" defer></script>
   <script src="./report.js" defer></script>
 </head>
 <body>
@@ -16,7 +21,7 @@
     <div class="brand">
       <img src="../assets/icons/gen-ui-mark.svg" width="44" height="44" alt="">
       <span><strong>GEN-UI</strong></span>
-      <button id="toggle-sidebar" type="button" class="nav-toggle" aria-expanded="true" aria-controls="report-sidebar" aria-label="收起目录" title="收起目录"><span id="sidebar-toggle-glyph" class="toggle-glyph" aria-hidden="true">‹</span><span id="sidebar-toggle-label" class="toggle-label">收起目录</span></button>
+      <button id="toggle-sidebar" type="button" class="nav-toggle" aria-expanded="true" aria-controls="report-sidebar" aria-label="收起目录" title="收起目录"><svg id="sidebar-toggle-glyph" class="toggle-glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="M12 4 6 10l6 6"/></svg><span id="sidebar-toggle-label" class="toggle-label">收起目录</span></button>
     </div>
     <nav aria-label="页面目录">
 
@@ -51,16 +56,45 @@
     </header>
 
     <section id="overview" class="jump" aria-labelledby="overview-heading">
-      <div class="section-title"><h2 id="overview-heading"><span class="section-emoji" aria-hidden="true">📊</span> 执行概览</h2></div>
+      <div class="section-title"><h2 id="overview-heading"><img class="section-icon" src="../assets/icons/gen-ui-spark.svg" alt=""> 执行概览</h2></div>
       <dl class="metrics">
         <div class="metric"><dt>全部记录</dt><dd id="count-total">—</dd></div>
         <div class="metric positive"><dt>成功</dt><dd id="count-success">—</dd></div>
         <div class="metric negative"><dt>失败</dt><dd id="count-failure">—</dd></div>
-        <div class="metric"><dt>待处理</dt><dd id="count-pending">—</dd></div>
-        <div class="metric"><dt>超过耗时阈值</dt><dd id="count-slow">—</dd></div>
+        <div class="metric pending"><dt>待处理</dt><dd id="count-pending">—</dd></div>
+        <div class="metric slow"><dt>超过耗时阈值</dt><dd id="count-slow">—</dd></div>
       </dl>
       <div class="overview-story">
-        <img src="./quality-flow.svg" width="620" height="150" alt="数据分析流程：记录接入、条件筛选、指标统计、明细核验">
+        <div class="flow-panel" id="flow-panel" aria-label="工程数据分析流程图">
+  <div class="flow-toolbar"><span class="flow-title">工程流程</span>
+    <div class="flow-actions" role="group" aria-label="流程图工具">
+      <button id="flow-zoom-out" type="button" aria-label="缩小流程图"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button>
+      <span id="flow-zoom-label" aria-live="polite">100%</span>
+      <button id="flow-zoom-in" type="button" aria-label="放大流程图"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12 M10 4v12"/></svg></button>
+      <button id="flow-fit" type="button">适应窗口</button>
+      <button id="flow-fullscreen" type="button" aria-pressed="false" aria-label="全屏查看流程图" title="按 Esc 退出全屏">全屏</button>
+    </div></div>
+  <div id="flow-canvas" class="flow-canvas" tabindex="0" role="region" aria-label="可拖动和缩放的离线SVG流程图">
+<svg id="flow-svg" xmlns="http://www.w3.org/2000/svg" width="620" height="150" viewBox="0 0 620 150" role="img" aria-labelledby="title desc">
+  <title id="title">工程数据分析流程</title>
+  <desc id="desc">记录接入、条件筛选、指标统计、明细核验四个连续步骤。</desc>
+  <defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 6 3 0 6" fill="none" stroke="#999" stroke-width="1"/></marker></defs>
+  <g fill="none" stroke="#d7d7d7" stroke-width="1.4">
+    <rect x="8" y="34" width="128" height="76" rx="8" fill="#ecf5ff"/>
+    <rect x="168" y="34" width="128" height="76" rx="8" fill="#f0f9eb"/>
+    <rect x="328" y="34" width="128" height="76" rx="8" fill="#fdf6ec"/>
+    <rect x="488" y="34" width="124" height="76" rx="8" fill="#f4f4ff"/>
+    <path d="M138 72h25M298 72h25M458 72h25" marker-end="url(#arrow)"/>
+  </g>
+  <g fill="#333" font-family="Microsoft YaHei, PingFang SC, sans-serif" text-anchor="middle">
+    <text x="72" y="65" font-size="15" font-weight="600">记录接入</text><text x="72" y="88" font-size="11" fill="#777">统一数据源</text>
+    <text x="232" y="65" font-size="15" font-weight="600">条件筛选</text><text x="232" y="88" font-size="11" fill="#777">模块 · 状态 · 批次</text>
+    <text x="392" y="65" font-size="15" font-weight="600">指标统计</text><text x="392" y="88" font-size="11" fill="#777">数量 · 分布 · 趋势</text>
+    <text x="550" y="65" font-size="15" font-weight="600">明细核验</text><text x="550" y="88" font-size="11" fill="#777">定位具体记录</text>
+  </g>
+</svg>
+  </div><p class="flow-hint">拖动平移 · ＋/− 缩放 · 0 适应窗口 · Esc 退出全屏</p>
+</div>
         <div class="overview-copy">
           <h3>先看整体，再核对明细</h3>
           <p>所有指标、图表和记录来自同一份筛选结果。先确认成功与失败分布，再按模块、批次和耗时定位具体问题。</p>
@@ -70,7 +104,7 @@
     </section>
 
     <section id="visuals" class="jump" aria-labelledby="visuals-heading">
-      <div class="section-title"><h2 id="visuals-heading"><span class="section-emoji" aria-hidden="true">📈</span> 趋势与分布</h2></div>
+      <div class="section-title"><h2 id="visuals-heading"><img class="section-icon" src="../assets/icons/gen-ui-chart.svg" alt=""> 趋势与分布</h2></div>
       <div class="chart-layout">
         <article id="status-distribution" class="chart-section jump"><h3>状态构成 · 饼图</h3><figure id="pie"></figure></article>
         <article id="module-analysis" class="chart-section jump"><h3>模块对比 · 柱状图</h3><figure id="bar"></figure></article>
@@ -79,7 +113,7 @@
     </section>
 
     <section id="records" class="jump" aria-labelledby="records-heading">
-      <div class="section-title"><h2 id="records-heading"><span class="section-emoji" aria-hidden="true">📋</span> 执行明细</h2></div>
+      <div class="section-title"><h2 id="records-heading"><img class="section-icon" src="../assets/icons/gen-ui-table.svg" alt=""> 执行明细</h2></div>
       <div class="toolbar">
         <div class="tab-list" role="tablist" aria-label="当前页面内的内容切换">
           <button type="button" id="tab-records" role="tab" aria-controls="panel-records" aria-selected="true" tabindex="0" class="tab active">
@@ -90,8 +124,8 @@
           </button>
         </div>
         <div class="toolbar-actions">
-          <button type="button" id="open-create" class="primary"><img src="../assets/icons/gen-ui-form.svg" alt="">新增记录 <small>弹窗</small></button>
-          <button type="button" id="open-data-drawer"><img src="../assets/icons/gen-ui-drawer.svg" alt="">编辑数据 <small>右侧抽屉</small></button>
+          <button type="button" id="open-create" class="primary"><img src="../assets/icons/gen-ui-form.svg" alt="">新增记录</button>
+          <button type="button" id="open-data-drawer"><img src="../assets/icons/gen-ui-drawer.svg" alt="">编辑数据</button>
           <span class="toolbar-note">操作仅在当前页面生效</span>
         </div>
       </div>
@@ -104,7 +138,6 @@
             <select id="status"><option value="all">全部状态</option><option value="success">成功</option><option value="failure">失败</option><option value="pending">待处理</option></select>
           </label>
           <label for="batch-filter">执行批次<select id="batch-filter"><option value="all">全部批次</option></select></label>
-          <label for="page-size">每页条数<select id="page-size"><option value="20" selected>20 条</option><option value="50">50 条</option><option value="100">100 条</option></select></label>
           <button type="button" id="reset-filters" class="secondary">重置筛选</button>
         </form>
         <div class="detail-filters">
@@ -124,9 +157,16 @@
         </div>
         <div class="paging">
           <p id="page-info" class="muted" aria-live="polite"></p>
-          <div class="paging-actions"><button type="button" id="previous">上一页</button><button type="button" id="next">下一页</button></div>
+          <div class="paging-actions">
+            <label for="page-size">每页 <select id="page-size" aria-label="每页记录数"><option value="10" selected>10 条</option><option value="20">20 条</option><option value="50">50 条</option></select></label>
+            <button type="button" id="previous" aria-label="上一页"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12 4 6 10l6 6"/></svg></button>
+            <nav id="page-numbers" class="page-numbers" aria-label="表格页码"></nav>
+            <button type="button" id="next" aria-label="下一页"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8 4 6 6-6 6"/></svg></button>
+            <label class="page-jump" for="page-jump-input">前往 <input id="page-jump-input" type="number" min="1" value="1" aria-label="跳转到第几页"> 页</label>
+            <button type="button" id="page-go">跳转</button>
+          </div>
         </div>
-        <p class="help">可左右滚动查看完整列；长文本保留省略号，鼠标移入或键盘聚焦时显示完整内容。最后一页允许少于 20 条。</p>
+        <p class="help">可左右滚动查看完整列；长文本保留省略号，鼠标移入或键盘聚焦时显示完整内容。最后一页允许少于所选每页条数。</p>
       </div>
       <div id="panel-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
         <h3>筛选与查看规则</h3>
@@ -143,7 +183,7 @@
 
 <dialog id="create-dialog" aria-labelledby="create-heading" class="modal">
   <form id="create-form" autocomplete="off">
-    <div class="dialog-head"><h2 id="create-heading">新增演示记录</h2><button type="button" id="close-create" class="icon-only" aria-label="关闭新增弹窗" title="关闭"><span aria-hidden="true">×</span></button></div>
+    <div class="dialog-head"><h2 id="create-heading">新增演示记录</h2><button type="button" id="close-create" class="icon-only" aria-label="关闭新增弹窗" title="关闭"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button></div>
     <p class="muted">在当前页面临时增加一条记录，关闭页面后不保存。</p>
     <div class="form-fields">
       <label for="new-id">任务编号<input id="new-id" maxlength="40" required placeholder="例如：T-068"></label>
@@ -158,13 +198,13 @@
 </dialog>
 
 <dialog id="detail-drawer" class="drawer" aria-labelledby="detail-heading">
-  <div class="dialog-head"><h2 id="detail-heading">任务详情 · 站内抽屉</h2><button type="button" id="close-detail" class="icon-only" aria-label="关闭任务详情" title="关闭"><span aria-hidden="true">×</span></button></div>
+  <div class="dialog-head"><h2 id="detail-heading">任务详情 · 站内抽屉</h2><button type="button" id="close-detail" class="icon-only" aria-label="关闭任务详情" title="关闭"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button></div>
   <dl id="detail-content" class="details"></dl>
   <p class="help">仅展示当前报告数据，不会打开浏览器新标签页。</p>
 </dialog>
 
 <dialog id="data-drawer" class="drawer" aria-labelledby="json-heading">
-  <div class="dialog-head"><h2 id="json-heading">编辑受控数据 · 站内抽屉</h2><button type="button" id="close-data" class="icon-only" aria-label="关闭数据编辑" title="关闭"><span aria-hidden="true">×</span></button></div>
+  <div class="dialog-head"><h2 id="json-heading">编辑受控数据 · 站内抽屉</h2><button type="button" id="close-data" class="icon-only" aria-label="关闭数据编辑" title="关闭"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button></div>
   <p class="muted">仅允许 <code>gen-ui-html-report/v1</code> 数据字段。禁用脚本、HTML、事件属性和任意网络地址。</p>
   <label for="report-json">报告 JSON</label>
   <textarea id="report-json" spellcheck="false" aria-describedby="json-status"></textarea>

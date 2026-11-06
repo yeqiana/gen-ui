@@ -19,7 +19,7 @@ test("侧边栏收起保留纵向图标栏，展开按钮始终位于侧栏内�
   assert.equal(toggle.attributes["aria-expanded"],"false");
   assert.equal(toggle.attributes["aria-label"],"展开目录");
   assert.equal(toggle.title,"展开目录");
-  assert.equal(get("sidebar-toggle-glyph").textContent,"›");
+  assert.equal(get("sidebar-toggle-glyph").style.transform,"rotate(180deg)");
   assert.equal(get("sidebar-toggle-label").textContent,"展开目录");
   dispatch(toggle,"click");
   assert.equal(app.dataset.sidebarCollapsed,"false");
@@ -32,29 +32,30 @@ test("侧边栏收起保留纵向图标栏，展开按钮始终位于侧栏内�
   assert.doesNotMatch(css,/\.app\[data-sidebar-collapsed="true"\]\s+\.sidebar\s*\{\s*display:\s*none/);
 });
 
-test("标题不带底部小标题，关键内容采用有说明的图文组合并控制 Emoji 数量", () => {
+test("标题不带冗余小标题，统一 SVG 图标并嵌入可操作流程图", () => {
   const html=read("demo/report.html");
   const heading=html.match(/<div class="page-heading">([\s\S]*?)<\/div>/)?.[1] ?? "";
   assert.match(heading,/<h1 id="report-title">工程质量分析<\/h1>\s*$/);
-  assert.match(html,/<div class="overview-story">[\s\S]*?<img[^>]+alt="[^"]+"[\s\S]*?<div class="overview-copy">/);
-  assert.equal((html.match(/class="section-emoji"/g) ?? []).length,3);
+  assert.match(html,/<div class="overview-story">[\s\S]*?<svg id="flow-svg"[\s\S]*?<div class="overview-copy">/);
+  assert.equal((html.match(/class="section-icon"/g) ?? []).length,3);
   assert.doesNotMatch(html,/id="data"|open-data-secondary/);
   assert.match(html,/class="icon-only" aria-label="关闭新增弹窗" title="关闭"/);
 });
 
-test("演示记录为中文模拟数据，20/50/100 分页不填充末页", () => {
+test("演示记录为中文模拟数据，默认10条并支持10/20/50分页", () => {
   const report = ui.validateReport(ui.sample());
   assert.equal(report.rows.length, 67);
   assert.match(report.title, /模拟数据/);
   assert.ok(report.rows.every(row => /[\u4e00-\u9fff]/.test(row.module)));
+  assert.equal(ui.paginateRows(report.rows, 1, 10).rows.length, 10);
+  assert.equal(ui.paginateRows(report.rows, 7, 10).rows.length, 7);
+  assert.equal(ui.paginateRows(report.rows, 80, 10).page, 7);
   assert.equal(ui.paginateRows(report.rows, 1, 20).rows.length, 20);
   assert.equal(ui.paginateRows(report.rows, 4, 20).rows.length, 7);
-  assert.equal(ui.paginateRows(report.rows, 80, 20).page, 4);
   assert.equal(ui.paginateRows(report.rows, 1, 50).rows.length, 50);
   assert.equal(ui.paginateRows(report.rows, 2, 50).rows.length, 17);
-  assert.equal(ui.paginateRows(report.rows, 1, 100).rows.length, 67);
-  assert.throws(() => ui.paginateRows(report.rows, 1, 10), /20/);
-  assert.deepEqual(ui.paginateRows([], 1, 20).rows, []);
+  assert.throws(() => ui.paginateRows(report.rows, 1, 100), /10/);
+  assert.deepEqual(ui.paginateRows([], 1, 10).rows, []);
 });
 
 test("筛选条件与具体列关联：编号、模块、状态、批次、耗时", () => {
@@ -157,10 +158,10 @@ function dispatch(node,event,fields={}) {
   return prevented;
 }
 
-test("页面 DOM 初始化 20 条、中文数据状态与三个可访问的 SVG 图表", () => {
+test("页面 DOM 初始化 10 条、中文数据状态与三个可访问的 SVG 图表", () => {
   const {get}=boot();
-  assert.equal(get("report-rows").children.length,20);
-  assert.match(get("page-info").textContent,/第 1–20 条/);
+  assert.equal(get("report-rows").children.length,10);
+  assert.match(get("page-info").textContent,/第 1–10 条/);
   assert.equal(Number(get("count-total").textContent),67);
   assert.equal(Number(get("count-success").textContent)+
     Number(get("count-failure").textContent)+Number(get("count-pending").textContent),67);
@@ -177,10 +178,10 @@ test("页面 DOM 初始化 20 条、中文数据状态与三个可访问的 SVG 
 test("模块、批次和状态联动重置分页；滑块与分页大小实际生效", () => {
   const {get,app}=boot();
   dispatch(get("next"),"click");
-  assert.match(get("page-info").textContent,/第 21–40 条/);
+  assert.match(get("page-info").textContent,/第 11–20 条/);
   dispatch(get("module-filter"),"change",{value:"鉴权中心"});
   assert.equal(Number(get("count-total").textContent),ui.sample().rows.filter(row=>row.module==="鉴权中心").length);
-  assert.match(get("page-info").textContent,/第 1\//);
+  assert.match(get("page-info").textContent,/1\/2 页/);
   dispatch(get("batch-filter"),"change",{value:"2"});
   assert.equal(Number(get("count-total").textContent),ui.sample().rows.filter(row=>row.module==="鉴权中心"&&row.batch===2).length);
   dispatch(get("status"),"change",{value:"failure"});
@@ -276,7 +277,7 @@ test("JSON 抽屉允许受控数据但拒绝脚本，保留上次合法内容", 
   input.value=JSON.stringify({...original,rows:[{...original.rows[0],onClick:"alert(1)"}]});
   dispatch(get("apply-json"),"click");
   assert.equal(get("json-status").dataset.kind,"error");
-  assert.equal(get("report-rows").children.length,20);
+  assert.equal(get("report-rows").children.length,10);
   const injectedTitle="<img src=x onerror=alert(1)>";
   input.value=JSON.stringify({version:"gen-ui-html-report/v1",title:injectedTitle,
     rows:[{id:"X1",module:"测试模块",status:"success",durationMs:22,batch:1}]});
@@ -352,7 +353,7 @@ test("8 个品牌 SVG 图标完整，文件和页面中的图标引用都存在"
 
 test("手工验收文档与严格 HTML 规范链接存在", () => {
   const doc=read("references/html-report-contract.md");
-  assert.match(doc,/20 rows per page/);
+  assert.match(doc,/10 rows per page/);
   assert.match(doc,/HTML/);
   assert.match(read("README.zh-CN.md"),/HTML 报告/);
   assert.match(read("scripts/test-skill.ps1"),/tests\/report.test.mjs/);
@@ -443,7 +444,7 @@ test("最大 1000 条、含大量转义字符的合法报告仍可导入", () =>
 test("键盘只进入真正发生截断的单元格，窗口尺寸变化后重新计算", () => {
   const {get, win}=boot();
   const spans=get("report-rows").querySelectorAll(".clip");
-  assert.equal(spans.length,80);
+  assert.equal(spans.length,40);
   assert.ok(spans.every(span=>span.tabIndex===-1));
   const long=spans[1];
   long.scrollWidth=240;
@@ -483,8 +484,48 @@ test("每条重复操作按钮有与记录关联的不同无障碍名称", () =>
   const {get}=boot();
   const rows=get("report-rows").children;
   const names=rows.map(row=>row.children[5].children[0].attributes["aria-label"]);
-  assert.equal(names.length,20);
-  assert.equal(new Set(names).size,20);
+  assert.equal(names.length,10);
+  assert.equal(new Set(names).size,10);
   for(let i=0;i<rows.length;i++)assert.match(names[i],new RegExp(rows[i].dataset.recordId));
   assert.ok(names.every(name=>name.includes("站内抽屉")));
+});
+
+
+test("总览卡片、十条分页和多色图表的静态资源全部离线可用", () => {
+  const html=read("demo/report.html");
+  const css=read("demo/ui-refresh.css");
+  const pager=read("demo/pager-refresh.js");
+  const charts=read("demo/chart-refresh.js");
+  assert.match(html,/option value="10" selected/);
+  assert.match(html,/id="page-numbers"/);
+  assert.match(html,/id="page-jump-input"/);
+  assert.match(css,/\.metric,.metric:first-child,.metric:last-child/);
+  assert.match(css,/#67c23a/i);
+  assert.match(css,/#f56c6c/i);
+  assert.match(css,/\.status\.success/);
+  assert.match(pager,/aria-current/);
+  assert.match(charts,/#5470c6/i);
+  assert.match(charts,/#91cc75/i);
+  assert.match(charts,/#fac858/i);
+  for(const src of ["./ui-refresh.css","./chart-refresh.js","./pager-refresh.js"]){
+    assert.ok(html.includes(src),"缺少离线资产: "+src);
+    assert.ok(fs.existsSync(path.join(base,"demo",src)));
+  }
+  assert.doesNotMatch(charts+pager,/fetch\(|XMLHttpRequest|import\(/i);
+});
+
+test("内嵌 SVG 流程图具备全屏、缩放、适应窗口、拖拽、Esc和离线保障", () => {
+  const html=read("demo/report.html"),js=read("demo/flow-viewer.js");
+  assert.match(html,/<svg id="flow-svg"/);
+  assert.match(html,/id="flow-canvas"/);
+  for(const id of ["flow-fullscreen","flow-zoom-in","flow-zoom-out","flow-fit"]){
+    assert.match(html,new RegExp('id="'+id+'"'));
+  }
+  assert.match(js,/requestFullscreen/);
+  assert.match(js,/exitFullscreen/);
+  assert.match(js,/pointerdown/);
+  assert.match(js,/pointermove/);
+  assert.match(js,/Escape/);
+  assert.match(js,/viewBox/);
+  assert.doesNotMatch(js,/fetch\(|XMLHttpRequest|https?:\/\//i);
 });

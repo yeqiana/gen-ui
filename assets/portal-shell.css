@@ -71,3 +71,13 @@ button{cursor:pointer}button:focus-visible,a:focus-visible,iframe:focus-visible,
 .preview-mode{flex-basis:100%;text-align:right}
 }
 @media(prefers-reduced-motion:reduce){.rail,.group summary::before{transition:none}}
+
+/* 统一图标：目录与折叠按钮使用同一套矢量描边。 */
+.nav-glyph::before,.nav-glyph::after{content:none!important;display:none!important}
+.nav-glyph svg{display:block;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.icon-button svg{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rail-close[aria-expanded=false] svg{transform:rotate(180deg)}
+.page-link[aria-current=page],.section-link[aria-current=location]{background:#ecf5ff;color:#409eff}
+.page-link:hover,.section-link:hover{background:#ecf5ff;color:#337ecc}
+.icon-button:hover{background:#ecf5ff;color:#409eff}
+.is-collapsed .rail-close{width:34px;height:34px}

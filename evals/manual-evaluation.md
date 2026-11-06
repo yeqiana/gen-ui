@@ -44,7 +44,7 @@ Conclusion: Pass / Limited / Fail / Not tested
 ### 中文 HTML 页面专项验收
 
 1. 表头和数据全部不换行；横向滚动时首列保持固定。让模块内容超长，验证省略号及悬浮全文：**只在实际截断时出现**，鼠标移出/失焦/表格滚动后隐藏，键盘聚焦同样可以查看。
-2. 编号搜索、模块、状态、批次与耗时阈值分别对应实际列字段；更新筛选后，数据量、成功/失败数量、图表与分页必须同步；每页 20/50/100，最后一页不补虚拟记录。
+2. 编号搜索、模块、状态、批次与耗时阈值分别对应实际列字段；更新筛选后，数据量、成功/失败数量、图表与分页必须同步；每页 10/20/50，最后一页不补虚拟记录。
 3. “页内标签”按钮只切换当前面板；标注“新标签页打开”的链接确实设置 `target="_blank"`、`rel="noopener noreferrer"`。测试键盘焦点及左右方向键切换。
 4. 页面所有非必要可见文本使用中文，保留代码标识、品牌和原始数据。除非真正改善理解，不堆积正文卡片。
 5. 测试新增记录弹窗、详情抽屉、JSON 数据抽屉的打开/关闭、字段验证、非法数据拒绝与表格联动；不应有任意脚本执行或后台 API 调用。
@@ -56,7 +56,7 @@ Conclusion: Pass / Limited / Fail / Not tested
 Open [demo/report.html](../demo/report.html) from the cloned repository with [report.js](../demo/report.js) beside it. This is an offline *illustrative* dataset, not a real deployment or observed test report.
 
 1. Default navigation is on the **left**; switching to **Top** preserves working section anchors. On mobile width, navigation remains usable. The headings follow h1 → h2 → h3.
-2. Start with 67 records. The table displays **20 records**, then 20, 20, and 7 across four pages. Page-size options are 20/50/100; no 10-row choice exists.
+2. Start with 67 records. The table displays **10 records** by default, with 10/10/10/10/10/10/7 records over seven pages. Page-size options are 10/20/50; numbers, arrows and page jump all work offline.
 3. Search by module and filter by status. Counts, pages, pie/bar/line charts, and empty-result message must agree with filtered data.
 4. The top **Success** metric is green and **Failure** metric is red, with labels; ordinary metrics remain neutral. Changing the slow-threshold slider updates the above-threshold count, and **Only above threshold** filters the table.
 5. Apply a valid `gen-ui-html-report/v1` JSON payload. A malformed payload or unexpected script field must be rejected without replacing the last valid report; a tag-like title must display as text.
@@ -66,7 +66,7 @@ Browser-level visual and accessibility checks require manual inspection; Node te
 
 ### 交互与 Agent 回归专项检查（2026-11-05）
 
-1. 默认 20 条与每页 100 条模式下，未截断的单元格不可产生多余 Tab 焦点；输入合法超长字段后，仅截断项进入 Tab 顺序，窗口宽度变化后焦点数量准确更新。
+1. 默认 10 条与每页 50 条模式下，未截断的单元格不可产生多余 Tab 焦点；输入合法超长字段后，仅截断项进入 Tab 顺序，窗口宽度变化后焦点数量准确更新。
 2. 导入模块名恰好为 `all` 的合法 JSON 数据，验证“全部模块”与真实 `all` 模块可以分别选择；过滤统计、分页与重置均正确。
 3. 每一条“查看详情”按钮的辅助技术名称都包含具体任务编号，且按钮打开正确记录的抽屉。
 4. 对照 [Agent 提示词矩阵](agent-evaluation.md) 运行真实 Codex/Claude 等 Agent，将原始输出落盘，用离线门禁检测，并附真实浏览器/人工验收证据。未运行的用例不得写成 Agent 通过。
