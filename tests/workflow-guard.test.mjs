@@ -12,7 +12,9 @@ test("CI has limited permissions, unit and actual browser jobs",()=>{
  assert.match(yaml,/needs: validate/);
  assert.match(yaml,/browser-actions\/setup-chrome@v2/);
  assert.match(yaml,/GEN_UI_CHROME:/);
- assert.match(yaml,/set -euo pipefail/);
+ assert.match(yaml,/runs-on: windows-latest/);
+ assert.match(yaml,/shell: pwsh/);
+ assert.match(yaml,/if \(\$LASTEXITCODE -ne 0\) \{ throw/);
  assert.doesNotMatch(yaml,/continue-on-error:\s*true/);
  assert.doesNotMatch(yaml,/pull_request_target|workflow_run/);
  assert.doesNotMatch(yaml,/permissions:\s*write-all/);
@@ -22,7 +24,7 @@ test("CI runs every locally supported Chrome suite and all three new Agent cases
   assert.ok(yaml.includes("tests/"+f),"missing in workflow: "+f);
   assert.ok(fs.existsSync(path.join(root,"tests",f)));
  }
- assert.match(yaml,/HTML02 HTML03 HTML04/);
+ assert.match(yaml,/HTML02.*HTML03.*HTML04/);
  assert.match(yaml,/node-version:\s*"22"/);
  assert.match(yaml,/persist-credentials:\s*false/);
 });
