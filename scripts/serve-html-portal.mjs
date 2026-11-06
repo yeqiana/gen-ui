@@ -26,10 +26,12 @@ export async function startPortalServer({dir,port=8765}={}){
  if(!dir)throw Error("必须指定目录");
  const root=fs.realpathSync(path.resolve(dir));
  if(!fs.statSync(root).isDirectory())throw Error("源目录不是文件夹");
+ // Capture the loopback Host while listening; server.address() becomes null during close.
+ let expectedHost;
  const server=http.createServer((req,res)=>{
   const respond=(status,message)=>{res.writeHead(status,{"Content-Type":"text/plain; charset=utf-8","X-Content-Type-Options":"nosniff","Cache-Control":"no-store"});res.end(message)};
   // Loopback binding alone does not prevent browser DNS rebinding.
-  const expectedHost="127.0.0.1:"+server.address().port;
+  // Late shutdown requests must not query mutable listener state.
   if(req.headers.host!==expectedHost){respond(403,"仅允许本机预览地址");return}
   if(req.method!=="GET"&&req.method!=="HEAD"){respond(405,"此预览服务只允许读取文件");return}
   let rel;
@@ -52,7 +54,15 @@ export async function startPortalServer({dir,port=8765}={}){
   const stream=fs.createReadStream(file);
   stream.on("error",()=>{res.destroy()});stream.pipe(res);
  });
- await new Promise((resolve,reject)=>{server.once("error",reject);server.listen(port,"127.0.0.1",resolve)});
+ await new Promise((resolve,reject)=>{
+  server.once("error",reject);
+  server.listen(port,"127.0.0.1",()=>{
+   const address=server.address();
+   if(!address||typeof address==="string"){reject(Error("无法获取本机预览端口"));return}
+   expectedHost="127.0.0.1:"+address.port;
+   resolve();
+  });
+ });
  const address=server.address();
  return {server,url:"http://127.0.0.1:"+address.port+"/index.html",root};
 }
