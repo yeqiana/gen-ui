@@ -12,13 +12,13 @@
 <body>
 <a class="skip" href="#main">跳到主要内容</a>
 <div class="app" data-report-app data-navigation="left">
-  <aside class="sidebar" aria-label="侧边导航">
+  <aside id="report-sidebar" class="sidebar" aria-label="侧边导航">
     <div class="brand">
       <img src="../assets/icons/gen-ui-mark.svg" width="44" height="44" alt="">
-      <span><strong>GEN-UI</strong><small>智能界面 · 实验室</small></span>
+      <span><strong>GEN-UI</strong></span>
     </div>
     <nav aria-label="页面目录">
-      <p class="nav-caption">报告导航</p>
+
       <ul class="nav-list">
         <li><a href="#overview"><img src="../assets/icons/gen-ui-spark.svg" alt="">数据总览</a></li>
         <li><a href="#visuals"><img src="../assets/icons/gen-ui-chart.svg" alt="">趋势与分布</a></li>
@@ -29,11 +29,7 @@
         <li><a href="#data"><img src="../assets/icons/gen-ui-drawer.svg" alt="">数据与交互</a></li>
       </ul>
     </nav>
-    <div class="sidebar-signature">
-      <img src="../assets/icons/gen-ui-mark.svg" width="48" height="48" alt="">
-      <strong>GEN-UI</strong>
-      <small>让输出更直观 · 更可交互</small>
-    </div>
+
   </aside>
   <main id="main">
     <header class="masthead">
@@ -43,6 +39,7 @@
         <p class="muted">以下均为模拟数据，非真实系统运行结果；所有操作仅在当前页面生效。</p>
       </div>
       <div class="masthead-actions">
+        <button id="toggle-sidebar" type="button" class="nav-toggle" aria-expanded="true" aria-controls="report-sidebar">收起目录</button>
         <label class="inline-select" for="nav-mode">导航布局
           <select id="nav-mode">
             <option value="left" selected>左侧（默认）</option>
@@ -56,7 +53,7 @@
     </header>
 
     <section id="overview" class="jump" aria-labelledby="overview-heading">
-      <div class="section-title"><h2 id="overview-heading">一、执行概览</h2><span class="muted">指标随筛选结果实时联动</span></div>
+      <div class="section-title"><h2 id="overview-heading">执行概览</h2><span class="muted">指标随筛选结果实时联动</span></div>
       <dl class="metrics">
         <div class="metric"><dt>全部记录</dt><dd id="count-total">—</dd></div>
         <div class="metric positive"><dt>成功</dt><dd id="count-success">—</dd></div>
@@ -67,7 +64,7 @@
     </section>
 
     <section id="visuals" class="jump" aria-labelledby="visuals-heading">
-      <div class="section-title"><h2 id="visuals-heading">二、趋势与分布</h2><span class="muted">同一筛选数据源 · 图表按需展示</span></div>
+      <div class="section-title"><h2 id="visuals-heading">趋势与分布</h2><span class="muted">同一筛选数据源 · 图表按需展示</span></div>
       <div class="chart-layout">
         <article id="status-distribution" class="chart-section jump"><h3>状态构成 · 饼图</h3><figure id="pie"></figure></article>
         <article id="module-analysis" class="chart-section jump"><h3>模块对比 · 柱状图</h3><figure id="bar"></figure></article>
@@ -76,7 +73,7 @@
     </section>
 
     <section id="records" class="jump" aria-labelledby="records-heading">
-      <div class="section-title"><h2 id="records-heading">三、执行明细</h2><span class="muted">表头与内容均不换行 · 固定首列</span></div>
+      <div class="section-title"><h2 id="records-heading">执行明细</h2><span class="muted">表头与内容均不换行 · 固定首列</span></div>
       <div class="toolbar">
         <div class="tab-list" role="tablist" aria-label="当前页面内的内容切换">
           <button type="button" id="tab-records" role="tab" aria-controls="panel-records" aria-selected="true" tabindex="0" class="tab active">
@@ -132,11 +129,11 @@
     </section>
 
     <section id="data" class="jump" aria-labelledby="data-heading">
-      <div class="section-title"><h2 id="data-heading">四、数据与交互</h2><span class="muted">无需后端或模型 API</span></div>
+      <div class="section-title"><h2 id="data-heading">数据与交互</h2><span class="muted">无需后端或模型 API</span></div>
       <p>示例支持页面内新增记录、侧边抽屉查看详情和更换经过校验的 JSON 数据。不会自动调用远程接口或修改真实项目数据。</p>
       <button type="button" id="open-data-secondary">打开数据编辑抽屉 <span class="action-hint">当前页面内部</span></button>
     </section>
-    <footer class="page-footer"><img src="../assets/icons/gen-ui-spark.svg" width="18" height="18" alt="">GEN-UI · 让输出更直观、更可交互</footer>
+    <footer class="page-footer"><img src="../assets/icons/gen-ui-spark.svg" width="18" height="18" alt="">GEN-UI · 模拟数据报告</footer>
   </main>
 </div>
 

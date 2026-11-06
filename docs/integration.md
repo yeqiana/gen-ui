@@ -42,8 +42,10 @@ The included browser demo implements an **illustrative** `gen-ui-demo/v1` protoc
 **Not implemented.** A future WebCodex integration may introduce a separate UI message type and an optional frontend renderer without changing local Runner scheduling. A Markdown source view must remain accessible if UI parsing fails. All privileged operations must continue through existing authorization and review flows.
 
 ## HTML report deliverables (when HTML is the selected output)
+The portal supports two sandboxed modes. Direct `file://` opening preserves local CSS using `sandbox="allow-same-origin"` with child scripts disabled. For interactive pages, run `node scripts/serve-html-portal.mjs --dir <directory>` and open the loopback URL; the iframe uses `sandbox="allow-scripts allow-forms"` **without** same-origin permission. Neither mode silently drops iframe isolation.
 
-A user-requested HTML artifact is distinct from the ordinary Markdown response and the limited `gen-ui-demo/v1` Webview protocol. A report can contain **trusted authored JavaScript** to implement local navigation, filters, 20+ row pagination, SVG charts, and a schema-validated data editor. It must not execute untrusted model-provided JS/HTML. Follow the [HTML report contract](../references/html-report-contract.md) and inspect [the offline example](../demo/report.html).
+
+A user-requested HTML artifact is distinct from the ordinary Markdown response and the limited `gen-ui-demo/v1` Webview protocol. If an existing directory is supplied, use `node scripts/build-html-portal.mjs --dir <directory>` to recursively enumerate nested HTML files and create a minimalist iframe navigation shell. The original files remain independent, and a hand-authored `index.html` is never silently overwritten. A report can contain **trusted authored JavaScript** to implement local navigation, filters, 20+ row pagination, SVG charts, and a schema-validated data editor. It must not execute untrusted model-provided JS/HTML. Follow the [HTML report contract](../references/html-report-contract.md), inspect the [multi-page portal](../demo/portal-pages/index.html), and keep the standalone [report](../demo/report.html) as a separate interactive content-page example.
 
 ## 5. Acceptance criteria
 

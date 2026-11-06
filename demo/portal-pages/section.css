@@ -1,0 +1,8 @@
+:root{font:14px/1.72 "PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#242424;background:#fff;--muted:#737373;--line:#ececec}
+*{box-sizing:border-box}body{max-width:1080px;margin:0 auto;padding:clamp(18px,4vw,52px)}
+h1{font-size:26px;font-weight:650;letter-spacing:-.02em;margin:0 0 14px}h2{font-size:17px;font-weight:650;margin:42px 0 13px}h3{font-size:14px;font-weight:650;margin:25px 0 9px}
+p{margin:9px 0;color:#454545}.muted{font-size:12px;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0;border-block:1px solid var(--line);margin:25px 0;padding:14px 0}
+.metrics dl{padding:10px 15px;margin:0}.metrics dl+dl{border-left:1px solid var(--line)}dt{font-size:12px;color:var(--muted)}dd{margin:4px 0;font-size:28px;font-weight:600}.good{color:#16724e}.bad{color:#b73b3b}
+table{border-collapse:collapse;min-width:630px;width:100%}th,td{white-space:nowrap;text-align:left;border-bottom:1px solid var(--line);padding:11px 14px}th{font-weight:650;color:#666}th:first-child,td:first-child{position:sticky;left:0;background:#fff}.table-scroll{overflow:auto;max-width:100%;margin:22px 0}
+ul{padding-left:20px}li{margin:6px 0}.note{font-size:12px;color:var(--muted);padding:13px 0}

@@ -1,4 +1,4 @@
-# GEN-UI · HTML Report Contract (v1.2)
+# GEN-UI · HTML Report Contract (v1.3)
 
 This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
@@ -6,9 +6,19 @@ This contract applies **whenever HTML is the chosen or required final deliverabl
 
 - Render all nonessential user-facing text in **Simplified Chinese** by default: page headings, section titles, tables, form labels, filters, buttons, navigation, empty states, validation messages, chart captions and tooltips.
 - Retain English only when technically necessary (e.g. JSON, API names, code, product/brand names such as GEN-UI). Preserve actual user-provided identifiers, names and source data rather than fabricating translations.
-- Use `<html lang="zh-CN">`, **one H1**, logical **H2 major sections** and **H3 subsections**. Keep a semantic table of contents when multiple major sections exist.
-- Left navigation is the default; top navigation is a supported deliberate option. Responsive screens must not make navigation unusable.
-- Reduce decorative cards and large bordered boxes. Prefer clear typographic hierarchy, dividing rules, concise toolbars and readable data density. Small KPI strips and form dialogs are appropriate when useful.
+- Use `<html lang="zh-CN">` and one meaningful H1 per content page. H2 appears only when it improves navigation; H3 is optional, not an ornament.
+- Directory or multi-page output defaults to a **collapsible light left rail and a real iframe main display**. Each page title maps to an actual HTML file; its existing identified H2 headings may appear below it. Mobile navigation must be closable.
+- Prefer black, white, gray and calm typography. Reduce decorative cards, colorful stripes, excess separators and repeated micro-headings; reserve green/red for meaningful success/failure data.
+
+## Directory / multi-page portal contract
+
+When a directory is specified, **do not generate only a standalone index that ignores the other HTML files**. Run `node scripts/build-html-portal.mjs --dir <directory>` to recursively discover eligible HTML in nested folders. The generated `index.html` is a thin shell that preserves every original page file and relative asset.
+
+- Every primary page title opens its corresponding HTML document in the **main embedded iframe**. Existing named H2 subsections become optional subordinate navigation items (frame URL fragments). Directory folders form collapsible groups; avoid empty nested headings.
+- Default to a minimal monochrome left navigation that folds/hides on desktop and can open/close on mobile. An action labelled “新标签页打开” opens the current page separately; the ordinary navigation stays within the iframe.
+- Browsers cannot recursively scan arbitrary file directories at runtime. Discover files **before** opening the portal, and rerun the builder after adding new files. A preexisting hand-authored index must not be overwritten; use `--output <directory>/portal.html` instead.
+- Skip symlink, hidden, dependency and generated build paths; do not inject executable content into original HTML. **Two safe modes:** the direct `file://` portal uses `sandbox="allow-same-origin"` with scripts disabled so local stylesheets render; running the built-in loopback HTTP preview (`node scripts/serve-html-portal.mjs --dir <directory>`) switches to `sandbox="allow-scripts allow-forms"` without same-origin permission so JavaScript/forms work in an isolated frame. Never combine `allow-scripts` and `allow-same-origin`, and never remove the iframe sandbox as an implicit shortcut. Files can have their own security-sensitive behavior; review their source before interactive execution.
+- Single-page reports remain independent HTML documents; only the **multi-page shell** must use an iframe. Never nest iframe shells merely because a content page already has its own headings.
 
 ## 2. Nonwrapping, horizontally scrollable data tables
 
@@ -50,13 +60,13 @@ This contract applies **whenever HTML is the chosen or required final deliverabl
 
 ## 7. GEN-UI personal IP icon set
 
-- Use the cohesive GEN-UI icon system in [assets/icons/README.md](../assets/icons/README.md): a custom **inspiration-cat** logomark with indigo-purple geometry and restrained coral accents, plus icons for charts, tables, internal tabs, external tabs, forms and drawers.
+- Use the [GEN-UI monochrome SVG set](../assets/icons/README.md), featuring a highly abstract silhouette with one-color companion icons. Avoid purple gradients, colorful mascots, coral accents and decorative icon overload.
 - Use icons selectively in the **sidebar, page header, toolbar or footer**, not in dense body paragraphs. Pair functional icons with clear Chinese text; use `alt=""` when icons are decorative.
 - Keep SVG assets local and reusable, do not embed untrusted external SVG. Avoid a large decorative brand watermark over the table or report findings.
 
 ## 8. Executable example and validation
 
-Run the offline [Chinese HTML report](../demo/report.html) alongside its [CSS](../demo/report.css), [JavaScript](../demo/report.js) and local SVG icons. The sample deliberately contains **67 fictional records** and is **not** an observed engineering test result.
+Open the [recursive iframe portal](../demo/portal-pages/index.html) or the standalone [Chinese HTML report](../demo/report.html) alongside its [CSS](../demo/report.css), [JavaScript](../demo/report.js) and local SVG icons. The sample deliberately contains **67 fictional records** and is **not** an observed engineering test result.
 
 The report accepts a separate data-only protocol (`gen-ui-html-report/v1`), not `gen-ui-demo/v1`:
 

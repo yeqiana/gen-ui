@@ -39,6 +39,20 @@ The current host supports Markdown only.
 
 Put the Skill under your project's `.claude/skills/gen-ui/` or your agent's documented Skills location. For systems without Skill discovery, provide `SKILL.md` as an instruction and reference files when appropriate. A Skill improves content organization; it does not install a visual runtime.
 
+## Multi-page directory portal (offline iframe shell)
+
+When the deliverable names a **directory**, Gen UI recursively discovers all eligible `.html` / `.htm` files in nested folders, preserves every original page and relative assets, and builds a lightweight entry with a **real iframe as the main content**. Page titles select independent documents; existing identified H2 headings can appear below each page as child links. The monochrome rail collapses on desktop and opens/closes on mobile. No giant concatenated HTML output or decorative gradient sidebar.
+
+~~~powershell
+node scripts/build-html-portal.mjs --dir "D:\\reports" --title "Project acceptance"
+# Keep an existing hand-authored index.html untouched:
+node scripts/build-html-portal.mjs --dir "D:\\reports" --output "D:\\reports\\portal.html"
+~~~
+
+Try the [four-page offline portal](demo/portal-pages/index.html), inspect the [generator](scripts/build-html-portal.mjs) and read the [HTML contract](references/html-report-contract.md). Re-run after adding or removing source files; browsers cannot recursively scan directories at runtime.
+
+**Safe preview modes:** double-clicking the generated portal (`file://`) displays local CSS with scripts disabled inside the iframe. To exercise existing page JavaScript and forms, run `node scripts/serve-html-portal.mjs --dir "D:\\reports"` and visit `http://127.0.0.1:8765/`. The loopback HTTP shell automatically switches to `sandbox="allow-scripts allow-forms"` **without** same-origin permission. No unsandboxed opt-in is offered; external content is not silently trusted.
+
 ## HTML reports: filters, charts, and navigation
 
 When HTML is the selected output, Gen UI applies a **Chinese-first interface** (except technical names and actual source data), nonwrapping headers/cells, horizontal scrolling with optional sticky first column, overflow tooltips on hover/focus, and column-specific filters. Internal tabs and new browser tabs are marked with different visible Chinese labels. Favor a lean report with forms, dialogs and drawers over decorative cards, and use the original [GEN-UI SVG icon set](assets/icons/README.md) in non-body locations.
@@ -47,7 +61,7 @@ Try the [offline Chinese HTML report](demo/report.html) with its [stylesheet](de
 
 
 
-When **HTML is the selected final deliverable** (explicitly requested or established by the current task), Gen UI specifies practical report layouts: left sidebar by default (top navigation optional), hierarchy-based section anchors, meaningful table filters, **20/50/100 rows per page**, success/failure KPI highlighting, appropriate pie/bar/line charts, and safe local forms/sliders. These features run in actual HTML, not in a plain terminal.
+When **HTML is the selected final deliverable** (explicitly requested or established by the current task), Gen UI specifies practical report layouts: a collapsible monochrome left rail for multi-page iframe portals, optional in-page anchors for standalone reports, meaningful table filters, **20/50/100 rows per page**, success/failure KPI highlighting, appropriate pie/bar/line charts, and safe local forms/sliders. These features run in actual HTML, not in a plain terminal.
 
 Open the [offline HTML report](demo/report.html) (keep [report.js](demo/report.js) beside it) to try the 67-row illustrative dataset. Read the [HTML report contract](references/html-report-contract.md) for accessibility, data validation, pagination, and security constraints. This report format is separate from the existing lightweight UI protocol.
 

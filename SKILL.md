@@ -77,18 +77,19 @@ If the generated deliverable is HTML, apply these additional nonnegotiable rules
 - **Column-aware filtering**: provide conditions for the actual key fields (e.g. record ID search, module/status/batch selects, duration threshold). Filter, metrics, charts, and paging from one coherent dataset. Never use filter sentinels that collide with valid data (e.g. a module named `all`).
 - **Explicit navigation destination**: distinguish **“页内标签”** (current-page panel) from **“新标签页打开”** (real external target) with visible text and correct semantic controls; icons alone are insufficient.
 - **Lean presentation, richer interactions**: reduce decorative cards. Use forms, modal dialogs, side drawers, tabs and linked controls when they clarify the task; do not limit HTML to list pages. Repeated row actions need a unique record-specific accessible name.
-- **GEN-UI brand icon system**: use original [SVG assets](assets/icons/README.md) selectively in the sidebar, heading, toolbar or footer for recognizability, not throughout body paragraphs.
+- **GEN-UI monochrome silhouette icon system**: use original [SVG assets](assets/icons/README.md) in a highly abstract one-color style. Avoid gradients, playful mascots, multiple accent colors and excessive icon decoration.
 
 
 
-- Multi-section HTML uses a real table of contents with **left navigation by default** (top allowed when requested or on narrow screens), following an **h1 → h2 → h3** hierarchy.
+- **Directory-to-portal mode**: when given a directory, recursively discover every eligible HTML file under nested subdirectories and preserve the original pages and local resources. Generate a thin `index.html` **iframe shell**: clicking a page title opens that real HTML file in the main embedded iframe; useful H2 anchors may be nested beneath each page. The index must not replace, flatten or omit the other pages. Use [scripts/build-html-portal.mjs](scripts/build-html-portal.mjs) at build time; offline browsers cannot list directories themselves.
+- **Minimal collapsible navigation**: multi-page output uses a monochrome, hideable/foldable left rail with a mobile open/close control; the iframe sandbox must not pair script execution with same-origin access. Avoid gradients, stacked cards, thick dividers and gratuitous H3 headings. Standalone HTML reports may keep concise internal anchors and interactive controls, without nesting another iframe.
 - Data tables offer relevant filters when they help; long tables are paginated **20 rows per page by default**, optionally 50/100, with no page size below 20. The final page can contain fewer than 20 remaining records. Recompute page counts after filtering.
 - Highlight high-priority **success figures in green** and **failure figures in red** near the top; label each metric in text and avoid coloring ordinary values just for decoration.
 - Add pie/bar/line charts only when appropriate to composition/comparison/ordered trends. Charts and summary values must agree with displayed data and have accessible text equivalents.
 - Standalone HTML can include reviewed client-side JS for local **filters, controls, forms, sliders, charts and navigation**; untrusted JSON remains data under a strict allowlist. No executable AI-supplied HTML/JS, no invented API actions, and no fake test data.
 - Default terminal/Markdown output remains Markdown. An HTML file does not grant arbitrary UI capability inside the user's chat host.
 
-See the offline [HTML report example](demo/report.html) and [its renderer logic](demo/report.js). This is a **separate** illustrative data format (`gen-ui-html-report/v1`), not a breaking change to the existing `gen-ui-demo/v1` demo.
+See the [offline multi-page iframe portal](demo/portal-pages/index.html), [recursive directory builder](scripts/build-html-portal.mjs), and the standalone [HTML report example](demo/report.html) with [its renderer logic](demo/report.js). This is a **separate** illustrative data format (`gen-ui-html-report/v1`), not a breaking change to the existing `gen-ui-demo/v1` demo.
 
 ## 6. Quick routing examples
 

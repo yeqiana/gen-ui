@@ -1,0 +1,83 @@
+{
+  "page": "demo/portal-pages/index.html",
+  "source": "trusted-repository-fixture",
+  "browser": "Chrome CDP",
+  "at": "2026-11-05T16:17:25.612Z",
+  "viewports": {
+    "375": {
+      "width": 375,
+      "pages": 4,
+      "subheadings": 8,
+      "iframe": true,
+      "src": "00-%E6%80%BB%E8%A7%88.html",
+      "sandbox": "allow-same-origin",
+      "hasOverflow": false,
+      "railColor": "rgb(250, 250, 250)",
+      "offlineStyle": {
+        "mode": "离线静态预览 · 脚本不可用",
+        "cssLink": true,
+        "fontSize": "14px"
+      }
+    },
+    "768": {
+      "width": 768,
+      "pages": 4,
+      "subheadings": 8,
+      "iframe": true,
+      "src": "00-%E6%80%BB%E8%A7%88.html",
+      "sandbox": "allow-same-origin",
+      "hasOverflow": false,
+      "railColor": "rgb(250, 250, 250)",
+      "offlineStyle": {
+        "mode": "离线静态预览 · 脚本不可用",
+        "cssLink": true,
+        "fontSize": "14px"
+      }
+    },
+    "1440": {
+      "width": 1440,
+      "pages": 4,
+      "subheadings": 8,
+      "iframe": true,
+      "src": "00-%E6%80%BB%E8%A7%88.html",
+      "sandbox": "allow-same-origin",
+      "hasOverflow": false,
+      "railColor": "rgb(250, 250, 250)",
+      "offlineStyle": {
+        "mode": "离线静态预览 · 脚本不可用",
+        "cssLink": true,
+        "fontSize": "14px"
+      }
+    }
+  },
+  "pageSwap": {
+    "start": "00-%E6%80%BB%E8%A7%88.html",
+    "next": "%E8%B4%A8%E9%87%8F/%E6%98%8E%E7%BB%86.html",
+    "title": "记录明细",
+    "selected": 1,
+    "sameLink": true,
+    "target": "_blank",
+    "rel": "noopener noreferrer"
+  },
+  "anchor": {
+    "src": "00-%E6%80%BB%E8%A7%88.html#navigation",
+    "selected": 1,
+    "title": "层级导航"
+  },
+  "desktopCollapse": {
+    "first": {
+      "collapsed": true,
+      "columns": "68px 1372px",
+      "expanded": "false"
+    },
+    "recovered": true
+  },
+  "mobile": {
+    "opened": true,
+    "closed": true,
+    "expanded": "false"
+  },
+  "loadedFrame": "portal-pages/00-%E6%80%BB%E8%A7%88.html",
+  "exceptions": [],
+  "result": "pass"
+}
