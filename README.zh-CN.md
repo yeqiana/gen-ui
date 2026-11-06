@@ -95,6 +95,8 @@ node scripts/build-html-portal.mjs --dir "D:\\reports" --output "D:\\reports\\po
 
 无需后端、网络、API Key。`gen-ui-demo/v1` 是**本仓库演示协议**，不是 ChatGPT DIL / OpenUI / A2UI 官方接口。详见 [协议说明](references/renderer-contract.md) 和 [集成指南](docs/integration.md)。
 
+**本轮发布状态：** 真实 Agent 样例已保存 [五组 GPT-6 + WebCodex 评测证据](evals/webcodex-agent-matrix-2026-11-06.md)，但五组跨越两次 Skill 基线，不等于原生 Codex 的独立盲测。原生 Codex 的 [盲测门禁](evals/codex-blind-gate-2026-11-06.md) 仍未通过；下一候选版本 [v1.4.0 发布就绪清单](docs/release-readiness-v1.4.0.md) 明确记录了尚需验证的项目，**目前未创建正式 Tag 或 Release**。
+
 ## 发布前检查
 
 ~~~powershell

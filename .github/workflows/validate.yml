@@ -3,18 +3,60 @@ name: Validate Gen UI Skill
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   validate:
+    name: Skill and unit tests
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
+          package-manager-cache: false
       - name: Validate Skill package and examples
         shell: pwsh
         run: ./scripts/test-skill.ps1
+
+  browser:
+    name: Browser QA (Chrome, 375/768/1440px)
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - name: Install Chrome for Testing
+        id: chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          chrome-version: stable
+      - name: Verify Chrome install
+        env:
+          GEN_UI_CHROME: ${{ steps.chrome.outputs.chrome-path }}
+        run: '"$GEN_UI_CHROME" --version'
+      - name: Run actual Chrome smoke suites
+        shell: bash
+        env:
+          GEN_UI_CHROME: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          set -euo pipefail
+          node tests/chrome-report-smoke.mjs
+          node tests/chrome-portal-smoke.mjs
+          node tests/chrome-portal-http-smoke.mjs
+          node tests/chrome-portal-directory-smoke.mjs
+          for case_id in HTML02 HTML03 HTML04; do
+            node tests/chrome-agent-output-smoke.mjs --case "$case_id" --input "evals/artifacts/${case_id}-webcodex-gpt6-20261106/report.html" --report "$RUNNER_TEMP/${case_id}-browser-evidence.json"
+          done

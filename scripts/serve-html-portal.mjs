@@ -28,6 +28,9 @@ export async function startPortalServer({dir,port=8765}={}){
  if(!fs.statSync(root).isDirectory())throw Error("源目录不是文件夹");
  const server=http.createServer((req,res)=>{
   const respond=(status,message)=>{res.writeHead(status,{"Content-Type":"text/plain; charset=utf-8","X-Content-Type-Options":"nosniff","Cache-Control":"no-store"});res.end(message)};
+  // Loopback binding alone does not prevent browser DNS rebinding.
+  const expectedHost="127.0.0.1:"+server.address().port;
+  if(req.headers.host!==expectedHost){respond(403,"仅允许本机预览地址");return}
   if(req.method!=="GET"&&req.method!=="HEAD"){respond(405,"此预览服务只允许读取文件");return}
   let rel;
   try{
@@ -35,7 +38,7 @@ export async function startPortalServer({dir,port=8765}={}){
    if(u.origin!=="http://127.0.0.1")throw Error("invalid URL");
    rel=decodeURIComponent(u.pathname).replace(/^\/+/,"");
    if(!rel)rel="index.html";
-   if(rel.includes("\0")||rel.includes("\\")||rel.split("/").some(x=>x.startsWith(".")||x===".."||x==="")){respond(403,"文件访问被拒绝");return}
+   if(rel.includes("\0")||rel.includes("\\")||rel.split("/").some(x=>x.startsWith(".")||x===".."||x===""||x.includes(":"))){respond(403,"文件访问被拒绝");return}
   }catch{respond(400,"地址格式无效");return}
   const target=path.resolve(root,rel);
   if(!inside(root,target)){respond(403,"不允许读取目录外文件");return}
