@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="150" viewBox="0 0 620 150" role="img" aria-labelledby="title desc">
+  <title id="title">工程数据分析流程</title>
+  <desc id="desc">记录接入、条件筛选、指标统计、明细核验四个连续步骤。</desc>
+  <defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 6 3 0 6" fill="none" stroke="#999" stroke-width="1"/></marker></defs>
+  <g fill="none" stroke="#d7d7d7" stroke-width="1.4">
+    <rect x="8" y="34" width="128" height="76" rx="8" fill="#fafafa"/>
+    <rect x="168" y="34" width="128" height="76" rx="8" fill="#fafafa"/>
+    <rect x="328" y="34" width="128" height="76" rx="8" fill="#fafafa"/>
+    <rect x="488" y="34" width="124" height="76" rx="8" fill="#fafafa"/>
+    <path d="M138 72h25M298 72h25M458 72h25" marker-end="url(#arrow)"/>
+  </g>
+  <g fill="#333" font-family="Microsoft YaHei, PingFang SC, sans-serif" text-anchor="middle">
+    <text x="72" y="65" font-size="15" font-weight="600">记录接入</text><text x="72" y="88" font-size="11" fill="#777">统一数据源</text>
+    <text x="232" y="65" font-size="15" font-weight="600">条件筛选</text><text x="232" y="88" font-size="11" fill="#777">模块 · 状态 · 批次</text>
+    <text x="392" y="65" font-size="15" font-weight="600">指标统计</text><text x="392" y="88" font-size="11" fill="#777">数量 · 分布 · 趋势</text>
+    <text x="550" y="65" font-size="15" font-weight="600">明细核验</text><text x="550" y="88" font-size="11" fill="#777">定位具体记录</text>
+  </g>
+</svg>
