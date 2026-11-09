@@ -54,7 +54,7 @@
     </header>
 
     <section id="overview" class="jump" aria-labelledby="overview-heading">
-      <div class="section-title"><h2 id="overview-heading"><img class="section-icon" src="../assets/icons/gen-ui-spark.svg" alt=""> 执行概览</h2></div>
+      <div class="section-title"><h2 id="overview-heading"><img class="section-icon" src="../assets/icons/gen-ui-spark.svg" alt=""> 一、执行概览</h2></div>
       <dl class="metrics">
         <div class="metric"><dt>全部记录</dt><dd id="count-total">—</dd></div>
         <div class="metric positive"><dt>成功</dt><dd id="count-success">—</dd></div>
@@ -62,6 +62,9 @@
         <div class="metric pending"><dt>待处理</dt><dd id="count-pending">—</dd></div>
         <div class="metric slow"><dt>超过耗时阈值</dt><dd id="count-slow">—</dd></div>
       </dl>
+      <div class="callout callout--important" role="note"><strong>关键结论：</strong>指标、图表与执行明细必须来自同一份筛选数据集，避免统计口径不一致。</div>
+      <blockquote class="callout callout--confirm"><strong>⚠️ 待确认：</strong>本示例使用模拟数据；真实项目报告必须先核实数据来源和测试范围。</blockquote>
+      <ul class="task-state-list" aria-label="实施任务状态示例"><li><span class="task-state" role="img" aria-label="已完成" title="已完成">✅</span><span>统一主题与字号检查</span></li><li><span class="task-state" role="img" aria-label="待执行" title="待执行">⏳</span><span>对目标项目执行真实压测</span></li><li><span class="task-state" role="img" aria-label="暂停" title="暂停">⏸️</span><span>等待测试环境授权后继续</span></li></ul>
       <div class="overview-story">
         <div class="flow-panel" id="flow-panel" aria-label="工程数据分析流程图">
   <div class="flow-toolbar"><span class="flow-title">工程流程</span>
@@ -102,16 +105,16 @@
     </section>
 
     <section id="visuals" class="jump" aria-labelledby="visuals-heading">
-      <div class="section-title"><h2 id="visuals-heading"><img class="section-icon" src="../assets/icons/gen-ui-chart.svg" alt=""> 趋势与分布</h2></div>
+      <div class="section-title"><h2 id="visuals-heading"><img class="section-icon" src="../assets/icons/gen-ui-chart.svg" alt=""> 二、趋势与分布</h2></div>
       <div class="chart-layout">
-        <article id="status-distribution" class="chart-section jump"><h3>状态构成 · 饼图</h3><figure id="pie"></figure></article>
-        <article id="module-analysis" class="chart-section jump"><h3>模块对比 · 柱状图</h3><figure id="bar"></figure></article>
-        <article id="batch-trend" class="chart-section jump"><h3>批次走势 · 折线图</h3><figure id="line"></figure></article>
+        <article id="status-distribution" class="chart-section jump"><h3>2.1 状态构成 · 饼图</h3><figure id="pie"></figure></article>
+        <article id="module-analysis" class="chart-section jump"><h3>2.2 模块对比 · 柱状图</h3><figure id="bar"></figure></article>
+        <article id="batch-trend" class="chart-section jump"><h3>2.3 批次走势 · 折线图</h3><figure id="line"></figure></article>
       </div>
     </section>
 
     <section id="records" class="jump" aria-labelledby="records-heading">
-      <div class="section-title"><h2 id="records-heading"><img class="section-icon" src="../assets/icons/gen-ui-table.svg" alt=""> 执行明细</h2></div>
+      <div class="section-title"><h2 id="records-heading"><img class="section-icon" src="../assets/icons/gen-ui-table.svg" alt=""> 三、执行明细</h2></div>
       <div class="toolbar">
         <div class="tab-list" role="tablist" aria-label="内容切换">
           <button type="button" id="tab-records" role="tab" aria-controls="panel-records" aria-selected="true" tabindex="0" class="tab active">

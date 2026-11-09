@@ -1,4 +1,4 @@
-# GEN-UI · HTML Report Contract (v1.3)
+# GEN-UI · HTML Report Contract (v1.4)
 
 This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
@@ -12,8 +12,16 @@ This contract applies **whenever HTML is the chosen or required final deliverabl
 - Iconify a few familiar actions such as close, collapse, reset and open details. Keep text on important, destructive or unfamiliar actions; icon-only buttons need `aria-label` and a visible tooltip.
 - Use one clear H1. **Do not put a small subtitle immediately below the main H1**; move metadata above it or combine context with the first content group. Aggregate related metrics, explanations and actions into a few meaningful sections instead of scattering them into tiny panels or repeated micro-headings.
 - When the host supports visuals, prefer an **image + concise Chinese explanation** for important concepts: meaningful diagrams, screenshots, maps, charts or annotated illustrations. Use source-grounded/authored visuals, meaningful alt text and a textual takeaway. If image display is unsupported or no useful visual exists, use a concise text/table/Mermaid fallback; do not add decorative filler images.
-- Prefer consistent local SVG section icons to emoji; use emoji only where genuinely helpful, never as the only status or action indication. Keep Chinese labels.
+- Prefer consistent local SVG section icons to emoji for navigation, section decoration and general actions. For implementation-task states only, use the task-state emoji tokens defined below as the visible state marker; keep the task description and accessible name. Keep Chinese interface copy.
 - Use the fixed visual tokens: page background #FFFFFF, foreground #1A1C1F, primary accent #3A83F7; use the system UI font stack, 14px body text and 12px code. Keep the base page white and do not load remote fonts. For the overview, a small grid of labelled metric cards improves scanning; avoid excessive decorative card layers, heavy shadows, gradients and clutter.
+
+### Content emphasis, heading numbering and task-state markers
+
+- **Bold selectively**: emphasize key conclusions, decisions, risk impact, thresholds and required actions. Do not bold entire paragraphs or use bold as a substitute for hierarchy.
+- **Number section headings consistently**: Chinese reports default to 一、/二、/三; engineering reports may instead use a decimal hierarchy such as 1. / 1.1 / 1.2 / 2. / 2.1. Choose one scheme per document and keep parent/child levels consistent. The main H1 may remain unnumbered.
+- **Use semantic callouts** for important conclusions, pending confirmation and attention/risk notes. Apply the semantic color to the callout surface and left border, not to H1–H6 text. The same rule applies to blockquote: a quote carrying a warning or pending confirmation must receive the appropriate callout class rather than remaining an unmarked quote.
+- Suggested semantic classes: .callout--important (soft blue #EFF6FF, border #3A83F7), .callout--confirm (soft amber #FFF8E8, border #E6A23C), .callout--attention (soft red #FFF1F0, border #F56C6C), and .callout--neutral (soft gray #F5F7FA, border #98A2B3). Keep body text at the normal foreground color; do not change heading colors. Add a short label/explanation so meaning is not color-only.
+- **Task-state emoji mapping**: ✅ completed/verified; ❌ failed; ⏸️ paused/blocked; ⏳ pending/to execute; 🔄 in progress; ❓ needs confirmation; ⚠️ attention/risk. In implementation plans, acceptance checklists and task-status columns, show the emoji as the visible state instead of repeating textual state labels. Keep the task description readable and add aria-label and title to each status marker. Do not replace navigation/action SVG icons with emoji.
 
 ## Directory / multi-page portal contract
 

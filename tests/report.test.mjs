@@ -527,3 +527,22 @@ test("内嵌 SVG 流程图具备全屏、缩放、适应窗口、拖拽、Esc和
   assert.match(js,/viewBox/);
   assert.doesNotMatch(js,/fetch\(|XMLHttpRequest|https?:\/\//i);
 });
+
+test("HTML content emphasis, semantic callouts, numbered headings and task-state icons",()=>{
+  const html=read("demo/report.html");
+  const css=read("demo/report.css");
+  assert.match(html,/一、执行概览/);
+  assert.match(html,/二、趋势与分布/);
+  assert.match(html,/三、执行明细/);
+  assert.match(html,/2\.1 状态构成/);
+  assert.match(html,/class="callout callout--important"/);
+  assert.match(html,/<blockquote class="callout callout--confirm"/);
+  assert.match(html,/关键结论：<\/strong>/);
+  assert.match(html,/aria-label="待执行" title="待执行">⏳/);
+  assert.match(html,/aria-label="已完成" title="已完成">✅/);
+  assert.match(html,/aria-label="暂停" title="暂停">⏸️/);
+  assert.match(css,/\.callout--important\{background:#EFF6FF;border-left-color:#3A83F7\}/);
+  assert.match(css,/\.callout--confirm\{background:#FFF8E8;border-left-color:#E6A23C\}/);
+  assert.match(css,/\.callout--attention\{background:#FFF1F0;border-left-color:#F56C6C\}/);
+  assert.doesNotMatch(css,/\.callout[^}]*h[1-6][^}]*color/);
+});
