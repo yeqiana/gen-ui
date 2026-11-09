@@ -54,3 +54,12 @@ test("Agent browser CLI malformed inputs fail closed (cannot be green by acciden
  assert.notEqual(res.status,0);
  assert.match(res.stderr+res.stdout,/Required|missing|Error/);
 });
+test("Skill validation required-file list contains no stale paths",()=>{
+ const script=fs.readFileSync(path.join(root,"scripts/test-skill.ps1"),"utf8");
+ const block=script.match(/\$required\s*=\s*@\(([\s\S]*?)\n\)/)?.[1];
+ assert.ok(block,"missing required-file list in scripts/test-skill.ps1");
+ const files=[...block.matchAll(/^\s*"([^"]+)"\s*,?\s*$/gm)].map(m=>m[1]);
+ assert.ok(files.length>0);
+ const missing=files.filter(file=>!fs.existsSync(path.join(root,file)));
+ assert.deepEqual(missing,[],"stale required-file entries: "+missing.join(", "));
+});

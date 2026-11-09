@@ -41,7 +41,6 @@ $required = @(
   "assets/icons/gen-ui-table.svg",
   "assets/icons/gen-ui-chart.svg",
   "assets/icons/gen-ui-tab.svg",
-  "assets/icons/gen-ui-external.svg",
   "assets/icons/gen-ui-drawer.svg",
   "assets/icons/gen-ui-form.svg",
   "tests/report.test.mjs",
