@@ -61,8 +61,8 @@ try{
    evidence.viewports[width]=m;
  }
  // The final 1440px viewport is already navigated and verified; avoid a redundant reload.
- const pageSwitch=await evalJS("(()=>{const all=[...document.querySelectorAll('.page-link')];const choice=all.find(x=>x.textContent.includes('质量状态'))??all.find(x=>x.textContent.includes('深度验收'))??all[all.length-1];const f=document.querySelector('#page-frame'),before=f.getAttribute('src');choice.click();const after=f.getAttribute('src');return{before,after,different:before!==after,selected:document.querySelectorAll('[aria-current=\"page\"]').length,externalSame:document.querySelector('#open-external').getAttribute('href')===after}})()");
- if(!pageSwitch.different||pageSwitch.selected!==1||!pageSwitch.externalSame)throw Error("page switch "+JSON.stringify(pageSwitch));
+ const pageSwitch=await evalJS("(()=>{const all=[...document.querySelectorAll('.page-link')];const choice=all.find(x=>x.textContent.includes('质量状态'))??all.find(x=>x.textContent.includes('深度验收'))??all[all.length-1];const f=document.querySelector('#page-frame'),before=f.getAttribute('src');choice.click();const after=f.getAttribute('src');return{before,after,different:before!==after,selected:document.querySelectorAll('[aria-current=\"page\"]').length,noExtra:!document.querySelector('#open-external')}})()");
+ if(!pageSwitch.different||pageSwitch.selected!==1||!pageSwitch.noExtra)throw Error("page switch "+JSON.stringify(pageSwitch));
  evidence.checks.iframeSwitch=pageSwitch;
  const expectedLeaf=pageSwitch.after.split("#")[0].split("/").at(-1);
  let nestedFrameLoaded=false;

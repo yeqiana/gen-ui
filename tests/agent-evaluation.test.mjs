@@ -126,3 +126,12 @@ test("真实 Codex 调用记录不得伪装为 Skill 合规通过",()=>{
   assert.equal(record.safeguards.bypassedPolicy,false);
   assert.equal(record.safeguards.dedicatedScheduledTaskRemoved,true);
 });
+
+test("新版 HTML03 静态门禁拒绝历史多余操作，归档证据不篡改",()=>{
+  const current=auditFile("HTML03",path.join(repo,"demo/report.html"));
+  assert.equal(current.staticGate,"pass");
+  assert.equal(current.checks.find(x=>x.id==="no-extra-actions")?.passed,true);
+  const archived=auditFile("HTML03",path.join(repo,"evals/artifacts/HTML03-webcodex-gpt6-20261106/report.html"));
+  assert.equal(archived.staticGate,"fail");
+  assert.equal(archived.checks.find(x=>x.id==="no-extra-actions")?.passed,false);
+});

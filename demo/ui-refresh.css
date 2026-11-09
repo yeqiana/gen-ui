@@ -1,8 +1,8 @@
 /* 统一的轻量管理台视觉：局部增强，保留原有功能与离线能力。 */
 :root{
-  --brand:#409eff;--brand-light:#ecf5ff;--green:#67c23a;--red:#f56c6c;
+  --brand:#3A83F7;--brand-light:#ecf5ff;--green:#67c23a;--red:#f56c6c;
   --warning:#e6a23c;--ink:#303133;--line:#dcdfe6;--muted:#909399;
-  --soft:#f5f7fa;--focus:#409eff;
+  --soft:#f5f7fa;--focus:#3A83F7;
 }
 body{color:var(--ink);background:#fff}
 button,select,input,textarea{border-color:#dcdfe6;border-radius:6px}
@@ -17,12 +17,12 @@ button.secondary,.secondary{background:var(--soft);border-color:#e4e7ed;color:#6
 .inline-select select{min-height:31px;padding:4px 9px}
 .text-action{padding:5px 8px;min-height:31px}
 .toolbar-actions{gap:7px;padding-bottom:4px}
-.toolbar-actions button,.paging button,.filters button,.dialog-actions button{min-height:31px;padding:5px 11px;font-size:13px}
-.toolbar-actions small,.tab small{font-size:10px;color:#909399}
+.toolbar-actions button,.paging button,.filters button,.dialog-actions button{min-height:31px;padding:5px 11px;font-size:14px}
+.toolbar-actions small,.tab small{font-size:14px;color:#909399}
 .nav-toggle{min-height:30px;padding:3px 7px}
 .icon-only{width:30px;height:30px;font-size:19px}
 .nav-list a{min-height:37px;padding:8px 10px}
-.nav-list a:hover,.nav-list a:focus-visible{background:#ecf5ff;color:#409eff}
+.nav-list a:hover,.nav-list a:focus-visible{background:#ecf5ff;color:#3A83F7}
 .nav-list a img,.toolbar-actions img,.tab img,.text-action img{width:16px;height:16px}
 .section-title{align-items:center;padding-bottom:8px;margin-bottom:12px}
 .section-icon{width:19px;height:19px;margin-right:5px;vertical-align:-4px;opacity:.85}
@@ -31,12 +31,12 @@ button.secondary,.secondary{background:var(--soft);border-color:#e4e7ed;color:#6
   position:relative;min-width:0;padding:18px 18px 16px;border:1px solid #e4e7ed;
   border-radius:10px;background:#fff;box-shadow:0 3px 15px rgba(42,75,108,.045);
 }
-.metric::before{content:"";position:absolute;top:18px;right:18px;width:9px;height:9px;border-radius:50%;background:#409eff}
+.metric::before{content:"";position:absolute;top:18px;right:18px;width:9px;height:9px;border-radius:50%;background:#3A83F7}
 .metric.positive::before{background:var(--green)}
 .metric.negative::before{background:var(--red)}
 .metric.pending::before{background:var(--warning)}
 .metric.slow::before{background:#909399}
-.metric dt{color:#909399;font-size:12px}
+.metric dt{color:#909399;font-size:14px}
 .metric dd{margin-top:9px;font-weight:760;font-size:clamp(25px,2.4vw,36px);line-height:1.2}
 .metric.positive dd{color:var(--green)}
 .metric.negative dd{color:var(--red)}
@@ -50,7 +50,7 @@ button.secondary,.secondary{background:var(--soft);border-color:#e4e7ed;color:#6
   padding:16px 13px;min-width:0;border:1px solid #e4e7ed;border-radius:10px;background:#fff;
   box-shadow:0 3px 15px rgba(42,75,108,.035)
 }
-.chart-section h3{color:#606266;font-weight:650;font-size:13px;margin-bottom:4px}
+.chart-section h3{color:#606266;font-weight:650;font-size:14px;margin-bottom:4px}
 .chart-section figure svg{max-height:260px}
 .chart-section figcaption{text-align:center;color:#909399;margin-top:5px}
 .status{display:inline-flex;align-items:center;justify-content:center;gap:4px;border:1px solid transparent;border-radius:4px;padding:2px 10px;font-weight:600}
@@ -96,7 +96,7 @@ th,td{height:40px;padding:9px 13px;border-bottom-color:#ebeef5}
  .paging-actions{justify-content:flex-start}
  .page-jump{width:100%;margin-top:5px}
 }
-@media(max-width:420px){.metrics{gap:8px}.metric dt{font-size:11px}.metric dd{font-size:24px}}
+@media(max-width:420px){.metrics{gap:8px}.metric dt{font-size:14px}.metric dd{font-size:24px}}
 
 /* Unified compact controls, including pagination, zoom and dialog icon buttons. */
 .toggle-glyph,.paging-actions button svg,.flow-actions button svg,.icon-only svg{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -104,3 +104,31 @@ th,td{height:40px;padding:9px 13px;border-bottom-color:#ebeef5}
 .paging-actions button svg,.flow-actions button svg{margin:auto}
 .icon-only svg{margin:auto}
 .nav-toggle{width:31px;justify-content:center;padding:4px}
+
+/* Unified page tokens and Markdown-style offline code blocks. */
+:root{
+  color-scheme:light;
+  --background:#FFFFFF;--foreground:#1A1C1F;--accent:#3A83F7;
+  --brand:var(--accent);--ink:var(--foreground);--focus:var(--accent);
+  --line:#E6EAF0;--muted:#667085;--soft:#F5F7FA;
+  font-family:system-ui,sans-serif;font-size:14px;color:var(--foreground);background:var(--background);
+}
+html,body,#main{background:var(--background);color:var(--foreground);font-family:system-ui,sans-serif;font-size:14px}
+body{line-height:1.6}
+button,input,select,textarea{font:inherit}
+p,li,label,th,td,.muted,.help,.eyebrow,.toolbar-note,.status,.tab,.filters label,.detail-filters,.nav-list a,.inline-select{font-size:14px}
+a{color:var(--accent)}a:hover{color:#2469D8}
+:focus-visible{outline-color:var(--accent)}
+.primary,button.primary,.page-numbers .page-number[aria-current=page]{background:var(--accent);border-color:var(--accent);color:#FFFFFF}
+button:hover:not(:disabled),select:hover,input:hover,textarea:hover{border-color:var(--accent)}
+.nav-list a:hover,.nav-list a:focus-visible,.paging-actions button:hover:not(:disabled){background:#EFF5FF;color:var(--accent)}
+.inline-button{color:var(--accent)}.detail-filters input[type=range]{accent-color:var(--accent)}
+.page-jump{font-size:14px}
+code:not(pre code){font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+pre.code-block{position:relative;max-width:100%;overflow:auto;margin:14px 0;padding:42px 16px 16px;border:1px solid #E6EAF0;border-radius:8px;background:#F5F7FA;color:var(--foreground);font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}
+pre.code-block>code{display:block;padding:0;background:transparent;color:inherit;font:inherit;white-space:pre}
+.code-copy{position:absolute;top:8px;right:8px;min-height:26px;padding:3px 10px;border:1px solid #D8E1EE;border-radius:6px;background:#FFFFFF;color:var(--foreground);font:12px/1.3 system-ui,sans-serif}
+.code-copy:hover:not(:disabled),.code-copy:focus-visible{border-color:var(--accent);color:var(--accent)}
+.code-copy-status{position:absolute;top:12px;right:66px;color:var(--accent);font:12px/1.3 system-ui,sans-serif}
+.code-example{margin:16px 0}.code-example figcaption{margin-bottom:7px;color:var(--muted);font-size:14px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

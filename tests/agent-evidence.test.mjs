@@ -22,8 +22,10 @@ for(const [id,dir,file,isHtml] of entries){
   const input=path.join(folder,file);
   assert.ok(fs.statSync(input).size>250);
   const computed=auditFile(id,input);
-  assert.equal(computed.staticGate,"pass");
-  assert.ok(computed.checks.every(c=>c.passed));
+  const expectedCurrentGate=id==="HTML03"?"fail":"pass";
+   assert.equal(computed.staticGate,expectedCurrentGate);
+   if(id==="HTML03") assert.deepEqual(computed.checks.filter(c=>!c.passed).map(c=>c.id),["no-extra-actions"]);
+   else assert.ok(computed.checks.every(c=>c.passed));
   const gate=JSON.parse(fs.readFileSync(path.join(folder,"static-gate.json"),"utf8"));
   assert.equal(gate.caseId,id);
   assert.equal(gate.staticGate,"pass");
