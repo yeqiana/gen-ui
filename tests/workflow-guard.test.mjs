@@ -34,11 +34,18 @@ test("HTML visual contract requires a persistent icon rail, image-text compositi
  assert.match(skill,/Collapsed navigation is an icon rail, never a hidden sidebar/);
  assert.match(skill,/Image-and-text first when visuals are supported/);
  assert.match(skill,/Prefer SVG icons over emoji/);
+ assert.match(skill,/Task-state exception/);
+ assert.match(skill,/selectively bold key conclusions/);
+ assert.match(skill,/Do not mix numbering systems/);
   assert.match(skill,/10 rows per page by default/);
  assert.match(contract,/keep the expand control inside the rail/);
  assert.match(contract,/Do not put a small subtitle immediately below the main H1/);
  assert.match(contract,/image \+ concise Chinese explanation/);
  assert.match(contract,/Prefer consistent local SVG section icons to emoji/);
+ assert.match(contract,/Content emphasis, heading numbering and task-state markers/);
+ assert.match(contract,/\.callout--confirm/);
+ assert.match(contract,/heading colors/);
+ assert.match(contract,/⏳ pending\/to execute/);
   assert.match(contract,/10 rows per page/);
 });
 
