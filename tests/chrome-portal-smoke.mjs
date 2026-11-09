@@ -59,7 +59,7 @@ async function run(){
     await send("Page.navigate",{url:pathToFileURL(report).href});
     await sleep(350);
     const state=await evaluate("(()=>({width:innerWidth,pages:document.querySelectorAll('.page-link').length,subheadings:document.querySelectorAll('.section-link').length,iframe:!!document.querySelector('iframe#page-frame'),src:document.querySelector('iframe#page-frame')?.getAttribute('src'),sandbox:document.querySelector('iframe#page-frame')?.getAttribute('sandbox'),hasOverflow:document.documentElement.scrollWidth>innerWidth,railColor:getComputedStyle(document.getElementById('rail')).backgroundColor}))()");
-    check("视口 "+width,state,state.pages===4&&state.subheadings>=6&&state.iframe&&state.src&&!state.src.startsWith("about:")&&state.sandbox==="allow-same-origin"&&!state.hasOverflow&&state.railColor==="rgb(250, 250, 250)");
+    check("视口 "+width,state,state.pages===4&&state.subheadings>=6&&state.iframe&&state.src&&!state.src.startsWith("about:")&&state.sandbox==="allow-same-origin"&&!state.hasOverflow&&state.railColor==="rgb(255, 255, 255)");
     results.viewports[width]=state;
     const brand=await evaluate("(()=>({marks:[...document.querySelectorAll('.rail-head .mark svg,.workspace-brand-mark svg,.rail-foot-mark svg')].map(svg=>({path:svg.querySelector('path')?.getAttribute('d'),size:svg.getBoundingClientRect().width,hidden:svg.getAttribute('aria-hidden')})),favicon:document.querySelector('link[rel=icon]')?.getAttribute('href'),headerVisible:document.querySelector('.workspace-brand-mark')?.getBoundingClientRect().width>0}))()");
     check("品牌统一/"+width,brand,brand.marks.length===3&&brand.marks.every(x=>x.path===markPath&&x.size>=16&&x.hidden==="true")&&brand.headerVisible&&brand.favicon?.startsWith("data:image/svg+xml;base64,")&&Buffer.from(brand.favicon.split(",")[1],"base64").toString("utf8")===markSvg);
@@ -79,8 +79,8 @@ async function run(){
   }
   await send("Emulation.setDeviceMetricsOverride",{width:1440,height:820,deviceScaleFactor:1,mobile:false});
   await send("Page.navigate",{url:pathToFileURL(report).href});await sleep(300);
-  const swap=await evaluate("(()=>{const frame=document.querySelector('#page-frame');const start=frame.getAttribute('src');const page=document.querySelectorAll('.page-link')[2];page.click();const next=frame.getAttribute('src');const title=document.getElementById('active-title').textContent;const selected=document.querySelectorAll('[aria-current=\"page\"]').length;const newTab=document.getElementById('open-external');const sameLink=newTab.getAttribute('href')===next;return {start,next,title,selected,sameLink,target:newTab.target,rel:newTab.rel}})()");
-  check("iframe 页面切换",swap,swap.start!==swap.next&&swap.selected===1&&swap.sameLink&&swap.target==="_blank"&&swap.rel.includes("noopener"));
+  const swap=await evaluate("(()=>{const frame=document.querySelector('#page-frame');const start=frame.getAttribute('src');const page=document.querySelectorAll('.page-link')[2];page.click();const next=frame.getAttribute('src');const title=document.getElementById('active-title').textContent;const selected=document.querySelectorAll('[aria-current=\"page\"]').length;const noExtra=!document.getElementById('open-external');return {start,next,title,selected,noExtra}})()");
+  check("iframe 页面切换",swap,swap.start!==swap.next&&swap.selected===1&&swap.noExtra);
   results.pageSwap=swap;
   const anchor=await evaluate("(()=>{const frame=document.getElementById('page-frame');const section=document.querySelectorAll('.section-link')[1];section.click();return {src:frame.getAttribute('src'),selected:document.querySelectorAll('[aria-current=\"location\"]').length,title:document.getElementById('active-title').textContent}})()");
   check("小标题锚点",anchor,anchor.src.includes("#")&&anchor.selected===1);

@@ -62,7 +62,8 @@ function inspectPage(root,file){
     const key=id[1]??id[2];
     if(!key||seen.has(key))continue;
     const text=safeText(match[2],50);
-    if(text){seen.add(key);headings.push({id:key,title:text});}
+    const sourceHeading=/^(?:原文|原文内容|原始(?:\s*Markdown|\s*内容|\s*文档)|Markdown\s*原文)$/i.test(text);
+    if(text&&!sourceHeading){seen.add(key);headings.push({id:key,title:text});}
     if(headings.length>=8)break;
   }
   return {title:pageTitle,href:makeHref(root,file),sections:headings,parts:path.relative(root,file).split(path.sep)};
@@ -141,7 +142,7 @@ export function buildPortal({dir,output,title}){
     '<div class="portal" id="portal">',
     '<aside class="rail" id="rail" aria-label="页面目录"><div class="rail-head"><span class="mark" aria-hidden="true">'+inlineMark+'</span><span class="rail-name">GEN-UI</span><button class="icon-button rail-close" id="collapse" type="button" aria-expanded="true" aria-controls="page-nav" title="折叠目录" aria-label="折叠目录"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M11 4 6 9l5 5"/></svg><span class="sr-only">折叠目录</span></button></div><nav id="page-nav" aria-label="页面层级导航"></nav><div class="rail-foot"><span class="rail-foot-label"><span class="rail-foot-mark" aria-hidden="true">'+inlineMark+'</span><span class="rail-foot-text">本地多页面目录</span></span><span class="rail-count" id="page-count"></span></div></aside>',
     '<div class="mobile-backdrop" id="backdrop" hidden></div>',
-    '<div class="workspace"><header class="workspace-header"><button class="icon-button menu-button" type="button" id="open-nav" aria-controls="page-nav" aria-expanded="false" aria-label="打开目录"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 5h12 M3 9h12 M3 13h12"/></svg></button><span class="workspace-brand-mark" aria-hidden="true">'+inlineMark+'</span><div class="workspace-titles"><p class="workspace-overline" id="breadcrumb"></p><h1 id="active-title" class="sr-only">页面目录</h1></div><a id="open-external" class="open-new" target="_blank" rel="noopener noreferrer" href="#" aria-label="在新标签页打开当前页面">新标签页打开 <span aria-hidden="true">↗</span></a><span class="preview-mode" id="preview-mode"></span></header>',
+    '<div class="workspace"><header class="workspace-header"><button class="icon-button menu-button" type="button" id="open-nav" aria-controls="page-nav" aria-expanded="false" aria-label="打开目录"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 5h12 M3 9h12 M3 13h12"/></svg></button><span class="workspace-brand-mark" aria-hidden="true">'+inlineMark+'</span><div class="workspace-titles"><p class="workspace-overline" id="breadcrumb"></p><h1 id="active-title" class="sr-only">页面内容</h1></div><span class="preview-mode" id="preview-mode"></span></header>',
     '<div class="frame-area"><iframe id="page-frame" title="内容页面" loading="eager" referrerpolicy="no-referrer"'+frameSandbox+' src="about:blank"></iframe><p class="frame-status" id="frame-status" role="status" aria-live="polite"></p></div>',
     '</div></div>',
     '<script type="application/json" id="page-manifest">'+escaped+"</script>",

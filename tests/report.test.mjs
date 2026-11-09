@@ -290,7 +290,7 @@ test("JSON 抽屉允许受控数据但拒绝脚本，保留上次合法内容", 
   assert.equal(get("data-drawer").open,false);
 });
 
-test("中文 HTML 声明站内/外部导航，首列固定，正文无多余卡片容器", () => {
+test("中文 HTML 使用简洁导航、首列固定且不添加原文操作", () => {
   const html=read("demo/report.html"),css=read("demo/report.css");
   assert.match(html,/<html lang="zh-CN">/);
   assert.equal((html.match(/<h1\b/g)||[]).length,1);
@@ -299,9 +299,7 @@ test("中文 HTML 声明站内/外部导航，首列固定，正文无多余卡�
   assert.match(html,/<h2\b/);
   assert.match(html,/<h3\b/);
   assert.match(html,/id="tab-records" role="tab"/);
-  assert.match(html,/页内标签/);
-  assert.match(html,/新标签页打开/);
-  assert.match(html,/target="_blank" rel="noopener noreferrer"/);
+  assert.doesNotMatch(html,/新标签页打开|下载原MD|打印当前页|target="_blank"/);
   assert.match(html,/<dialog id="create-dialog"/);
   assert.match(html,/<dialog id="detail-drawer"/);
   assert.match(html,/<dialog id="data-drawer"/);
@@ -315,10 +313,10 @@ test("中文 HTML 声明站内/外部导航，首列固定，正文无多余卡�
   assert.doesNotMatch(html,/\bclass="(panel|card|chart-box)\b/);
 });
 
-test("8 个品牌 SVG 图标完整，文件和页面中的图标引用都存在", () => {
+test("7 个品牌 SVG 图标完整，文件和页面中的图标引用都存在", () => {
   const dir=path.join(base,"assets/icons");
   const names=["gen-ui-mark","gen-ui-spark","gen-ui-table","gen-ui-chart","gen-ui-tab",
-    "gen-ui-external","gen-ui-drawer","gen-ui-form"];
+    "gen-ui-drawer","gen-ui-form"];
   for(const name of names) {
     const file=path.join(dir,name+".svg");
     assert.ok(fs.existsSync(file),name);
@@ -504,9 +502,9 @@ test("总览卡片、十条分页和多色图表的静态资源全部离线可�
   assert.match(css,/#f56c6c/i);
   assert.match(css,/\.status\.success/);
   assert.match(pager,/aria-current/);
-  assert.match(charts,/#5470c6/i);
-  assert.match(charts,/#91cc75/i);
-  assert.match(charts,/#fac858/i);
+  assert.match(charts,/#3A83F7/i);
+  assert.match(charts,/#67C23A/i);
+  assert.match(charts,/#E6A23C/i);
   for(const src of ["./ui-refresh.css","./chart-refresh.js","./pager-refresh.js"]){
     assert.ok(html.includes(src),"缺少离线资产: "+src);
     assert.ok(fs.existsSync(path.join(base,"demo",src)));

@@ -13,6 +13,7 @@
   <script src="./pager-refresh.js" defer></script>
   <script src="./flow-viewer.js" defer></script>
   <script src="./report.js" defer></script>
+  <script src="../assets/code-blocks.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">跳到主要内容</a>
@@ -49,9 +50,6 @@
             <option value="top">顶部</option>
           </select>
         </label>
-        <a class="text-action external-action" href="https://github.com/yeqiana/gen-ui/blob/main/references/html-report-contract.md" target="_blank" rel="noopener noreferrer">
-          <img src="../assets/icons/gen-ui-external.svg" alt="">规范文档 <span class="action-hint">新标签页打开</span>
-        </a>
       </div>
     </header>
 
@@ -115,12 +113,12 @@
     <section id="records" class="jump" aria-labelledby="records-heading">
       <div class="section-title"><h2 id="records-heading"><img class="section-icon" src="../assets/icons/gen-ui-table.svg" alt=""> 执行明细</h2></div>
       <div class="toolbar">
-        <div class="tab-list" role="tablist" aria-label="当前页面内的内容切换">
+        <div class="tab-list" role="tablist" aria-label="内容切换">
           <button type="button" id="tab-records" role="tab" aria-controls="panel-records" aria-selected="true" tabindex="0" class="tab active">
-            <img src="../assets/icons/gen-ui-tab.svg" alt="">执行记录 <small>页内标签</small>
+            <img src="../assets/icons/gen-ui-tab.svg" alt="">执行记录
           </button>
           <button type="button" id="tab-rules" role="tab" aria-controls="panel-rules" aria-selected="false" tabindex="-1" class="tab">
-            筛选说明 <small>页内标签</small>
+            筛选说明
           </button>
         </div>
         <div class="toolbar-actions">
@@ -171,7 +169,15 @@
       <div id="panel-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
         <h3>筛选与查看规则</h3>
         <p>编号支持模糊搜索；模块、状态和批次分别对应表格关键字段；阈值筛选与所有统计及图表实时联动。</p>
-        <p>“页内标签”仅切换当前页面内容；“新标签页打开”会在浏览器中新建标签，并明确显示跳转目标。</p>
+        <p>筛选说明用于查看当前报告的字段口径与操作规则，不会改变原始数据。</p>
+        <figure class="code-example">
+          <figcaption>报告数据格式 · JSON</figcaption>
+          <pre><code class="language-json">{
+  "version": "gen-ui-html-report/v1",
+  "title": "工程质量分析",
+  "rows": []
+}</code></pre>
+        </figure>
       </div>
     </section>
 
@@ -200,7 +206,7 @@
 <dialog id="detail-drawer" class="drawer" aria-labelledby="detail-heading">
   <div class="dialog-head"><h2 id="detail-heading">任务详情 · 站内抽屉</h2><button type="button" id="close-detail" class="icon-only" aria-label="关闭任务详情" title="关闭"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button></div>
   <dl id="detail-content" class="details"></dl>
-  <p class="help">仅展示当前报告数据，不会打开浏览器新标签页。</p>
+  <p class="help">仅展示当前报告数据。</p>
 </dialog>
 
 <dialog id="data-drawer" class="drawer" aria-labelledby="json-heading">

@@ -14,7 +14,7 @@ frame.setAttribute("sandbox",interactive?"allow-scripts allow-forms":"allow-same
 document.getElementById("preview-mode").textContent=interactive?"隔离交互预览":"离线静态预览 · 脚本不可用";
 const title=document.getElementById("active-title");
 const crumb=document.getElementById("breadcrumb");
-const external=document.getElementById("open-external");
+
 const status=document.getElementById("frame-status");
 const collapse=document.getElementById("collapse");
 const menu=document.getElementById("open-nav");
@@ -37,8 +37,8 @@ function goto(page,section){
  frame.src=safeUrl;frame.title=page.title+(section?" · "+section.title:"");
  title.textContent=section?section.title:page.title;
  crumb.textContent=[manifest.title,...page.parts.slice(0,-1),page.title].join(" / ");
- external.href=safeUrl;
- external.setAttribute("aria-label","在新标签页打开"+(section?section.title:page.title));
+
+
  status.textContent="正在显示 · "+page.title;
  for(const [key,button] of active){
    const on=key===page.id+(section?"#"+section.id:"");

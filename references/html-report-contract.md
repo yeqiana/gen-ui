@@ -13,14 +13,14 @@ This contract applies **whenever HTML is the chosen or required final deliverabl
 - Use one clear H1. **Do not put a small subtitle immediately below the main H1**; move metadata above it or combine context with the first content group. Aggregate related metrics, explanations and actions into a few meaningful sections instead of scattering them into tiny panels or repeated micro-headings.
 - When the host supports visuals, prefer an **image + concise Chinese explanation** for important concepts: meaningful diagrams, screenshots, maps, charts or annotated illustrations. Use source-grounded/authored visuals, meaningful alt text and a textual takeaway. If image display is unsupported or no useful visual exists, use a concise text/table/Mermaid fallback; do not add decorative filler images.
 - Prefer consistent local SVG section icons to emoji; use emoji only where genuinely helpful, never as the only status or action indication. Keep Chinese labels.
-- Use clear hierarchy, compact controls, friendly accent colors, light borders and modest spacing. For the overview, a small grid of labelled metric cards improves scanning; avoid excessive decorative card layers, heavy shadows, gradients and clutter.
+- Use the fixed visual tokens: page background #FFFFFF, foreground #1A1C1F, primary accent #3A83F7; use the system UI font stack, 14px body text and 12px code. Keep the base page white and do not load remote fonts. For the overview, a small grid of labelled metric cards improves scanning; avoid excessive decorative card layers, heavy shadows, gradients and clutter.
 
 ## Directory / multi-page portal contract
 
 When a directory is specified, **do not generate only a standalone index that ignores the other HTML files**. Run `node scripts/build-html-portal.mjs --dir <directory>` to recursively discover eligible HTML in nested folders. The generated `index.html` is a thin shell that preserves every original page file and relative asset.
 
-- Every primary page title opens its corresponding HTML document in the **main embedded iframe**. Existing named H2 subsections become optional subordinate navigation items (frame URL fragments). Directory folders form collapsible groups; avoid empty nested headings.
-- Default to a minimal monochrome left navigation that folds to a **persistent vertical icon rail** on desktop and can open/close on mobile. In the collapsed state, show one icon per primary page, hide labels and subordinate links, and keep the expand control inside the rail. Never hide the whole sidebar. Every icon-only link has an accessible Chinese name and hover/focus hint. An action labelled “新标签页打开” opens the current page separately; the ordinary navigation stays within the iframe.
+- Every primary page title opens its corresponding HTML document in the **main embedded iframe**. Meaningful H2 subsections from that HTML page may become subordinate navigation items (frame URL fragments). Directory folders form collapsible groups; avoid empty nested headings. Never create a synthetic source/Markdown page or a dedicated original-text directory or table of contents.
+- Default to a minimal monochrome left navigation that folds to a **persistent vertical icon rail** on desktop and can open/close on mobile. In the collapsed state, show one icon per primary page, hide labels and subordinate links, and keep the expand control inside the rail. Never hide the whole sidebar. Every icon-only link has an accessible Chinese name and hover/focus hint. Navigation stays within the main iframe; do not add a separate open-current-page action.
 - Browsers cannot recursively scan arbitrary file directories at runtime. Discover files **before** opening the portal, and rerun the builder after adding new files. A preexisting hand-authored index must not be overwritten; use `--output <directory>/portal.html` instead.
 - Skip symlink, hidden, dependency and generated build paths; do not inject executable content into original HTML. **Two safe modes:** the direct `file://` portal uses `sandbox="allow-same-origin"` with scripts disabled so local stylesheets render; running the built-in loopback HTTP preview (`node scripts/serve-html-portal.mjs --dir <directory>`) switches to `sandbox="allow-scripts allow-forms"` without same-origin permission so JavaScript/forms work in an isolated frame. Never combine `allow-scripts` and `allow-same-origin`, and never remove the iframe sandbox as an implicit shortcut. Files can have their own security-sensitive behavior; review their source before interactive execution.
 - Single-page reports remain independent HTML documents; only the **multi-page shell** must use an iframe. Never nest iframe shells merely because a content page already has its own headings.
@@ -40,12 +40,13 @@ When a directory is specified, **do not generate only a standalone index that ig
 - Filtering, KPI counts, charts and pagination must derive from the **same dataset** and refresh together. Changing a filter or page size resets/clamps the current page.
 - For long tables, default to **10 rows per page** with optional 20 and 50. Use a compact numbered pager with previous/next, visible current page and optional jump-to-page control. The final page or filtered result can naturally have fewer than 10 rows. Do not pad results. Provide accurate row counts and an empty state.
 
-## 4. Navigation intent: new browser tab versus current-page tab
+## 4. Minimal actions and internal navigation
 
-- The distinction between **opening a new browser tab** and **switching an internal page tab** must be immediately visible in **Chinese text**, not solely in an icon.
-- External target links use a label such as **“新标签页打开”**; where supported, `target="_blank"` plus `rel="noopener noreferrer"`. Do not claim a new tab will open from a plain button without implementing it.
-- Internal switches use **“页内标签” / “当前页面内部切换”** labels and semantic tabs with `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-controls` and `aria-selected`. The UI should never silently navigate away.
-- Do not make a report **only** a list of tabs. Use real navigation, forms, dialogs, panels and drawers based on information needs.
+- Do not add source-Markdown download, original-text export, current-page print or similar document-operation buttons unless the user explicitly requests them. Avoid redundant toolbar actions; the page content is the deliverable.
+- Do not display copy that describes opening a new browser tab. The multi-page portal navigates within its embedded iframe. If an external reference is genuinely needed, use a concise descriptive link label and do not add a separate open-in-new-tab control.
+- Internal switches use semantic tabs with role="tablist", role="tab", role="tabpanel", aria-controls and aria-selected; concise tab labels are sufficient. The UI should never silently navigate away.
+- Do not make a report only a list of tabs. Use real navigation, forms, dialogs, panels and drawers based on information needs.
+- Code examples are not toolbar exports: render multi-line code in Markdown-style <pre><code class="language-..."> blocks with a visible one-click Copy control and accessible copy feedback.
 
 ## 5. Components beyond list pages and unnecessary cards
 
@@ -64,13 +65,25 @@ When a directory is specified, **do not generate only a standalone index that ig
 - A self-contained HTML file can inline **reviewed trusted code/assets** if the request explicitly requires a single file. Otherwise local CSS/JS/SVG assets are encouraged for maintenance.
 - The HTML demo is **not** an implementation of DIL, OpenUI or A2UI; interactive rendering requires the actual browser or compatible host.
 
-## 7. GEN-UI personal IP icon set
+## 7. Markdown-style code blocks and fixed theme
+
+- Render every multi-line code example as <pre><code class="language-...">...</code></pre> with preserved whitespace, horizontal overflow when needed, and a restrained light surface. Use a system monospace font at 12px; surrounding body text remains 14px.
+- Provide one visible 复制 button for every code block. Copy the code element's textContent, not the wrapper's text. Prefer navigator.clipboard.writeText; if unavailable or rejected, use a temporary selected textarea with document.execCommand("copy"). Announce success or failure through an aria-live="polite" status. The page must work offline and must not load a remote highlighter or clipboard library.
+- Inline identifiers may remain inline code; do not wrap ordinary prose in a block merely to add a Copy control.
+
+## Fixed theme tokens
+
+- Background: #FFFFFF; foreground: #1A1C1F; primary accent: #3A83F7.
+- Font: system UI font stack, no remote font downloads. Body: 14px. Code: 12px.
+- Use the accent consistently for focus, primary actions, active navigation and links. Semantic success/failure colors may remain distinct from the primary accent, but must not replace the global theme tokens.
+
+## 8. GEN-UI personal IP icon set
 
 - Use the [GEN-UI monochrome SVG set](../assets/icons/README.md). The personal mark must be one double-peak cat-ear stroke (one path only), without a full head, face details, frame or ornament; keep it legible at 16/20/24px. Functional icons should use at most 1–2 geometric primitives while preserving clear meaning and consistent visual weight. Avoid gradients, colorful mascots, coral accents and decorative icon overload.
 - Use icons selectively in the **sidebar, page header, toolbar or footer**, not in dense body paragraphs. Pair functional icons with clear Chinese text; use `alt=""` when icons are decorative.
 - Keep SVG assets local and reusable, do not embed untrusted external SVG. Avoid a large decorative brand watermark over the table or report findings.
 
-## 8. Executable example and validation
+## 9. Executable example and validation
 
 Open the [recursive iframe portal](../demo/portal-pages/index.html) or the standalone [Chinese HTML report](../demo/report.html) alongside its [CSS](../demo/report.css), [JavaScript](../demo/report.js) and local SVG icons. The sample deliberately contains **67 fictional records** and is **not** an observed engineering test result.
 
