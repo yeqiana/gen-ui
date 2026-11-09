@@ -2,12 +2,12 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
-## Unreleased — five sanitized HTML showcases and README refresh (2026-11-09)
+## Unreleased — technical-document HTML examples and README correction (2026-11-09)
 
-- Add five standalone offline HTML showcases and Chrome-rendered previews: StoryOS, messaging authorization, hot/cold archival, Android 4.2 TV, and QR scanning audit.
-- Rewrite bilingual READMEs to place clickable images and finished HTML output first; remove duplicate historical release and styling narration.
-- Add case provenance, redaction policy, Demo directory navigation and fixed trusted showcase regression tests.
-- Preserve the original four-page portal and protocol fixtures as required browser test inputs; no private business screenshots are distributed.
+- Replace the unrelated business-UI mockups with four substantial technical documents: project analysis, architecture design, implementation plan, and test/acceptance plan.
+- Add a consistent article layout with real section navigation, long-form tables, inline SVG architecture/sequence diagrams, code examples, copy controls, responsive reading and print styles.
+- Add fixed Chrome and structural tests for all four documents; explicitly label the scenario as sanitized and all unexecuted tests as pending.
+- Update bilingual READMEs and Demo navigation so the primary examples demonstrate engineering-document output rather than product UI mockups.
 
 ## Unreleased — v1.4.0 readiness work (2026-11-06)
 

@@ -2,57 +2,49 @@
 
 **简体中文** | [English](README.md)
 
-> 让 Codex、Claude Code、DeepSeek 等 Coding Agent 输出更清晰的 Markdown、工程报告和可离线打开的 HTML 案例。
+> 让 Codex、Claude Code、DeepSeek 等 Coding Agent 输出结构清晰的 Markdown，以及专业的离线技术文档 HTML。
 
 [![Validate Skill](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml/badge.svg)](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml)
 
 **Gen UI 是一个 Markdown-first 的 AI Coding 输出 Skill**，不是官方 ChatGPT UI 运行时，也不会因为安装了 Skill 就使终端具备按钮、图表或表单交互能力。它按宿主能力选择可读 Markdown、可验证的结构化 UI 数据，或在明确要求 HTML 时生成离线网页。
 
-## 效果预览 · 五个独立案例
+## 技术文档 HTML 示例
 
-不是占位文字：下面五个案例都提供独立 HTML，可以直接在浏览器打开。README 中的图片由仓库内这些 HTML 的 Chrome 页面截图生成。**所有公开案例均使用合成或重制数据，不复制私有业务源数据。**
+下面展示的是 **AI Coding Agent 输出的专业技术文档**，不是业务系统界面、控制台或数据大屏。四份文档围绕一个脱敏的 AI 内容生产平台展开，内容从项目分析延伸到架构设计、实施和测试验收。
 
-### 01 · StoryOS：AI 内容生产工作台
+### 01 · 项目分析报告
 
-[![StoryOS 工作台演示截图](demo/cases/assets/story-workbench-preview.png)](demo/cases/story-workbench.html)
+[![项目分析报告 HTML 预览](demo/documents/assets/project-analysis-preview.png)](demo/documents/project-analysis.html)
 
-结合 StoryOS Web Console 的工作台、作品库、生产监控和工作流设计：创作入口、作品摘要、素材与阶段记录分离。真实项目结构参考，**作品名、封面、状态与数量均已替换为演示内容**。
+从业务目标、模块边界、技术架构、核心链路、领域模型到风险与改造建议，展示完整的工程项目分析。
 
-[打开 StoryOS HTML](demo/cases/story-workbench.html)
+[打开项目分析 HTML](demo/documents/project-analysis.html)
 
-### 02 · 即时通信：群消息受理与可靠投递
+### 02 · 系统架构设计方案
 
-[![即时通信架构演示截图](demo/cases/assets/im-message-flow-preview.png)](demo/cases/im-message-flow.html)
+[![系统架构设计 HTML 预览](demo/documents/assets/architecture-design-preview.png)](demo/documents/architecture-design.html)
 
-根据历史 IM 设计材料重制消息发送链路，展示授权快照、Outbox、MQ、ACK、去重与失败恢复。**不包含原业务品牌、真实群聊、账号或内部接口；不声称完成了当日源码审计。**
+包含总体架构、组件职责、任务状态机、时序图、数据模型、并发控制、Transactional Outbox、Fencing Token 和断点恢复设计。
 
-[打开 IM 架构 HTML](demo/cases/im-message-flow.html)
+[打开架构设计 HTML](demo/documents/architecture-design.html)
 
-### 03 · 冷热库：消息归档和搜索回源
+### 03 · 技术实施方案
 
-[![冷热归档设计演示截图](demo/cases/assets/cold-archive-preview.png)](demo/cases/cold-archive.html)
+[![技术实施方案 HTML 预览](demo/documents/assets/implementation-plan-preview.png)](demo/documents/implementation-plan.html)
 
-展示热库在线读写、冷库归档、批次水位、幂等重放、ES 定位与冷库回源。原始设计属于**待评审方案**，不是已上线的效果声明。
+围绕改造范围、阶段任务、依赖关系、数据迁移、灰度发布、回滚策略和交付验收，呈现可执行的工程实施文档。
 
-[打开冷热归档 HTML](demo/cases/cold-archive.html)
+[打开技术实施 HTML](demo/documents/implementation-plan.html)
 
-### 04 · Android 4.2 TV：旧电视启动器美化
+### 04 · 测试与验收方案
 
-[![Android TV 启动器演示截图](demo/cases/assets/tv-launcher-preview.png)](demo/cases/tv-launcher.html)
+[![测试验收方案 HTML 预览](demo/documents/assets/test-acceptance-preview.png)](demo/documents/test-acceptance.html)
 
-面向 Android 4.2.1 / API 17 的大屏主屏概念：方向键焦点、应用入口、时钟、壁纸和玻璃质感。页面是 **HTML 重绘概念图，不是电视实机截图**；设备地址、网络和个人信息均未包含。
+包含测试覆盖矩阵、核心用例、故障注入、性能测试阶梯、安全检查和验收证据要求。所有用例均明确标记为待执行。
 
-[打开 TV 启动器 HTML](demo/cases/tv-launcher.html)
+[打开测试验收 HTML](demo/documents/test-acceptance.html)
 
-### 05 · QR Audit：离线二维码识别审计
-
-[![二维码审计报告演示截图](demo/cases/assets/qr-audit-report-preview.png)](demo/cases/qr-audit-report.html)
-
-展示策略统计、输入指纹、运行证据和失败复盘。示例比率与计数全部为虚构数据，**不代表实际扫描识别率**。
-
-[打开二维码审计 HTML](demo/cases/qr-audit-report.html)
-
-[**查看案例展廊（5 个 HTML）**](demo/cases/index.html) · [案例来源与脱敏说明](docs/cases.md) · [Demo 目录说明](demo/README.md)
+[**浏览四份完整技术文档**](demo/documents/index.html) · [文档来源与边界](docs/html-document-examples.md) · [Demo 目录说明](demo/README.md)
 
 ## 立即使用
 
@@ -87,7 +79,7 @@ HTML 报告的页面行为是**仓库内可信的演示代码**，不是让模�
 
 | 演示 / 工具 | 入口 | 用途 |
 | --- | --- | --- |
-| 业务案例展廊 | [demo/cases/index.html](demo/cases/index.html) | 五个脱敏业务 HTML 成品 |
+| 技术文档示例集 | [demo/documents/index.html](demo/documents/index.html) | 四份项目分析、架构设计、实施与测试验收 HTML |
 | 工程质量分析报告 | [demo/report.html](demo/report.html) | 离线筛选、表格、图表、分页、抽屉 |
 | 多文件 HTML 门户 | [demo/portal-pages/index.html](demo/portal-pages/index.html) | 多级目录、真实 iframe 和移动导航 |
 | 声明式 UI 协议 | [demo/index.html](demo/index.html) | 受控滑块和教育用途 `gen-ui-demo/v1` |
@@ -116,7 +108,7 @@ node scripts/serve-html-portal.mjs --dir "D:\reports"
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 node tests/chrome-report-smoke.mjs
 node tests/chrome-portal-smoke.mjs
-node tests/chrome-cases-smoke.mjs
+node tests/chrome-documents-smoke.mjs
 ~~~
 
 这些测试验证的是**仓库内的固定示例**，不是任意模型输出的安全性或真实业务部署。当前版本的 Model/Agent 独立盲测与正式 Release 需要分别核实；详见 [真实 Agent 证据](evals/webcodex-agent-matrix-2026-11-06.md)与[发布门禁](docs/release-readiness-v1.4.0.md)。
@@ -126,10 +118,10 @@ node tests/chrome-cases-smoke.mjs
 ~~~text
 SKILL.md                 Skill 入口与输出规则
 references/              HTML 报告与受控 Renderer 契约
-demo/cases/              五个脱敏业务 HTML + 截图与展廊
+demo/documents/           四份专业技术文档 HTML + 统一样式与交互
 demo/                    工程质量报告、目录门户、受控协议示例
 examples/                代码评审、实施验收与线程池 Markdown 示例
-docs/                    集成说明、案例溯源、FAQ、GEO
+docs/                    集成说明、HTML 文档示例说明、FAQ、GEO
 tests/                   Node 测试与固定浏览器回归
 evals/                   真实 Agent 与浏览器验收证据
 scripts/                 校验、门户生成与本地预览

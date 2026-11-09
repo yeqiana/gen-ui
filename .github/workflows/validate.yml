@@ -59,7 +59,7 @@ jobs:
             "tests/chrome-portal-smoke.mjs",
             "tests/chrome-portal-http-smoke.mjs",
             "tests/chrome-portal-directory-smoke.mjs",
-            "tests/chrome-cases-smoke.mjs"
+            "tests/chrome-documents-smoke.mjs"
           )
           foreach ($script in $scripts) {
             & node $script

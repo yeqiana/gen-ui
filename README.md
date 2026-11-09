@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) | **English**
 
-> Markdown-first presentation for coding agents, with practical, offline HTML examples.
+> Markdown-first presentation for coding agents, with professional offline HTML technical documents.
 
 [![Validate Skill](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml/badge.svg)](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml)
 
@@ -10,51 +10,41 @@
 
 It is **not** OpenAI's ChatGPT UI runtime or an official DIL implementation. A terminal does not become interactive merely by installing a Skill. The host must provide and authorize a renderer.
 
-## Five offline HTML showcases
+## Four technical-document HTML examples
 
-These are real HTML files in this repository, with browser-rendered previews. All publicly shown business names, messages, media and metrics are synthetic or redrawn. Source inspiration does **not** imply a current source-code audit or a production deployment.
+These are **engineering documents generated for Coding Agent workflows**, not product dashboards or business-application mockups. The four documents share one sanitized AI content-production scenario and cover analysis, architecture, implementation, and testing.
 
-### 01 · StoryOS — AI production workbench
+### 01 · Project analysis report
 
-[![StoryOS example screenshot](demo/cases/assets/story-workbench-preview.png)](demo/cases/story-workbench.html)
+[![Project analysis HTML preview](demo/documents/assets/project-analysis-preview.png)](demo/documents/project-analysis.html)
 
-An editorial production workbench inspired by verified StoryOS console design notes. Covers creative entry points, work status, approved-media concepts and evidence-aware workflow presentation. Actual project media and story names are not included.
+A structured project analysis covering business goals, module boundaries, architecture, execution flow, domain model, risks, and recommendations.
 
-[Open HTML](demo/cases/story-workbench.html)
+[Open project analysis](demo/documents/project-analysis.html)
 
-### 02 · Messaging architecture — authorization and delivery
+### 02 · System architecture design
 
-[![Messaging architecture example](demo/cases/assets/im-message-flow-preview.png)](demo/cases/im-message-flow.html)
+[![Architecture design HTML preview](demo/documents/assets/architecture-design-preview.png)](demo/documents/architecture-design.html)
 
-Redrawn from historical messaging-system design materials: send authorization snapshots, transactional outbox, message queues, ACKs, retries and idempotency. No internal brand, endpoints, accounts or user messages.
+A detailed design with component responsibilities, task state machine, sequence diagrams, data model, concurrency control, transactional outbox, fencing tokens, and recovery.
 
-[Open HTML](demo/cases/im-message-flow.html)
+[Open architecture design](demo/documents/architecture-design.html)
 
-### 03 · Hot/cold data — message archiving and search
+### 03 · Technical implementation plan
 
-[![Archive architecture example](demo/cases/assets/cold-archive-preview.png)](demo/cases/cold-archive.html)
+[![Implementation plan HTML preview](demo/documents/assets/implementation-plan-preview.png)](demo/documents/implementation-plan.html)
 
-Hot storage, cold archive, reconciliation watermarks, idempotent replay, and search-index lookup followed by authoritative record retrieval. **A proposal example, not a claim of deployed behavior.**
+An actionable engineering plan with scope, phases, dependencies, migration, rollout, rollback, risks, and acceptance gates.
 
-[Open HTML](demo/cases/cold-archive.html)
+[Open implementation plan](demo/documents/implementation-plan.html)
 
-### 04 · Android 4.2 TV — legacy launcher refresh
+### 04 · Test and acceptance plan
 
-[![TV launcher HTML concept](demo/cases/assets/tv-launcher-preview.png)](demo/cases/tv-launcher.html)
+[![Test and acceptance HTML preview](demo/documents/assets/test-acceptance-preview.png)](demo/documents/test-acceptance.html)
 
-A self-contained HTML design concept for remote-control focus, app entry points, clock and wallpaper on an Android 4.2.1 / API 17 class television. **This is not a device screenshot.**
+A test matrix, reproducible scenarios, fault injection, performance test stages, security checks, and evidence-based acceptance criteria. All test cases are explicitly marked as not yet executed.
 
-[Open HTML](demo/cases/tv-launcher.html)
-
-### 05 · QR Audit — offline scan evidence
-
-[![QR audit report example](demo/cases/assets/qr-audit-report-preview.png)](demo/cases/qr-audit-report.html)
-
-An evidence-oriented report for QR recognition strategies, pair-level metrics, run fingerprints and traceable failures. All displayed success rates are illustrative.
-
-[Open HTML](demo/cases/qr-audit-report.html)
-
-[**Browse all five showcases**](demo/cases/index.html) · [Case provenance and redaction notes](docs/cases.md) · [Demo directory guide](demo/README.md)
+[**Browse all four technical documents**](demo/documents/index.html) · [Document scope and provenance](docs/html-document-examples.md) · [Demo directory guide](demo/README.md)
 
 ## Install
 
@@ -89,7 +79,7 @@ The bundled `gen-ui-demo/v1` JSON contract is educational; it is not interoperab
 
 | Entry | Purpose |
 | --- | --- |
-| [Business showcase gallery](demo/cases/index.html) | Five redacted offline HTML pages |
+| [Technical document examples](demo/documents/index.html) | Four project analysis, architecture, implementation, and test documents |
 | [Quality report](demo/report.html) | Filtering, pagination, charts and drawers |
 | [Multi-page portal](demo/portal-pages/index.html) | Recursive HTML directory with sandboxed iframe |
 | [Declarative UI demo](demo/index.html) | Safe educational slider / JSON example |
@@ -115,7 +105,7 @@ The existing [Java code review](examples/code-review.md), [implementation accept
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 node tests/chrome-report-smoke.mjs
 node tests/chrome-portal-smoke.mjs
-node tests/chrome-cases-smoke.mjs
+node tests/chrome-documents-smoke.mjs
 ~~~
 
 These checks validate **trusted repository examples**, not general model compliance or production behavior. Native Codex blind-test and release readiness require separate evidence. See [Agent evaluation](evals/webcodex-agent-matrix-2026-11-06.md) and [release gate](docs/release-readiness-v1.4.0.md).
@@ -125,10 +115,10 @@ These checks validate **trusted repository examples**, not general model complia
 ~~~text
 SKILL.md                 Skill presentation rules
 references/              HTML report and renderer contracts
-demo/cases/              Five public-safe business showcases and previews
+demo/documents/           Four professional technical-document HTML examples
 demo/                    Quality report, directory portal and protocol demo
 examples/                Markdown/JSON review and implementation examples
-docs/                    Case provenance, integration, FAQ and discoverability
+docs/                    HTML document examples, integration, FAQ and discoverability
 tests/                   Node and real-browser regression suites
 evals/                   Browser and real-Agent evidence
 scripts/                 Validation and preview utilities
