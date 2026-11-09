@@ -2,6 +2,13 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
+## Unreleased — five sanitized HTML showcases and README refresh (2026-11-09)
+
+- Add five standalone offline HTML showcases and Chrome-rendered previews: StoryOS, messaging authorization, hot/cold archival, Android 4.2 TV, and QR scanning audit.
+- Rewrite bilingual READMEs to place clickable images and finished HTML output first; remove duplicate historical release and styling narration.
+- Add case provenance, redaction policy, Demo directory navigation and fixed trusted showcase regression tests.
+- Preserve the original four-page portal and protocol fixtures as required browser test inputs; no private business screenshots are distributed.
+
 ## Unreleased — v1.4.0 readiness work (2026-11-06)
 
 - Record the distinction between GPT-6 + WebCodex saved Agent samples and a **not-yet-completed** native Codex blind run; protect model quota and preserve honest evidence.

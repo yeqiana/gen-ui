@@ -38,6 +38,6 @@ No. Gen UI improves how an agent **reports** actions and evidence. The actual co
 
 ## Where should I start?
 
-Read [the English README](../README.md) or [中文说明](../README.zh-CN.md), install the Skill, try [the acceptance-plan example](../examples/acceptance-plan.md), and view [the offline demo](../demo/index.html).
+Read [the English README](../README.md) or [中文说明](../README.zh-CN.md), install the Skill, try [the acceptance-plan example](../examples/acceptance-plan.md), and view the [five standalone HTML showcases](../demo/cases/index.html). The [offline UI protocol demo](../demo/index.html) is a separate educational example.
 
 For implementation specifics, see [the renderer contract](../references/renderer-contract.md) and [host integration guide](integration.md).
