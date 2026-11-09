@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="即时通信系统群消息授权快照与可靠投递脱敏案例"><title>即时通信 · 消息受理与可靠投递</title>
+<style>
+:root{color-scheme:light;--ink:#1a1c1f;--muted:#687486;--line:#e4e9f0;--blue:#3a83f7;--soft:#f5f8fc;--green:#27865f;--amber:#b7791f;font:14px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#f4f6fa;color:var(--ink)}a{color:var(--blue);text-decoration:none}.page{max-width:1360px;margin:auto;padding:20px 26px 30px}.casebar{display:flex;align-items:center;gap:15px;color:var(--muted);font-size:12px;margin-bottom:18px}.casebar .tag{margin-left:auto;border:1px solid #d9e2ee;background:white;padding:4px 10px;border-radius:999px}.hero{padding:10px 0 19px;border-bottom:1px solid var(--line)}.kicker{font-size:11px;letter-spacing:.12em;color:var(--blue);font-weight:750}.hero h1{font-size:28px;margin:8px 0 6px;letter-spacing:-.02em}.hero p{margin:0;color:var(--muted);max-width:850px}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.meta span{background:#eaf2ff;color:#355f9d;padding:4px 9px;border-radius:5px;font-size:11px}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,.8fr);gap:16px;margin-top:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:17px 18px;min-width:0}.panel h2{font-size:15px;margin:0 0 13px}.flow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;align-items:stretch}.node{position:relative;border:1px solid #dce5f0;background:#fbfcfe;border-radius:8px;padding:12px 8px;text-align:center;min-height:95px;display:flex;flex-direction:column;justify-content:center}.node:not(:last-child):after{content:"›";position:absolute;right:-10px;top:34px;color:var(--blue);font-size:22px;font-weight:700;z-index:2}.node b{font-size:12px}.node small{font-size:10px;color:var(--muted);margin-top:5px}.node.primary{border-color:#9fc4ff;background:#f1f7ff}.node.queue{border-color:#b9ddcd;background:#f2fbf6}.flow-note{margin-top:12px;padding:10px 12px;border-left:3px solid var(--blue);background:#f1f6ff;border-radius:4px;color:#43546c;font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:15px}.surface{border:1px solid var(--line);border-radius:8px;padding:13px;background:#fff}.surface h3{font-size:13px;margin:0 0 8px}.surface p,.surface li{font-size:12px;color:#5e6b7b}.surface ul{padding-left:18px;margin:7px 0 0}.chat{display:flex;flex-direction:column;gap:9px}.msg{max-width:88%;padding:9px 11px;border-radius:9px;background:#f1f4f8;font-size:12px}.msg.self{align-self:flex-end;background:#eaf3ff}.msg small{display:block;color:#8491a2;font-size:10px;margin-top:4px}.table{width:100%;border-collapse:collapse;font-size:11px}.table th{text-align:left;color:#778396;font-weight:600;border-bottom:1px solid var(--line);padding:8px 6px}.table td{border-bottom:1px solid #edf0f4;padding:9px 6px}.table tr:last-child td{border:0}.pill{font-size:10px;padding:3px 7px;border-radius:99px;background:#eaf7f0;color:var(--green);white-space:nowrap}.pill.wait{background:#fff5e5;color:var(--amber)}.wide{margin-top:15px}.aside-list{display:grid;gap:9px}.aside-item{display:grid;grid-template-columns:26px 1fr;gap:9px;align-items:start}.num{width:24px;height:24px;border-radius:7px;background:#eaf2ff;color:var(--blue);display:grid;place-items:center;font-weight:700;font-size:11px}.aside-item b{font-size:12px}.aside-item p{margin:2px 0 0;font-size:11px;color:var(--muted)}.disclaimer{margin-top:13px;color:#778396;font-size:11px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.flow{grid-template-columns:repeat(3,1fr)}.node:nth-child(3):after{display:none}}
+@media(max-width:560px){.page{padding:14px}.hero h1{font-size:23px}.flow{grid-template-columns:repeat(2,1fr)}.node:nth-child(2n):after{display:none}.grid2{grid-template-columns:1fr}}
+</style></head>
+<body><main class="page">
+<div class="casebar"><a href="index.html">← 案例展廊</a><span>CASE 02 / COMMUNICATION</span><span class="tag">脱敏重制 · 历史设计材料提炼</span></div>
+<header class="hero"><div class="kicker">SYSTEM DESIGN / MESSAGE DELIVERY</div><h1>即时通信：群消息受理与可靠投递</h1><p>把“是否允许发送”与“如何把消息送达”拆成两段可审计流程：受理时冻结授权边界，持久化后再异步分发。</p><div class="meta"><span>群成员授权快照</span><span>消息持久化 + Outbox</span><span>MQ 异步投递</span><span>ACK / 重试 / 幂等</span></div></header>
+<div class="layout">
+<div>
+<section class="panel"><h2>群消息受理与投递链路</h2><div class="flow">
+<div class="node"><b>客户端</b><small>发送请求 / client message id</small></div><div class="node primary"><b>IM Core</b><small>参数校验 / 受理入口</small></div><div class="node primary"><b>关系授权服务</b><small>成员关系 / 原子快照</small></div><div class="node"><b>消息存储</b><small>消息记录 / Outbox</small></div><div class="node queue"><b>消息队列</b><small>异步事件 / 消费重试</small></div><div class="node"><b>收件人</b><small>在线推送 / 离线补拉</small></div>
+</div><div class="flow-note"><b>关键边界：</b>授权快照在受理时确定本次收件人集合。后续群成员变化不应让同一条已受理消息在不同重试批次中悄悄改变收件范围。</div></section>
+<div class="grid2">
+<section class="surface"><h3>受理阶段 · 授权快照</h3><ul><li>关系服务是成员、角色、禁言等关系事实的权威来源。</li><li>IM 获取一次原子授权结果，并固定本次收件人集合。</li><li>缓存未命中不等于“不是成员”；授权服务不可用与明确拒绝必须区分。</li><li>消息记录、会话更新和异步事件应共享同一受理边界。</li></ul></section>
+<section class="surface"><h3>投递阶段 · 可靠性</h3><ul><li>先持久化消息和待投递事件，再由消费者异步分发。</li><li>使用消息唯一标识实现重复消费幂等。</li><li>失败重试有上限，超过阈值进入隔离队列供排查。</li><li>ACK、离线补拉和已读游标按明确顺序推进。</li></ul></section>
+</div>
+<section class="panel wide"><h2>模拟会话 · 消息状态与回执</h2><div class="grid2">
+<div class="chat"><div class="msg">大家好，今晚的讨论材料已更新。<small>成员 A · 10:21 · 已受理</small></div><div class="msg self">收到，我稍后补充一份测试清单。<small>成员 B · 10:22 · 已持久化</small></div><div class="msg">本次收件范围以受理时的成员快照为准。<small>系统提示 · 10:22 · 事件已入队</small></div></div>
+<div><table class="table"><thead><tr><th>环节</th><th>演示标识</th><th>状态</th></tr></thead><tbody><tr><td>消息受理</td><td>MSG-DEMO-0142</td><td><span class="pill">完成</span></td></tr><tr><td>授权快照</td><td>SNAP-DEMO-08</td><td><span class="pill">已固定</span></td></tr><tr><td>异步投递</td><td>OUTBOX-DEMO-21</td><td><span class="pill wait">待 ACK</span></td></tr><tr><td>离线补拉</td><td>CURSOR-DEMO-05</td><td><span class="pill">可追溯</span></td></tr></tbody></table></div>
+</div></section>
+</div>
+<aside class="panel"><h2>设计关注点</h2><div class="aside-list">
+<div class="aside-item"><span class="num">01</span><div><b>授权一致性</b><p>成员关系快照必须来自权威服务，不能用缓存 Miss 代替业务拒绝。</p></div></div>
+<div class="aside-item"><span class="num">02</span><div><b>事务与事件边界</b><p>消息写入与 Outbox 事件在同一受控事务中提交，避免“消息已存但事件丢失”。</p></div></div>
+<div class="aside-item"><span class="num">03</span><div><b>重复与乱序</b><p>消费者按消息标识去重，状态更新携带单调版本，防止旧事件覆盖新状态。</p></div></div>
+<div class="aside-item"><span class="num">04</span><div><b>可观测与恢复</b><p>记录积压、失败原因、重试次数、ACK 延迟和隔离队列，形成可复跑证据。</p></div></div>
+</div><div class="flow-note" style="margin-top:18px"><b>证据等级：</b>本页提炼自历史架构与测试设计材料；当前原始业务仓库未完成访问，因此不声称这是最新源码审计或线上运行状态。</div></aside>
+</div>
+<p class="disclaimer">隐私处理：原项目名称、服务标识、内部地址、账号、真实用户与群信息均未保留；示例消息、标识和统计均为虚构数据。</p>
+</main></body></html>

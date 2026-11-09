@@ -32,6 +32,11 @@ $required = @(
   "CHANGELOG.md",
   "references/html-report-contract.md",
   "demo/report.html",
+  "demo/README.md",
+  "demo/cases/index.html",
+  "docs/cases.md",
+  "tests/cases.test.mjs",
+  "tests/chrome-cases-smoke.mjs",
   "demo/report.js",
   "demo/report.css",
   "demo/quality-flow.svg",
@@ -139,7 +144,7 @@ if ($LASTEXITCODE -ne 0) { throw "Agent browser eval JS syntax failed" }
 Write-Output "[PASS] Agent browser smoke JS syntax"
 & node --check (Join-Path $root "tests/portal-security.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Portal security tests syntax failed" }
-& node --check (Join-Path $root "tests/workflow-guard.test.mjs")
+& node --check (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/cases.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "CI workflow guard tests syntax failed" }
 Write-Output "[PASS] Portal security / CI test syntax"
 

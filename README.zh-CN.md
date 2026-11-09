@@ -2,161 +2,139 @@
 
 **简体中文** | [English](README.md)
 
-> 让本地 Coding Agent 默认输出清晰、可读、有证据的 Markdown；只有客户端具备安全渲染能力时才使用真实交互界面。
+> 让 Codex、Claude Code、DeepSeek 等 Coding Agent 输出更清晰的 Markdown、工程报告和可离线打开的 HTML 案例。
 
 [![Validate Skill](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml/badge.svg)](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml)
 
-**Gen UI** 是给 Codex、Claude Code、DeepSeek 和其他 Coding Agent 使用的通用输出 Skill，可用于实施方案、代码评审、测试验收及技术分析。
+**Gen UI 是一个 Markdown-first 的 AI Coding 输出 Skill**，不是官方 ChatGPT UI 运行时，也不会因为安装了 Skill 就使终端具备按钮、图表或表单交互能力。它按宿主能力选择可读 Markdown、可验证的结构化 UI 数据，或在明确要求 HTML 时生成离线网页。
 
-它借鉴智能交互式回答的理念，但**不是 ChatGPT 内部 DIL 运行时，也不能靠 Prompt 让纯 CLI 显示可操作控件**。
+## 效果预览 · 五个独立案例
 
-## 为什么需要它
+不是占位文字：下面五个案例都提供独立 HTML，可以直接在浏览器打开。README 中的图片由仓库内这些 HTML 的 Chrome 页面截图生成。**所有公开案例均使用合成或重制数据，不复制私有业务源数据。**
 
-AI 输出经常出现文字墙、表格过宽、未验证却声称通过、在不支持交互的终端生成无法点击的组件。本 Skill 根据宿主能力选择输出形态，默认用 Markdown 保证可读性，支持受控 Renderer 时再渐进增强。
+### 01 · StoryOS：AI 内容生产工作台
 
-## 能力范围
+[![StoryOS 工作台演示截图](demo/cases/assets/story-workbench-preview.png)](demo/cases/story-workbench.html)
 
-| 宿主 | 合理的输出 | 必要条件 |
-| --- | --- | --- |
-| Codex / Claude CLI / 终端 | Markdown、清单、短表格、代码块 | Skill 指令 |
-| GitHub / IDE 预览 | GFM、可选图表 + 文字回退 | Markdown 渲染器 |
-| 自有网页 / Webview | 受控 JSON + 真正的表单/滑块 | 宿主集成安全 Renderer |
+结合 StoryOS Web Console 的工作台、作品库、生产监控和工作流设计：创作入口、作品摘要、素材与阶段记录分离。真实项目结构参考，**作品名、封面、状态与数量均已替换为演示内容**。
 
-**Skill 定义模型怎么组织回答；Renderer 才负责把结构化数据变成真实交互组件。**
+[打开 StoryOS HTML](demo/cases/story-workbench.html)
 
-## 快速安装
+### 02 · 即时通信：群消息受理与可靠投递
 
-### Codex（Windows PowerShell）
+[![即时通信架构演示截图](demo/cases/assets/im-message-flow-preview.png)](demo/cases/im-message-flow.html)
+
+根据历史 IM 设计材料重制消息发送链路，展示授权快照、Outbox、MQ、ACK、去重与失败恢复。**不包含原业务品牌、真实群聊、账号或内部接口；不声称完成了当日源码审计。**
+
+[打开 IM 架构 HTML](demo/cases/im-message-flow.html)
+
+### 03 · 冷热库：消息归档和搜索回源
+
+[![冷热归档设计演示截图](demo/cases/assets/cold-archive-preview.png)](demo/cases/cold-archive.html)
+
+展示热库在线读写、冷库归档、批次水位、幂等重放、ES 定位与冷库回源。原始设计属于**待评审方案**，不是已上线的效果声明。
+
+[打开冷热归档 HTML](demo/cases/cold-archive.html)
+
+### 04 · Android 4.2 TV：旧电视启动器美化
+
+[![Android TV 启动器演示截图](demo/cases/assets/tv-launcher-preview.png)](demo/cases/tv-launcher.html)
+
+面向 Android 4.2.1 / API 17 的大屏主屏概念：方向键焦点、应用入口、时钟、壁纸和玻璃质感。页面是 **HTML 重绘概念图，不是电视实机截图**；设备地址、网络和个人信息均未包含。
+
+[打开 TV 启动器 HTML](demo/cases/tv-launcher.html)
+
+### 05 · QR Audit：离线二维码识别审计
+
+[![二维码审计报告演示截图](demo/cases/assets/qr-audit-report-preview.png)](demo/cases/qr-audit-report.html)
+
+展示策略统计、输入指纹、运行证据和失败复盘。示例比率与计数全部为虚构数据，**不代表实际扫描识别率**。
+
+[打开二维码审计 HTML](demo/cases/qr-audit-report.html)
+
+[**查看案例展廊（5 个 HTML）**](demo/cases/index.html) · [案例来源与脱敏说明](docs/cases.md) · [Demo 目录说明](demo/README.md)
+
+## 立即使用
+
+### 安装到 Codex（Windows PowerShell）
 
 ~~~powershell
 git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
 ~~~
 
-调用示例：
+然后在 Codex 中输入：
 
 ~~~text
 使用 $gen-ui。
-给我一份 Java 线程池的实施、测试、验收方案。
-当前宿主是 Markdown 阅读器，不支持交互组件。
-请先给结论、依据，再列风险和验收步骤。
+分析当前项目的代码、架构和风险，输出中文实施测试验收方案。
+先给结论和证据，不能把待执行、已实施和已验收混为一谈。
 ~~~
 
-### Claude Code / DeepSeek / 其他 AI
+Claude Code 可将仓库放入项目的 `.claude/skills/gen-ui/`；其他 Agent 按其 Skill 发现规则安装，或直接读取 `SKILL.md` 和 `references/`。安装不改变 Agent 的工具权限，也不会自动安装 Webview Renderer。
 
-将 `SKILL.md`、`references/` 和 `examples/` 放进对应的 Skills 目录，如项目级 `.claude/skills/gen-ui/`。没有 Skill 自动加载的模型，可将 `SKILL.md` 注入系统提示词并按需补充参考文件。
+## 支持的输出方式
 
-安装此 Skill 并不会修改本地 Runner 或替换模型客户端。
+| 环境 | 默认输出 | 交互条件 |
+| --- | --- | --- |
+| Codex / Claude CLI / 终端 | Markdown、表格、流程和代码块 | 不假装能点击 |
+| GitHub / IDE Markdown | GFM、可选 Mermaid、文本回退 | 宿主支持的 Markdown 预览 |
+| 本地 HTML 报告 | 离线 CSS/JS、表格筛选、图表、目录 | 用户明确要求或任务明确选择 HTML |
+| 自有 Webview | 受控声明式 JSON + Markdown 回退 | 宿主已经实现并授权安全 Renderer |
 
-## 真实浏览器与 Agent 基线
+HTML 报告的页面行为是**仓库内可信的演示代码**，不是让模型生成任意 JS 并执行。页面默认离线运行；已有 HTML 目录可使用生成器递归集成为 iframe 门户。
 
-新增 [可信示例 Chrome 自动复验脚本](tests/chrome-report-smoke.mjs)：在本地独立运行 `node tests/chrome-report-smoke.mjs`，覆盖 375/768/1440px、表格焦点、合法模块 `all` 筛选、超长文本提示和新增记录反馈。此脚本不会自动运行未知 Agent HTML，也不会调用模型。
+## 本地 Demo 与工具
 
-[2026-11-05 验证基线](evals/real-agent-baseline-2026-11-05.md)已更新：桌面用户会话下 Codex CLI 登录**已验证成功**，但 [HTML04 真实生成尝试](evals/codex-user-session-attempt-2026-11-05.md)遭 Windows 命令执行策略拒绝，未生成产物；Agent 遵循率尚未测量。
-
-## Agent 输出回归评测
-
-新增 [真实 Agent 提示词矩阵与离线静态门禁](evals/agent-evaluation.md)：覆盖中文报告、模块名冲突、键盘无障碍、表单抽屉和 Markdown 回退。它不会自行调用模型、不会消耗 Agent 额度；只有真实执行 Agent、保留生成文件并通过人工浏览器验收后，才能宣称 Agent 输出符合规范。
-
-## 目录递归集成与 iframe 多页面模式
-
-当指定一个包含 HTML 的目录时，GEN-UI 会在**生成阶段递归扫描所有子目录**，把每份 HTML 作为独立页面保留，并生成一个轻量入口。主展示区域采用真正的 **iframe**：左侧点击标题切换对应页面，带 `id` 的 H2 可自动作为子导航。侧栏默认黑白灰；收起后必须保留一列纵向图标栏，展开/收起按钮始终位于侧栏内部，不会把侧栏整体隐藏。手机上可打开、关闭。不会把内容硬塞进一个巨大的 `index.html`。
+| 演示 / 工具 | 入口 | 用途 |
+| --- | --- | --- |
+| 业务案例展廊 | [demo/cases/index.html](demo/cases/index.html) | 五个脱敏业务 HTML 成品 |
+| 工程质量分析报告 | [demo/report.html](demo/report.html) | 离线筛选、表格、图表、分页、抽屉 |
+| 多文件 HTML 门户 | [demo/portal-pages/index.html](demo/portal-pages/index.html) | 多级目录、真实 iframe 和移动导航 |
+| 声明式 UI 协议 | [demo/index.html](demo/index.html) | 受控滑块和教育用途 `gen-ui-demo/v1` |
+| 目录门户生成器 | [scripts/build-html-portal.mjs](scripts/build-html-portal.mjs) | 将现有 HTML 递归整合为门户 |
 
 ~~~powershell
-# 目录不存在 index.html 或可覆盖 GEN-UI 已生成入口时
-node scripts/build-html-portal.mjs --dir "D:\\reports" --title "工程验收"
+# 现有目录内没有 index.html 时
+node scripts/build-html-portal.mjs --dir "D:\reports" --title "工程报告"
 
-# 目录已有自己维护的 index.html 时，输出独立入口避免覆盖
-node scripts/build-html-portal.mjs --dir "D:\\reports" --output "D:\\reports\\portal.html"
+# 已有手工维护的 index.html：生成独立 portal.html，避免覆盖
+node scripts/build-html-portal.mjs --dir "D:\reports" --output "D:\reports\portal.html"
+
+# 本地可信页面需要启用 JS / 表单时，使用沙盒化 HTTP 预览
+node scripts/serve-html-portal.mjs --dir "D:\reports"
 ~~~
 
-查看 [完整的四页面离线示例](demo/portal-pages/index.html)、[递归生成器源码](scripts/build-html-portal.mjs)及 [HTML 规范](references/html-report-contract.md)。目录中新添页面后重新运行生成器即可更新导航；浏览器不具备直接递归读取文件目录的权限。旧的单页报告仍可独立打开使用。
+直接通过 `file://` 打开门户属于静态沙盒预览，子页面脚本不执行；本地 HTTP 模式启用脚本、表单但**不授予 iframe 同源权限**。更多见 [HTML 报告契约](references/html-report-contract.md)、[Renderer 协议](references/renderer-contract.md)、[集成指南](docs/integration.md)。
 
-**本地 iframe 兼容与安全：** 双击 `index.html` 使用静态预览模式，保留子页面外部 CSS，但禁用子页面 JavaScript。若需要原有页面的 JavaScript、筛选或表单，请运行 `node scripts/serve-html-portal.mjs --dir "D:\\reports"`，打开 `http://127.0.0.1:8765/`。本地 HTTP 模式使用 `sandbox="allow-scripts allow-forms"`，不授予 iframe 同源权限；没有取消沙盒的快捷选项。
+## Markdown 基础案例
 
-## HTML 报告增强能力
+除 HTML 外，也保留 [Java 代码评审](examples/code-review.md)、[实施验收计划](examples/acceptance-plan.md) 和 [线程池解释](examples/thread-pool.md) 三个可在 CLI/IDE 直接阅读的示例。它们是示范文本，不代表执行过当前业务测试。
 
-当最终交付物确定为 HTML 页面时（无论用户是否明确说出“HTML”），**默认使用简体中文展示**（标题、按钮、表头、状态、表单、提示等）；仅保留必要的品牌、技术名词、字段标识和原始数据。执行下列细则：
-
-- 表头与单元格一律不换行；表格可以横向滚动，并按需固定首列。过长内容省略展示，鼠标悬停或键盘聚焦时浮动显示完整文本，移出或失焦即隐藏；只有实际截断的单元格进入 Tab 顺序。
-- 根据真实列的关键字段生成筛选项（编号、模块、状态、批次、耗时等），与数字、图表和分页保持联动。长表格默认每页 10 条，可选 20/50 条。
-- 不增加下载原始 Markdown、打印当前页面、导出原文等额外按钮；不为原文单独新增目录或导航。内部内容切换只保留必要的简洁标签，不出现浏览器标签行为提示。
-- HTML 主题统一为背景 #FFFFFF、前景 #1A1C1F、强调色 #3A83F7，字体跟随系统，正文 14px、代码 12px；不加载远程字体。
-- 多行代码使用 Markdown 风格代码块，并提供离线可用的一键复制及成功/失败反馈。
-- 弱化不必要的卡片，按需采用表单、弹窗、左右抽屉、内部标签及联动图表，而不是把所有界面做成列表卡片。
-- 侧边栏收起后必须保留纵向图标栏；展开/收起按钮必须在侧边栏内，图标项需要中文无障碍名称和悬停提示。部分常用按钮可图标化，但重要、危险或含义不直观的操作保留文字。
-- 正文只保留清晰的大标题，不在 H1 正下方追加小标题；背景说明放到标题上方或首个内容区。尽量聚合同类指标、图表、说明和操作，减少碎片化小节。
-- 优先使用图文搭配：架构、流程、趋势等内容在支持图片时用有意义的图示配简短中文说明；没有合适图像或宿主不支持时再使用文字、表格或 Mermaid。禁止为了装饰而塞图。
-- 重要结论、关键阈值、风险影响和行动要求可选择性加粗，不要整段加粗。待确认、需注意和重要引用块使用浅底色 + 左侧语义色条标注；只给内容块着色，不改变标题颜色。
-- 中文报告标题统一使用“一、二、三”或“1. / 1.1 / 1.2 / 2. / 2.1”其中一种编号体系，不在同一篇报告混用。
-- 任务状态使用图标化标记替代重复状态文字：✅ 完成、❌ 失败、⏸️ 暂停、⏳ 待执行、🔄 进行中、❓ 待确认、⚠️ 注意/风险；保留任务描述，并提供无障碍名称和悬停提示。导航和通用操作仍优先使用本地 SVG 图标。整体保持简约、清晰和留白感。
-- GEN-UI 的原创 SVG 图标主要用于侧边栏、页眉、工具栏、页脚等非正文位置。个人 IP 标识只保留单线双峰猫耳轮廓，不绘制完整头像、五官或装饰；功能图标尽量使用 1–2 个几何主体，并保持单色、统一视觉重量和明确语义。品牌标识需在 16/20/24px 下清晰。Emoji 作为少量语义提示，与功能图标分开使用。详见 [品牌图标](assets/icons/README.md)和[视觉规范验收清单](evals/visual-design-acceptance-2026-11-06.md)。
-
-
-
-当最终交付物是 **HTML 报告**时，单页保留原有交互和简洁的可收起目录；**多页面/指定目录交付必须使用递归集成 + iframe 主区域**，大标题映射到各独立页面，小标题可定位页面内部锚点。长表格默认 **每页 10 条**，可选 20/50；成功数字用绿色、失败数字用红色，其余元素优先黑白灰。可按数据需要使用饼图、柱状图、折线图，以及本地受控 JSON、表单和滑块。
-
-查看 [HTML 报告示例](demo/report.html)（需与 [report.js](demo/report.js) 放在一起）及 [英文 HTML 规范](references/html-report-contract.md)。示例使用 67 条**虚构数据**，仅用于验证分页、筛选与交互；不代表真实测试报告。未确定交付 HTML 时继续遵循 Markdown 优先策略。
-
-## 离线交互 Demo
-
-浏览器打开 [demo/index.html](demo/index.html)，调节核心线程数滑块即可实时更新演示指标。也可以把 [示例 JSON](examples/thread-pool.ui.json) 粘贴到编辑框，测试正常和非法协议的处理。
-
-无需后端、网络、API Key。`gen-ui-demo/v1` 是**本仓库演示协议**，不是 ChatGPT DIL / OpenUI / A2UI 官方接口。详见 [协议说明](references/renderer-contract.md) 和 [集成指南](docs/integration.md)。
-
-**本轮发布状态：** 真实 Agent 样例已保存 [五组 GPT-6 + WebCodex 评测证据](evals/webcodex-agent-matrix-2026-11-06.md)，但五组跨越两次 Skill 基线，不等于原生 Codex 的独立盲测。原生 Codex 的 [盲测门禁](evals/codex-blind-gate-2026-11-06.md) 仍未通过；下一候选版本 [v1.4.0 发布就绪清单](docs/release-readiness-v1.4.0.md) 明确记录了尚需验证的项目，**目前未创建正式 Tag 或 Release**。
-
-## 发布前检查
+## 验证与质量门禁
 
 ~~~powershell
-# Windows PowerShell 5.1+
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
-
-# PowerShell 7，支持 Windows / macOS / Linux
-pwsh -NoProfile -File scripts/test-skill.ps1
+node tests/chrome-report-smoke.mjs
+node tests/chrome-portal-smoke.mjs
+node tests/chrome-cases-smoke.mjs
 ~~~
 
-脚本验证 Skill 元数据、目录结构、JSON 示例、JS 语法与单元测试；GitHub Actions 自动执行。模型遵循程度、真实浏览器交互仍需要人工验收，见 [人工评测](evals/manual-evaluation.md)。
+这些测试验证的是**仓库内的固定示例**，不是任意模型输出的安全性或真实业务部署。当前版本的 Model/Agent 独立盲测与正式 Release 需要分别核实；详见 [真实 Agent 证据](evals/webcodex-agent-matrix-2026-11-06.md)与[发布门禁](docs/release-readiness-v1.4.0.md)。
 
-## 文件结构
+## 仓库结构
 
 ~~~text
-gen-ui/
-├── SKILL.md                    # 输出规范
-├── agents/openai.yaml          # Agent 元数据
-├── README.md / README.zh-CN.md # 中英文文档
-├── references/                 # 受控 UI 协议
-├── examples/                   # Markdown 和 JSON 案例
-├── demo/                       # 离线浏览器示例
-├── docs/                       # 集成边界
-├── evals/                      # 人工行为评测
-├── tests/                      # 自动单元测试
-├── scripts/test-skill.ps1      # 一键校验入口
-└── .github/workflows/          # CI
+SKILL.md                 Skill 入口与输出规则
+references/              HTML 报告与受控 Renderer 契约
+demo/cases/              五个脱敏业务 HTML + 截图与展廊
+demo/                    工程质量报告、目录门户、受控协议示例
+examples/                代码评审、实施验收与线程池 Markdown 示例
+docs/                    集成说明、案例溯源、FAQ、GEO
+tests/                   Node 测试与固定浏览器回归
+evals/                   真实 Agent 与浏览器验收证据
+scripts/                 校验、门户生成与本地预览
 ~~~
 
-## 实际工程场景
+**边界：** Gen UI 管输出呈现，不替代项目的代码规范、运行权限、真实测试、脱敏审查或发布审批。未经验证的设计写成方案，不写成已上线。更多见 [FAQ](docs/faq.md) 和 [GEO 说明](docs/geo.zh-CN.md)。GEO / 搜索可发现性效果尚**未测量**，README 展示不意味着搜索排名或 AI 引用率已提高。
 
-以下案例用于展示真实 Coding 工作中常见的提问与输出格式，**属于可复用的示范，不代表已经检查了真实项目或完成了压测**。
-
-| 场景 | 示例文档 | 能解决的问题 |
-| --- | --- | --- |
-| [Java 代码审查](examples/code-review.md) | 严重程度、证据和复核步骤 | 不伪造测试通过 |
-| [功能实施验收](examples/acceptance-plan.md) | 目标、变更范围、验收清单 | 计划与已验证分离 |
-| [Java 线程池解释](examples/thread-pool.md) | 静态表格与公式 | 终端不支持 Renderer 也可用 |
-
-常见问题（CLI 能否交互、DeepSeek 兼容、与 OpenUI/A2UI 的区别）详见 [英文 FAQ](docs/faq.md)。
-
-## GEO / 搜索可发现性
-
-项目标准定位为 **Markdown-first Generative UI Skill for AI Coding Agents**，而非通用 UI 框架。[英文 GEO 文档](docs/geo.md) 和 [中文说明](docs/geo.zh-CN.md) 给出了 GitHub 仓库简介、Topics、链接结构与真实用例建议。[基线评测](evals/discovery-baseline.md) 初始状态为**未测量**，不能伪造 GEO 权重或 AI 引用率。
-
-README 不会自动设置 GitHub About，也不意味着 GitHub Pages 已经上线。仓库元数据需要通过 GitHub 设置或可授权接口更新后单独验收。
-## 安全与边界
-
-- **只管输出，不替代工程规范：** 与项目现有代码审查、实施、测试验收规则兼容。
-- **不假装交互：** 宿主能力不明时，只提供完整 Markdown。
-- **不执行模型代码：** 不将模型返回的 JS、HTML、CSS、事件脚本当成可信代码。
-- **不伪造结果：** 所有“通过、已发布、已推送”都必须有真实证据。
-- **当前尚未集成 WebCodex 聊天窗口：** 演示页面可离线使用，宿主集成需单独实施。
-
-MIT 开源，详见 [LICENSE](LICENSE)。
+MIT License · [LICENSE](LICENSE).
