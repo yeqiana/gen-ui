@@ -33,10 +33,20 @@ $required = @(
   "references/html-report-contract.md",
   "demo/report.html",
   "demo/README.md",
-  "demo/cases/index.html",
-  "docs/cases.md",
-  "tests/cases.test.mjs",
-  "tests/chrome-cases-smoke.mjs",
+  "demo/documents/index.html",
+  "demo/documents/project-analysis.html",
+  "demo/documents/architecture-design.html",
+  "demo/documents/implementation-plan.html",
+  "demo/documents/test-acceptance.html",
+  "demo/documents/assets/document.css",
+  "demo/documents/assets/document.js",
+  "demo/documents/assets/project-analysis-preview.png",
+  "demo/documents/assets/architecture-design-preview.png",
+  "demo/documents/assets/implementation-plan-preview.png",
+  "demo/documents/assets/test-acceptance-preview.png",
+  "docs/html-document-examples.md",
+  "tests/documents.test.mjs",
+  "tests/chrome-documents-smoke.mjs",
   "demo/report.js",
   "demo/report.css",
   "demo/quality-flow.svg",
@@ -144,14 +154,18 @@ if ($LASTEXITCODE -ne 0) { throw "Agent browser eval JS syntax failed" }
 Write-Output "[PASS] Agent browser smoke JS syntax"
 & node --check (Join-Path $root "tests/portal-security.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Portal security tests syntax failed" }
-& node --check (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/cases.test.mjs")
+& node --check (Join-Path $root "tests/workflow-guard.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "CI workflow guard tests syntax failed" }
-Write-Output "[PASS] Portal security / CI test syntax"
+& node --check (Join-Path $root "tests/documents.test.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Document structure tests syntax failed" }
+& node --check (Join-Path $root "tests/chrome-documents-smoke.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Technical document Chrome smoke syntax failed" }
+Write-Output "[PASS] Technical document test syntax"
 
 & node --check (Join-Path $root "tests/chrome-report-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Chrome smoke JS syntax failed" }
 Write-Output "[PASS] Chrome smoke JS syntax（浏览器实测请单独运行）"
 
-& node --test (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
+& node --test (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
