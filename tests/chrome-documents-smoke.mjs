@@ -13,7 +13,13 @@ const specs=[
  {id:"project-analysis",file:"project-analysis.html",title:"AI 内容生产平台项目分析报告",article:true},
  {id:"architecture-design",file:"architecture-design.html",title:"异步任务编排与断点恢复架构设计方案",article:true},
  {id:"implementation-plan",file:"implementation-plan.html",title:"技术实施方案",article:true},
- {id:"test-acceptance",file:"test-acceptance.html",title:"测试与验收方案",article:true}
+ {id:"test-acceptance",file:"test-acceptance.html",title:"测试与验收方案",article:true},
+ {id:"en-gallery",file:"en/index.html",title:"English technical document examples",article:false,english:true},
+ {id:"en-project-analysis",file:"en/project-analysis.html",title:"Project analysis report",article:true,english:true},
+ {id:"en-architecture-design",file:"en/architecture-design.html",title:"System architecture design",article:true,english:true},
+ {id:"en-implementation-plan",file:"en/implementation-plan.html",title:"Technical implementation plan",article:true,english:true},
+ {id:"en-test-acceptance",file:"en/test-acceptance.html",title:"Test and acceptance plan",article:true,english:true},
+ {id:"en-report",file:"../report.en.html",title:"Information design case gallery",article:true,english:true}
 ];
 const capture=process.argv.includes("--update-previews");
 const chrome=[process.env.GEN_UI_CHROME,"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe","C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe","/usr/bin/google-chrome","/usr/bin/chromium"].filter(Boolean).find(fs.existsSync);
@@ -45,9 +51,9 @@ async function main(){
     for(let i=0;i<90;i++){try{state=await evalPage("(()=>({ready:document.readyState==='complete',title:document.title,h1:document.querySelector('h1')?.innerText||'',overflow:document.documentElement.scrollWidth>innerWidth+2,sections:document.querySelectorAll('main h2').length,toc:document.querySelectorAll('.toc-list a').length,svg:document.querySelectorAll('svg[role=img]').length,tables:document.querySelectorAll('table').length,code:document.querySelectorAll('pre code').length,copies:document.querySelectorAll('.copy-code').length,remote:[...document.querySelectorAll('script[src],link[href],img[src]')].filter(x=>/^(https?:)?\\/\\//i.test(x.getAttribute('src')||x.getAttribute('href')||'')).length,metrics:document.querySelectorAll('.metrics,.metric,.app').length}))()");if(state.ready&&state.h1)break;}catch{}await sleep(100);}
     check("page ready "+width+" "+spec.id,state,state?.ready&&state.h1&&state.title.includes(spec.title)&&!state.overflow&&state.remote===0);
     if(spec.article){
-     check("document structure "+spec.id,state,state.sections>=7&&state.toc===state.sections*2&&state.svg>=1&&state.tables>=2&&state.code>=1&&state.copies===state.code&&state.metrics===0);
-     const zoom=await evalPage("(()=>{const d=document.querySelector('[data-diagram]'),label=d.querySelector('[data-zoom-label]');d.querySelector('[data-zoom-in]').click();const increased=label.textContent;d.querySelector('[data-fit]').click();return{increased,reset:label.textContent}})()");
-     check("diagram controls "+spec.id,zoom,zoom.increased==="115%"&&zoom.reset==="100%");
+     if(spec.english){check("English document structure "+spec.id,state,state.sections>=5&&state.toc===state.sections*2&&state.tables>=1&&state.copies===state.code&&state.metrics===0);}else{check("document structure "+spec.id,state,state.sections>=7&&state.toc===state.sections*2&&state.svg>=1&&state.tables>=2&&state.code>=1&&state.copies===state.code&&state.metrics===0);}
+     if(!spec.english){const zoom=await evalPage("(()=>{const d=document.querySelector('[data-diagram]'),label=d.querySelector('[data-zoom-label]');d.querySelector('[data-zoom-in]').click();const increased=label.textContent;d.querySelector('[data-fit]').click();return{increased,reset:label.textContent}})()");
+     check("diagram controls "+spec.id,zoom,zoom.increased==="115%"&&zoom.reset==="100%");}
      if(capture&&width===1440){
       await sleep(250);
       const shot=await cmd("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});
@@ -58,7 +64,7 @@ async function main(){
     results.push({width,id:spec.id,sections:state.sections,overflow:state.overflow});
    }
   }
-  console.log(JSON.stringify({result:"PASS",documents:4,viewportScenarios:results.length,results,captured:capture?4:0}));
+  console.log(JSON.stringify({result:"PASS",documents:9,viewportScenarios:results.length,results,captured:capture?9:0}));
  }finally{try{socket?.close();}catch{}proc.kill();await sleep(200);fs.rmSync(profile,{recursive:true,force:true,maxRetries:4,retryDelay:100});}
 }
 main().catch(e=>{console.error(e.stack||e);process.exitCode=1;});

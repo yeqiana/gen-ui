@@ -43,7 +43,7 @@ test("Article navigation, diagrams and code examples are structurally complete",
 test("No previous product-UI mockup showcase remains in the public entrypoints",()=>{
  const zh=read("README.zh-CN.md"),en=read("README.md");
  assert.match(zh,/项目分析报告/);assert.match(zh,/系统架构设计方案/);assert.match(zh,/技术实施方案/);assert.match(zh,/测试与验收方案/);
- assert.match(en,/Project analysis/);assert.match(en,/Architecture design/);assert.doesNotMatch(zh,/TV 启动器|StoryOS 工作台演示截图|五个独立案例/);
+ assert.match(en,/Project analysis/);assert.match(en,/architecture design/i);assert.doesNotMatch(zh,/TV 启动器|StoryOS 工作台演示截图|五个独立案例/);
  assert.doesNotMatch(en,/TV launcher HTML concept|Five offline HTML showcases/);
 });
 
@@ -75,4 +75,77 @@ test("Public report has source links at the bottom and never treats local paths 
  assert.ok(external.length>=2);
  assert.ok(external.every(x=>/^https:\/\//.test(x[1])));
  assert.doesNotMatch(h,/新标签页打开/);
+});
+
+
+test("English README links only English HTML examples and English screenshots",()=>{
+  const en=read("README.md"),zh=read("README.zh-CN.md");
+  assert.match(en,/Information design, not UI decoration/);
+  assert.match(zh,/不是单纯美化 UI/);
+  assert.doesNotMatch(en,/GEO|search ranking|SEO/i);
+  assert.doesNotMatch(zh,/GEO|搜索排名|SEO/i);
+  for(const id of docs){
+    const english="demo/documents/en/"+id+".html";
+    assert.ok(en.includes("]("+english+")"),"English README missing "+english);
+    assert.ok(!zh.includes("]("+english+")"),"Chinese README should not link to English examples");
+    assert.ok(zh.includes("](demo/documents/"+id+".html)"),"Chinese README missing Chinese document "+id);
+    const englishImage="demo/documents/assets/en-"+id+"-preview.png";
+    const chineseImage="demo/documents/assets/"+id+"-preview.png";
+    assert.ok(en.includes(englishImage),"English preview missing "+id);
+    assert.ok(zh.includes(chineseImage),"Chinese preview missing "+id);
+    const h=read(english);
+    assert.match(h,/<html lang="en">/);
+    assert.match(h,/<main class="doc-main">/);
+    assert.ok((h.match(/class="doc-section"/g)||[]).length>=5,"English content too short "+id);
+    assert.ok((h.match(/<table>/g)||[]).length>=1,"English evidence table missing "+id);
+    assert.doesNotMatch(h,/[一-鿿]/,"English page contains Chinese text "+id);
+    const image=fs.readFileSync(path.join(root,englishImage));
+    assert.ok(image.length>8000,"English screenshot too small "+id);
+    assert.equal(image.toString("hex",0,8),"89504e470d0a1a0a");
+  }
+});
+test("Chinese report demonstrates all ten information-design use cases",()=>{
+  const html=read("demo/report.html"),style=read("demo/report-refinements.css");
+  const cases=["answer","compare","process","review","plan","test","triage","host","guide","features"];
+  for(const id of cases){
+    assert.ok(html.includes('id="case-'+id+'"'),"missing case "+id);
+    assert.ok(html.includes('href="#case-'+id+'"'),"case navigation missing "+id);
+  }
+  assert.ok(html.includes('id="showcase"'));
+  assert.match(html,/原始回答（反例）/);
+  assert.match(html,/class="before-after"/);
+  assert.match(html,/id="case-features"/);
+  assert.match(html,/class="language-sql"/);
+  assert.match(html,/id="status-multi"/);
+  assert.match(html,/id="column-picker"/);
+  assert.match(html,/id="flow-fullscreen"/);
+  assert.match(style,/\.case-directory/);
+  const snap=fs.readFileSync(path.join(root,"demo/assets/report-information-design-preview.png"));
+  assert.ok(snap.length>8000);
+  assert.equal(snap.toString("hex",0,8),"89504e470d0a1a0a");
+});
+test("Skill focuses on reading comprehension rather than UI decoration",()=>{
+ const skill=read("SKILL.md");
+ assert.match(skill,/Information Design Skill/);
+ assert.match(skill,/walls of text, comprehension effort, and reading friction/);
+ assert.match(skill,/Reader-first transformation procedure/);
+ assert.match(skill,/Choose the smallest effective structure/);
+ assert.ok(fs.existsSync(path.join(root,"examples/code-review.zh-CN.md")));
+ assert.ok(fs.existsSync(path.join(root,"examples/acceptance-plan.zh-CN.md")));
+});
+
+test("English case gallery has ten real, English-language information-design examples",()=>{
+ const h=read("demo/report.en.html"),en=read("README.md");
+ assert.match(h,/<html lang="en">/);
+ const ids=["answer","compare","steps","review","planning","test","triage","host","documents","interaction"];
+ for(const id of ids){assert.ok(h.includes('id="'+id+'"'),id);assert.ok(h.includes('href="#'+id+'"'),"missing English nav "+id);}
+ assert.doesNotMatch(h,/[一-鿿]/);
+ assert.match(h,/Before/);
+ assert.match(h,/class="language-sql"/);
+ assert.match(h,/Not run/);
+ assert.ok(en.includes("demo/report.en.html"));
+ assert.ok(en.includes("demo/documents/assets/en-report-preview.png"));
+ const img=fs.readFileSync(path.join(root,"demo/documents/assets/en-report-preview.png"));
+ assert.ok(img.length>8000);
+ assert.equal(img.toString("hex",0,8),"89504e470d0a1a0a");
 });

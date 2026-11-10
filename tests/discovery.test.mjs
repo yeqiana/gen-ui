@@ -42,7 +42,9 @@ test("Three independent examples distinguish demonstrations from observed result
     assert.match(content, /illustrative/i, file);
     assert.match(content, /not|unverified/i, file);
     assert.ok(read("README.md").includes("examples/" + file));
-    assert.ok(read("README.zh-CN.md").includes("examples/" + file));
+    const localized = file === "thread-pool.md" ? "thread-pool.zh-CN.md" : file.replace(".md",".zh-CN.md");
+    assert.ok(read("README.zh-CN.md").includes("examples/" + localized));
+    assert.ok(fs.existsSync(path.join(root,"examples",localized)));
   }
 });
 
@@ -74,5 +76,6 @@ test("GEO materials do not claim a live site or guaranteed rankings", () => {
   const geo = read("docs/geo.md");
   assert.match(geo, /not a live site/);
   assert.match(geo, /No optimization guarantees/);
-  assert.match(read("README.zh-CN.md"), /未测量/);
+  assert.doesNotMatch(read("README.zh-CN.md"), /GEO|搜索排名|搜索优化/i);
+  assert.doesNotMatch(read("README.md"), /GEO|SEO|search ranking/i);
 });

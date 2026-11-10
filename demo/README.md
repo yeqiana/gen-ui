@@ -1,37 +1,65 @@
-# Demo 导航与文档示例说明
+# GEN-UI Demo：AI 回答的信息组织与阅读体验
 
-Demo 目录同时保留技术文档 HTML、交互报告、受控协议示例和门户测试夹具。**主展示内容是可阅读的工程文档，不是业务 UI 原型。**
+本目录的演示目标是：**让 AI 生成的复杂信息更容易理解、定位和执行**，而不是把一切内容都转成 UI。默认先按内容选择结构，再根据宿主能力决定是否启用 HTML 交互。
 
-## 技术文档 HTML（主示例）
+## 主案例：完整的中文 HTML 信息重构报告
 
-入口：[技术文档目录](documents/index.html)
+[![信息重构案例实机截图](assets/report-information-design-preview.png)](report.html)
 
-| HTML 成品 | 文档类型 | 内容 |
+**[demo/report.html](report.html)** 汇总 Skill 的主要设计规则，并将它们映射到实际可操作的页面：
+
+| 分类 | 对应示例 | 解决的问题 |
 | --- | --- | --- |
-| [项目分析报告](documents/project-analysis.html) | 项目分析 | 背景、模块、架构、链路、领域模型、风险和建议 |
-| [架构设计方案](documents/architecture-design.html) | 系统设计 | 架构图、状态机、时序图、数据模型、并发与恢复 |
-| [技术实施方案](documents/implementation-plan.html) | 实施计划 | 阶段任务、依赖、迁移、灰度、回滚和交付物 |
-| [测试验收方案](documents/test-acceptance.html) | 测试验收 | 覆盖矩阵、测试用例、故障注入、性能与验收证据 |
+| 结论优先与重点标识 | 4.1 文字墙前后对比、顶部关键结论 | 重要内容淹没在长段落中 |
+| 对比决策 | 4.2 方案对比表 | 无法快速看清利弊与适用条件 |
+| 步骤与关系 | 4.3 编号步骤、顶部 SVG | 流程顺序与模块依赖难理解 |
+| 代码评审与复制 | 4.4 严重级别、位置、SQL 代码块 | 无法快速定位修复建议 |
+| 任务进度 | 4.5 七种任务状态语义 | 计划、失败与已完成混淆 |
+| 测试验收 | 4.6 测试矩阵、证据边界 | 把待执行写成已通过 |
+| 故障排查 | 4.7 症状、假设、证据、行动 | 排查缺乏可执行顺序 |
+| 宿主适配 | 4.8 CLI、IDE、HTML、Webview | 输出形式与宿主能力不匹配 |
+| 技术文档导航 | 4.9 四份完整中文文档 | 长篇文档难阅读与跳转 |
+| HTML 交互能力 | 4.10 覆盖矩阵、原有图表与记录 | 数据量大、页面宽、缺少聚焦 |
 
-这些页面采用统一的技术文档排版：左侧目录、正文层级、长表格、架构图与时序图、代码块、风险提示和打印样式。图表支持缩放、拖动、适应窗口与全屏；代码块提供复制操作。页面不依赖外网资源，可通过本地浏览器打开。
+**保留的实际交互：** 模块→批次级联、状态多选、搜索、耗时滑块、图表联动、每页 10 条分页、列显隐、截断浮层、按钮与表单、弹窗与抽屉、离线 SVG 全屏/缩放/拖动、代码复制、个人 IP favicon，以及带秒的生成时间。示例数据是虚构的，页面不向服务端提交操作。
 
-**内容边界：** 四份文档使用脱敏的 AI 内容生产平台作为统一示例。它们是工程分析和设计样稿，不是当前真实仓库扫描、代码审计、压测或上线验收结果。未执行的测试明确标记为待执行。
+## 四份完整中文技术文档
 
-## 其他 Demo 与测试夹具
+| 文档 | 内容 |
+| --- | --- |
+| [项目分析报告](documents/project-analysis.html) | 背景、模块、架构、领域模型、风险与建议 |
+| [系统架构设计](documents/architecture-design.html) | 状态机、组件职责、一致性、Outbox、断点恢复 |
+| [技术实施方案](documents/implementation-plan.html) | 阶段任务、依赖、迁移、灰度、回滚 |
+| [测试与验收方案](documents/test-acceptance.html) | 用例矩阵、故障注入、性能计划、验收证据 |
 
-| 目录 / 文件 | 保留理由 | 使用方法 |
-| --- | --- | --- |
-| [report.html](report.html) | 交互式工程质量数据报告示例 | 本地浏览器打开，数据为虚构样本 |
-| [portal-pages/index.html](portal-pages/index.html) | 四页固定夹具，供 iframe 门户回归测试 | 浏览器回归要求保持页面数 |
-| [index.html](index.html) | `gen-ui-demo/v1` 声明式 UI 协议教学示例 | 离线滑块和 JSON 示例 |
-| `renderer.js`、`report.js`、样式与流程脚本 | 对应演示和自动测试的固定依赖 | 不要随意删除 |
-| [documents/assets](documents/assets) | 文档共享 CSS、交互脚本与 Chrome 页面预览 | 离线加载 |
+[浏览中文文档目录](documents/index.html)
 
-## 验收命令
+## Four English document examples
+
+English readers get **English prose, headings, tables, browser previews, and instructions**—not Chinese content behind an English README:
+
+| English example | Purpose |
+| --- | --- |
+| [Project analysis report](documents/en/project-analysis.html) | Context, risks, ownership and recommendations |
+| [System architecture design](documents/en/architecture-design.html) | State, fencing, Outbox and recovery |
+| [Technical implementation plan](documents/en/implementation-plan.html) | Phases, dependencies and rollback |
+| [Test and acceptance plan](documents/en/test-acceptance.html) | Cases, fault injection and evidence gates |
+
+[Browse English document examples](documents/en/index.html)
+
+## 其他演示与固定测试夹具
+
+- [demo/index.html](index.html)：`gen-ui-demo/v1` 受控声明式协议教学（滑块演示，不是通用运行时）。
+- [portal-pages/index.html](portal-pages/index.html)：递归目录、iframe 沙盒和移动导航的固定浏览器夹具。
+- `report.js`、`report-refinements.css`、`flow-viewer.js`、`documents/assets/`：主示例使用的可信离线实现和共享样式。
+- [Skill HTML 规范](../references/html-report-contract.md)：颜色、排版、链接、表格、图表、表单、代码与安全边界。
+
+## 本地复验
 
 ~~~powershell
-node tests/documents.test.mjs
-node tests/chrome-documents-smoke.mjs
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 node tests/chrome-report-smoke.mjs
-node tests/chrome-portal-smoke.mjs
+node tests/chrome-documents-smoke.mjs
 ~~~
+
+页面样本可通过本地浏览器离线查看。所有声称的测试通过情况只适用于本仓库的固定测试，不代表虚构业务系统已完成审计、压测或发布。

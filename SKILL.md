@@ -1,13 +1,15 @@
 ---
 name: gen-ui
-description: Use when a coding agent needs to present technical answers, implementation plans, code reviews, tests, acceptance reports, or explicitly requested interactive HTML reports clearly. Produce evidence-based Markdown by default; generate controlled interactive UI data only if the host explicitly supports a trusted renderer.
+description: Use when AI responses become hard to understand, too long, or difficult to navigate. Turn complex technical explanations, reviews, plans, comparisons, and test evidence into clear, accurate, readable information. Use Markdown by default and interactive HTML only when requested and supported.
 ---
 
-# Gen UI — Presentation Skill for Coding Agents
+# Gen UI — Information Design Skill for AI Responses
 
 ## Purpose and priority
 
-Gen UI helps coding agents turn technical information into clear, useful responses **without changing how the underlying task is executed**. It is a presentation contract, not a tool runner, code review replacement, or official ChatGPT UI/DIL runtime.
+Gen UI reduces **walls of text, comprehension effort, and reading friction** in AI-generated answers by reorganizing information around reader questions. It is an information-design contract, not merely a UI makeover, tool runner, code-review replacement, or official ChatGPT UI/DIL runtime.
+
+**The goal is understanding, not decoration:** preserve facts, caveats, evidence, decisions, and next actions while using the simplest structure that makes them easier to follow. A beautiful page with missing information or fake interaction is a failure.
 
 Follow the user's language unless explicitly requested otherwise. The normative rules in this file are in English; Chinese answers and examples remain supported.
 
@@ -25,6 +27,16 @@ Follow the user's language unless explicitly requested otherwise. The normative 
 **Decision:** If the host has not explicitly declared a trusted renderer and its accepted schema, do not output UI protocol JSON as the primary answer. Do not assume that a Skill, a prompt, or a Markdown viewer can activate functional sliders, charts, forms, or buttons.
 
 **HTML deliverables:** When HTML is explicitly required or selected, follow the mandatory [HTML Report Contract](references/html-report-contract.md). Choose compact field-appropriate filters, provide column visibility for wide tables, style only absolute HTTP(S) URLs as external links, place cited public sources at the bottom, keep modal fields nonwrapping, stamp report generation time to seconds, and include the GEN-UI personal mark as the local favicon. Do not force interactive controls into long-form documents that do not need them.
+
+## Reader-first transformation procedure
+
+1. **Identify the reader's question:** what needs to be understood, compared, decided, verified, or done?
+2. **Extract the information hierarchy:** conclusion, evidence, assumptions, risks, decisions, and next actions. Do not silently delete important details.
+3. **Choose the smallest effective structure:** prose for a short answer; tables for comparison; numbered steps for procedures; timelines or diagrams for relationships; evidence matrices for verification.
+4. **Separate facts from plans:** mark simulated inputs, unexecuted checks, unconfirmed assumptions, and observed results distinctly.
+5. **Progressive disclosure:** put the conclusion first and details near the relevant section. Avoid decorative cards, unsupported charts, redundant headings, and unnecessary controls.
+6. **Validate readability and accuracy:** the output must still make sense as plain Markdown; diagrams, colors, and interactive HTML must have accessible text equivalents.
+7. **Localize examples completely:** Chinese documentation uses Chinese prose, labels and screenshots; English documentation uses English prose, labels and screenshots. Preserve original code identifiers and technical terms.
 
 ## 2. Choose layouts by information needs
 
@@ -78,7 +90,7 @@ Read [references/renderer-contract.md](references/renderer-contract.md) before p
 Whenever the final deliverable is HTML (explicitly requested or established by task context), follow [HTML report contract](references/html-report-contract.md). Do not change ordinary Markdown/CLI output into HTML without an HTML deliverable requirement:
 
 If the generated deliverable is HTML, apply these additional nonnegotiable rules:
-- **Chinese-first page**: all nonessential visible UI copy (headings, buttons, labels, messages, chart descriptions) uses Simplified Chinese. Retain technical identifiers, JSON keys and real source names where necessary.
+- **Audience-language page**: visible UI copy follows the requested language (Chinese for Chinese examples and English for English examples). Retain technical identifiers, JSON keys and source names where necessary.
 - **Emphasis and numbered headings**: selectively bold important content; use Chinese section numbering (一、二、三) by default for Chinese reports, or a consistent decimal hierarchy (1., 1.1, 1.2, 2., 2.1). Do not mix numbering systems within one document.
 - **Semantic callouts**: visually mark important content, pending confirmation and attention/risk notes using distinct soft background + left-border treatments on the content body or blockquote. Keep H1–H6 colors unchanged; status color belongs to the callout surface/border, not the title.
 - **Task-state iconization**: use ✅ completed/verified, ❌ failed, ⏸️ paused/blocked, ⏳ pending/to execute, 🔄 in progress, ❓ needs confirmation, and ⚠️ attention/risk. In task lists and task-status columns, show the icon instead of a repeated textual status label; keep the task/action description and add aria-label and title for accessibility.

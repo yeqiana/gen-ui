@@ -90,6 +90,9 @@ test("页面主题、离线复制资产与不生成额外操作的契约", () =>
   assert.match(css,/font:12px\/1\.65/);
   assert.match(html,/<pre><code class="language-json">/);
   assert.match(html,/assets\/code-blocks\.js/);
-  assert.doesNotMatch(html,/下载原MD|新标签页打开|打印当前页|target="_blank"/);
+  assert.doesNotMatch(html,/下载原MD|新标签页打开|打印当前页/);
+  const links=[...html.matchAll(/<a class="external-link" href="([^"]+)" target="_blank" rel="noopener noreferrer"/g)];
+  assert.ok(links.length>=2);
+  assert.ok(links.every(x=>/^https?:\/\//i.test(x[1])));
   assert.doesNotMatch(source,/fetch\(|XMLHttpRequest|https?:\/\//i);
 });
