@@ -184,7 +184,9 @@ test("模块、批次和状态联动重置分页；滑块与分页大小实际�
   assert.match(get("page-info").textContent,/1\/2 页/);
   dispatch(get("batch-filter"),"change",{value:"2"});
   assert.equal(Number(get("count-total").textContent),ui.sample().rows.filter(row=>row.module==="鉴权中心"&&row.batch===2).length);
-  dispatch(get("status"),"change",{value:"failure"});
+  dispatch(get("status-success"),"change",{checked:false});
+  dispatch(get("status-pending"),"change",{checked:false});
+  assert.equal(get("status-count").textContent,"1/3");
   assert.equal(Number(get("count-total").textContent),ui.sample().rows.filter(row=>row.module==="鉴权中心"&&row.batch===2&&row.status==="failure").length);
   dispatch(get("reset-filters"),"click");
   assert.equal(Number(get("count-total").textContent),67);
@@ -299,7 +301,9 @@ test("中文 HTML 使用简洁导航、首列固定且不添加原文操作", ()
   assert.match(html,/<h2\b/);
   assert.match(html,/<h3\b/);
   assert.match(html,/id="tab-records" role="tab"/);
-  assert.doesNotMatch(html,/新标签页打开|下载原MD|打印当前页|target="_blank"/);
+  assert.doesNotMatch(html,/新标签页打开|下载原MD|打印当前页/);
+  assert.match(html,/class="external-link" href="https:\/\/[^"]+" target="_blank" rel="noopener noreferrer"/);
+  assert.match(html,/id="generated-at" datetime="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}"/);
   assert.match(html,/<dialog id="create-dialog"/);
   assert.match(html,/<dialog id="detail-drawer"/);
   assert.match(html,/<dialog id="data-drawer"/);

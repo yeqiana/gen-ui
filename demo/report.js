@@ -52,9 +52,11 @@
     const keyword = String(filter.query || "").trim().toLowerCase();
     const selectedModule = filter.module ?? "";
     const selectedBatch = filter.batch || "all";
+    const selectedStatuses = Array.isArray(filter.statuses)
+      ? filter.statuses : (filter.status && filter.status !== "all" ? [filter.status] : STATUSES);
     return rows.filter(row =>
       (!keyword || row.id.toLowerCase().includes(keyword) || row.module.toLowerCase().includes(keyword)) &&
-      (!filter.status || filter.status === "all" || row.status === filter.status) &&
+      selectedStatuses.includes(row.status) &&
       (selectedModule === "" || row.module === selectedModule) &&
       (selectedBatch === "all" || String(row.batch) === String(selectedBatch)) &&
       (!filter.slowOnly || row.durationMs > filter.threshold)
@@ -141,7 +143,7 @@
   let report = sample();
   let page = 1;
   const filter = {
-    query: "", module: "", status: "all", batch: "all",
+    query: "", module: "", statuses: [...STATUSES], batch: "all",
     slowOnly: false, threshold: 600, size: 10
   };
 
@@ -259,8 +261,9 @@
     tooltip.style.left = left + "px";
     tooltip.style.top = top + "px";
   }
-  function clippedCell(value) {
+  function clippedCell(value, column) {
     const cell = dom("td");
+    cell.dataset.column = column;
     const span = dom("span", value, "clip");
     // Non-truncated text is already readable and should not create a Tab stop.
     span.tabIndex = -1;
@@ -300,14 +303,18 @@
     ];
     content.replaceChildren();
     for (const [key, value] of entries) {
-      content.append(dom("dt", key), dom("dd", value));
+      const term = dom("dt", key), description = dom("dd", value);
+      if (key.length > 15) term.title = key;
+      if (String(value).length > 15) description.title = String(value);
+      content.append(term, description);
     }
     openDialog("detail-drawer");
   }
 
   function updateColumnFilters() {
     const modules = [...new Set(report.rows.map(row => row.module))].sort((a, b) => a.localeCompare(b, "zh-CN"));
-    const batches = [...new Set(report.rows.map(row => row.batch))].sort((a, b) => a - b);
+    const moduleRows = filter.module === "" ? report.rows : report.rows.filter(row => row.module === filter.module);
+    const batches = [...new Set(moduleRows.map(row => row.batch))].sort((a, b) => a - b);
     const mod = byId("module-filter"), bat = byId("batch-filter");
     mod.replaceChildren();
     bat.replaceChildren();
@@ -333,6 +340,38 @@
     }
     mod.value = filter.module;
     bat.value = String(filter.batch);
+    updateStatusCount();
+  }
+
+  function updateStatusCount() {
+    const selected = Array.isArray(filter.statuses) ? filter.statuses.length : 0;
+    const output = byId("status-count");
+    if (output) output.textContent = selected + "/" + STATUSES.length;
+  }
+
+  const COLUMN_KEYS = ["module", "status", "duration", "batch", "action"];
+  const COLUMN_WIDTHS = { id: 175, module: 260, status: 130, duration: 168, batch: 130, action: 164 };
+  function applyColumnVisibility() {
+    let count = 1;
+    const visible = new Set(["id"]);
+    for (const key of COLUMN_KEYS) {
+      const checked = byId("column-" + key).checked;
+      byId("col-" + key).hidden = !checked;
+      byId("th-" + key).hidden = !checked;
+      if (checked) { visible.add(key); count++; }
+    }
+    const body = byId("report-rows");
+    for (const row of body.children) {
+      for (const cell of row.children) {
+        if (cell.dataset?.column) cell.hidden = !visible.has(cell.dataset.column);
+      }
+    }
+    const table = byId("report-table");
+    if (table?.style) table.style.minWidth = [...visible].reduce((sum, key) => sum + COLUMN_WIDTHS[key], 0) + "px";
+    const live = byId("column-visibility-live");
+    if (live) live.textContent = "当前显示 " + count + " 列";
+    refreshClippedFocusability();
+    return count;
   }
 
   function render() {
@@ -356,22 +395,24 @@
       const tr = dom("tr");
       tr.dataset.recordId = row.id;
       const statusCell = dom("td");
+      statusCell.dataset.column = "status";
       statusCell.append(dom("span", STATUS_TEXT[row.status], "status " + row.status));
       const actionCell = dom("td");
+      actionCell.dataset.column = "action";
       const detail = dom("button", "查看详情 · 站内抽屉", "inline-button");
       detail.type = "button";
       detail.setAttribute("aria-label", "查看任务 " + row.id + " 的详情（站内抽屉）");
       detail.addEventListener("click", () => showRecord(row));
       actionCell.append(detail);
-      tr.append(clippedCell(row.id), clippedCell(row.module), statusCell,
-        clippedCell(row.durationMs.toLocaleString("zh-CN") + " 毫秒"),
-        clippedCell("第 " + row.batch + " 批"), actionCell);
+      tr.append(clippedCell(row.id, "id"), clippedCell(row.module, "module"), statusCell,
+        clippedCell(row.durationMs.toLocaleString("zh-CN") + " 毫秒", "duration"),
+        clippedCell("第 " + row.batch + " 批", "batch"), actionCell);
       body.append(tr);
     }
-    refreshClippedFocusability();
+    const visibleColumnCount = applyColumnVisibility();
     if (!paging.rows.length) {
       const tr = dom("tr"), cell = dom("td", "暂无符合条件的记录，请调整筛选条件");
-      cell.colSpan = 6;
+      cell.colSpan = visibleColumnCount;
       tr.append(cell);
       body.append(tr);
     }
@@ -402,12 +443,14 @@
 
   function resetFilters() {
     Object.assign(filter, {
-      query: "", module: "", status: "all", batch: "all",
+      query: "", module: "", statuses: [...STATUSES], batch: "all",
       slowOnly: false, threshold: 600, size: 10
     });
+    updateColumnFilters();
     byId("keyword").value = "";
     byId("module-filter").value = "";
-    byId("status").value = "all";
+    for (const status of STATUSES) byId("status-" + status).checked = true;
+    updateStatusCount();
     byId("batch-filter").value = "all";
     byId("slow-only").checked = false;
     byId("threshold").value = "600";
@@ -419,8 +462,21 @@
   const bind = (name, event, callback) => byId(name).addEventListener(event, callback);
   bind("filters", "submit", event => event.preventDefault());
   bind("keyword", "input", event => { filter.query = event.target.value; page = 1; render(); });
-  bind("module-filter", "change", event => { filter.module = event.target.value; page = 1; render(); });
-  bind("status", "change", event => { filter.status = event.target.value; page = 1; render(); });
+  bind("module-filter", "change", event => {
+    filter.module = event.target.value;
+    filter.batch = "all";
+    updateColumnFilters();
+    page = 1;
+    render();
+  });
+  for (const status of STATUSES) bind("status-" + status, "change", event => {
+    const selected = new Set(filter.statuses);
+    if (event.target.checked) selected.add(status); else selected.delete(status);
+    filter.statuses = STATUSES.filter(value => selected.has(value));
+    updateStatusCount();
+    page = 1;
+    render();
+  });
   bind("batch-filter", "change", event => { filter.batch = event.target.value; page = 1; render(); });
   bind("slow-only", "change", event => { filter.slowOnly = event.target.checked; page = 1; render(); });
   bind("threshold", "input", event => { filter.threshold = Number(event.target.value); page = 1; render(); });
@@ -432,6 +488,7 @@
     render();
   });
   bind("reset-filters", "click", resetFilters);
+  for (const key of COLUMN_KEYS) bind("column-" + key, "change", applyColumnVisibility);
   bind("previous", "click", () => { page--; render(); });
   bind("next", "click", () => { page++; render(); });
   const jumpPage = () => {
@@ -508,6 +565,39 @@
   bind("open-data-drawer", "click", () => openDialog("data-drawer"));
   bind("close-data", "click", () => closeDialog("data-drawer"));
 
+  function syncFormTooltip(id) {
+    const control = byId(id);
+    const label = byId("label-" + id);
+    const labelText = String(label?.textContent || "").trim();
+    if (label) label.title = labelText.length > 15 ? labelText : "";
+    const value = control.tagName === "SELECT"
+      ? (control.options?.[control.selectedIndex]?.textContent || control.value || "")
+      : String(control.value || control.placeholder || "");
+    control.title = value.length > 15 ? value : "";
+  }
+  const formFieldIds = ["new-id", "new-module", "new-status", "new-duration", "new-batch"];
+  for (const id of formFieldIds) {
+    syncFormTooltip(id);
+    byId(id).addEventListener("input", () => syncFormTooltip(id));
+    byId(id).addEventListener("change", () => syncFormTooltip(id));
+  }
+
+  function normalizeExternalLinks() {
+    const links = document.querySelectorAll?.("a[href]") || [];
+    for (const link of links) {
+      const href = String(link.getAttribute("href") || "").trim();
+      if (/^https?:\/\//i.test(href)) {
+        link.classList.add("external-link");
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      } else {
+        link.classList.remove("external-link");
+        if (link.target === "_blank") link.removeAttribute("target");
+      }
+    }
+  }
+  normalizeExternalLinks();
+
   bind("create-form", "submit", event => {
     event.preventDefault();
     const notice = byId("create-status");
@@ -558,6 +648,8 @@
       notice.dataset.kind = "error";
     }
   });
+  for (const status of STATUSES) byId("status-" + status).checked = true;
+  for (const key of COLUMN_KEYS) byId("column-" + key).checked = true;
   updateColumnFilters();
   render();
 })();

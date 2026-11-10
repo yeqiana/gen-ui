@@ -46,3 +46,33 @@ test("No previous product-UI mockup showcase remains in the public entrypoints",
  assert.match(en,/Project analysis/);assert.match(en,/Architecture design/);assert.doesNotMatch(zh,/TV 启动器|StoryOS 工作台演示截图|五个独立案例/);
  assert.doesNotMatch(en,/TV launcher HTML concept|Five offline HTML showcases/);
 });
+
+
+test("Four documents carry second-precision report metadata and the actual personal-mark favicon",()=>{
+ for(const id of docs){
+  const f="demo/documents/"+id+".html",h=read(f);
+  const fav=h.match(/<link rel="icon"[^>]*href="([^"]+)"/);
+  assert.ok(fav,id+" missing local icon");
+  assert.ok(!/^https?:/i.test(fav[1]),id+" remote favicon");
+  const absolute=path.resolve(root,"demo/documents",fav[1]);
+  assert.ok(fs.existsSync(absolute),id+" favicon path invalid: "+absolute);
+  assert.match(fs.readFileSync(absolute,"utf8"),/<svg/);
+  assert.match(h,/<time class="generated-at" datetime="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+08:00">/);
+  for(const attr of ["data-zoom-in","data-zoom-out","data-fit","data-fullscreen"]){
+   const b=h.match(new RegExp('<button[^>]*'+attr+'[^>]*>.*?<\\/button>'))?.[0];
+   assert.ok(b,id+" missing icon button "+attr);
+   assert.match(b,/aria-label="[^"]+"/);assert.match(b,/title="[^"]+"/);assert.match(b,/<svg/);
+  }
+ }
+});
+test("Public report has source links at the bottom and never treats local paths as external",()=>{
+ const h=read("demo/report.html"),at=h.indexOf('id="references"'),footer=h.indexOf('class="page-footer"');
+ assert.ok(at>0&&footer>at);
+ assert.match(h,/<time id="generated-at" datetime="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+08:00"/);
+ assert.match(h,/<details id="status-multi"/);
+ assert.match(h,/<details id="column-picker"/);
+ const external=[...h.matchAll(/<a class="external-link" href="([^"]+)" target="_blank" rel="noopener noreferrer"/g)];
+ assert.ok(external.length>=2);
+ assert.ok(external.every(x=>/^https:\/\//.test(x[1])));
+ assert.doesNotMatch(h,/新标签页打开/);
+});

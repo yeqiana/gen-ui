@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./report.css">
   <link rel="stylesheet" href="./ui-refresh.css">
   <link rel="stylesheet" href="./flow-viewer.css">
+  <link rel="stylesheet" href="./report-refinements.css">
   <script src="./chart-refresh.js" defer></script>
   <script src="./pager-refresh.js" defer></script>
   <script src="./flow-viewer.js" defer></script>
@@ -43,7 +44,7 @@
         <p class="eyebrow"><img class="heading-mark" src="../assets/icons/gen-ui-mark.svg" width="20" height="20" alt="">GEN-UI / 可交互报告示例 · 模拟数据</p>
         <h1 id="report-title">工程质量分析</h1>
       </div>
-      <div class="masthead-actions">
+      <div class="masthead-actions"><p class="generated-at"><span>报告生成时间</span><time id="generated-at" datetime="2026-11-10T10:48:21+08:00">2026-11-10 10:48:21 +08:00</time></p>
         <label class="inline-select" for="nav-mode">导航布局
           <select id="nav-mode">
             <option value="left" selected>左侧（默认）</option>
@@ -72,8 +73,8 @@
       <button id="flow-zoom-out" type="button" aria-label="缩小流程图"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button>
       <span id="flow-zoom-label" aria-live="polite">100%</span>
       <button id="flow-zoom-in" type="button" aria-label="放大流程图"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12 M10 4v12"/></svg></button>
-      <button id="flow-fit" type="button">适应窗口</button>
-      <button id="flow-fullscreen" type="button" aria-pressed="false" aria-label="全屏查看流程图" title="按 Esc 退出全屏">全屏</button>
+      <button id="flow-fit" type="button" aria-label="适应窗口" title="适应窗口"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"/></svg></button>
+      <button id="flow-fullscreen" type="button" aria-pressed="false" aria-label="全屏查看流程图" title="全屏查看流程图"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
     </div></div>
   <div id="flow-canvas" class="flow-canvas" tabindex="0" role="region" aria-label="可拖动和缩放的离线SVG流程图">
 <svg id="flow-svg" xmlns="http://www.w3.org/2000/svg" width="620" height="150" viewBox="0 0 620 150" role="img" aria-labelledby="title desc">
@@ -126,21 +127,39 @@
         </div>
         <div class="toolbar-actions">
           <button type="button" id="open-create" class="primary"><img src="../assets/icons/gen-ui-form.svg" alt="">新增记录</button>
-          <button type="button" id="open-data-drawer"><img src="../assets/icons/gen-ui-drawer.svg" alt="">编辑数据</button>
+          <button type="button" id="open-data-drawer"><img src="../assets/icons/gen-ui-drawer.svg" alt="">编辑数据</button><details id="column-picker" class="column-picker">
+  <summary aria-label="选择表格显示列" title="选择显示列"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 4h14M3 10h14M3 16h14M7 2v4M13 8v4M9 14v4"/></svg><span>列显示</span></summary>
+  <div class="column-picker-panel" role="group" aria-label="表格列显示设置">
+    <label><input type="checkbox" id="column-module" checked>所属模块</label>
+    <label><input type="checkbox" id="column-status" checked>执行状态</label>
+    <label><input type="checkbox" id="column-duration" checked>耗时</label>
+    <label><input type="checkbox" id="column-batch" checked>执行批次</label>
+    <label><input type="checkbox" id="column-action" checked>操作</label>
+    <span id="column-visibility-live" class="sr-only" role="status" aria-live="polite"></span>
+</div>
+</details>
           <span class="toolbar-note">操作仅在当前页面生效</span>
         </div>
       </div>
 
       <div id="panel-records" role="tabpanel" aria-labelledby="tab-records">
         <form id="filters" class="filters" autocomplete="off" role="search">
-          <label for="keyword">任务编号 / 关键字<input type="search" id="keyword" placeholder="按编号或模块搜索"></label>
-          <label for="module-filter">所属模块<select id="module-filter"><option value="">全部模块</option></select></label>
-          <label for="status">执行状态
-            <select id="status"><option value="all">全部状态</option><option value="success">成功</option><option value="failure">失败</option><option value="pending">待处理</option></select>
-          </label>
-          <label for="batch-filter">执行批次<select id="batch-filter"><option value="all">全部批次</option></select></label>
-          <button type="button" id="reset-filters" class="secondary">重置筛选</button>
-        </form>
+  <label class="filter-search" for="keyword"><span>任务编号 / 关键字</span><input type="search" id="keyword" placeholder="按编号或模块搜索"></label>
+  <div class="cascade-filter" role="group" aria-label="模块与批次级联筛选">
+    <label for="module-filter"><span>所属模块</span><select id="module-filter"><option value="">全部模块</option></select></label>
+    <span class="cascade-arrow" aria-hidden="true">›</span>
+    <label for="batch-filter"><span>执行批次</span><select id="batch-filter"><option value="all">全部批次</option></select></label>
+  </div>
+  <details id="status-multi" class="filter-multi">
+    <summary><span>执行状态</span><b id="status-count">3/3</b></summary>
+    <div class="filter-multi-options" id="status-options">
+      <label><input type="checkbox" id="status-success" value="success" checked>成功</label>
+      <label><input type="checkbox" id="status-failure" value="failure" checked>失败</label>
+      <label><input type="checkbox" id="status-pending" value="pending" checked>待处理</label>
+    </div>
+  </details>
+  <button type="button" id="reset-filters" class="secondary">重置筛选</button>
+</form>
         <div class="detail-filters">
           <label for="threshold">耗时阈值</label>
           <input type="range" id="threshold" min="100" max="1200" step="50" value="600">
@@ -150,9 +169,9 @@
         <p id="page-notice" class="page-notice" role="status" aria-live="polite"></p>
         <p id="filter-count" class="muted"></p>
         <div class="table-wrap" id="table-scroll" tabindex="0" role="region" aria-label="可横向滚动的执行记录表格">
-          <table aria-label="工程执行记录">
-            <colgroup><col class="col-id"><col class="col-module"><col class="col-status"><col class="col-duration"><col class="col-batch"><col class="col-action"></colgroup>
-            <thead><tr><th scope="col">任务编号（固定）</th><th scope="col">所属模块</th><th scope="col">执行状态</th><th scope="col">耗时（毫秒）</th><th scope="col">执行批次</th><th scope="col">操作</th></tr></thead>
+          <table id="report-table" aria-label="工程执行记录">
+            <colgroup><col id="col-id" data-column="id" class="col-id"><col id="col-module" data-column="module" class="col-module"><col id="col-status" data-column="status" class="col-status"><col id="col-duration" data-column="duration" class="col-duration"><col id="col-batch" data-column="batch" class="col-batch"><col id="col-action" data-column="action" class="col-action"></colgroup>
+            <thead><tr><th id="th-id" data-column="id" scope="col">任务编号（固定）</th><th id="th-module" data-column="module" scope="col">所属模块</th><th id="th-status" data-column="status" scope="col">执行状态</th><th id="th-duration" data-column="duration" scope="col">耗时（毫秒）</th><th id="th-batch" data-column="batch" scope="col">执行批次</th><th id="th-action" data-column="action" scope="col">操作</th></tr></thead>
             <tbody id="report-rows"></tbody>
           </table>
         </div>
@@ -184,6 +203,14 @@
       </div>
     </section>
 
+    <section id="references" class="references" aria-labelledby="references-heading">
+  <div class="section-title"><h2 id="references-heading">参考资料</h2><span class="muted">交互与可访问性规范</span></div>
+  <ul class="reference-list">
+    <li><a class="external-link" href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/" target="_blank" rel="noopener noreferrer">W3C WAI-ARIA APG：模态对话框模式</a><span>对话框焦点管理、键盘交互与模态语义</span></li>
+    <li><a class="external-link" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog" target="_blank" rel="noopener noreferrer">MDN：HTML dialog 元素</a><span>原生对话框的打开、关闭与可访问性说明</span></li>
+    <li><a class="external-link" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/noopener" target="_blank" rel="noopener noreferrer">MDN：rel=noopener</a><span>外部链接与浏览上下文隔离</span></li>
+  </ul>
+</section>
     <footer class="page-footer"><img src="../assets/icons/gen-ui-mark.svg" width="18" height="18" alt="">GEN-UI · 模拟数据报告</footer>
   </main>
 </div>
@@ -195,11 +222,11 @@
     <div class="dialog-head"><h2 id="create-heading">新增演示记录</h2><button type="button" id="close-create" class="icon-only" aria-label="关闭新增弹窗" title="关闭"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button></div>
     <p class="muted">在当前页面临时增加一条记录，关闭页面后不保存。</p>
     <div class="form-fields">
-      <label for="new-id">任务编号<input id="new-id" maxlength="40" required placeholder="例如：T-068"></label>
-      <label for="new-module">所属模块<input id="new-module" maxlength="40" required placeholder="例如：用户服务"></label>
-      <label for="new-status">执行状态<select id="new-status"><option value="success">成功</option><option value="failure">失败</option><option value="pending">待处理</option></select></label>
-      <label for="new-duration">耗时（毫秒）<input id="new-duration" type="number" min="0" max="1000000" value="250" required></label>
-      <label for="new-batch">执行批次<select id="new-batch"><option value="1">批次 1</option><option value="2">批次 2</option><option value="3">批次 3</option><option value="4">批次 4</option><option value="5">批次 5</option><option value="6">批次 6</option><option value="7">批次 7</option><option value="8">批次 8</option><option value="9">批次 9</option><option value="10">批次 10</option><option value="11">批次 11</option><option value="12">批次 12</option></select></label>
+      <label for="new-id"><span class="form-label" id="label-new-id" title="任务编号">任务编号</span><input id="new-id" maxlength="40" required placeholder="例如：T-068"></label>
+      <label for="new-module"><span class="form-label" id="label-new-module" title="所属模块与业务领域或微服务完整名称（用于报表分类）">所属模块与业务领域或微服务完整名称（用于报表分类）</span><input id="new-module" maxlength="40" required placeholder="例如：用户服务"></label>
+      <label for="new-status"><span class="form-label" id="label-new-status" title="执行状态">执行状态</span><select id="new-status"><option value="success">成功</option><option value="failure">失败</option><option value="pending">待处理</option></select></label>
+      <label for="new-duration"><span class="form-label" id="label-new-duration" title="耗时（毫秒）">耗时（毫秒）</span><input id="new-duration" type="number" min="0" max="1000000" value="250" required></label>
+      <label for="new-batch"><span class="form-label" id="label-new-batch" title="执行批次">执行批次</span><select id="new-batch"><option value="1">批次 1</option><option value="2">批次 2</option><option value="3">批次 3</option><option value="4">批次 4</option><option value="5">批次 5</option><option value="6">批次 6</option><option value="7">批次 7</option><option value="8">批次 8</option><option value="9">批次 9</option><option value="10">批次 10</option><option value="11">批次 11</option><option value="12">批次 12</option></select></label>
     </div>
     <p id="create-status" role="status" aria-live="polite"></p>
     <div class="dialog-actions"><button type="button" id="cancel-create">取消</button><button class="primary" type="submit">添加到当前报告</button></div>

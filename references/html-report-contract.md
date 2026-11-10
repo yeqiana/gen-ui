@@ -1,4 +1,4 @@
-# GEN-UI · HTML Report Contract (v1.4)
+# GEN-UI · HTML Report Contract (v1.5)
 
 This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
@@ -35,23 +35,26 @@ When a directory is specified, **do not generate only a standalone index that ig
 
 ## 2. Nonwrapping, horizontally scrollable data tables
 
-- **Table headers must never wrap**: use `white-space: nowrap` for each header, not only the table container.
-- **Table cells must never wrap**; truncate overflowing long content via `overflow: hidden; text-overflow: ellipsis; white-space: nowrap`.
-- Provide an **overflow tooltip that appears on pointer hover or keyboard focus and disappears on pointer leave or blur**. Only show it when the content is actually truncated (`scrollWidth > clientWidth`); use plain text, never model-provided HTML. Hide it when the table scrolls.
-- When the table is wider than the viewport, enable horizontal scrolling. For record tables, prefer a **sticky first column** (`position: sticky; left: 0`) with a solid background and correct stacking against the header. Sticky columns must not obscure user content. Use fixed/declared column widths as needed for stable truncation.
-- Do not sacrifice keyboard access: table-scroll region can be focused. **Only truly truncated cells** should enter the sequential Tab order; recompute focusability after render and responsive layout changes. Keep full text accessible and use plain-text hover/focus tooltips.
+- Table headers and cells never wrap. Use nowrap, hidden overflow and ellipsis for long cell values.
+- Show a plain-text overflow tooltip on hover and keyboard focus only when the cell is actually truncated; hide it on pointer leave, blur or table scroll.
+- When a table is wider than the viewport, enable horizontal scrolling. Prefer a sticky identity column with a solid background and correct stacking.
+- If a table has many columns (normally 7 or more) or optional/detail columns, provide a compact column-visibility control. Keep the record identity column visible; readers can hide secondary columns independently. Preserve header/body alignment and announce visibility changes accessibly.
+- Keep the table-scroll region keyboard-focusable. Only truly truncated cells enter the Tab order; recompute focusability after filtering, column changes, render and responsive layout changes.
 
 ## 3. Filters mapped to real column fields; pagination
 
-- Select relevant filters from the actual **key fields / column definitions**, not arbitrary global controls: text search for record identifier, selector for module / status / category, batch/date range for sequence/time columns, slider or numeric bounds for measured values.
-- Where reasonable, derive selector options from available data and refresh when the dataset changes. Never invent absent fields, statuses or API endpoints. **Never use a sentinel value that can collide with actual field data**: e.g., an empty-string sentinel for nonempty module names; a real module called `all` must remain selectable.
-- Filtering, KPI counts, charts and pagination must derive from the **same dataset** and refresh together. Changing a filter or page size resets/clamps the current page.
-- For long tables, default to **10 rows per page** with optional 20 and 50. Use a compact numbered pager with previous/next, visible current page and optional jump-to-page control. The final page or filtered result can naturally have fewer than 10 rows. Do not pad results. Provide accurate row counts and an empty state.
+- Select filters from real key fields and column definitions. Choose the control by field semantics: text search for identifiers; a cascader for hierarchical relationships; radio or segmented controls for mutually exclusive choices; checkboxes or a compact multi-select popover for multiple values; date/range controls for time or numeric fields; a slider only for a meaningful continuous threshold.
+- Use more than dropdowns when the data model supports it, but never invent a hierarchy or filter field. Derive options from available data and refresh dependent options when an upstream cascader value changes.
+- Never use a sentinel that can collide with real data. Represent “all” separately from actual field values.
+- Keep filters compact: desktop controls normally 30–32px high, with concise labels and consistent gaps. Use slightly larger touch targets only where needed on mobile.
+- Filtering, KPI counts, charts and pagination derive from the same dataset and refresh together. Changing an upstream filter or page size resets or clamps the current page. Multi-select must show its selected count and define zero-selection behavior.
+- For long tables, default to 10 rows per page with optional 20 and 50. Use a compact numbered pager with previous/next, current page and optional jump-to-page control. Do not pad results; provide accurate counts and an empty state.
 
 ## 4. Minimal actions and internal navigation
 
-- Do not add source-Markdown download, original-text export, current-page print or similar document-operation buttons unless the user explicitly requests them. Avoid redundant toolbar actions; the page content is the deliverable.
-- Do not display copy that describes opening a new browser tab. The multi-page portal navigates within its embedded iframe. If an external reference is genuinely needed, use a concise descriptive link label and do not add a separate open-in-new-tab control.
+- Do not add source-Markdown download, original-text export, current-page print or similar document-operation buttons unless explicitly requested. Avoid redundant toolbar actions.
+- Every absolute http:// or https:// URL must look like an external link (theme-colored and underlined or equivalent), with target="_blank" and rel="noopener noreferrer". Use concise descriptive link text; never add visible explanatory copy about which tab or window will open.
+- Relative paths, root-relative paths, fragment anchors and local files are internal links: never apply the external-link class or external-link icon, and never force them to target="_blank". In iframe portals, internal links remain inside the portal's main frame.
 - Internal switches use semantic tabs with role="tablist", role="tab", role="tabpanel", aria-controls and aria-selected; concise tab labels are sufficient. The UI should never silently navigate away.
 - Do not make a report only a list of tabs. Use real navigation, forms, dialogs, panels and drawers based on information needs.
 - Code examples are not toolbar exports: render multi-line code in Markdown-style <pre><code class="language-..."> blocks with a visible one-click Copy control and accessible copy feedback.
@@ -60,14 +63,17 @@ When a directory is specified, **do not generate only a standalone index that ig
 
 - Use forms for data entry, a modal dialog for discrete creation/confirmation, and a **right or left side drawer** for record details or data editing when it avoids destroying page context. Choose layout on usefulness, not ornamentation. Repeated action buttons must have **record-specific accessible names** (e.g. “查看任务 T-001 的详情”) rather than identical labels.
 - Keep operations local for this offline example. Real side effects require the host's explicit authentication, permissions, review and confirmation.
-- Keep the semantic H1/H2/H3 structure independent of the chosen tab or panel state; restore logical focus on close where the browser provides it.
-- Keep compact, clearly labelled metric cards together in a visual overview, with bright but purposeful accents. Avoid duplicate KPI blocks, excessive card nesting, oversized shadows and decorative whitespace. Prefer compact controls around 30–34px tall unless touch accessibility requires larger targets.
+- Keep semantic H1/H2/H3 structure independent of the chosen tab or panel state; restore logical focus on close.
+- Form labels and single-line field values must stay on one line. Use min-width:0, white-space:nowrap, overflow:hidden and text-overflow:ellipsis; never wrap labels or input/select values. If a label or value exceeds 15 characters, expose the full plain-text value on hover and keyboard focus (for example, native title or an accessible tooltip). Keep the full value available to assistive technology.
+- When a form has many fields (normally 5 or more), use a two-column desktop grid with consistent row and column gaps; collapse to one column on narrow mobile screens.
+- Keep compact, clearly labelled metric cards together in a visual overview. Avoid duplicate KPI blocks, excessive card nesting, oversized shadows and decorative whitespace. Prefer compact controls around 30–34px tall unless touch accessibility requires larger targets.
+- Add subtle dividers selectively between metadata groups, filter clusters, major sections or dense form groups when they improve scanning. Do not put a divider between every field or turn the page into a grid of boxes.
 
 ## 6. Charts, metrics, controlled JSON and safety
 
 - At the top, meaningful **success** counts may use a fresh green and **failure** counts a friendly red; ordinary figures remain neutral. Where a status appears in a table, use a softly tinted text tag with a readable label and sufficient contrast. Always include labels and units. No fabricated counts or tests.
 - Choose pie for composition, bar for categories and line for ordered sequence/trends. Use a coordinated multi-color series palette, clear legends, readable axes, restrained grid lines and category-specific colors. Add them only if useful. Include chart descriptions and a clear no-data state; charts should follow the table's current filter when meaningful.
-- **Offline flow diagrams:** embed inline SVG when a flowchart materially helps. Provide labelled controls for fullscreen, zoom, fit-to-window and pointer drag/pan. Support Escape to exit fullscreen, keyboard access, a text description and no network requests.
+- **Offline flow diagrams:** embed inline SVG when a flowchart materially helps. Provide controls for fullscreen, zoom, fit-to-window and pointer drag/pan in the diagram top-right toolbar. Prefer compact icon-only buttons for zoom/fullscreen/fit; each needs a Chinese aria-label, hover/focus tooltip and visible focus styling. Keep the zoom percentage visible. Support Escape to exit fullscreen, keyboard access, a text description and no network requests.
 - Trusted static author-written JavaScript may implement real controls, slider updates, tabs, pagination, modal windows and drawers. Model-supplied **JSON is data**, strictly validated against an allowlist, bounds and size limits.
 - Never execute AI-supplied JavaScript, HTML, CSS, `eval`, `innerHTML`, event handlers or arbitrary remote URLs. No unsupported database/API/deployment action is implied by being in a browser.
 - A self-contained HTML file can inline **reviewed trusted code/assets** if the request explicitly requires a single file. Otherwise local CSS/JS/SVG assets are encouraged for maintenance.
@@ -85,13 +91,20 @@ When a directory is specified, **do not generate only a standalone index that ig
 - Font: system UI font stack, no remote font downloads. Body: 14px. Code: 12px.
 - Use the accent consistently for focus, primary actions, active navigation and links. Semantic success/failure colors may remain distinct from the primary accent, but must not replace the global theme tokens.
 
-## 8. GEN-UI personal IP icon set
+## 8. Report metadata, external references and favicon
+
+- A generated report shows its generation timestamp near the top, accurate to seconds and including its timezone/offset (YYYY-MM-DD HH:mm:ss ±HH:mm). Stamp the time when the artifact/report is generated; do not use a date-only label or update it on every filter interaction.
+- If analysis or design cites external public material, consolidate those citations in a clearly titled 参考资料 / References section at the very bottom of the report, after findings and before the final brand footer. Use descriptive source titles and absolute HTTPS URLs.
+- Every standalone HTML page and directory index includes the local GEN-UI personal-mark favicon. Use the correct relative path to assets/icons/gen-ui-mark.svg; a generated portal shell may embed the same trusted SVG as a data URI. Never substitute an emoji, remote favicon or unrelated icon.
+- The report timestamp, external references and favicon are part of the HTML artifact contract, not optional decoration.
+
+## 9. GEN-UI personal IP icon set
 
 - Use the [GEN-UI monochrome SVG set](../assets/icons/README.md). The personal mark must be one double-peak cat-ear stroke (one path only), without a full head, face details, frame or ornament; keep it legible at 16/20/24px. Functional icons should use at most 1–2 geometric primitives while preserving clear meaning and consistent visual weight. Avoid gradients, colorful mascots, coral accents and decorative icon overload.
 - Use icons selectively in the **sidebar, page header, toolbar or footer**, not in dense body paragraphs. Pair functional icons with clear Chinese text; use `alt=""` when icons are decorative.
 - Keep SVG assets local and reusable, do not embed untrusted external SVG. Avoid a large decorative brand watermark over the table or report findings.
 
-## 9. Executable example and validation
+## 10. Executable example and validation
 
 Open the [recursive iframe portal](../demo/portal-pages/index.html) or the standalone [Chinese HTML report](../demo/report.html) alongside its [CSS](../demo/report.css), [JavaScript](../demo/report.js) and local SVG icons. The sample deliberately contains **67 fictional records** and is **not** an observed engineering test result.
 
