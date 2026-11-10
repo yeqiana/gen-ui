@@ -1,132 +1,115 @@
-# Gen UI
+# Gen UI · 让 AI 回答更容易理解
 
 **简体中文** | [English](README.md)
 
-> 让 Codex、Claude Code、DeepSeek 等 Coding Agent 输出结构清晰的 Markdown，以及专业的离线技术文档 HTML。
+> 把冗长、密集、难以快速理解的 AI 回答，整理成有结论、有层次、有证据、有下一步的内容。**不是单纯美化 UI。**
 
 [![Validate Skill](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml/badge.svg)](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml)
 
-**Gen UI 是一个 Markdown-first 的 AI Coding 输出 Skill**，不是官方 ChatGPT UI 运行时，也不会因为安装了 Skill 就使终端具备按钮、图表或表单交互能力。它按宿主能力选择可读 Markdown、可验证的结构化 UI 数据，或在明确要求 HTML 时生成离线网页。
+**Gen UI 是面向 AI Coding Agent 的信息组织与阅读体验 Skill。** 它通过选择恰当的信息结构，改善代码评审、架构说明、实施计划、测试验收、技术分析和日常解释的阅读体验。优先使用宿主可直接阅读的 Markdown；只有在明确需要且宿主支持时，才使用离线 HTML 或经过验证的声明式交互。
 
-## 技术文档 HTML 示例
+## 为什么需要 Gen UI？
 
-下面展示的是 **AI Coding Agent 输出的专业技术文档**，不是业务系统界面、控制台或数据大屏。四份文档围绕一个脱敏的 AI 内容生产平台展开，内容从项目分析延伸到架构设计、实施和测试验收。
+同一份技术信息，长段叙述并不一定有利于理解。Gen UI 关注读者的实际问题：
+
+| 常见阅读问题 | Gen UI 的处理方式 |
+| --- | --- |
+| 一大段文字，看不到结论 | 先说结论，再给证据、限制和下一步 |
+| 多个方案混在一起，难以取舍 | 使用对比表，明确优点、代价与推荐条件 |
+| 流程、模块依赖关系难理解 | 编号步骤、架构图、SVG 流程图与文字说明 |
+| 已完成、待执行和失败混在一起 | 状态标识、验收清单与可核查的证据 |
+| 大量记录，找不到关键数据 | 图表、相关字段筛选、分页、列隐藏与长文本浮层 |
+| 回答无法在终端和网页间复用 | 根据宿主选择 Markdown、静态图示或受控 HTML |
+
+**原则：不减少必要事实，不编造执行结果，不为了美观增加无意义组件。**
+
+## 先看一个回答重构示例
+
+**普通回答：** “线程池需要考虑 CPU、IO、线程数、队列、拒绝策略、性能指标、运行环境，还需要根据情况做压测和调整……”
+
+**使用 Gen UI 后：** **结论：** 先采用有界队列与明确的拒绝策略；线程数量根据任务类型和实际负载测试确定。**依据：** CPU 密集与阻塞型任务的瓶颈不同。**下一步：** 采集队列等待、P95/P99 与资源利用率，再进行调优。
+
+这是信息组织方式的示例，不是生产环境的线程池配置建议。
+
+## HTML 完整展示 · 十类阅读场景
+
+[![中文信息重构案例与交互报告](demo/assets/report-information-design-preview.png)](demo/report.html)
+
+[**查看交互式完整报告**](demo/report.html) · 包含结论提炼、方案对比、执行步骤、代码评审、实施任务、测试验收、排障分析、宿主适配、技术文档导航、功能覆盖矩阵共 **10 类案例**。
+
+在同一份 HTML 中，还可以体验与阅读直接相关的功能：状态多选与模块批次级联、滑块、图表、表格列隐藏和分页、截断提示、代码块一键复制、离线 SVG 缩放/拖动/全屏、弹窗与抽屉、导航、秒级生成时间及底部公开引用。
+
+## 四份中文工程技术文档
+
+四份 HTML 围绕**脱敏的异步 AI 内容生产平台**，展示从理解项目到验收交付的完整链路；这些是**设计与分析示例**，不是对某个私有仓库的实时扫描结论。
 
 ### 01 · 项目分析报告
 
-[![项目分析报告 HTML 预览](demo/documents/assets/project-analysis-preview.png)](demo/documents/project-analysis.html)
+[![项目分析报告中文预览](demo/documents/assets/project-analysis-preview.png)](demo/documents/project-analysis.html)
 
-从业务目标、模块边界、技术架构、核心链路、领域模型到风险与改造建议，展示完整的工程项目分析。
-
-[打开项目分析 HTML](demo/documents/project-analysis.html)
+业务背景、模块职责、系统边界、领域模型、核心链路与风险。 [阅读项目分析](demo/documents/project-analysis.html)
 
 ### 02 · 系统架构设计方案
 
-[![系统架构设计 HTML 预览](demo/documents/assets/architecture-design-preview.png)](demo/documents/architecture-design.html)
+[![架构设计方案中文预览](demo/documents/assets/architecture-design-preview.png)](demo/documents/architecture-design.html)
 
-包含总体架构、组件职责、任务状态机、时序图、数据模型、并发控制、Transactional Outbox、Fencing Token 和断点恢复设计。
-
-[打开架构设计 HTML](demo/documents/architecture-design.html)
+任务状态机、模块边界、Outbox、执行权围栏和断点恢复。 [阅读架构设计](demo/documents/architecture-design.html)
 
 ### 03 · 技术实施方案
 
-[![技术实施方案 HTML 预览](demo/documents/assets/implementation-plan-preview.png)](demo/documents/implementation-plan.html)
+[![技术实施方案中文预览](demo/documents/assets/implementation-plan-preview.png)](demo/documents/implementation-plan.html)
 
-围绕改造范围、阶段任务、依赖关系、数据迁移、灰度发布、回滚策略和交付验收，呈现可执行的工程实施文档。
-
-[打开技术实施 HTML](demo/documents/implementation-plan.html)
+阶段计划、依赖关系、迁移、灰度、回滚与验收门禁。 [阅读实施方案](demo/documents/implementation-plan.html)
 
 ### 04 · 测试与验收方案
 
-[![测试验收方案 HTML 预览](demo/documents/assets/test-acceptance-preview.png)](demo/documents/test-acceptance.html)
+[![测试与验收方案中文预览](demo/documents/assets/test-acceptance-preview.png)](demo/documents/test-acceptance.html)
 
-包含测试覆盖矩阵、核心用例、故障注入、性能测试阶梯、安全检查和验收证据要求。所有用例均明确标记为待执行。
+覆盖矩阵、故障注入、待执行用例、性能测试计划和证据要求。 [阅读测试验收](demo/documents/test-acceptance.html)
 
-[打开测试验收 HTML](demo/documents/test-acceptance.html)
+[浏览全部中文技术文档](demo/documents/index.html) · [Demo 目录说明](demo/README.md)
 
-[**浏览四份完整技术文档**](demo/documents/index.html) · [文档来源与边界](docs/html-document-examples.md) · [Demo 目录说明](demo/README.md)
+## 安装与使用
 
-## 立即使用
-
-### 安装到 Codex（Windows PowerShell）
+Windows PowerShell 中安装到 Codex：
 
 ~~~powershell
 git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
 ~~~
 
-然后在 Codex 中输入：
+在 Coding Agent 中输入：
 
 ~~~text
-使用 $gen-ui。
-分析当前项目的代码、架构和风险，输出中文实施测试验收方案。
-先给结论和证据，不能把待执行、已实施和已验收混为一谈。
+使用 $gen-ui，先识别读者真正要解决的问题。
+分析当前项目的异步任务链路，先给结论、关键依据、风险，再列出下一步。
+避免长段文字墙；必要时使用表格、步骤或流程图。
+明确区分已验证事实、待确认假设和待执行任务。
+当前宿主只有 Markdown，不要生成不可操作的按钮。
 ~~~
 
-Claude Code 可将仓库放入项目的 `.claude/skills/gen-ui/`；其他 Agent 按其 Skill 发现规则安装，或直接读取 `SKILL.md` 和 `references/`。安装不改变 Agent 的工具权限，也不会自动安装 Webview Renderer。
+Claude Code 可放入项目的 `.claude/skills/gen-ui/`，其他 Agent 可按照其 Skill 机制读取 `SKILL.md` 和 `references/`。安装 Skill 不会自动获得系统权限或让终端支持交互控件。
 
-## 支持的输出方式
+## 输出模式与更多示例
 
-| 环境 | 默认输出 | 交互条件 |
+| 宿主 | 推荐输出 | 说明 |
 | --- | --- | --- |
-| Codex / Claude CLI / 终端 | Markdown、表格、流程和代码块 | 不假装能点击 |
-| GitHub / IDE Markdown | GFM、可选 Mermaid、文本回退 | 宿主支持的 Markdown 预览 |
-| 本地 HTML 报告 | 离线 CSS/JS、表格筛选、图表、目录 | 用户明确要求或任务明确选择 HTML |
-| 自有 Webview | 受控声明式 JSON + Markdown 回退 | 宿主已经实现并授权安全 Renderer |
+| 终端 / Codex / Claude CLI | 结构化 Markdown | 结论、列表、表格、代码与证据 |
+| GitHub / IDE | Markdown、可支持的图示 | 保留文本说明与无图回退 |
+| 明确要求的离线 HTML | 自带 CSS/JS 的可信本地文件 | 交互只用于提升阅读和探索效率 |
+| 已配置的 Webview Renderer | 校验过的声明式 UI + Markdown | 必须由宿主声明能力 |
 
-HTML 报告的页面行为是**仓库内可信的演示代码**，不是让模型生成任意 JS 并执行。页面默认离线运行；已有 HTML 目录可使用生成器递归集成为 iframe 门户。
+中文 Markdown 例子：[Java 代码评审](examples/code-review.zh-CN.md) · [实施验收计划](examples/acceptance-plan.zh-CN.md) · [线程池解释](examples/thread-pool.zh-CN.md)。
 
-## 本地 Demo 与工具
+其他演示：[离线多页门户](demo/portal-pages/index.html) · [声明式协议教学示例](demo/index.html) · [HTML 规范](references/html-report-contract.md)。
 
-| 演示 / 工具 | 入口 | 用途 |
-| --- | --- | --- |
-| 技术文档示例集 | [demo/documents/index.html](demo/documents/index.html) | 四份项目分析、架构设计、实施与测试验收 HTML |
-| 工程质量分析报告 | [demo/report.html](demo/report.html) | 离线筛选、表格、图表、分页、抽屉 |
-| 多文件 HTML 门户 | [demo/portal-pages/index.html](demo/portal-pages/index.html) | 多级目录、真实 iframe 和移动导航 |
-| 声明式 UI 协议 | [demo/index.html](demo/index.html) | 受控滑块和教育用途 `gen-ui-demo/v1` |
-| 目录门户生成器 | [scripts/build-html-portal.mjs](scripts/build-html-portal.mjs) | 将现有 HTML 递归整合为门户 |
-
-~~~powershell
-# 现有目录内没有 index.html 时
-node scripts/build-html-portal.mjs --dir "D:\reports" --title "工程报告"
-
-# 已有手工维护的 index.html：生成独立 portal.html，避免覆盖
-node scripts/build-html-portal.mjs --dir "D:\reports" --output "D:\reports\portal.html"
-
-# 本地可信页面需要启用 JS / 表单时，使用沙盒化 HTTP 预览
-node scripts/serve-html-portal.mjs --dir "D:\reports"
-~~~
-
-直接通过 `file://` 打开门户属于静态沙盒预览，子页面脚本不执行；本地 HTTP 模式启用脚本、表单但**不授予 iframe 同源权限**。更多见 [HTML 报告契约](references/html-report-contract.md)、[Renderer 协议](references/renderer-contract.md)、[集成指南](docs/integration.md)。
-
-## Markdown 基础案例
-
-除 HTML 外，也保留 [Java 代码评审](examples/code-review.md)、[实施验收计划](examples/acceptance-plan.md) 和 [线程池解释](examples/thread-pool.md) 三个可在 CLI/IDE 直接阅读的示例。它们是示范文本，不代表执行过当前业务测试。
-
-## 验证与质量门禁
+## 验证
 
 ~~~powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 node tests/chrome-report-smoke.mjs
-node tests/chrome-portal-smoke.mjs
 node tests/chrome-documents-smoke.mjs
 ~~~
 
-这些测试验证的是**仓库内的固定示例**，不是任意模型输出的安全性或真实业务部署。当前版本的 Model/Agent 独立盲测与正式 Release 需要分别核实；详见 [真实 Agent 证据](evals/webcodex-agent-matrix-2026-11-06.md)与[发布门禁](docs/release-readiness-v1.4.0.md)。
+测试仅验证**仓库内的固定示例**；不等于真实目标项目已通过审计、执行或发布。关于安全边界、宿主适配与操作许可，参见 [SKILL.md](SKILL.md)、[集成说明](docs/integration.md) 和 [FAQ](docs/faq.md)。
 
-## 仓库结构
-
-~~~text
-SKILL.md                 Skill 入口与输出规则
-references/              HTML 报告与受控 Renderer 契约
-demo/documents/           四份专业技术文档 HTML + 统一样式与交互
-demo/                    工程质量报告、目录门户、受控协议示例
-examples/                代码评审、实施验收与线程池 Markdown 示例
-docs/                    集成说明、HTML 文档示例说明、FAQ、GEO
-tests/                   Node 测试与固定浏览器回归
-evals/                   真实 Agent 与浏览器验收证据
-scripts/                 校验、门户生成与本地预览
-~~~
-
-**边界：** Gen UI 管输出呈现，不替代项目的代码规范、运行权限、真实测试、脱敏审查或发布审批。未经验证的设计写成方案，不写成已上线。更多见 [FAQ](docs/faq.md) 和 [GEO 说明](docs/geo.zh-CN.md)。GEO / 搜索可发现性效果尚**未测量**，README 展示不意味着搜索排名或 AI 引用率已提高。
-
-MIT License · [LICENSE](LICENSE).
+MIT License · [LICENSE](LICENSE)。

@@ -33,6 +33,7 @@
         <li class="sub"><a href="#status-distribution">状态构成</a></li>
         <li class="sub"><a href="#module-analysis">模块对比</a></li>
         <li class="sub"><a href="#batch-trend">批次走势</a></li>
+        <li><a href="#showcase" title="信息重构案例" aria-label="信息重构案例"><img src="../assets/icons/gen-ui-spark.svg" alt=""><span class="nav-label">信息重构案例</span></a></li>
         <li><a href="#records" title="执行明细" aria-label="执行明细"><img src="../assets/icons/gen-ui-table.svg" alt=""><span class="nav-label">执行明细</span></a></li>
       </ul>
     </nav>
@@ -203,6 +204,120 @@
       </div>
     </section>
 
+    <section id="showcase" class="jump showcase" aria-labelledby="showcase-heading">
+  <div class="section-title"><h2 id="showcase-heading">四、AI 回答的信息重构案例</h2><span class="muted">示例均为虚构场景，不代表已审计或已执行</span></div>
+  <p class="showcase-lead">GEN-UI 首先解决<strong>文字墙、重点不明确、阅读顺序混乱、事实与计划混杂</strong>，然后才根据宿主能力决定是否使用图表与交互。以下案例展示从普通 AI 回答到可读工程信息的完整路径。</p>
+  <div class="case-directory" aria-label="信息重构用例目录">
+    <a href="#case-answer"><strong>01</strong><span>结论优先</span></a><a href="#case-compare"><strong>02</strong><span>方案对比</span></a>
+    <a href="#case-process"><strong>03</strong><span>步骤与流程</span></a><a href="#case-review"><strong>04</strong><span>代码评审</span></a>
+    <a href="#case-plan"><strong>05</strong><span>实施任务</span></a><a href="#case-test"><strong>06</strong><span>测试验收</span></a>
+    <a href="#case-triage"><strong>07</strong><span>问题排查</span></a><a href="#case-host"><strong>08</strong><span>宿主适配</span></a>
+    <a href="#case-guide"><strong>09</strong><span>技术文档</span></a><a href="#case-features"><strong>10</strong><span>交互能力矩阵</span></a>
+  </div>
+  <article id="case-answer" class="case-block jump">
+    <h3>4.1 结论优先：把一段文字墙改成三层信息</h3>
+    <div class="before-after">
+      <div><h4>原始回答（反例）</h4><p>线程池需要考虑 CPU 核数、任务类型、最大线程数、队列长度、拒绝策略和超时时间，还需要考虑各种运行环境、应用程序的性能指标以及运行时的资源情况。不同场景配置不同，最终需要做一些测试和调整……</p></div>
+      <div><h4>结构化回答</h4><p><strong>结论：</strong>优先使用有界队列和明确拒绝策略，线程数必须结合负载压测确定。</p><p><strong>核心依据：</strong>CPU 密集与阻塞型任务的资源瓶颈不同；队列积压会直接影响尾延迟。</p><p><strong>下一步：</strong>先记录 P95/P99、队列等待与 CPU 使用率，再按实际负载调参。</p></div>
+    </div>
+    <blockquote class="callout callout--confirm"><strong>❓ 需要确认：</strong>当前任务是 CPU 密集还是 IO 密集？该信息决定线程池容量估算方法，不能直接从通用公式推断生产配置。</blockquote>
+  </article>
+  <article id="case-compare" class="case-block jump">
+    <h3>4.2 方案对比：让读者直接看到取舍</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="异步执行方式方案比较">
+      <table><thead><tr><th>方案</th><th>优点</th><th>主要代价</th><th>建议场景</th></tr></thead><tbody>
+      <tr><td>同步 HTTP</td><td>链路直观</td><td>超时与连接生命周期受限</td><td>短耗时且可预测的调用</td></tr>
+      <tr><td>MQ + Worker</td><td>解耦执行</td><td>需要幂等与重试机制</td><td>独立后台任务</td></tr>
+      <tr><td>持久化工作流</td><td>支持依赖、断点恢复与证据追踪</td><td>编排和状态机复杂度更高</td><td>多阶段 AI 内容生产</td></tr>
+      </tbody></table>
+    </div>
+    <div class="callout callout--success"><strong>推荐方向：</strong>对于需要长期运行、可恢复的多阶段流程，优先考虑持久化工作流。具体选型仍取决于真实 SLA 和故障成本。</div>
+  </article>
+  <article id="case-process" class="case-block jump">
+    <h3>4.3 步骤与流程：用可执行顺序替代散乱叙述</h3>
+    <ol class="action-steps"><li><strong>识别输入：</strong>检查需求、已有代码与约束。</li><li><strong>确定边界：</strong>列出本次涉及的模块与不改动范围。</li><li><strong>执行变更：</strong>小步实现并记录影响。</li><li><strong>核验证据：</strong>运行明确的测试并区分已完成与未验证事项。</li></ol>
+    <p>上方的<strong>内嵌 SVG 工程流程图</strong>演示了可缩放、平移、全屏与文字说明的流程表达；缺少浏览器能力时应回退到上述编号步骤。</p>
+  </article>
+  <article id="case-review" class="case-block jump">
+    <h3>4.4 代码评审：按严重程度、证据和行动分组</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="虚构代码评审示例"><table><thead><tr><th>级别</th><th>位置（虚构）</th><th>风险</th><th>整改</th></tr></thead><tbody>
+      <tr><td><span class="tag tag--red">高</span></td><td><code>JobWorker.java:88</code></td><td>租约失效后旧进程仍能更新结果</td><td>使用 fencing token 做条件更新</td></tr>
+      <tr><td><span class="tag tag--amber">中</span></td><td><code>JobWorker.java:121</code></td><td>执行权丢失与临时故障混用同一异常码</td><td>拆分 Attempt 错误分类</td></tr>
+    </tbody></table></div>
+    <p><strong>证据推演：</strong>假设锁租约为 30 秒而任务耗时 45 秒，旧 Worker 仍可能在新 Worker 接管后写入。此处只是故障模型，<strong>没有实际扫描 Java 仓库</strong>。</p>
+    <figure class="code-example"><figcaption>实现机制示例 · SQL 条件更新</figcaption><pre><code class="language-sql">UPDATE task
+SET status = 'SUCCEEDED', version = version + 1
+WHERE task_id = :task_id
+  AND fencing_token = :current_token
+  AND status = 'RUNNING';</code></pre></figure>
+  </article>
+  <article id="case-plan" class="case-block jump">
+    <h3>4.5 实施计划：用状态标记任务，而不是声称已完成</h3>
+    <ul class="task-state-list">
+      <li><span class="task-state" role="img" aria-label="已完成" title="已完成">✅</span><span>编写本页的交互演示与规则说明</span></li>
+      <li><span class="task-state" role="img" aria-label="失败" title="失败">❌</span><span>示例故障：旧 Worker 无条件写入导致并发冲突</span></li>
+      <li><span class="task-state" role="img" aria-label="暂停" title="暂停">⏸️</span><span>生产环境发布：缺少授权与灰度窗口</span></li>
+      <li><span class="task-state" role="img" aria-label="待执行" title="待执行">⏳</span><span>对目标项目运行真实故障注入</span></li>
+      <li><span class="task-state" role="img" aria-label="进行中" title="进行中">🔄</span><span>示例演示：拟定数据库状态机契约</span></li>
+      <li><span class="task-state" role="img" aria-label="待确认" title="待确认">❓</span><span>租约时间是否覆盖目标业务执行时长</span></li>
+      <li><span class="task-state" role="img" aria-label="风险提示" title="风险提示">⚠️</span><span>不能依赖缓存租约作为最终写入权限</span></li>
+    </ul>
+    <p class="muted">这些符号展示的是不同语义，并非真实项目任务执行记录。</p>
+  </article>
+  <article id="case-test" class="case-block jump">
+    <h3>4.6 测试验收：把“如何验证”与“验证结果”严格分离</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="虚构测试验收示例"><table><thead><tr><th>测试 ID</th><th>验证场景</th><th>通过条件</th><th>状态</th></tr></thead><tbody>
+      <tr><td>TC-001</td><td>重复投递同一消息</td><td>仅产生一次有效业务结果</td><td><span class="tag tag--amber">⏳</span></td></tr>
+      <tr><td>TC-002</td><td>旧 Worker 租约过期后恢复</td><td>过期 token 的更新影响行数为 0</td><td><span class="tag tag--amber">⏳</span></td></tr>
+      <tr><td>TC-003</td><td>任务运行中异常退出</td><td>对账恢复可追踪且不重复副作用</td><td><span class="tag tag--amber">⏳</span></td></tr>
+    </tbody></table></div><div class="callout callout--attention"><strong>⚠️ 证据边界：</strong>以上测试案例均未执行，不能写成“验收通过”。</div>
+  </article>
+  <article id="case-triage" class="case-block jump">
+    <h3>4.7 问题排查：症状 → 假设 → 证据 → 下一步</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="问题排查决策表"><table><thead><tr><th>症状</th><th>可能原因</th><th>优先采集</th><th>下一步</th></tr></thead><tbody>
+      <tr><td>任务一直 RUNNING</td><td>Worker 心跳中断</td><td>心跳时间、租约、进程日志</td><td>核实后触发恢复对账</td></tr>
+      <tr><td>消息重复消费</td><td>ACK 丢失或重投</td><td>事件 ID、幂等记录</td><td>核实去重约束</td></tr>
+      <tr><td>旧结果覆盖新结果</td><td>缺少执行权围栏</td><td>token 历史、更新行数</td><td>增加条件写入</td></tr>
+    </tbody></table></div>
+  </article>
+  <article id="case-host" class="case-block jump">
+    <h3>4.8 宿主适配：能阅读优先，交互按需启用</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="宿主输出适配表"><table><thead><tr><th>宿主</th><th>首选形式</th><th>能力边界</th></tr></thead><tbody>
+      <tr><td>终端 / CLI</td><td>Markdown 结论、表格和步骤</td><td>不假装有可点击组件</td></tr>
+      <tr><td>GitHub / IDE</td><td>GFM + 受支持的图示</td><td>提供文字回退</td></tr>
+      <tr><td>离线 HTML</td><td>本地受控脚本、图表、交互</td><td>仅在任务需要 HTML 时生成</td></tr>
+      <tr><td>已接入 Renderer 的 Webview</td><td>宿主声明式数据 + Markdown</td><td>校验协议，不执行模型生成的任意 JS</td></tr>
+    </tbody></table></div>
+  </article>
+  <article id="case-guide" class="case-block jump">
+    <h3>4.9 长篇技术文档：让目录、图表和代码分别服务理解</h3>
+    <p>这四份相互关联的<strong>中文完整技术文档</strong>对应不同阅读目的：理解项目、理解设计、执行方案、验证交付。它们不是另外一套业务 UI。</p>
+    <div class="doc-link-grid">
+      <a href="documents/project-analysis.html"><strong>项目分析</strong><span>背景、领域模型、架构边界与风险</span></a>
+      <a href="documents/architecture-design.html"><strong>架构设计</strong><span>任务状态、Outbox、围栏、断点恢复</span></a>
+      <a href="documents/implementation-plan.html"><strong>实施方案</strong><span>阶段任务、迁移、灰度与回滚</span></a>
+      <a href="documents/test-acceptance.html"><strong>测试验收</strong><span>用例矩阵、故障注入与证据门禁</span></a>
+    </div>
+  </article>
+  <article id="case-features" class="case-block jump">
+    <h3>4.10 Skill HTML 能力覆盖矩阵</h3>
+    <p>以下映射帮助检查每个交互是否有<strong>具体阅读目的</strong>，避免仅为美化而增加控件。</p>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="GEN-UI HTML 能力与实际位置映射"><table><thead><tr><th>能力</th><th>实际演示位置</th><th>解决的问题</th></tr></thead><tbody>
+      <tr><td>结论优先、重要加粗</td><td><a href="#case-answer">4.1</a>、一、执行概览</td><td>减少寻找结论的时间</td></tr>
+      <tr><td>对比表、风险引用块</td><td><a href="#case-compare">4.2</a>、<a href="#case-review">4.4</a></td><td>减少决策与风险理解成本</td></tr>
+      <tr><td>编号步骤、SVG 流程图</td><td><a href="#case-process">4.3</a>、一、执行概览</td><td>解释关系与先后顺序</td></tr>
+      <tr><td>状态 icon、验收证据</td><td><a href="#case-plan">4.5</a>、<a href="#case-test">4.6</a></td><td>防止计划与结果混淆</td></tr>
+      <tr><td>代码块与一键复制</td><td><a href="#case-review">4.4</a>、筛选说明</td><td>复用技术信息</td></tr>
+      <tr><td>多彩图表、统一统计口径</td><td>二、趋势与分布</td><td>快速识别异常与趋势</td></tr>
+      <tr><td>搜索、级联、状态多选、滑块</td><td>三、执行明细</td><td>缩小大数据集的阅读范围</td></tr>
+      <tr><td>分页、列隐藏、长文本浮层</td><td>三、执行明细</td><td>宽表阅读时聚焦关键列</td></tr>
+      <tr><td>抽屉、弹窗、两列表单</td><td>三、执行明细的操作区域</td><td>局部查看与编辑，避免跳离正文</td></tr>
+      <tr><td>导航、品牌图标、响应式</td><td>侧边目录、页面标签页</td><td>快速定位与跨屏阅读</td></tr>
+      <tr><td>秒级生成时间、外部引用</td><td>报告顶部、底部参考资料</td><td>标明时间与可核查来源</td></tr>
+      <tr><td>主机能力分级、安全协议</td><td><a href="#case-host">4.8</a></td><td>不生成不可用的假交互</td></tr>
+    </tbody></table></div>
+  </article>
+</section>
     <section id="references" class="references" aria-labelledby="references-heading">
   <div class="section-title"><h2 id="references-heading">参考资料</h2><span class="muted">交互与可访问性规范</span></div>
   <ul class="reference-list">

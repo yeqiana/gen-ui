@@ -2,7 +2,7 @@
 
 This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
-## 1. Chinese-first interface and semantic hierarchy
+## 1. Audience-language interface and semantic hierarchy
 
 - Render all nonessential user-facing text in **Simplified Chinese** by default: page headings, section titles, tables, form labels, filters, buttons, navigation, empty states, validation messages, chart captions and tooltips.
 - Retain English only when technically necessary (e.g. JSON, API names, code, product/brand names such as GEN-UI). Preserve actual user-provided identifiers, names and source data rather than fabricating translations.

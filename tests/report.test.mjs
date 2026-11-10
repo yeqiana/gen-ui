@@ -357,7 +357,8 @@ test("手工验收文档与严格 HTML 规范链接存在", () => {
   const doc=read("references/html-report-contract.md");
   assert.match(doc,/10 rows per page/);
   assert.match(doc,/HTML/);
-  assert.match(read("README.zh-CN.md"),/HTML 报告/);
+  assert.match(read("README.zh-CN.md"),/HTML 完整展示/);
+  assert.match(read("README.zh-CN.md"),/references\/html-report-contract\.md/);
   assert.match(read("scripts/test-skill.ps1"),/tests\/report.test.mjs/);
 });
 

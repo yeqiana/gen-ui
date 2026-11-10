@@ -38,3 +38,9 @@ node tests/chrome-documents-smoke.mjs
 ~~~
 
 浏览器测试覆盖四份文章和文档目录在 1440、768、375 三种视口下的结构、横向溢出、目录锚点、图表控件和离线资源引用。该测试只验证仓库固定示例，不代表任意模型输出都自动满足规范。
+
+## Content-first examples and localization
+
+The main [Chinese interactive report](../demo/report.html) demonstrates ten ways to reorganize AI answers: answer-first summaries, comparisons, procedures, code reviews, implementation plans, test evidence, troubleshooting, host-aware output, long-form technical documents, and a feature-to-purpose map. The interface components exist to support these reading tasks; they are not the product goal.
+
+Chinese documentation uses the four [Chinese technical documents](../demo/documents/index.html) and corresponding screenshots. English documentation uses four **independent English examples** in [demo/documents/en/](../demo/documents/en/index.html), with matching English screenshots in `demo/documents/assets/en-*-preview.png`. These are fictional, illustrative artifacts, not verified results from a private repository.

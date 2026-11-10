@@ -2,6 +2,15 @@
 
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
+## Unreleased — reader-first information design and bilingual examples (2026-11-10)
+
+- Reframe the Skill around reducing AI answer walls of text, comprehension difficulty, and reading effort; explicitly prefer structure and evidence over decoration.
+- Extend `demo/report.html` with ten practical use-case sections and a feature-to-reading-purpose matrix while preserving charts, SVG flow, filters, pagination, code copy, dialogs, drawers, and offline behavior.
+- Rewrite Chinese and English READMEs with concise before/after examples, native-language links, and screenshots generated from their corresponding HTML pages.
+- Add four standalone English technical-document examples and an English ten-case gallery, plus localized Chinese Markdown examples.
+- Remove discoverability/GEO promotion from README prose while retaining the repository's separate research materials; add browser and content-localization regression coverage.
+- Keep all illustrative examples clearly distinct from verified code audits, executed tests, or production deployments.
+
 ## Unreleased — technical-document HTML examples and README correction (2026-11-09)
 
 - Replace the unrelated business-UI mockups with four substantial technical documents: project analysis, architecture design, implementation plan, and test/acceptance plan.
