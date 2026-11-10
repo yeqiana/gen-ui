@@ -15,6 +15,18 @@ Follow the user's language unless explicitly requested otherwise. The normative 
 
 **Authority:** user instructions and project-specific safety, coding, review, and test requirements take precedence over this presentation Skill. Never conceal failures, skip verification, or invent tool results to make an answer look polished.
 
+## Robust offline diagrams, copy controls, and images
+
+- **Navigation is mandatory for HTML documents:** default to a visible left-side navigation or TOC; narrow screens may collapse it into a compact accessible menu. Never replace the main content with navigation or leave a long HTML report unnavigable.
+- **Use the current M-shaped personal IP favicon** (`assets/icons/gen-ui-mark.svg`) consistently in every standalone browser tab and portal shell; keep the local relative path correct.
+- **Choose diagram types from the document's informational purpose:** sequence diagrams for call order; mind maps for conceptual grouping; deployment/topology for runtime nodes; ER for persisted entity relationships; activity diagrams for decision flow; swimlanes for cross-role responsibilities; component diagrams for module dependencies. Do not add every type by default to every document, and provide a text explanation and accessible `<title>`/`<desc>`.
+- **Diagram invariants:** at most one fullscreen transition may be in progress. Fullscreen enter/exit, Escape, browser-driven exits, fallback overlay, fit, zoom and panning are idempotent and preserve a consistent view. Use local SVG line icons inspired by familiar zoom-in/zoom-out, fit-to-view and expand/shrink conventions, with `aria-label`, title and focus affordance. Never replace a button's icon with text on state changes.
+- **Avoid occlusion:** place labels with adequate node spacing, route connectors behind nodes, and leave enough space for captions. Optional node dragging requires an explicit double-click or keyboard activation, pointer ownership, movement bounds, overlap prevention and connector updates. Document and test these rules.
+- **Code copy is icon-only:** use a Copy icon at rest, Check icon after a confirmed successful copy, Error icon after failure; revert to Copy after **1,000 ms**, including repeated clicks and older timer cancellation. No visible copied/clipboard status phrases. Preserve an accessible changing name and genuine offline fallback.
+- **Quoted callouts:** the final nonempty content line should end the colored quote region, without an extra blank quoted line. Remove trailing empty nodes, cancel trailing paragraph margins, and preserve the semantic colors for warnings/confirmation.
+- **Images:** meaningful report images gain a magnifier button to open a same-page fullscreen-style overlay, then zoom in/out, fit, pan, Escape/close, and return focus to the opener. Decorative images and branding must not receive an image viewer; controls must work offline.
+- **Verify real browser behavior:** include repeated fullscreen toggle/ESC/re-entry, native API rejection fallback, zoom/pan before and after fullscreen, copy reset after one second, image overlay closure and focus return, node movement/edge tracking and layout overflow at mobile/tablet/desktop widths.
+
 ## 1. Detect host capabilities before choosing a format
 
 | Host | Safe assumption | Preferred output |

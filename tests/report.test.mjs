@@ -518,7 +518,7 @@ test("总览卡片、十条分页和多色图表的静态资源全部离线可�
 });
 
 test("内嵌 SVG 流程图具备全屏、缩放、适应窗口、拖拽、Esc和离线保障", () => {
-  const html=read("demo/report.html"),js=read("demo/flow-viewer.js");
+  const html=read("demo/report.html"),js=read("assets/media-viewer.js");
   assert.match(html,/<svg id="flow-svg"/);
   assert.match(html,/id="flow-canvas"/);
   for(const id of ["flow-fullscreen","flow-zoom-in","flow-zoom-out","flow-fit"]){

@@ -25,10 +25,12 @@ function boot({native = true, nativeFails = false, fallback = true} = {}) {
   const body = {appendChild() {}};
   const document = {
     readyState: "complete",
+    documentElement: {lang:"zh-CN"},
     querySelectorAll: () => [pre],
     body,
     createElement: tag => ({
       tagName: tag,
+      dataset: {},
       style: {},
       value: "",
       textContent: "",
@@ -51,20 +53,26 @@ function boot({native = true, nativeFails = false, fallback = true} = {}) {
     }}
   } : {};
   const MutationObserver = class {observe() {}};
-  vm.runInNewContext(source,{document,navigator,MutationObserver});
-  return {pre,code,controls,attrs,copy: () => controls[0].onclick(), read: () => clipboardValue};
+  const pending = new Map(); let seq = 0;
+  const setTimeoutStub = fn => { const id=++seq; pending.set(id,fn); return id; };
+  const clearTimeoutStub = id => pending.delete(id);
+  vm.runInNewContext(source,{document,navigator,MutationObserver,setTimeout:setTimeoutStub,clearTimeout:clearTimeoutStub});
+  return {pre,code,controls,attrs,copy: () => controls[0].onclick(), read: () => clipboardValue,advance:()=>{for(const [id,fn] of [...pending]){pending.delete(id);fn();}}};
 }
 
 test("每个 Markdown 代码块有复制按钮和可访问反馈", async () => {
   const u = boot();
   assert.equal(u.pre.dataset.genUiCopyReady, "true");
   assert.equal(u.controls.length, 2);
-  assert.equal(u.controls[0].textContent, "复制");
+  assert.match(u.controls[0].innerHTML,/<svg/);
   assert.equal(u.attrs["aria-live"], "polite");
   await u.copy();
   assert.equal(u.read(), u.code.textContent);
-  assert.equal(u.controls[0].textContent, "已复制");
-  assert.equal(u.controls[1].textContent, "代码已复制到剪贴板");
+  assert.equal(u.controls[0].dataset.state, "check");
+  assert.equal(u.controls[0].textContent, "");
+  u.advance();
+  assert.equal(u.controls[0].dataset.state, "copy");
+  assert.equal(u.controls[1].textContent, "");
 });
 
 test("Clipboard API 不可用或拒绝时使用离线回退", async () => {
@@ -72,15 +80,23 @@ test("Clipboard API 不可用或拒绝时使用离线回退", async () => {
     const u=boot(opts);
     await u.copy();
     assert.equal(u.read(),u.code.textContent);
-    assert.equal(u.controls[0].textContent,"已复制");
+    assert.equal(u.controls[0].dataset.state,"check");
   }
 });
 
 test("无复制权限时显示失败提示，不虚报成功", async () => {
   const u = boot({native:false,fallback:false});
   await u.copy();
-  assert.equal(u.controls[0].textContent,"复制失败");
-  assert.match(u.controls[1].textContent,/手动选择/);
+  assert.equal(u.controls[0].dataset.state,"error");
+  assert.equal(u.controls[1].textContent,"");
+});
+
+test("重复复制不叠加反馈且最新计时器独立恢复",async()=>{
+ const u=boot();await u.copy();await u.copy();
+ assert.equal(u.controls[0].dataset.state,"check");
+ u.advance();assert.equal(u.controls[0].dataset.state,"copy");
+ assert.equal(u.controls[0].textContent,"");
+ assert.match(u.controls[0].innerHTML,/<svg/);
 });
 
 test("页面主题、离线复制资产与不生成额外操作的契约", () => {

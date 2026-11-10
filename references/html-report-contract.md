@@ -82,7 +82,7 @@ When a directory is specified, **do not generate only a standalone index that ig
 ## 7. Markdown-style code blocks and fixed theme
 
 - Render every multi-line code example as <pre><code class="language-...">...</code></pre> with preserved whitespace, horizontal overflow when needed, and a restrained light surface. Use a system monospace font at 12px; surrounding body text remains 14px.
-- Provide one visible 复制 button for every code block. Copy the code element's textContent, not the wrapper's text. Prefer navigator.clipboard.writeText; if unavailable or rejected, use a temporary selected textarea with document.execCommand("copy"). Announce success or failure through an aria-live="polite" status. The page must work offline and must not load a remote highlighter or clipboard library.
+- Provide one **icon-only Copy button** for every code block. Show a check SVG on real success, an error SVG on failure, and revert to the Copy SVG after 1000ms. No visible success phrases. Copy the code element's textContent, not the wrapper's text. Prefer navigator.clipboard.writeText; if unavailable or rejected, use a temporary selected textarea with document.execCommand("copy"). Keep an accessible button label, and never report success before the clipboard operation completes.
 - Inline identifiers may remain inline code; do not wrap ordinary prose in a block merely to add a Copy control.
 
 ## Fixed theme tokens
@@ -97,6 +97,22 @@ When a directory is specified, **do not generate only a standalone index that ig
 - If analysis or design cites external public material, consolidate those citations in a clearly titled 参考资料 / References section at the very bottom of the report, after findings and before the final brand footer. Use descriptive source titles and absolute HTTPS URLs.
 - Every standalone HTML page and directory index includes the local GEN-UI personal-mark favicon. Use the correct relative path to assets/icons/gen-ui-mark.svg; a generated portal shell may embed the same trusted SVG as a data URI. Never substitute an emoji, remote favicon or unrelated icon.
 - The report timestamp, external references and favicon are part of the HTML artifact contract, not optional decoration.
+
+### Interaction reliability and diagram selection
+
+**Navigation:** Standalone HTML pages and documentation indexes must present a usable left-side navigation by default. On mobile it can collapse into a simple accessible menu. Generated iframe children can rely on their parent portal navigation, but the portal shell itself always provides a left rail. The page/tab favicon is the repository's newest local **M-shaped** `gen-ui-mark.svg` mark.
+
+**Diagram selection:** Use sequence (message order), mind map (concepts), deployment/topology (runtime), ER (data relationships), activity (decision steps), swimlane (ownership), and component (modules) only where the document benefits. All diagrams are locally embedded inline SVG with `title`, `desc`, explanatory caption, and no remote fetch. Ensure labels are never hidden by nodes, edges, toolbars or another text label. Optional node dragging is double-click-to-arm, keyboard equivalent, bounded and overlap-free; update connectors when moving.
+
+**Fullscreen state machine:** Fullscreen enter/exit is serialized and idempotent. Handle rapid repeated clicks, browser Escape, `fullscreenchange`, `fullscreenerror`, denied native API (local overlay fallback), and return to normal layout. Preserve zoom and pan while changing modes. All toolbar icons retain visible SVG markup and update only their SVG state and accessible name. The top-right toolbar uses compact recognizable zoom magnifier, fit-brackets, and expand/shrink icons, inspired by a consistent 24px line icon vocabulary.
+
+**Copy icon:** Every multi-line code block has an icon-only button showing Copy, Check on success, and Error on failure. After **1000ms**, the icon returns to Copy; cancel older timeouts to avoid stale feedback. Clipboard API and offline `execCommand` fallback remain supported. Do not emit visible success/failure copy messages or extra blank status lines; use accessible labels and nonvisual status when appropriate.
+
+**Quote termination:** Strip trailing blank quoted lines and empty trailing paragraph nodes; enforce zero bottom margin on the final actual quote element.
+
+**Images:** Content images may have a magnifying-glass button that opens an in-page fullscreen-style preview. Show zoom percentage and icon-only zoom in/out, fit, close; allow dragging, Esc, and focus restoration. Never attach it to logos, icons or decorative assets. All operations must work without network access.
+
+**Regression gates:** Explicitly assert the above through Chrome at 375/768/1440px including three or more fullscreen cycles, denied native fullscreen, SVG node drag and connector updates, image zoom and Esc closure, one-second copy reset, and no body horizontal overflow.
 
 ## 9. GEN-UI personal IP icon set
 

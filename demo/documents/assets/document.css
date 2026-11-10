@@ -15,3 +15,5 @@
 @media(max-width:700px){.doc-meta>span+span{padding-left:0;border-left:0}.diagram-actions button.diagram-icon-button{width:30px;height:30px}}
 
 .doc-meta .generated-at{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+
+.doc-index-layout{display:grid;grid-template-columns:210px minmax(0,1fr);max-width:1400px;margin:0 auto;gap:25px}.doc-index-sidebar{position:sticky;top:24px;align-self:start;height:calc(100vh - 48px);border-right:1px solid var(--line);padding:36px 16px 10px 25px}.doc-index-layout .doc-index{margin:0;min-width:0}.doc-toc nav{display:block}@media(max-width:700px){.doc-index-layout{display:block}.doc-index-sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 17px}.doc-index-sidebar .toc-list{display:flex;flex-wrap:wrap}.doc-index-sidebar .toc-list a{white-space:nowrap}.doc-index-layout .doc-index{margin:auto}}

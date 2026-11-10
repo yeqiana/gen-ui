@@ -65,6 +65,14 @@ Risk-based test cases, fault injection, performance evaluation, and acceptance g
 
 [Explore ten English reading scenarios](demo/report.en.html): answer-first summaries, decision tables, procedures, reviews, task statuses, acceptance evidence, troubleshooting, host adaptation, long documents, and purposeful interaction. The [complete interactive Chinese report](demo/report.html) separately demonstrates the full offline HTML control set.
 
+## Robust diagrams, icon-only copy, and image inspection
+
+The offline HTML examples now include a **shared SVG viewer** with familiar zoom-magnifier, fit-to-view, expand, and collapse icons. The state machine serializes fullscreen transitions, preserves pan/zoom across entry and exit, supports native Escape and browser fullscreen events, and falls back to a local overlay if the browser rejects fullscreen.
+
+Use **one or more of seven diagram types only when the information calls for it**: sequence, mind map, deployment/topology, ER, activity, swimlane, and component diagrams. Nodes can be armed with a double click and repositioned without overlapping other labels; connectors follow them. Full text descriptions remain available when graphics are unsupported.
+
+Code blocks use an icon-only Copy → Check/Error → Copy cycle (1-second reset, no visible success text). Content images can open a same-page fullscreen-style zoom viewer. Quoted callouts end cleanly at their final nonempty line, and standalone documents default to a left navigation and the local M-shaped favicon.
+
 ## Install
 
 Windows PowerShell, Codex:
