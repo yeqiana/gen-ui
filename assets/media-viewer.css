@@ -1,0 +1,26 @@
+/* GEN-UI offline media viewer: consistent 24px line-icon vocabulary. */
+.genui-image-open,.genui-image-toolbar button{border:1px solid #d0d5dd;background:#fff;color:#344054;border-radius:6px;display:inline-grid;place-items:center;width:32px;height:32px;padding:6px;cursor:pointer}
+.genui-image-open:hover,.genui-image-toolbar button:hover{color:#3A83F7;border-color:#9dc2ff;background:#eff6ff}
+.genui-image-open:focus-visible,.genui-image-toolbar button:focus-visible{outline:2px solid #3A83F7;outline-offset:2px}
+.genui-image-open svg,.genui-image-toolbar button svg,.flow-actions button svg,.diagram-actions button svg{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+img[data-zoomable]{max-width:100%;height:auto}
+.genui-image-open{margin:7px 0;vertical-align:middle}
+.genui-image-overlay{position:fixed;inset:0;z-index:19999;background:rgba(14,22,35,.94);display:flex;flex-direction:column;color:#fff}
+.genui-image-overlay[hidden]{display:none!important}
+.genui-image-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px;background:#1c273b;border-bottom:1px solid rgba(255,255,255,.15)}
+.genui-image-toolbar [data-image-percent]{min-width:46px;text-align:center;font:12px/1.5 system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.genui-image-stage{flex:1;min-height:0;overflow:hidden;display:grid;place-items:center;cursor:grab;touch-action:none;outline:none}
+.genui-image-stage:active{cursor:grabbing}
+.genui-image-stage img{max-width:88vw;max-height:calc(100dvh - 105px);width:auto;height:auto;object-fit:contain;will-change:transform;user-select:none;pointer-events:none;transform-origin:center}
+.genui-image-open:focus-visible,.genui-image-stage:focus-visible{outline:2px solid #3A83F7;outline-offset:-3px}
+body.genui-image-open{overflow:hidden}
+.flow-panel.is-fullscreen,.flow-panel:fullscreen,.diagram.is-fullscreen,.diagram:fullscreen{z-index:16000!important}
+.flow-actions button,.diagram-actions button{width:30px;min-width:30px;height:30px;min-height:30px;padding:5px;display:grid;place-items:center}
+.flow-actions button:disabled,.diagram-actions button:disabled{opacity:.45;cursor:not-allowed}
+[data-graph-node]{cursor:default}
+[data-graph-node][data-armed=true]{cursor:move;outline:none}
+[data-graph-node][data-armed=true] rect{stroke:#3A83F7!important;stroke-width:2.5!important}
+[data-graph-node]:focus-visible rect{stroke:#3A83F7!important;stroke-width:2.5!important}
+blockquote>:last-child,blockquote.callout>:last-child,.callout>:last-child{margin-bottom:0!important}
+blockquote>p:empty,blockquote>div:empty{display:none}
+@media(max-width:700px){.genui-image-toolbar{padding:9px 12px}.genui-image-stage img{max-width:96vw}}

@@ -122,8 +122,11 @@ async function run(){
     await send("Input.dispatchMouseEvent",{type:"mousePressed",x:copyPoint.x,y:copyPoint.y,button:"left",clickCount:1});
     await send("Input.dispatchMouseEvent",{type:"mouseReleased",x:copyPoint.x,y:copyPoint.y,button:"left",clickCount:1});
     await sleep(250);
-    const copyStatus=await evaluate("(()=>({label:document.querySelector('.code-example .code-copy')?.textContent,feedback:document.querySelector('.code-example [role=status]')?.textContent}))()");
-    check("离线一键复制真实交互",copyStatus,copyStatus.label==="已复制"&&copyStatus.feedback.includes("已复制"));
+    const copyStatus=await evaluate("(()=>{const b=document.querySelector('.code-example .code-copy');return{state:b?.dataset.state,icon:!!b?.querySelector('svg'),visibleText:b?.textContent,feedback:document.querySelector('.code-example [role=status]')?.textContent}})()");
+    check("离线一键复制真实交互",copyStatus,copyStatus.state==="check"&&copyStatus.icon&&!copyStatus.visibleText&&!copyStatus.feedback);
+    await sleep(1100);
+    const restored=await evaluate("document.querySelector('.code-example .code-copy')?.dataset.state");
+    check("复制图标一秒恢复",restored,restored==="copy");
     evidence.codeCopy=copyStatus;
 
     await reset(1440);
@@ -152,6 +155,61 @@ async function run(){
     const exited=await evaluate("(()=>({native:document.fullscreenElement?.id==='flow-panel',fallback:document.getElementById('flow-panel').classList.contains('is-fullscreen'),expanded:document.getElementById('flow-fullscreen').getAttribute('aria-pressed')}))()");
     check("Esc退出流程全屏",exited,!exited.native&&!exited.fallback&&exited.expanded==="false");
     evidence.flowFullscreen={entered:full,exited};
+
+    const cycles=[];
+    for(let i=0;i<3;i++){
+      const start=await evaluate("(()=>{const b=document.getElementById('flow-fullscreen').getBoundingClientRect();return{x:b.left+b.width/2,y:b.top+b.height/2}})()");
+      await send("Input.dispatchMouseEvent",{type:"mousePressed",x:start.x,y:start.y,button:"left",clickCount:1});
+      await send("Input.dispatchMouseEvent",{type:"mouseReleased",x:start.x,y:start.y,button:"left",clickCount:1});
+      await sleep(100);
+      const inFull=await evaluate("(()=>{document.getElementById('flow-zoom-in').click();const p=document.getElementById('flow-panel');return{active:document.fullscreenElement===p,pressed:document.getElementById('flow-fullscreen').getAttribute('aria-pressed'),view:document.getElementById('flow-svg').getAttribute('viewBox'),icon:!!document.querySelector('#flow-fullscreen svg')}})()");
+      const end=await evaluate("(()=>{const b=document.getElementById('flow-fullscreen').getBoundingClientRect();return{x:b.left+b.width/2,y:b.top+b.height/2}})()");
+      await send("Input.dispatchMouseEvent",{type:"mousePressed",x:end.x,y:end.y,button:"left",clickCount:1});
+      await send("Input.dispatchMouseEvent",{type:"mouseReleased",x:end.x,y:end.y,button:"left",clickCount:1});
+      await sleep(100);
+      const after=await evaluate("(()=>{const p=document.getElementById('flow-panel');return{active:document.fullscreenElement===p,pressed:document.getElementById('flow-fullscreen').getAttribute('aria-pressed'),view:document.getElementById('flow-svg').getAttribute('viewBox'),icon:!!document.querySelector('#flow-fullscreen svg')}})()");
+      cycles.push({inFull,after});
+    }
+    check("全屏反复切换与缩放状态保存",cycles,cycles.length===3&&cycles.every(c=>c.inFull.active&&c.inFull.pressed==="true"&&c.inFull.icon&&!c.after.active&&c.after.pressed==="false"&&c.after.icon&&c.after.view===c.inFull.view));
+    evidence.fullscreenCycles=cycles;
+
+    const fallback=await evaluate("(async()=>{const panel=document.getElementById('flow-panel'),b=document.getElementById('flow-fullscreen');Object.defineProperty(panel,'requestFullscreen',{configurable:true,value:async()=>{throw Error('blocked')}});await b.click();return {active:panel.classList.contains('is-fullscreen'),pressed:b.getAttribute('aria-pressed')}})()");
+    check("全屏受限时可回退",fallback,fallback.active&&fallback.pressed==="true");
+    await send("Input.dispatchKeyEvent",{type:"keyDown",key:"Escape",code:"Escape",windowsVirtualKeyCode:27,nativeVirtualKeyCode:27});
+    await send("Input.dispatchKeyEvent",{type:"keyUp",key:"Escape",code:"Escape",windowsVirtualKeyCode:27,nativeVirtualKeyCode:27});
+    const fallbackExited=await evaluate("(()=>{const panel=document.getElementById('flow-panel'),b=document.getElementById('flow-fullscreen');return{active:panel.classList.contains('is-fullscreen'),pressed:b.getAttribute('aria-pressed')}})()");
+    check("回退全屏 Esc 恢复",fallbackExited,!fallbackExited.active&&fallbackExited.pressed==="false");
+
+    const diagramTypes=await evaluate("(()=>{const list=[...document.querySelectorAll('#diagram-type-gallery [data-diagram-type]')];return list.map(d=>({type:d.dataset.diagramType,svg:!!d.querySelector('svg[viewBox]'),nodes:d.querySelectorAll('[data-graph-node]').length,edges:d.querySelectorAll('[data-edge-from][data-edge-to]').length,icons:d.querySelectorAll('.diagram-actions button svg').length}))})()");
+    check("七种可缩放关系图与独立节点",diagramTypes,diagramTypes.length===7&&new Set(diagramTypes.map(x=>x.type)).size===7&&diagramTypes.every(x=>x.svg&&x.nodes>=4&&x.edges>=3&&x.icons===4));
+    evidence.diagramTypes=diagramTypes;
+
+    const initialNodes=await evaluate("(()=>[...document.querySelectorAll('#diagram-type-gallery [data-diagram]')].map(d=>{const n=[...d.querySelectorAll('[data-graph-node]')].map(e=>({x:+e.dataset.x,y:+e.dataset.y,w:+e.dataset.width,h:+e.dataset.height}));return{type:d.dataset.diagramType,overlap:n.some((a,i)=>n.some((b,j)=>i!==j&&a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y))}}))()");
+    check("七种图初始布局无节点遮挡",initialNodes,initialNodes.every(d=>!d.overlap));
+    const duplicate=await evaluate("(()=>{document.getElementById('flow-fit').click();GenUIMedia.initDiagram(document.getElementById('flow-panel'));GenUIMedia.initDiagram(document.getElementById('flow-panel'));document.getElementById('flow-zoom-in').click();const scale=document.getElementById('flow-zoom-label').textContent;document.getElementById('flow-fit').click();return{scale,ready:document.getElementById('flow-panel').dataset.genUiDiagramReady}})()");
+    check("重复初始化不会叠加 SVG 事件处理",duplicate,duplicate.scale==="125%"&&duplicate.ready==="true");
+
+    const nodeDrag=await evaluate("(()=>{const details=document.getElementById('diagram-type-er');details.open=true;details.scrollIntoView({block:'center',behavior:'instant'});const d=details.querySelector('[data-diagram]'),node=d.querySelector('[data-graph-node]');node.dispatchEvent(new MouseEvent('dblclick',{bubbles:true}));return{armed:node.dataset.armed,startingX:Number(node.dataset.x),y:Number(node.dataset.y),edge:d.querySelector('[data-edge-from]').getAttribute('x1'),box:(()=>{const r=node.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}})()}})()");
+    check("关系节点双击进入可拖动模式",nodeDrag,nodeDrag.armed==="true");
+    await send("Input.dispatchMouseEvent",{type:"mousePressed",x:nodeDrag.box.x,y:nodeDrag.box.y,button:"left",clickCount:1});
+    await send("Input.dispatchMouseEvent",{type:"mouseMoved",x:nodeDrag.box.x+30,y:nodeDrag.box.y+15,button:"left",buttons:1});
+    await send("Input.dispatchMouseEvent",{type:"mouseReleased",x:nodeDrag.box.x+30,y:nodeDrag.box.y+15,button:"left",clickCount:1});
+    const moved=await evaluate("(()=>{const d=document.querySelector('#diagram-type-er [data-diagram]'),n=d.querySelector('[data-graph-node]');return{x:Number(n.dataset.x),edge:d.querySelector('[data-edge-from]').getAttribute('x1')}})()");
+    check("节点拖动更新连线",moved,moved.x>nodeDrag.startingX&&moved.edge!==nodeDrag.edge);
+    evidence.nodeDrag={nodeDrag,moved};
+
+    const keyMove=await evaluate("(()=>{const n=document.querySelector('#diagram-type-er [data-graph-node]');const before=+n.dataset.x;n.focus();n.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));return{before,after:+n.dataset.x}})()");
+    check("已激活节点键盘移动",keyMove,keyMove.after>keyMove.before);
+
+
+    const image=await evaluate("(()=>{const trigger=document.querySelector('.genui-image-open'),el=document.querySelector('.genui-image-overlay');trigger.click();const before=el.querySelector('[data-image-percent]').textContent;el.querySelector('[data-image-plus]').click();const after=el.querySelector('[data-image-percent]').textContent;el.querySelector('[data-image-minus]').click();const restored=el.querySelector('[data-image-percent]').textContent;return{opened:!el.hidden,before,after,restored,buttons:el.querySelectorAll('button svg').length}})()");
+    check("图片放大镜查看与比例缩放",image,image.opened&&image.before==="100%"&&image.after==="125%"&&image.restored==="100%"&&image.buttons===4);
+    await send("Input.dispatchKeyEvent",{type:"keyDown",key:"Escape",code:"Escape",windowsVirtualKeyCode:27,nativeVirtualKeyCode:27});
+    await send("Input.dispatchKeyEvent",{type:"keyUp",key:"Escape",code:"Escape",windowsVirtualKeyCode:27,nativeVirtualKeyCode:27});
+    const closed=await evaluate("(()=>({hidden:document.querySelector('.genui-image-overlay').hidden,focus:document.activeElement===document.querySelector('.genui-image-open')}))()");
+    check("图片 Esc 关闭并恢复焦点",closed,closed.hidden&&closed.focus);
+    evidence.imageViewer={image,closed};
+
 
     await reset(375);
     const sentinel=await evaluate("(()=>{const d={version:'gen-ui-html-report/v1',title:'筛选测试',rows:[{id:'X-1',module:'all',status:'success',durationMs:1,batch:1},{id:'X-2',module:'网关',status:'failure',durationMs:2,batch:2}]};document.getElementById('report-json').value=JSON.stringify(d);document.getElementById('apply-json').click();const s=document.getElementById('module-filter');const values=[...s.options].map(o=>o.value);s.value='all';s.dispatchEvent(new Event('change',{bubbles:true}));const only=document.getElementById('count-total').textContent;const id=document.querySelector('#report-rows tr').dataset.recordId;document.getElementById('reset-filters').click();return {values,only,id,allCount:document.getElementById('count-total').textContent,reset:s.value}})()");

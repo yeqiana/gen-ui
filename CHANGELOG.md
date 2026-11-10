@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — SVG, media interaction and navigation reliability (2026-11-10)
+
+- Add one shared offline SVG viewer for report and technical documents with serialized native/fallback fullscreen, zoom/pan, repeatable Escape handling, and consistent line icons.
+- Add context-driven sequence, mind-map, deployment, ER, activity, swimlane and component diagrams, with optional double-click node movement and connector tracking.
+- Replace visible clipboard messages with Copy/Check/Error SVG icon states that reset after one second; share the renderer across bilingual HTML examples.
+- Add a same-page magnifier image viewer with zoom, pan, focus return and Escape; remove trailing blank quote spacing; ensure left-side navigation and local M favicon.
+- Expand Chrome regression coverage for repeated fullscreen, fallback, diagram-node movement and image viewer behavior.
+
+
 All changes are documented in this file. Versions describe repository content, not a published package or live service.
 
 ## Unreleased — reader-first information design and bilingual examples (2026-11-10)

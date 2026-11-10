@@ -37,9 +37,11 @@
     .fallback { margin-top: 20px; font-size:.92rem; }
     .fallback code { padding: 2px 5px; background:light-dark(#ecf0fa,#2b3850);border-radius:4px; }
     @media (max-width: 720px) { .layout { grid-template-columns: 1fr; } main { padding-top: 24px; } }
-  </style>
+  .genui-demo-frame{display:grid;grid-template-columns:200px minmax(0,1fr)}.genui-demo-sidebar{position:sticky;top:0;height:100dvh;padding:25px 13px;background:#fff;color:#1a1c1f;border-right:1px solid #e4e7ec}.genui-demo-sidebar strong{display:block;font-size:12px;margin-bottom:15px}.genui-demo-sidebar nav{display:grid;gap:5px}.genui-demo-sidebar a{display:block;color:#344054;border-radius:5px;padding:8px 9px;font-size:13px;text-decoration:none}.genui-demo-sidebar a:hover{background:#eff6ff;color:#3a83f7}@media(max-width:720px){.genui-demo-frame{display:block}.genui-demo-sidebar{position:static;height:auto;padding:10px 13px;border-right:0;border-bottom:1px solid #e4e7ec}.genui-demo-sidebar nav{display:flex;flex-wrap:wrap}.genui-demo-sidebar strong{margin-bottom:5px}}
+</style>
 <link rel="icon" type="image/svg+xml" href="../assets/icons/gen-ui-mark.svg"></head>
 <body>
+  <div class="genui-demo-frame"><aside class="genui-demo-sidebar"><strong>GEN UI / DEMO</strong><nav aria-label="Demo navigation"><a href="#preview">Interactive preview</a><a href="#json-heading">Declarative JSON</a><a href="#fallback-heading">Markdown fallback</a><a href="report.html">Chinese report</a><a href="report.en.html">English report</a></nav></aside>
   <main>
     <header>
       <div class="eyebrow">LOCAL GENERATIVE UI · DEMO</div>
@@ -70,5 +72,5 @@
     </section>
   </main>
   <script src="./renderer.js" defer></script>
-</body>
+</div></body>
 </html>

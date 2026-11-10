@@ -58,6 +58,11 @@ $required = @(
   "assets/icons/gen-ui-tab.svg",
   "assets/icons/gen-ui-drawer.svg",
   "assets/icons/gen-ui-form.svg",
+  "assets/media-viewer.js",
+  "assets/media-viewer.css",
+  "assets/code-blocks.js",
+  "assets/diagram-types.css",
+  "tests/media-contract.test.mjs",
   "tests/report.test.mjs",
   "tests/chrome-report-smoke.mjs",
   "tests/chrome-portal-smoke.mjs",
@@ -166,6 +171,6 @@ Write-Output "[PASS] Technical document test syntax"
 if ($LASTEXITCODE -ne 0) { throw "Chrome smoke JS syntax failed" }
 Write-Output "[PASS] Chrome smoke JS syntax（浏览器实测请单独运行）"
 
-& node --test (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
+& node --test (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
