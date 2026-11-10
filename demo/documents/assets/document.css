@@ -3,3 +3,15 @@
 @media(max-width:980px){.doc-layout{grid-template-columns:205px minmax(0,1fr);gap:26px;padding:25px 24px 70px}.doc-main h1{font-size:30px}}
 @media(max-width:700px){.doc-layout{display:block;padding:14px 16px 55px}.doc-toc{display:none}.mobile-toc{display:block;border:1px solid var(--line);border-radius:5px;margin:13px 0 22px;padding:8px 11px}.mobile-toc summary{font-size:12px;color:#344054;font-weight:650;cursor:pointer}.mobile-toc .toc-list{margin-top:8px}.doc-main h1{font-size:27px}.doc-lede{font-size:14px}.doc-meta{gap:7px 12px}.doc-section{margin-top:33px}.doc-section>h2{font-size:19px}.diagram-toolbar{align-items:flex-start}.diagram-toolbar>strong{padding-top:4px}.diagram-actions button{padding:4px 6px}.doc-index{padding:25px 17px 55px}.index-hero{padding:33px 0 22px}.index-hero h1{font-size:29px}.index-item{grid-template-columns:43px minmax(0,1fr);gap:12px;padding:19px 0}.index-item .index-kind{grid-column:2;text-align:left;padding:0}.table-wrap{border-radius:4px}}
 @media print{html{scroll-behavior:auto}.doc-layout{display:block;padding:0;max-width:none}.doc-toc,.mobile-toc,.doc-topline,.diagram-toolbar,.copy-code{display:none!important}.doc-main{max-width:none}.doc-main h1{font-size:26px}.doc-section{break-inside:auto;margin-top:26px}.doc-section h2,.doc-section h3{break-after:avoid}.table-wrap{overflow:visible;border:0}table{min-width:0;font-size:10px}th,td{padding:6px;border:1px solid #d0d5dd}.diagram{break-inside:avoid}.doc-footer{margin-top:25px}}
+
+/* Icon-only diagram controls keep attention on the document, not the toolbar. */
+.diagram-actions{align-items:center;gap:4px}
+.diagram-actions button.diagram-icon-button{display:grid;place-items:center;width:28px;height:28px;min-width:28px;min-height:28px;padding:0}
+.diagram-actions button.diagram-icon-button svg{display:block;width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.diagram-actions button.diagram-icon-button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.doc-meta>span+span{border-left:1px solid var(--line);padding-left:12px}
+.external-link{color:#2468c9!important;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;font-weight:600}
+.external-link::after{content:"↗";display:inline-block;margin-left:4px;font-size:.9em;text-decoration:none}
+@media(max-width:700px){.doc-meta>span+span{padding-left:0;border-left:0}.diagram-actions button.diagram-icon-button{width:30px;height:30px}}
+
+.doc-meta .generated-at{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}

@@ -24,6 +24,8 @@ Follow the user's language unless explicitly requested otherwise. The normative 
 
 **Decision:** If the host has not explicitly declared a trusted renderer and its accepted schema, do not output UI protocol JSON as the primary answer. Do not assume that a Skill, a prompt, or a Markdown viewer can activate functional sliders, charts, forms, or buttons.
 
+**HTML deliverables:** When HTML is explicitly required or selected, follow the mandatory [HTML Report Contract](references/html-report-contract.md). Choose compact field-appropriate filters, provide column visibility for wide tables, style only absolute HTTP(S) URLs as external links, place cited public sources at the bottom, keep modal fields nonwrapping, stamp report generation time to seconds, and include the GEN-UI personal mark as the local favicon. Do not force interactive controls into long-form documents that do not need them.
+
 ## 2. Choose layouts by information needs
 
 - **Summary and conclusion:** start with the answer and the most important limitation.
