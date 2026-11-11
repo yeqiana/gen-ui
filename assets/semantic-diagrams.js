@@ -5,6 +5,7 @@
  const T=(zh,en)=>({zh,en});
  const text=(value,lang)=>typeof value==="string"?value:(value?.[lang]??"");
  let instanceCounter=0;
+ const instances=new WeakMap();
  const M={
  sequence:{
   title:T("异步任务提交时序图","Asynchronous run submission sequence"),
@@ -194,10 +195,11 @@
  function btn(parent,action,label,icon){const b=html("button","semantic-tool",parent);b.type="button";b.dataset.action=action;b.setAttribute("aria-label",label);b.title=label;b.innerHTML=icon||"";if(!icon)b.textContent=label;return b;}
  function labelWidth(value,lang){return Math.max(44,[...value].reduce((n,c)=>n+(c.charCodeAt(0)>255?12:7),0)+18);}
  function edge(svgRoot,spec,lang,defs){
-  const g=svg("g",{class:"semantic-edge", "data-selectable":"true","data-id":"edge-"+spec.from+"-"+spec.to,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":text(spec.label,lang),"data-summary":text(spec.detail||T("该连线表示两个元素之间的关系。","This connector represents a relationship between two elements."),lang),"tabindex":"0","role":"button"},svgRoot);
+  const edgeIndex=Number(svgRoot.dataset.edgeCount||0);svgRoot.dataset.edgeCount=String(edgeIndex+1);const uniqueId="edge-"+(spec.id??svgRoot.dataset.markerId+"-"+edgeIndex);
+   const g=svg("g",{class:"semantic-edge", "data-selectable":"true","data-id":uniqueId,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":text(spec.label,lang),"data-summary":text(spec.detail||T("该连线表示两个元素之间的关系。","This connector represents a relationship between two elements."),lang),"tabindex":"0","role":"button"},svgRoot);
   svg("path",{d:spec.d,fill:"none",stroke:"#8fa6c0","stroke-width":"2","stroke-linecap":"round","stroke-linejoin":"round","marker-end":"url(#"+svgRoot.dataset.markerId+")","stroke-dasharray":spec.dashed?"6 5":null},g);
   const value=text(spec.label,lang);
-  if(value){const w=labelWidth(value,lang),x=spec.lx-w/2,y=spec.ly-11;const chip=svg("g",{class:"semantic-edge-chip","data-selectable":"true","data-id":g.dataset.id,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":g.dataset.title,"data-summary":g.dataset.summary,"data-detail":text(spec.detail||spec.label,lang),"data-base-x":spec.lx,"data-base-y":spec.ly,tabindex:"0",role:"button","aria-label":value},svgRoot);svg("rect",{class:"semantic-edge-label-bg",x,y,width:w,height:22,rx:6,fill:"#fff",stroke:"#d0d5dd","stroke-width":"1"},chip);svg("text",{class:"semantic-edge-label",x:spec.lx,y:spec.ly+4,"text-anchor":"middle","font-size":"12","font-family":"system-ui,sans-serif",fill:"#344054"},chip,value);}
+  if(value){const w=labelWidth(value,lang),x=spec.lx-w/2,y=spec.ly-11;const chip=svg("g",{class:"semantic-edge-chip","data-selectable":"true","data-id":g.dataset.id,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":g.dataset.title,"data-summary":g.dataset.summary,"data-detail":text(spec.detail||spec.label,lang),"data-base-x":spec.lx,"data-base-y":spec.ly,tabindex:"0",role:"button","aria-label":value},svgRoot);svg("rect",{class:"semantic-edge-label-bg",x,y,width:w,height:22,rx:6,fill:"#fff",stroke:"#d0d5dd","stroke-width":"1"},chip);svg("text",{class:"semantic-edge-label",x:spec.lx,y:spec.ly+4,"text-anchor":"middle","font-size":"12","font-family":"system-ui,sans-serif",fill:"#344054"},chip,value);svg("title",{},chip,value);if(spec.messageIndex!==undefined){g.dataset.messageIndex=spec.messageIndex;chip.dataset.messageIndex=spec.messageIndex;}if(spec.path){g.dataset.path=spec.path;chip.dataset.path=spec.path;}}
   return g;
  }
  function selectable(g,id,kind,title,summary,detail){g.dataset.selectable="true";g.dataset.id=id;g.dataset.kind=kind;g.dataset.title=text(title,window.__genUiLang);g.dataset.summary=text(summary||title,window.__genUiLang);g.dataset.detail=text(detail||summary||title,window.__genUiLang);g.setAttribute("tabindex","0");g.setAttribute("role","button");g.setAttribute("aria-label",g.dataset.title);}
@@ -205,17 +207,17 @@
   const g=svg("g",{class:"semantic-node semantic-node-"+(opts?.kind||"service"),transform:"translate("+n.x+" "+n.y+")","data-x":n.x,"data-y":n.y,"data-w":n.w,"data-h":n.h},root);
   selectable(g,n.id,opts?.kind||"component",n.title,n.sub,n.detail);
   svg("rect",{class:"semantic-node-shape",width:n.w,height:n.h,rx:opts?.radius||9,fill:opts?.fill||"#f5f9ff",stroke:opts?.stroke||"#9dbce3","stroke-width":"1.6"},g);
-  svg("text",{x:n.w/2,y:opts?.sub?26:n.h/2+5,"text-anchor":"middle","font-size":"14","font-weight":"650",fill:"#1a1c1f","font-family":"system-ui,sans-serif"},g,text(n.title,lang));
+  svg("text",{x:n.w/2,y:n.sub?26:n.h/2+5,"text-anchor":"middle","font-size":"14","font-weight":"650",fill:"#1a1c1f","font-family":"system-ui,sans-serif"},g,text(n.title,lang));
   if(n.sub)svg("text",{x:n.w/2,y:46,"text-anchor":"middle","font-size":"11",fill:"#667085","font-family":"system-ui,sans-serif"},g,text(n.sub,lang));
   if(n.ports){n.ports.forEach((port,i)=>{const p=svg("g",{class:"semantic-port","data-port":"true"},g);svg("circle",{cx:n.w-10,cy:16+i*15,r:4,fill:"#fff",stroke:"#3a83f7","stroke-width":"1.4"},p);svg("title",{},p,text(T("接口：","Port: "),lang)+port);});}
   return g;
  }
- function actorNode(root,p,lang,x){
+ function actorNode(root,p,lang,x,height){
   const g=svg("g",{class:"semantic-node semantic-actor","transform":"translate("+(x-68)+" 28)"},root);selectable(g,p.id,"participant",p.name,p.sub,T("参与者，点击可高亮其生命线及相关消息。","Participant; click to highlight its lifeline and related messages."));
   svg("rect",{width:136,height:54,rx:8,fill:"#eff6ff",stroke:"#7aa8e8","stroke-width":"1.6"},g);
   svg("text",{x:68,y:23,"text-anchor":"middle","font-size":"14","font-weight":"650",fill:"#1a1c1f"},g,text(p.name,lang));
   svg("text",{x:68,y:42,"text-anchor":"middle","font-size":"10.5",fill:"#667085"},g,text(p.sub,lang));
-  svg("line",{class:"semantic-lifeline",x1:68,y1:54,x2:68,y2:590,stroke:"#9aa9bb","stroke-dasharray":"5 5","stroke-width":"1.5"},g);
+  svg("line",{class:"semantic-lifeline",x1:68,y1:54,x2:68,y2:height-30,stroke:"#9aa9bb","stroke-dasharray":"5 5","stroke-width":"1.5"},g);
   return g;
  }
  function entityNode(root,e,lang,showFields){
@@ -235,13 +237,13 @@
   });
   return g;
  }
- function renderSequence(root,m,lang){
+ function renderSequence(root,m,lang,height){
   const xs=m.participants.map((p,i)=>145+i*210),map={};m.participants.forEach((p,i)=>map[p.id]=xs[i]);
-  m.participants.forEach((p,i)=>actorNode(root,p,lang,xs[i]));
+  m.participants.forEach((p,i)=>actorNode(root,p,lang,xs[i],height));
   m.participants.slice(1).forEach(p=>{const msgs=m.messages.map((x,i)=>({from:x.from,to:x.to,y:x.y??155+i*75})).filter(x=>x.from===p.id||x.to===p.id);if(!msgs.length)return;const from=Math.min(...msgs.map(x=>x.y)),to=Math.max(...msgs.map(x=>x.y));svg("rect",{class:"semantic-activation",x:map[p.id]-6,y:from+10,width:12,height:Math.max(32,to-from-10),rx:3,fill:"#dceafe",stroke:"#5b91d6","stroke-width":"1"},root);});
   m.messages.forEach((msg,i)=>{
    const x1=map[msg.from],x2=map[msg.to],y=msg.y??155+i*75,ret=msg.kind==="return";
-   const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:(x1+x2)/2,ly:y-17,d:"M"+x1+" "+y+" H"+x2,dashed:ret,detail:msg.detail};
+   const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:(x1+x2)/2,ly:y-17,d:"M"+x1+" "+y+" H"+x2,dashed:ret,detail:msg.detail,messageIndex:i};
    const g=edge(root,edgeSpec,lang);g.dataset.messageIndex=i;g.dataset.kind="message";g.dataset.title=text(msg.label,lang);g.dataset.summary=text(T("消息类型："+(ret?"返回":msg.kind==="async"?"异步":"同步"),"Message type: "+(ret?"return":msg.kind),lang),lang);g.dataset.detail=text(msg.detail,lang);
    if(msg.kind==="async")g.querySelector("path").setAttribute("stroke","#3a83f7");
   });
@@ -255,7 +257,7 @@
    const g=boxNode(root,{id:b.id,x:b.x,y:b.y,w:185,h:68,title:b.title,sub:b.sub,detail:b.detail},lang,{kind:"branch",fill:["#eef6ff","#eef9f1","#fff7eb","#f4f0ff"][i],stroke:["#8db4e8","#8ac5a0","#e5bd79","#b4a0e3"][i]});
    const toggle=svg("g",{class:"semantic-branch-toggle","data-toggle-branch":b.id,"data-expanded":"true","aria-expanded":"true",role:"button",tabindex:"0","aria-label":text(T("展开或折叠","Expand or collapse"),lang)},g);
    svg("circle",{cx:166,cy:34,r:10,fill:"#fff",stroke:"#8a9bb0"},toggle);
-   svg("path",{d:"M161 34h10m-5-5v10",stroke:"#475467","stroke-width":"1.5"},toggle);
+   svg("path",{d:"M161 34h10",stroke:"#475467","stroke-width":"1.5"},toggle);
    b.children.forEach((c,j)=>{
     const cy=c.y??b.y+12+j*58,cx=c.x??b.x+310;
     const branchEdge=svg("g",{class:"semantic-branch-edge","data-parent":b.id},root);svg("path",{d:"M"+(b.x+185)+" "+by+" H"+(b.x+245)+" V"+(cy+22)+" H"+cx,fill:"none",stroke:"#b0bdcd","stroke-width":"1.6"},branchEdge);
@@ -292,8 +294,9 @@
   if(n.kind==="end")svg("circle",{cx:n.w/2,cy:n.h/2,r:n.w/2-7,fill:"none",stroke:"#667085","stroke-width":"1.4"},g);
  }
  function renderActivity(root,m,lang){
-  m.edges.forEach(e=>{const g=edge(root,e,lang);if(e.path)g.dataset.path=e.path;});
-  m.nodes.forEach(n=>{if(n.kind==="decision")diamond(root,n,lang);else if(n.kind==="start"||n.kind==="end")circleNode(root,n,lang);else boxNode(root,n,lang,{kind:"activity",fill:"#f5f9ff",stroke:"#9dbce3"});const g=root.querySelector('[data-id="'+n.id+'"]');if(g&&n.kind!=="start"&&n.kind!=="end")g.dataset.path=n.id==="reject"||n.id==="errorEnd"?"reject":n.id==="retry"?"retry":"normal";});
+  m.edges.forEach(e=>edge(root,e,lang));
+  const inferred=new Map();for(const e of m.edges){if(!e.path)continue;for(const id of [e.from,e.to]){if(!inferred.has(id))inferred.set(id,new Set());inferred.get(id).add(e.path);}}
+  m.nodes.forEach(n=>{if(n.kind==="decision")diamond(root,n,lang);else if(n.kind==="start"||n.kind==="end")circleNode(root,n,lang);else boxNode(root,n,lang,{kind:"activity",fill:"#f5f9ff",stroke:"#9dbce3"});const g=root.querySelector('[data-id="'+n.id+'"]');if(g){const paths=n.paths??(n.path?[n.path]:[...(inferred.get(n.id)??[])]);g.dataset.paths=paths.join(",");}});
  }
  function lane(root,l,lang){
   const g=svg("g",{class:"semantic-lane","data-lane-toggle":l.id,"data-selectable":"true","data-id":"lane-"+l.id,"data-kind":"lane","data-title":text(l.title,lang),"data-summary":text(l.detail,lang),"data-detail":text(l.detail,lang),role:"button",tabindex:"0"},root);
@@ -313,12 +316,14 @@
   m.nodes.forEach(n=>{const group=svg("g",{"data-zone-content":n.zone},root);boxNode(group,n,lang,{kind:"component",fill:"#fff",stroke:"#8ba8cc"});});
  }
  function render(model,type,root,lang){
-  const w=model.canvas?.width??(type==="sequence"?960:type==="mind"?920:type==="deploy"?1100:type==="er"?1040:type==="activity"?1640:type==="swim"?1060:1100);
-  const h=model.canvas?.height??(type==="sequence"?620:type==="mind"?590:type==="deploy"?560:type==="er"?560:type==="activity"?590:type==="swim"?535:550);
+  const requestedWidth=model.canvas?.width??(type==="sequence"?960:type==="mind"?920:type==="deploy"?1100:type==="er"?1040:type==="activity"?1640:type==="swim"?1060:1100);
+   const w=type==="sequence"?Math.max(requestedWidth,145+210*(model.participants.length-1)+100):requestedWidth;
+  const requestedHeight=model.canvas?.height??(type==="sequence"?620:type==="mind"?590:type==="deploy"?560:type==="er"?560:type==="activity"?590:type==="swim"?535:550);
+   const h=type==="sequence"?Math.max(requestedHeight,Math.max(...model.messages.map((m,i)=>m.y??155+i*75))+95):requestedHeight;
   const svgRoot=svg("svg",{class:"semantic-svg",viewBox:"0 0 "+w+" "+h,role:"img","aria-label":text(model.title,lang),"preserveAspectRatio":"xMinYMin meet"},root);
   svg("title",{},svgRoot,text(model.title,lang));svg("desc",{},svgRoot,text(model.desc,lang));
   const markerId="semantic-arrow-"+type+"-"+(++instanceCounter);svgRoot.dataset.markerId=markerId;const defs=svg("defs",{},svgRoot),marker=svg("marker",{id:markerId,markerWidth:"8",markerHeight:"8",refX:"7",refY:"3",orient:"auto"},defs);svg("path",{d:"M0 0 L7 3 L0 6",fill:"#8fa6c0"},marker);
-  if(type==="sequence")renderSequence(svgRoot,model,lang);
+  if(type==="sequence")renderSequence(svgRoot,model,lang,h);
   if(type==="mind")renderMind(svgRoot,model,lang);
   if(type==="deploy")renderDeploy(svgRoot,model,lang);
   if(type==="er")renderER(svgRoot,model,lang);
@@ -340,14 +345,17 @@
   };
   const collide=(a,b,pad=5)=>a.x<b.x+b.w+pad&&a.x+a.w+pad>b.x&&a.y<b.y+b.h+pad&&a.y+a.h+pad>b.y;
   const nodes=[...svgRoot.querySelectorAll(".semantic-node-shape,.semantic-actor>rect")].filter(n=>n.getClientRects().length&&n.getBoundingClientRect().width>0).map(box);
-  const chips=[...svgRoot.querySelectorAll(".semantic-edge-chip")].filter(n=>!n.classList.contains("is-hidden")&&n.getClientRects().length);
+  const chips=[...svgRoot.querySelectorAll(".semantic-edge-chip")].filter(n=>!n.classList.contains("is-hidden"));const fallback=svgRoot.closest(".genui-semantic-diagram")?.querySelector(".semantic-label-fallbacks");if(fallback)fallback.replaceChildren();
   const placed=[];
   const offsets=[0,-28,28,-56,56,-84,84,-112,112,-140,140,-168,168,-196,196,-224,224,-252,252];
   const candidates=offsets.flatMap(dy=>offsets.map(dx=>({dx,dy,cost:dx*dx+dy*dy*1.06}))).sort((a,b)=>a.cost-b.cost);
   for(const chip of chips){
-   const bg=chip.querySelector(".semantic-edge-label-bg"),caption=chip.querySelector(".semantic-edge-label");
+   chip.classList.remove("is-layout-fallback");const bg=chip.querySelector(".semantic-edge-label-bg"),caption=chip.querySelector(".semantic-edge-label");
    if(!bg||!caption)continue;
-   const w=Math.max(44,Math.ceil(caption.getComputedTextLength()+20)),h=22;
+   const fullText=chip.querySelector("title")?.textContent||caption.textContent;caption.textContent=fullText;
+   const maxWidth=Math.min(244,graph.w-40);const chars=Array.from(fullText);
+   if(caption.getComputedTextLength()>maxWidth){let lo=0,hi=chars.length;while(lo<hi){const mid=Math.ceil((lo+hi)/2);caption.textContent=chars.slice(0,mid).join("")+"…";if(caption.getComputedTextLength()<=maxWidth)lo=mid;else hi=mid-1;}caption.textContent=chars.slice(0,lo).join("")+"…";}
+   chip.dataset.truncated=String(caption.textContent!==fullText);const w=Math.max(36,Math.ceil(caption.getComputedTextLength()+20)),h=22;
    const cx=Number(chip.dataset.baseX),cy=Number(chip.dataset.baseY);
    bg.setAttribute("width",w);
    let best=null;
@@ -359,13 +367,14 @@
     best={cx:cx2,cy:cy2,rect:r};break;
    }
    chip.dataset.layoutOk=String(!!best);
-   if(!best)continue;
+   if(!best){chip.dataset.layoutOk="fallback";chip.classList.add("is-layout-fallback");if(fallback){const button=html("button","semantic-fallback-link",fallback,fullText);button.type="button";button.title=fullText;button.addEventListener("click",()=>{const e=[...svgRoot.querySelectorAll(".semantic-edge")].find(n=>n.dataset.id===chip.dataset.id);e?.dispatchEvent(new MouseEvent("click",{bubbles:true}));});}continue;}
    bg.setAttribute("x",best.rect.x);
    bg.setAttribute("y",best.rect.y);
    caption.setAttribute("x",best.cx);
    caption.setAttribute("y",best.cy+4);
    placed.push(best.rect);
   }
+  if(fallback)fallback.hidden=fallback.childElementCount===0;
  }
 
 
@@ -408,6 +417,8 @@
   const edges=type==="sequence"?m.messages:type==="er"?m.relations:type==="mind"?[]:m.edges;
   if(type!=="mind"){
    if(!array(edges,100)||!edges.every(e=>ids.includes(e.from)&&ids.includes(e.to)))return fail("edge endpoints");
+   if(!edges.every(e=>!e.id||id(e.id))||new Set(edges.filter(e=>e.id).map(e=>e.id)).size!==edges.filter(e=>e.id).length)return fail("relationship ids");
+   if(type==="activity"&&(!m.nodes.every(n=>!n.path||["normal","retry","reject"].includes(n.path))||!m.nodes.every(n=>!n.paths||Array.isArray(n.paths)&&n.paths.length<=3&&n.paths.every(p=>["normal","retry","reject"].includes(p)))||!edges.every(e=>!e.path||["normal","retry","reject"].includes(e.path))))return fail("activity paths");
    if(type!=="sequence"&&!edges.every(e=>typeof e.d==="string"&&e.d.length<=900&&/^[MmLlHhVvCcSsQqTtAaZz0-9., +\-]*$/.test(e.d)&&validText(e.label)&&num(e.lx)&&num(e.ly)))return fail("edge route or label");
   }
   return {ok:true};
@@ -423,10 +434,10 @@
  }
 
  function init(host){
-  if(host.dataset.semanticReady==="true")return;
+  if(instances.has(host))return instances.get(host);
   const type=host.dataset.semanticDiagram;if(!M[type])return;
   const loaded=readModel(host,type);if(!loaded.ok){host.dataset.semanticError=loaded.error;host.querySelector(".semantic-error")?.remove();const err=html("p","semantic-error",host,"图表数据校验失败 / Invalid diagram data: "+loaded.error);err.setAttribute("role","alert");return;}
-  host.dataset.semanticReady="true";delete host.dataset.semanticError;const model=loaded.model;
+  host.dataset.semanticReady="true";delete host.dataset.semanticError;const model=loaded.model;const modelSource=host.querySelector(':scope > script[type="application/json"][data-diagram-model]')?.cloneNode(true)??null;const controller=new AbortController(),signal=controller.signal;let disposed=false;
   const lang=document.documentElement.lang?.startsWith("en")?"en":"zh";window.__genUiLang=lang;
   host.innerHTML="";
   const shell=html("div","semantic-shell",host),toolbar=html("div","semantic-toolbar",shell);
@@ -447,8 +458,9 @@
   html("p","semantic-inspector-summary",inspector,text(T("点击图中的节点、连线或字段，查看其职责和关系。","Select a node, connector, or field to inspect its role and relationships."),lang));
   html("p","semantic-inspector-detail",inspector,text(T("画布空白处可拖动平移；使用缩放和适应窗口按钮浏览。","Drag the empty canvas to pan; use zoom and fit controls to navigate."),lang));
   const graph=render(model,type,stage,lang),svgRoot=graph.svg,zoomLabel=tools.querySelector("[data-zoom]");
-  let labelFrame=null;function scheduleLabelLayout(){if(labelFrame!==null)cancelAnimationFrame(labelFrame);labelFrame=requestAnimationFrame(()=>{labelFrame=null;layoutLabels(svgRoot,graph);});}
-  host.closest("details")?.addEventListener("toggle",scheduleLabelLayout);window.addEventListener("resize",scheduleLabelLayout);
+  const labelOverflow=html("div","semantic-label-fallbacks",shell);labelOverflow.hidden=true;labelOverflow.setAttribute("aria-label",text(T("关系标签完整文本","Full connector labels"),lang));
+  let labelFrame=null;function scheduleLabelLayout(){if(disposed)return;if(labelFrame!==null)cancelAnimationFrame(labelFrame);labelFrame=requestAnimationFrame(()=>{labelFrame=null;layoutLabels(svgRoot,graph);});}
+  host.closest("details")?.addEventListener("toggle",scheduleLabelLayout,{signal});window.addEventListener("resize",scheduleLabelLayout,{signal});
   let view={x:0,y:0,w:graph.w,h:graph.h},fullscreenBusy=false,fallback=false,pan=null,reading=false,sequenceIndex=0,fieldsVisible=true,portsVisible=true,lanesCollapsed=false,zonesCollapsed=false;
   const fit=()=>{reading=false;const b=tools.querySelector('[data-action="read"]');b?.setAttribute("aria-pressed","false");view={x:0,y:0,w:graph.w,h:graph.h};apply();};
   const read=()=>{reading=!reading;const b=tools.querySelector('[data-action="read"]');b?.setAttribute("aria-pressed",String(reading));if(!reading){fit();return;}const w=Math.min(graph.w,440),h=Math.min(graph.h,Math.max(200,w*stage.clientHeight/Math.max(1,stage.clientWidth)));view={x:Math.max(0,(graph.w-w)/2),y:Math.max(0,(graph.h-h)/2),w,h};apply();};
@@ -463,33 +475,35 @@
    else if(a==="prev"||a==="next"){const count=model.messages.length;sequenceIndex=Math.max(0,Math.min(count-1,sequenceIndex+(a==="next"?1:-1)));selectMessage(sequenceIndex);}
    else if(a==="fields"){fieldsVisible=!fieldsVisible;stage.querySelectorAll(".semantic-entity").forEach(entity=>{let index=0;entity.querySelectorAll("[data-field]").forEach(row=>{const hide=!fieldsVisible&&!["PK","FK"].includes(row.dataset.fieldType);row.classList.toggle("is-hidden",hide);if(!hide){row.setAttribute("transform","translate(0 "+(46+index*29)+")");index++;}});const height=56+index*29;entity.dataset.h=height;entity.querySelector(".semantic-node-shape")?.setAttribute("height",height);});b.textContent=text(T(fieldsVisible?"隐藏普通字段":"显示普通字段",fieldsVisible?"Hide non-key fields":"Show non-key fields"),lang);scheduleLabelLayout();}
    else if(a==="ports"){portsVisible=!portsVisible;stage.querySelectorAll("[data-port]").forEach(n=>n.classList.toggle("is-hidden",!portsVisible));b.textContent=text(T(portsVisible?"隐藏接口端口":"显示接口端口",portsVisible?"Hide ports":"Show ports"),lang);}
-   else if(a==="path-normal"||a==="path-retry"){const path=a==="path-normal"?"normal":"retry";stage.querySelectorAll("[data-path]").forEach(n=>n.classList.toggle("is-path-muted",n.dataset.path!==path));}
+   else if(a==="path-normal"||a==="path-retry"){const wanted=a==="path-normal"?new Set(["normal"]):new Set(["retry","reject"]);stage.querySelectorAll("[data-path],[data-paths]").forEach(n=>{const paths=(n.dataset.paths??n.dataset.path??"").split(",").filter(Boolean);n.classList.toggle("is-path-muted",paths.length>0&&!paths.some(path=>wanted.has(path)));});}
    else if(a==="path-all")stage.querySelectorAll(".is-path-muted").forEach(n=>n.classList.remove("is-path-muted"));
    else if(a==="expand-all"){stage.querySelectorAll("[data-parent]").forEach(n=>n.classList.remove("is-hidden"));stage.querySelectorAll("[data-toggle-branch]").forEach(n=>{n.dataset.expanded="true";n.setAttribute("aria-expanded","true");n.querySelector("path")?.setAttribute("d","M161 34h10");});}
    else if(a==="zones"){zonesCollapsed=!zonesCollapsed;stage.querySelectorAll("[data-zone-content]").forEach(n=>n.classList.toggle("is-hidden",zonesCollapsed));syncEdges();b.textContent=text(T(zonesCollapsed?"展开部署区域":"折叠部署区域",zonesCollapsed?"Expand zones":"Collapse zones"),lang);}
    else if(a==="lanes"){lanesCollapsed=!lanesCollapsed;stage.querySelectorAll("[data-lane-content]").forEach(n=>n.classList.toggle("is-hidden",lanesCollapsed));syncEdges();b.textContent=text(T(lanesCollapsed?"展开泳道":"折叠泳道",lanesCollapsed?"Expand lanes":"Collapse lanes"),lang);}
   });
   function syncEdges(){stage.querySelectorAll(".semantic-edge,.semantic-edge-chip").forEach(e=>{const a=stage.querySelector('[data-id="'+e.dataset.source+'"]'),b=stage.querySelector('[data-id="'+e.dataset.target+'"]');e.classList.toggle("is-hidden",!!(a?.closest(".is-hidden")||b?.closest(".is-hidden")));});}
-  function selectMessage(index){const messages=[...stage.querySelectorAll("[data-message-index]")];messages.forEach((n,i)=>n.classList.toggle("is-selected",i===index));const n=messages[index];if(n)show(n);}
+  function selectMessage(index){sequenceIndex=index;stage.querySelectorAll(".is-selected,.is-related").forEach(n=>n.classList.remove("is-selected","is-related"));const same=[...stage.querySelectorAll('[data-message-index="'+index+'"]')];same.forEach(n=>n.classList.add("is-selected"));const n=same.find(x=>x.classList.contains("semantic-edge"))??same[0];if(n){[n.dataset.source,n.dataset.target].forEach(id=>stage.querySelector('[data-id="'+id+'"]')?.classList.add("is-related"));show(n);}}
   function show(n){inspector.querySelector(".semantic-inspector-title").textContent=n.dataset.title||text(T("图表元素","Diagram element"),lang);inspector.querySelector(".semantic-inspector-summary").textContent=n.dataset.summary||"";inspector.querySelector(".semantic-inspector-detail").textContent=n.dataset.detail||"";}
-  function select(n){stage.querySelectorAll(".is-selected").forEach(x=>x.classList.remove("is-selected"));stage.querySelectorAll(".is-related").forEach(x=>x.classList.remove("is-related"));n.classList.add("is-selected");const id=n.dataset.id;stage.querySelectorAll(".semantic-edge,.semantic-edge-chip").forEach(e=>{const related=e.dataset.source===id||e.dataset.target===id||n.matches(".semantic-edge,.semantic-edge-chip")&&(e===n||e.dataset.source===n.dataset.source&&e.dataset.target===n.dataset.target);e.classList.toggle("is-related",related);});if(n.matches(".semantic-edge,.semantic-edge-chip")){[n.dataset.source,n.dataset.target].forEach(k=>stage.querySelector('[data-id="'+k+'"]')?.classList.add("is-related"));}show(n);}
+  function select(n){stage.querySelectorAll(".is-selected").forEach(x=>x.classList.remove("is-selected"));stage.querySelectorAll(".is-related").forEach(x=>x.classList.remove("is-related"));n.classList.add("is-selected");const id=n.dataset.id;stage.querySelectorAll(".semantic-edge,.semantic-edge-chip").forEach(e=>{const related=e.dataset.source===id||e.dataset.target===id||n.matches(".semantic-edge,.semantic-edge-chip")&&e.dataset.id===n.dataset.id;e.classList.toggle("is-related",related);});if(n.matches(".semantic-edge,.semantic-edge-chip")){[n.dataset.source,n.dataset.target].forEach(k=>stage.querySelector('[data-id="'+k+'"]')?.classList.add("is-related"));}show(n);}
   stage.addEventListener("click",e=>{
    const toggle=e.target.closest("[data-toggle-branch]");if(toggle){const id=toggle.dataset.toggleBranch,expanded=toggle.dataset.expanded!=="true";const descendants=[...stage.querySelectorAll('[data-parent="'+id+'"]')],focusedInside=descendants.some(n=>n.contains(document.activeElement));toggle.dataset.expanded=String(expanded);toggle.setAttribute("aria-expanded",String(expanded));descendants.forEach(n=>n.classList.toggle("is-hidden",!expanded));const p=toggle.querySelector("path");if(p)p.setAttribute("d",expanded?"M161 34h10":"M161 34h10m-5-5v10");if(!expanded&&focusedInside)toggle.focus();return;}
    const zone=e.target.closest("[data-zone-toggle]");if(zone&&type==="deploy"){const id=zone.dataset.zoneToggle;const hidden=zone.dataset.collapsed!=="true";zone.dataset.collapsed=String(hidden);stage.querySelectorAll('[data-zone-content="'+id+'"]').forEach(n=>n.classList.toggle("is-hidden",hidden));const glyph=zone.querySelector("[data-zone-glyph]");if(glyph)glyph.textContent=hidden?"+":"−";syncEdges();return;}
    const lane=e.target.closest("[data-lane-toggle]");if(lane&&type==="swim"){const id=lane.dataset.laneToggle;const hidden=lane.dataset.collapsed!=="true";lane.dataset.collapsed=String(hidden);stage.querySelectorAll('[data-lane-content="'+id+'"]').forEach(n=>n.classList.toggle("is-hidden",hidden));syncEdges();return;}
-   const target=e.target.closest("[data-selectable]");if(target){select(target);if(target.dataset.messageIndex!==undefined){sequenceIndex=Number(target.dataset.messageIndex);}return;}
+   const target=e.target.closest("[data-selectable]");if(target){if(target.dataset.messageIndex!==undefined)selectMessage(Number(target.dataset.messageIndex));else select(target);return;}
   });
-  stage.addEventListener("keydown",e=>{const toggle=e.target.closest("[data-toggle-branch],[data-zone-toggle],[data-lane-toggle]");if(toggle&&(e.key==="Enter"||e.key===" ")){e.preventDefault();toggle.dispatchEvent(new MouseEvent("click",{bubbles:true}));return;}const target=e.target.closest("[data-selectable]");if(target&&(e.key==="Enter"||e.key===" ")){e.preventDefault();select(target);}});
+  stage.addEventListener("keydown",e=>{const toggle=e.target.closest("[data-toggle-branch],[data-zone-toggle],[data-lane-toggle]");if(toggle&&(e.key==="Enter"||e.key===" ")){e.preventDefault();toggle.dispatchEvent(new MouseEvent("click",{bubbles:true}));return;}const target=e.target.closest("[data-selectable]");if(target&&(e.key==="Enter"||e.key===" ")){e.preventDefault();if(target.dataset.messageIndex!==undefined)selectMessage(Number(target.dataset.messageIndex));else select(target);}});
   stage.addEventListener("pointerdown",e=>{if(e.button!==0||e.target.closest("[data-selectable]"))return;pan={id:e.pointerId,x:e.clientX,y:e.clientY,viewX:view.x,viewY:view.y};stage.setPointerCapture?.(e.pointerId);});
   stage.addEventListener("pointermove",e=>{if(!pan||pan.id!==e.pointerId)return;const r=svgRoot.getBoundingClientRect();view.x=pan.viewX-(e.clientX-pan.x)*view.w/Math.max(1,r.width);view.y=pan.viewY-(e.clientY-pan.y)*view.h/Math.max(1,r.height);apply();});
   ["pointerup","pointercancel","lostpointercapture"].forEach(k=>stage.addEventListener(k,()=>{pan=null;}));
   stage.addEventListener("wheel",e=>{if(!e.ctrlKey)return;e.preventDefault();zoom(e.deltaY<0?.9:1.1);},{passive:false});
   stage.addEventListener("keydown",e=>{if(e.target.closest("[data-selectable]"))return;if(e.key==="+"||e.key==="="){e.preventDefault();zoom(.8);}else if(e.key==="-"){e.preventDefault();zoom(1.25);}else if(e.key==="0"){e.preventDefault();fit();}else if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)){e.preventDefault();const d=view.w/12;view.x+=e.key==="ArrowLeft"?-d:e.key==="ArrowRight"?d:0;view.y+=e.key==="ArrowUp"?-d:e.key==="ArrowDown"?d:0;apply();}});
-  document.addEventListener("fullscreenchange",syncFullscreen);document.addEventListener("fullscreenerror",syncFullscreen);
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&fallback){e.preventDefault();fallback=false;syncFullscreen();}});
-  apply();syncFullscreen();scheduleLabelLayout();
+  document.addEventListener("fullscreenchange",syncFullscreen,{signal});document.addEventListener("fullscreenerror",syncFullscreen,{signal});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&fallback){e.preventDefault();fallback=false;syncFullscreen();}},{signal});
+  const instance={destroy(){if(disposed)return;disposed=true;controller.abort();if(labelFrame!==null)cancelAnimationFrame(labelFrame);if(document.fullscreenElement===shell&&typeof document.exitFullscreen==="function")document.exitFullscreen().catch(()=>{});fallback=false;host.replaceChildren(...(modelSource?[modelSource]:[]));delete host.dataset.semanticReady;instances.delete(host);}};
+  instances.set(host,instance);apply();syncFullscreen();scheduleLabelLayout();return instance;
  }
- window.GenUISemantic={init,validateModel,types:Object.keys(M)};
+ function destroy(host){instances.get(host)?.destroy();}
+ window.GenUISemantic={init,validateModel,destroy,types:Object.keys(M)};
  function start(){document.querySelectorAll("[data-semantic-diagram]").forEach(init);}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();

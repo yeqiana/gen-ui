@@ -1,186 +1,60 @@
 ---
 name: gen-ui
-description: Use when AI responses become hard to understand, too long, or difficult to navigate. Turn complex technical explanations, reviews, plans, comparisons, and test evidence into clear, accurate, readable information. Use Markdown by default and interactive HTML only when requested and supported.
+description: Use when AI responses become hard to understand, too long, or difficult to navigate. Reorganize technical analysis, design proposals, implementation plans, reviews, and test evidence for clear reading. Markdown by default; offline HTML and diagrams only when genuinely needed.
 ---
 
 # Gen UI — Information Design Skill for AI Responses
 
-## Purpose and priority
+## Purpose
 
-Gen UI reduces **walls of text, comprehension effort, and reading friction** in AI-generated answers by reorganizing information around reader questions. It is an information-design contract, not merely a UI makeover, tool runner, code-review replacement, or official ChatGPT UI/DIL runtime.
+Gen UI reduces **walls of text, comprehension effort, and reading friction**. It is an **Information Design Skill**, not a general UI framework or a replacement for coding, review, testing, or deployment tools.
 
-**The goal is understanding, not decoration:** preserve facts, caveats, evidence, decisions, and next actions while using the simplest structure that makes them easier to follow. A beautiful page with missing information or fake interaction is a failure.
+**Goal:** make conclusions, evidence, limits, and next actions clear without losing facts. Follow the user's language. Never invent results or sources.
 
-Follow the user's language unless explicitly requested otherwise. The normative rules in this file are in English; Chinese answers and examples remain supported.
+## Progressive capability routing
 
-**Authority:** user instructions and project-specific safety, coding, review, and test requirements take precedence over this presentation Skill. Never conceal failures, skip verification, or invent tool results to make an answer look polished.
+Choose the **least complex supported output**. Never load advanced assets by default.
 
-## Robust offline diagrams, copy controls, and images
-
-- **Navigation is mandatory for HTML documents:** default to a visible left-side navigation or TOC; narrow screens may collapse it into a compact accessible menu. Never replace the main content with navigation or leave a long HTML report unnavigable.
-- **Use the current M-shaped personal IP favicon** (`assets/icons/gen-ui-mark.svg`) consistently in every standalone browser tab and portal shell; keep the local relative path correct.
-- **Choose semantic diagram types by the document's information model:** sequence diagrams must show participants, lifelines, activations and ordered messages; mind maps must show hierarchy and collapsible branches; deployment diagrams must show deployment zones, runtime services and protocols; ER diagrams must show entities, fields, PK/FK and cardinality; activity diagrams must show start/end, actions, decisions and guarded branches; swimlanes must show responsibility boundaries and handoffs; component diagrams must show component boundaries, ports/interfaces and dependencies. Never reuse a generic boxes-and-lines template as all seven diagram types. Provide accessible `<title>`/`<desc>` and an explanatory text equivalent.
-- **Interaction must match diagram semantics:** click selects nodes, messages, edges, fields or lanes and opens an inspector; add type-specific operations (sequence stepping, branch expand/collapse, zone collapse, ER field visibility, activity path filtering, swimlane collapse, component port visibility). Canvas pan/zoom/fit/fullscreen are shared navigation, not substitutes for graph interaction. Node dragging is optional and must never be the only interaction.
-- **Prevent connector-label occlusion:** route edges around node shapes; place labels in dedicated lanes with opaque backgrounds; validate label and node bounding boxes do not intersect.
-- **Control placement:** image fullscreen/magnifier control is anchored to the image upper-right corner; code-copy icon is anchored to the code block upper-right corner without taking space from code content.
-- **Diagram invariants:** at most one fullscreen transition may be in progress. Fullscreen enter/exit, Escape, browser-driven exits, fallback overlay, fit, zoom and panning are idempotent and preserve a consistent view. Use local SVG line icons inspired by familiar zoom-in/zoom-out, fit-to-view and expand/shrink conventions, with `aria-label`, title and focus affordance. Never replace a button's icon with text on state changes.
-- **Avoid occlusion:** place labels with adequate node spacing, route connectors behind nodes, and leave enough space for captions. Optional node dragging requires an explicit double-click or keyboard activation, pointer ownership, movement bounds, overlap prevention and connector updates. Document and test these rules.
-- **Code copy is icon-only:** use a Copy icon at rest, Check icon after a confirmed successful copy, Error icon after failure; revert to Copy after **1,000 ms**, including repeated clicks and older timer cancellation. No visible copied/clipboard status phrases. Preserve an accessible changing name and genuine offline fallback.
-- **Quoted callouts:** the final nonempty content line should end the colored quote region, without an extra blank quoted line. Remove trailing empty nodes, cancel trailing paragraph margins, and preserve the semantic colors for warnings/confirmation.
-- **Images:** meaningful report images gain a magnifier button to open a same-page fullscreen-style overlay, then zoom in/out, fit, pan, Escape/close, and return focus to the opener. Decorative images and branding must not receive an image viewer; controls must work offline.
-- **Verify real browser behavior:** include repeated fullscreen toggle/ESC/re-entry, native API rejection fallback, zoom/pan before and after fullscreen, copy reset after one second, image overlay closure and focus return, node movement/edge tracking and layout overflow at mobile/tablet/desktop widths.
-
-### Data-driven semantic diagram contract
-
-- Accept independent business diagrams through a direct-child `<script type="application/json" data-diagram-model>` inside `[data-semantic-diagram]`. Use `window.GenUISemantic.validateModel(type, model)` to verify the bounded contract before rendering. The full schema and executable example are in `references/semantic-diagram-model.md` and `demo/custom-diagram-model.html`.
-- Prefer data-driven diagrams over hardcoding project-specific cases. For topology, ER, activity, component and swimlane, explicit coordinates and edge routes are still required; do **not** claim fully automatic layout.
-- For every SVG, reserve a distinct topmost label layer; measure text widths and resolve label/node and label/label collisions in final transformed screen coordinates, not with untransformed SVG `getBBox()`. Revalidate at 375, 768 and 1440px in both languages.
-- Collapsing a branch or zone must hide **nodes and all attached connectors**, keeping keyboard focus valid. ER field filtering must recompute visible rows and the enclosing entity box size.
-- Mobile documents must show a fit-to-view overview and a usable focused reading mode without global horizontal page overflow. Handle rejected `requestFullscreen` and `exitFullscreen` calls, browser-driven fullscreen exits, and repeated rapid button clicks.
-- Reject malformed JSON, duplicate IDs, unknown edges, invalid coordinate types and oversized models without attempting remote requests or injecting model strings as HTML. Escape `<` in embedded JSON to protect the enclosing script tag.
-
-## 1. Detect host capabilities before choosing a format
-
-| Host | Safe assumption | Preferred output |
+| Request / host | Use | Open only when needed |
 | --- | --- | --- |
-| Plain terminal, Codex CLI, Claude Code CLI, logs | Text and limited Markdown | Structured Markdown / plain text |
-| GitHub, IDE Markdown preview | GFM; Mermaid only when available | Markdown, accessible fallback for diagrams |
-| Explicitly configured Web or Webview Renderer | Only components declared by host | Validated UI data **plus** complete Markdown fallback |
-| Unknown | Markdown only | Never emit pretend interactive controls |
+| Everyday explanation, analysis, code review, plan | Short Markdown | This file |
+| Explicit standalone HTML deliverable | Offline HTML report | [HTML report contract](references/html-report-contract.md) |
+| Semantic SVG, topology, interaction, custom business model | HTML plus diagram support | [Semantic diagram model](references/semantic-diagram-model.md) and [HTML report contract](references/html-report-contract.md) |
+| Host explicitly supports `gen-ui-demo/v1` | Validated UI data and complete Markdown fallback | [Renderer contract](references/renderer-contract.md) |
+| Directory of multiple HTML documents | Thin offline navigation shell | [HTML report contract](references/html-report-contract.md) and `scripts/build-html-portal.mjs` |
 
-**Decision:** If the host has not explicitly declared a trusted renderer and its accepted schema, do not output UI protocol JSON as the primary answer. Do not assume that a Skill, a prompt, or a Markdown viewer can activate functional sliders, charts, forms, or buttons.
-
-**HTML deliverables:** When HTML is explicitly required or selected, follow the mandatory [HTML Report Contract](references/html-report-contract.md). Choose compact field-appropriate filters, provide column visibility for wide tables, style only absolute HTTP(S) URLs as external links, place cited public sources at the bottom, keep modal fields nonwrapping, stamp report generation time to seconds, and include the GEN-UI personal mark as the local favicon. Do not force interactive controls into long-form documents that do not need them.
+Never assume Markdown can execute UI controls. If a trusted renderer is not declared, use Markdown. Whenever the final deliverable is HTML, follow its contract. **Do not change ordinary Markdown responses into HTML** without an HTML request.
 
 ## Reader-first transformation procedure
 
-1. **Identify the reader's question:** what needs to be understood, compared, decided, verified, or done?
-2. **Extract the information hierarchy:** conclusion, evidence, assumptions, risks, decisions, and next actions. Do not silently delete important details.
-3. **Choose the smallest effective structure:** prose for a short answer; tables for comparison; numbered steps for procedures; timelines or diagrams for relationships; evidence matrices for verification.
-4. **Separate facts from plans:** mark simulated inputs, unexecuted checks, unconfirmed assumptions, and observed results distinctly.
-5. **Progressive disclosure:** put the conclusion first and details near the relevant section. Avoid decorative cards, unsupported charts, redundant headings, and unnecessary controls.
-6. **Validate readability and accuracy:** the output must still make sense as plain Markdown; diagrams, colors, and interactive HTML must have accessible text equivalents.
-7. **Localize examples completely:** Chinese documentation uses Chinese prose, labels and screenshots; English documentation uses English prose, labels and screenshots. Preserve original code identifiers and technical terms.
+1. **Identify the reader's decision:** what must be understood, compared, chosen, verified, or done?
+2. **Lead with the answer:** then give the minimum evidence, limits, risks, and next action.
+3. **Choose the smallest effective structure:** short prose for simple points; comparison tables for alternatives; ordered steps for workflows; risk/acceptance matrices for engineering evidence; diagrams only if relationships are otherwise difficult to understand.
+4. **Preserve factual boundaries:** distinguish observed facts, user input, proposals, examples, estimates, unrun tests, and unverified assumptions.
+5. **Progressive detail:** essentials first; remove repetitive headings, decorative cards, and invented controls.
+6. **Validate comprehension:** answer, rationale, uncertainty, next step.
 
-## 2. Choose layouts by information needs
+## Default formatting
 
-- **Summary and conclusion:** start with the answer and the most important limitation.
-- **Comparisons:** use a short table (ideally five columns or fewer); avoid wide, nested tables.
-- **Procedures:** use numbered steps, with clear inputs and expected outcomes.
-- **Progress / acceptance:** distinguish planned, implemented, validated, failed, and unverified states accurately. For implementation-task states, use the task-state emoji tokens defined below instead of repeating textual state labels.
-- **Numbered headings:** for Chinese structured documents, number section headings with either Chinese numerals (一、二、三) or a consistent decimal hierarchy (1., 1.1, 1.2, 2., 2.1); do not mix the two schemes in one document.
-- **Task-state markers:** use ✅ completed/verified, ❌ failed, ⏸️ paused/blocked, ⏳ pending/to execute, 🔄 in progress, ❓ needs confirmation, and ⚠️ attention/risk. In task lists and status columns, the icon replaces repeated state words; retain the task description and provide accessible text when the host supports it.
-- **Architecture / flow:** use a compact sequence, code block, or Mermaid if supported; provide an equivalent text explanation.
-- **Code:** use language-tagged fenced blocks and runnable commands when appropriate.
-- **Important content:** selectively bold key conclusions, decisions, thresholds, impact and action points; do not bold whole paragraphs.
-- **Pending / attention / confirmation:** apply restrained semantic color to the callout body or quotation background/border, with a clear textual explanation. Never rely on color alone, and never recolor headings for status.
-- **Blockquotes:** when a quote contains a pending confirmation, risk or important caveat, style the quote itself as the corresponding semantic callout; do not leave it as an unmarked gray quote. Avoid decorative card overload.
-- **Accessibility:** use descriptive links, meaningful labels, alt text for images, and text explanations of charts.
+- Prefer concise prose to dashboards; use small comparison tables, clear procedures, and severity-ordered review findings.
+- Distinguish **planned / in progress / completed / tested / failed**; do not claim unrun tests succeeded.
+- Bold only key conclusions. Use consistent section numbering, meaningful links, and chart descriptions.
+- Keep source numbers consistent with tables; label estimates and fictional demos.
 
-Use headings sparingly. Prefer a concise, scannable answer over maximizing component count.
+## HTML and diagrams: on-demand, not core
 
-## 3. Evidence contract for coding work
+For HTML output only, read the **HTML report contract** covering local assets, navigation, tables, code, links, accessibility, and favicon.
 
-Never confuse an intended action with one that was actually executed. An example result is not a measured result.
+For relationships, read the **semantic diagram model** on demand. Semantic interactions, collision-safe labels, full text, and controls belong in the linked contract and renderer.
 
-For implementation or review work, include only fields useful to the task:
+The host must not execute untrusted model text as HTML/JS. Do not fetch remote code or perform network/file side effects without explicit permission. The diagram renderer is optional, not a dependency of everyday answers.
 
-- **Goal:** what was requested
-- **Changed files / scope:** actual paths or explicitly "none"
-- **Validation:** exact commands/tests run and their observed outcomes; "not run" when applicable
-- **Risks:** up to three meaningful caveats
-- **Manual acceptance:** up to five reproducible checks
-- **Conclusion:** verified / needs follow-up / unverified
+## Evidence and checks
 
-For code review, prioritize severity, affected location, evidence, and corrective action. Do not claim "merge-ready" without required project tests and evidence. Keep implementation facts separate from sample output.
+For coding work include only helpful fields: **goal, changed files, exact tests run/results, unresolved risks, and acceptance status**. Do not claim merge readiness based on illustrative examples or static screenshots. If work was not executed, label it clearly.
 
-## 4. Optional interactive UI contract
-
-Only generate the example protocol when the **host specifically confirms** support for `gen-ui-demo/v1` and a trusted renderer.
-
-Read [references/renderer-contract.md](references/renderer-contract.md) before producing demo JSON.
-
-- Model output is **data**, never executable HTML, CSS, JavaScript, or arbitrary event handlers.
-- The host validates the schema, allowed components, field lengths, references, and numeric bounds.
-- All interactive state lives in the host renderer; the demo may only update local slider-driven metrics.
-- The model cannot authorize network calls, file writes, deployments, deletes, or other side effects.
-- Always accompany the UI data with an equivalent Markdown fallback containing default values and formula meaning.
-- If validation fails, fall back to Markdown with a clear error; never silently execute an unrecognized component.
-
-**Protocol scope:** `gen-ui-demo/v1` is an illustrative repository-local format, **not** OpenUI Lang, Google A2UI, or OpenAI DIL. Integrations require their actual schemas and adapters.
-
-## 5. When the requested output is HTML
-
-Whenever the final deliverable is HTML (explicitly requested or established by task context), follow [HTML report contract](references/html-report-contract.md). Do not change ordinary Markdown/CLI output into HTML without an HTML deliverable requirement:
-
-If the generated deliverable is HTML, apply these additional nonnegotiable rules:
-- **Audience-language page**: visible UI copy follows the requested language (Chinese for Chinese examples and English for English examples). Retain technical identifiers, JSON keys and source names where necessary.
-- **Emphasis and numbered headings**: selectively bold important content; use Chinese section numbering (一、二、三) by default for Chinese reports, or a consistent decimal hierarchy (1., 1.1, 1.2, 2., 2.1). Do not mix numbering systems within one document.
-- **Semantic callouts**: visually mark important content, pending confirmation and attention/risk notes using distinct soft background + left-border treatments on the content body or blockquote. Keep H1–H6 colors unchanged; status color belongs to the callout surface/border, not the title.
-- **Task-state iconization**: use ✅ completed/verified, ❌ failed, ⏸️ paused/blocked, ⏳ pending/to execute, 🔄 in progress, ❓ needs confirmation, and ⚠️ attention/risk. In task lists and task-status columns, show the icon instead of a repeated textual status label; keep the task/action description and add aria-label and title for accessibility.
-- **Unified HTML theme**: use #FFFFFF for the page background, #1A1C1F for foreground text and #3A83F7 as the single primary accent. Use the system UI font stack, 14px body text and 12px code. Do not load remote fonts.
-- **Markdown-style code blocks**: show multi-line code only in fenced-Markdown-style <pre><code class="language-..."> blocks, never as unformatted paragraphs. Every block needs an icon-only Copy control anchored at the upper-right, an accessible state label, the Clipboard API with an execCommand("copy") fallback, and offline behavior. Show Check only after a confirmed copy and restore Copy after 1,000ms; never display visible “copied” text. Do not load remote syntax-highlighting libraries.
-- **No source/export/print chrome**: do not add buttons for downloading the original Markdown, printing the current page/content, exporting source text or similar document actions unless explicitly requested. Do not add a dedicated original-Markdown/source directory or table of contents. Do not display wording about opening a new browser tab; keep any necessary external link descriptively labelled and unobtrusive.
-- **Nonwrapping table**: both `th` and `td` use `white-space: nowrap`; long cells use `text-overflow: ellipsis` with a hover/focus **floating full-text tooltip** that closes on leave/blur/scroll. Use a horizontally scrollable table with a **sticky first column** when helpful. Only actually truncated cells should become Tab stops; recompute when resized.
-- **Column-aware filtering**: provide conditions for the actual key fields (e.g. record ID search, module/status/batch selects, duration threshold). Filter, metrics, charts, and paging from one coherent dataset. Never use filter sentinels that collide with valid data (e.g. a module named `all`).
-- **Minimal navigation actions**: use semantic internal tabs only when they improve the page. Do not add a separate browser-tab action, source-download action or print action unless the user asks for it. External references, when genuinely needed, use their descriptive link text without extra navigation wording.
-- **Readable dashboard, richer interactions**: use a small number of compact, clearly labelled metric cards in the overview when they improve scanning; avoid stacking decorative cards. Use forms, modal dialogs, side drawers, tabs and linked controls when useful; do not limit HTML to list pages. Repeated row actions need a unique record-specific accessible name.
-- **GEN-UI monochrome icon system**: use original [SVG assets](assets/icons/README.md) in a restrained one-color style. The personal mark is a single double-peak cat-ear stroke (one path only), with no full head, facial features, frame or ornament; keep its silhouette clear at 16/20/24px. Functional icons should use at most 1–2 geometric primitives, consistent visual weight and recognizable meaning. Do not simplify away semantics. Avoid gradients, colorful mascots, multiple accent colors and excessive decoration.
+For HTML, check local links, mobile layout, keyboard access, and actual interactions. Run `scripts/test-skill.ps1` when changing the GEN-UI repository, not for ordinary Q&A.
 
 
 
-- **Directory-to-portal mode**: when given a directory, recursively discover every eligible HTML file under nested subdirectories and preserve the original pages and local resources. Generate a thin `index.html` **iframe shell**: clicking a page title opens that real HTML file in the main embedded iframe; useful H2 anchors from that HTML page may be nested beneath it. Do not create a synthetic page or navigation group for the original Markdown/source text. The index must not replace, flatten or omit the other HTML pages. Use [scripts/build-html-portal.mjs](scripts/build-html-portal.mjs) at build time; offline browsers cannot list directories themselves.
-- **Minimal collapsible navigation**: multi-page output uses a monochrome left rail with a mobile open/close control; the iframe sandbox must not pair script execution with same-origin access. Avoid gradients, stacked cards, thick dividers and gratuitous H3 headings. Standalone HTML reports may keep concise internal anchors and interactive controls, without nesting another iframe.
-- **Collapsed navigation is an icon rail, never a hidden sidebar**: collapsing a left sidebar must leave a narrow vertical rail with one icon per primary destination. Keep the expand/collapse control inside that rail in both states. Hide labels and secondary navigation only; never set the entire sidebar to `display:none`, zero width, or move its toggle into the page header. Every icon-only destination and toggle needs an accessible Chinese name plus a hover/focus tooltip.
-- **Selective icon buttons**: iconify a small number of familiar, low-ambiguity actions (for example close, collapse, reset, open details). Keep text for primary, destructive, or unfamiliar actions. Icon-only controls require an accessible name and a visible hover/focus hint; never make users guess an icon's meaning.
-- **Main-heading hierarchy**: use one clear H1 and do not place a small subtitle directly beneath it. Put source/context metadata above the H1 or integrate it into the first content section. Combine related explanations, metrics and actions into a few meaningful groups; remove repeated micro-headings and isolated sections that merely restate nearby content.
-- **Image-and-text first when visuals are supported**: pair important explanations with a meaningful diagram, screenshot, chart, map or illustration, placing concise Chinese explanation beside or directly below it. Prefer authored, source-grounded visuals over decorative stock imagery. If the host cannot display images or no useful visual exists, use a clear text/table/Mermaid fallback; never add an image merely to fill space. Every informative image needs alt text and a textual takeaway.
-- **Prefer SVG icons over emoji** for navigation, section decoration and general actions: use consistent local line icons. **Task-state exception:** implementation and acceptance tasks use the emoji state tokens below as the visible state marker instead of repeated words such as “待执行/已完成/失败/暂停”; keep the task description readable and provide aria-label plus title on the icon. Do not use emoji as a substitute for general action icons.
-- **ChatGPT-inspired restraint**: aim for a calm, generous, readable interface with neutral surfaces, clear hierarchy, restrained accent color and subtle separators. Avoid stacked cards, heavy borders, oversized shadows, gradients, excessive small headings and dense decorative chrome. Take inspiration from the clarity of ChatGPT's UI without copying proprietary assets or exact layouts.
-- Data tables offer relevant filters when they help; long tables are paginated **10 rows per page by default**, optionally 20/50. The final page can contain fewer than 10 remaining records. Use compact numbered pagination with previous/next, a current-page indication and optional page jumping. Recompute page counts after filtering.
-- Highlight high-priority **success figures in bright green** and **failure figures in bright red** near the top. A restrained metric card grid is appropriate for the overview; use softly tinted semantic status tags where it improves scanning. Label every figure in text, and keep adequate text contrast.
-- Add pie/bar/line charts only when appropriate to composition/comparison/ordered trends. Use distinct coordinated category colors, clear legends, rounded bars, restrained grid lines and readable labels rather than a single color across every series. Charts and summary values must agree with displayed data and have accessible text equivalents.
-- **Offline SVG flowcharts**: when a flow diagram is useful in an HTML deliverable, embed a real inline SVG with local controls for fullscreen, zoom in/out, fit-to-window and canvas-background panning. Clicking a node or edge selects it and reveals its details; diagram-specific interactions must match the diagram type. Do not make node dragging the only interaction. Escape must exit fullscreen. Keep controls keyboard accessible, use no CDN, and provide a textual description.
-- Standalone HTML can include reviewed client-side JS for local **filters, controls, forms, sliders, charts and navigation**; untrusted JSON remains data under a strict allowlist. No executable AI-supplied HTML/JS, no invented API actions, and no fake test data.
-- Default terminal/Markdown output remains Markdown. An HTML file does not grant arbitrary UI capability inside the user's chat host.
-
-See the [offline multi-page iframe portal](demo/portal-pages/index.html), [recursive directory builder](scripts/build-html-portal.mjs), and the standalone [HTML report example](demo/report.html) with [its renderer logic](demo/report.js). This is a **separate** illustrative data format (`gen-ui-html-report/v1`), not a breaking change to the existing `gen-ui-demo/v1` demo.
-
-## 6. Quick routing examples
-
-**Prompt:** "Review this Java concurrency change. The client is a terminal."
-
-**Response strategy:** findings by severity, files/lines, evidence, remaining risks, and concise Markdown. No simulated GUI controls. See [examples/code-review.md](examples/code-review.md).
-
-**Prompt:** "Write an implementation and test acceptance plan. No tests have been run."
-
-**Response strategy:** an actionable checklist and explicit `Not run` status. Do not invent passing tests. See [examples/acceptance-plan.md](examples/acceptance-plan.md).
-
-**Prompt:** "Explain Java thread pool sizing using a Markdown-only client."
-
-**Response strategy:** static comparison table, formula and limits, with no slider. See [examples/thread-pool.md](examples/thread-pool.md).
-
-**Prompt:** "Show a thread-count slider; my Webview supports the Gen UI demo schema."
-
-**Response strategy:** validated JSON using [examples/thread-pool.ui.json](examples/thread-pool.ui.json), plus equivalent Markdown and clear note that the formula is educational.
-
-## 7. Final self-check
-
-1. Is the answer useful without any special renderer?
-2. Is the chosen format supported by the actual host, with a complete fallback?
-3. Are claims of implementation, testing, pushing, or deployment supported by observed evidence?
-4. Are the important technical facts and limitations easy to find?
-5. Would any output execute untrusted model-provided code or imply unauthorized side effects? If yes, remove it.
-
-## Further reading
-
-- [README](README.md) · [中文说明](README.zh-CN.md)
-- [Renderer contract](references/renderer-contract.md)
-- [HTML report contract](references/html-report-contract.md)
-- [Host integration guidance](docs/integration.md)
-- [Manual behavior evaluation](evals/manual-evaluation.md)
-- [Visual design acceptance checklist](evals/visual-design-acceptance-2026-11-06.md)
-- [Real-Agent prompt matrix and offline output checker](evals/agent-evaluation.md)
-- [Local validation script](scripts/test-skill.ps1)
-
-Gen UI governs **presentation only**. Preserve existing engineering and verification requirements.
+Further reading: [English README](README.md) · [中文说明](README.zh-CN.md).

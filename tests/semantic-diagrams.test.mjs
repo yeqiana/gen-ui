@@ -76,7 +76,9 @@ test("image and code controls are pinned to their upper-right corners", () => {
 test("Skill and HTML contract require semantic interactions, not drag-only diagrams", () => {
   const skill = read("SKILL.md");
   const contract = read("references/html-report-contract.md");
-  for (const source of [skill, contract]) {
+  assert.match(skill,/references\/semantic-diagram-model\.md/);
+  assert.match(skill,/HTML report contract/);
+  for (const source of [contract]) {
     assert.match(source, /sequence step/);
     assert.match(source, /expand\/collapse/);
     assert.match(source, /activity path filter/);

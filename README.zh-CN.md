@@ -31,6 +31,10 @@
 
 这是信息组织方式的示例，不是生产环境的线程池配置建议。
 
+[![同一份技术信息：原始文字墙与 GEN-UI 结构化说明对比](demo/assets/before-after-zh-preview.png)](demo/before-after.zh.html)
+
+这张截图使用**同一组异步任务可靠性信息**做左右对比：左边是长段文字，右边把结论、风险和下一步拆开；[打开中文对比 HTML](demo/before-after.zh.html)。
+
 ## HTML 完整展示 · 十类阅读场景
 
 [![中文信息重构案例与交互报告](demo/assets/report-information-design-preview.png)](demo/report.html)
@@ -47,25 +51,25 @@
 
 [![项目分析报告中文预览](demo/documents/assets/project-analysis-preview.png)](demo/documents/project-analysis.html)
 
-业务背景、模块职责、系统边界、领域模型、核心链路与风险。 [阅读项目分析](demo/documents/project-analysis.html)
+**截图重点：业务思维导图。** 业务背景、模块职责、系统边界、领域模型、核心链路与风险。 [阅读项目分析](demo/documents/project-analysis.html)
 
 ### 02 · 系统架构设计方案
 
 [![架构设计方案中文预览](demo/documents/assets/architecture-design-preview.png)](demo/documents/architecture-design.html)
 
-任务状态机、模块边界、Outbox、执行权围栏和断点恢复。 [阅读架构设计](demo/documents/architecture-design.html)
+**截图重点：消息时序与部署拓扑。** 任务状态机、模块边界、Outbox、执行权围栏和断点恢复。 [阅读架构设计](demo/documents/architecture-design.html)
 
 ### 03 · 技术实施方案
 
 [![技术实施方案中文预览](demo/documents/assets/implementation-plan-preview.png)](demo/documents/implementation-plan.html)
 
-阶段计划、依赖关系、迁移、灰度、回滚与验收门禁。 [阅读实施方案](demo/documents/implementation-plan.html)
+**截图重点：活动路径与责任泳道。** 阶段计划、依赖关系、迁移、灰度、回滚与验收门禁。 [阅读实施方案](demo/documents/implementation-plan.html)
 
 ### 04 · 测试与验收方案
 
 [![测试与验收方案中文预览](demo/documents/assets/test-acceptance-preview.png)](demo/documents/test-acceptance.html)
 
-覆盖矩阵、故障注入、待执行用例、性能测试计划和证据要求。 [阅读测试验收](demo/documents/test-acceptance.html)
+**截图重点：测试用例矩阵与故障注入。** 覆盖矩阵、故障注入、待执行用例、性能测试计划和证据要求。 [阅读测试验收](demo/documents/test-acceptance.html)
 
 [浏览全部中文技术文档](demo/documents/index.html) · [Demo 目录说明](demo/README.md)
 
