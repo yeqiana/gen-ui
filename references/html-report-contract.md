@@ -2,6 +2,10 @@
 
 This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
+### Delivery gate (required for standalone HTML reports)
+
+Before accepting a generated standalone report, run `node scripts/validate-html-report.mjs <report.html>`. A nonzero exit code blocks acceptance: missing left navigation container, missing heading-nav.js, missing main, missing navigable headings, mixed Chinese/decimal heading schemes, invalid decimal heading depth or visible timezone suffix. This is a **static contract check**, not a substitute for browser and accessibility tests. Heading levels are defined by H2/H3/H4, never inferred from numeric text. The navigation enhancer preserves source numbering by default; set `data-heading-numbering="chinese"` on `<html>` only for intentionally generated Chinese numbering. Choose numbering before producing the HTML, not at runtime.
+
 ### Fourth-round layout invariants
 
 - Single-page HTML reports default to a **visible left sidebar**, not top or hidden navigation. Build at most three collapsible heading levels (H2/H3/H4, including headings equivalent to 4 / 4.1 / 4.1.1). Generate links from actual heading IDs and preserve a usable static fallback.

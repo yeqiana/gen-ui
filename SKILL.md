@@ -9,6 +9,8 @@ description: Use when AI responses become hard to understand, too long, or diffi
 
 **Lightweight Skill entry, full capability, no functional or visual regression.** Load additional contracts, assets and scripts only when a deliverable needs them; progressively enhance Markdown to offline HTML to semantic interaction. Read [Skill principles](docs/skill-principles.md) for reusable positioning and regression checks.
 
+For standalone HTML delivery, run `node scripts/validate-html-report.mjs <report.html>` before acceptance; see the HTML report contract.
+
 ## Purpose
 
 Gen UI reduces **walls of text, comprehension effort, and reading friction**. It is an **Information Design Skill**, not a general UI framework or a replacement for coding, review, testing, or deployment tools.
