@@ -131,7 +131,11 @@ Additional **English Markdown examples**: [Java code review](examples/code-revie
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 node tests/chrome-report-smoke.mjs
 node tests/chrome-documents-smoke.mjs
+node tests/chrome-semantic-stress.mjs
+node tests/chrome-semantic-stress.mjs --mobile
 ~~~
+
+To refresh all nine current technical-document screenshots from the actual HTML and Chrome renderer, run `node tests/chrome-documents-smoke.mjs --update-previews`. Seeded diagram regression now covers 7 types × 40 models at desktop and mobile widths; it does not prove that every possible diagram is collision-free.
 
 These checks validate fixed, trusted repository examples; they do not establish general model compliance or results from a real project. See [SKILL.md](SKILL.md), [integration](docs/integration.md), and [FAQ](docs/faq.md) for capability and safety boundaries.
 
