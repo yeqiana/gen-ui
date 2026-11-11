@@ -80,3 +80,20 @@ button{cursor:pointer}button:focus-visible,a:focus-visible,iframe:focus-visible,
 .page-link:hover,.section-link:hover{background:#EFF5FF;color:#3A83F7}
 .icon-button:hover{background:#EFF5FF;color:#3A83F7}
 .is-collapsed .rail-close{width:34px;height:34px}
+
+/* Consistent left rail: hidden fold button, double-click brand, desktop resize. */
+#collapse{display:none!important}
+.rail-head{cursor:pointer;user-select:none}
+.portal:not(.is-collapsed) .nav-glyph{display:none}
+#page-nav{scrollbar-color:#e2e8f0 transparent;scrollbar-width:thin}
+#page-nav::-webkit-scrollbar{width:4px}
+#page-nav::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:8px}
+#page-nav::-webkit-scrollbar-track{background:transparent}
+@media(min-width:701px){
+ .portal:not(.is-collapsed){grid-template-columns:var(--genui-portal-rail-width,244px) minmax(0,1fr)}
+ .rail{position:relative}
+ .portal-rail-resize{position:absolute;right:0;top:0;bottom:0;width:7px;cursor:col-resize;touch-action:none;z-index:4;background:transparent;border-right:1px solid transparent}
+ .portal-rail-resize:hover,.portal-rail-resize.is-dragging,.portal-rail-resize:focus-visible{background:rgba(58,131,247,.09);border-right-color:#9dc2ff;outline:none}
+ .portal.is-collapsed .portal-rail-resize{display:none}
+}
+@media(max-width:700px){.portal-rail-resize{display:none}}

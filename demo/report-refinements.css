@@ -97,3 +97,7 @@ td[data-compare-status="success"]{color:#23764f;background:#f4fbf7;font-weight:6
 td[data-compare-status="failure"]{color:#a33b3b;background:#fff1f0;font-weight:650}
 td[data-compare-status="warning"]{color:#8a5a12;background:#fff8e8;font-weight:650}
 td[data-compare-status="neutral"]{color:#344054}
+
+/* Comparison emphasis is typographic, not a colored block. */
+.compare-value,.compare-value--success,.compare-value--failure,.compare-value--warning,.compare-value--neutral{background:transparent!important}
+td[data-compare-status]{background:transparent!important}

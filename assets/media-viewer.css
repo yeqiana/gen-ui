@@ -17,7 +17,7 @@ img[data-zoomable]{max-width:100%;height:auto}
 .genui-image-stage:active{cursor:grabbing}
 .genui-image-stage img{max-width:88vw;max-height:calc(100dvh - 105px);width:auto;height:auto;object-fit:contain;will-change:transform;user-select:none;pointer-events:none;transform-origin:center}
 .genui-image-open:focus-visible,.genui-image-stage:focus-visible{outline:2px solid #3A83F7;outline-offset:-3px}
-body.genui-image-open{overflow:hidden}
+body.genui-image-viewer-open{overflow:hidden}
 .flow-panel.is-fullscreen,.flow-panel:fullscreen,.diagram.is-fullscreen,.diagram:fullscreen{z-index:16000!important}
 .flow-actions button,.diagram-actions button{width:30px;min-width:30px;height:30px;min-height:30px;padding:5px;display:grid;place-items:center}
 .flow-actions button:disabled,.diagram-actions button:disabled{opacity:.45;cursor:not-allowed}
@@ -32,3 +32,7 @@ blockquote>p:empty,blockquote>div:empty{display:none}
 /* Compact icon-only media controls and double-click source image. */
 .genui-image-toolbar button,.genui-image-open{width:27px;height:27px;padding:5px}
 img[data-zoomable]{cursor:zoom-in}
+
+.genui-image-overlay{width:100vw;height:100dvh;max-height:100dvh}
+.genui-image-stage{display:flex;align-items:center;justify-content:center}
+.genui-image-stage img{flex:none;max-width:96vw;max-height:calc(100dvh - 75px);object-fit:contain;display:block}

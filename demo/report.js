@@ -406,7 +406,7 @@
       detail.setAttribute("aria-label", "查看任务 " + row.id + " 的详情（站内抽屉）");
       detail.addEventListener("click", () => showRecord(row));
       actionCell.append(detail);
-      const durationCell = clippedCell(row.durationMs.toLocaleString("zh-CN") + " 毫秒", "duration");
+      const durationCell = clippedCell((window.GenUITableFormat?.numberFormat(row.durationMs) ?? row.durationMs.toLocaleString("zh-CN",{maximumFractionDigits:2})) + " 毫秒", "duration");
       const severity = row.status === "failure" ? "failure" : row.durationMs > filter.threshold ? "warning" : row.status === "success" ? "success" : "neutral";
       durationCell.dataset.compareStatus = severity;
       tr.append(clippedCell(row.id, "id"), clippedCell(row.module, "module"), statusCell,
