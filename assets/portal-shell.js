@@ -105,7 +105,38 @@ collapse.addEventListener("click",()=>{
  collapse.title=expanded?"折叠目录":"展开目录";
  collapse.setAttribute("aria-label",collapse.title);
 });
-menu.addEventListener("click",()=>{
+const railHead=rail.querySelector(".rail-head");
+if(railHead){
+ railHead.tabIndex=0;railHead.setAttribute("role","button");railHead.setAttribute("aria-label","双击折叠或展开左侧导航");
+ railHead.title="双击折叠或展开左侧导航（Enter 键也可操作）";
+ railHead.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();collapse.click();}});
+}
+rail.addEventListener("dblclick",e=>{
+ if(e.target.closest(".portal-rail-resize"))return;
+ if(e.target.closest(".page-link,.section-link,.group summary,button")&&!e.target.closest(".rail-head"))return;
+ e.preventDefault();collapse.click();
+});
+const resizer=make("div","portal-rail-resize");
+resizer.tabIndex=0;resizer.setAttribute("role","separator");resizer.setAttribute("aria-orientation","vertical");
+resizer.setAttribute("aria-label","拖动调整左侧导航宽度");resizer.title="拖动调整导航宽度，双击恢复";
+let railWidth=244,drag=null;
+const setWidth=w=>{
+ railWidth=Math.max(190,Math.min(Math.min(480,Math.round(innerWidth*.45)),Math.round(w)));
+ app.style.setProperty("--genui-portal-rail-width",railWidth+"px");
+ resizer.setAttribute("aria-valuemin","190");resizer.setAttribute("aria-valuemax",String(Math.min(480,Math.round(innerWidth*.45))));
+ resizer.setAttribute("aria-valuenow",String(railWidth));
+};
+resizer.addEventListener("pointerdown",e=>{
+ if(e.button!==0||small()||app.classList.contains("is-collapsed"))return;
+ e.preventDefault();drag={id:e.pointerId,x:e.clientX,width:railWidth};
+ resizer.setPointerCapture?.(e.pointerId);resizer.classList.add("is-dragging");
+});
+resizer.addEventListener("pointermove",e=>{if(drag?.id===e.pointerId)setWidth(drag.width+e.clientX-drag.x);});
+const release=e=>{if(drag&&(!e||e.pointerId===drag.id)){drag=null;resizer.classList.remove("is-dragging");}};
+["pointerup","pointercancel","lostpointercapture"].forEach(k=>resizer.addEventListener(k,release));
+resizer.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();setWidth(railWidth+(e.key==="ArrowRight"?16:-16));}if(e.key==="Home"){e.preventDefault();setWidth(244);}});
+resizer.addEventListener("dblclick",e=>{e.stopPropagation();setWidth(244);});
+rail.appendChild(resizer);setWidth(244);menu.addEventListener("click",()=>{
  const show=!app.classList.contains("mobile-open");
  app.classList.toggle("mobile-open",show);menu.setAttribute("aria-expanded",String(show));backdrop.hidden=!show;
  if(show)rail.querySelector("summary,button")?.focus();

@@ -24,3 +24,22 @@
 /* Code-copy control: first-line alignment without an empty leading row. */
 .doc-section pre{padding-top:14px;padding-right:50px}
 .doc-section pre .code-copy{width:27px;height:27px;min-height:27px}
+
+/* Adjustable chapter rail; static brand/heading remain visible while navigation scrolls. */
+@media(min-width:701px){
+ .doc-layout:not([data-sidebar-collapsed="true"]){grid-template-columns:var(--genui-sidebar-width,248px) minmax(0,1fr);max-width:1650px}
+ .doc-layout>.doc-toc{display:flex;flex-direction:column;position:sticky;top:24px;align-self:start;height:calc(100dvh - 48px);max-height:calc(100dvh - 48px);min-height:0;overflow:hidden;padding-right:12px}
+ .doc-toc>.toc-brand,.doc-toc>.toc-label{flex:none;cursor:pointer}
+ .doc-toc>nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
+ .doc-toc>.toc-foot{flex:none;margin-top:8px}
+ .doc-main{width:100%;max-width:none}
+ .doc-layout[data-sidebar-collapsed="true"]{grid-template-columns:58px minmax(0,1fr);max-width:1650px;gap:26px}
+ .doc-layout[data-sidebar-collapsed="true"] .doc-toc{padding:0 5px 0 0;overflow:hidden}
+ .doc-layout[data-sidebar-collapsed="true"] .toc-brand{font-size:0;letter-spacing:0;white-space:nowrap;margin-bottom:0}
+ .doc-layout[data-sidebar-collapsed="true"] .toc-brand:before{content:"UI";display:block;font-size:12px;font-weight:700;color:#3a83f7;padding:4px 0}
+ .doc-layout[data-sidebar-collapsed="true"] .toc-label,.doc-layout[data-sidebar-collapsed="true"] .toc-foot,.doc-layout[data-sidebar-collapsed="true"] .genui-nav-resize{display:none!important}
+}
+
+/* Comparison values are highlighted only through their text. */
+.doc-main .table-wrap th,.doc-main .table-wrap td{text-align:left}
+.doc-main .table-wrap td .tag,.doc-main .table-wrap td .tag--blue,.doc-main .table-wrap td .tag--green,.doc-main .table-wrap td .tag--amber,.doc-main .table-wrap td .tag--red{background:transparent;border:0;padding-inline:0}

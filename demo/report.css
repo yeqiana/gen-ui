@@ -264,3 +264,16 @@ blockquote.callout{margin-inline:0}
   .app[data-sidebar-collapsed="true"] main{min-width:0;padding:20px 12px 40px}
 }
 @media(prefers-reduced-motion:reduce){.nav-toggle,.icon-only{transition:none}}
+
+/* Left navigation: fixed brand, independently scrolling chapter list, adjustable grid. */
+@media(min-width:801px){
+ .app:not([data-navigation="top"]):not([data-sidebar-collapsed="true"]){grid-template-columns:var(--genui-sidebar-width,222px) minmax(0,1fr)}
+ .app:not([data-navigation="top"]) .sidebar{position:sticky;top:0;height:100dvh;min-height:0;overflow:hidden;align-items:stretch}
+ .app:not([data-navigation="top"]) .sidebar>.brand{flex:none;position:relative;z-index:2}
+ .app:not([data-navigation="top"]) .sidebar>nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
+ .app:not([data-navigation="top"]) .sidebar .genui-tree{max-height:none;overflow:visible}
+}
+#toggle-sidebar{display:none!important}
+.sidebar>.brand{cursor:pointer;user-select:none}
+.app[data-navigation="top"] .genui-nav-resize,.app[data-sidebar-collapsed="true"] .genui-nav-resize{display:none!important}
+.app[data-sidebar-collapsed="true"] .sidebar>.brand{cursor:pointer}

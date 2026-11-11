@@ -16,3 +16,22 @@
 
 .genui-tree a svg{width:16px;height:16px;flex:0 0 16px}
 .app[data-sidebar-collapsed=true] .genui-tree .genui-nav-level-1>a svg{width:19px;height:19px}
+
+/* Fifth-round chapter navigation: no visible title icons or fold chevrons. */
+.genui-tree a>svg,.genui-tree a>img,.genui-nav-fold{display:none!important}
+.genui-tree a{padding-right:9px!important}
+.genui-nav-children{padding-left:8px;margin-left:8px}
+.genui-tree .genui-nav-level-1>a[aria-expanded]{cursor:pointer}
+.genui-nav-resize{position:absolute;right:0;top:0;bottom:0;width:7px;z-index:12;cursor:col-resize;touch-action:none;background:transparent;border-right:1px solid transparent}
+.genui-nav-resize:hover,.genui-nav-resize.is-dragging,.genui-nav-resize:focus-visible{background:rgba(58,131,247,.09);border-right-color:#9dc2ff;outline:none}
+.sidebar nav,.doc-toc nav{scrollbar-width:thin;scrollbar-color:#e2e8f0 transparent}
+.sidebar nav::-webkit-scrollbar,.doc-toc nav::-webkit-scrollbar{width:4px}
+.sidebar nav::-webkit-scrollbar-thumb,.doc-toc nav::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:8px}
+.sidebar nav::-webkit-scrollbar-track,.doc-toc nav::-webkit-scrollbar-track{background:transparent}
+@media(max-width:800px){.genui-nav-resize{display:none!important}}
+
+/* Icons are hidden by default; when only a narrow rail remains, show icon-only links. */
+.app[data-sidebar-collapsed="true"] .genui-tree .genui-nav-level-1>a>svg,.doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-level-1>a>svg{display:block!important;width:20px;height:20px;flex:0 0 20px}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav{display:block!important;flex:1;min-height:0;overflow-y:auto}
+.doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-level-1>a{font-size:0;padding:10px 3px!important;justify-content:center}
+.doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-children{display:none!important}

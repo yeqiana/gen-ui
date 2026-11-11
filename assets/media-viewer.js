@@ -149,10 +149,10 @@
   let scale=1,x=0,y=0,drag=null,originFocus=null;
   const paint=()=>{image.style.transform="translate("+x+"px,"+y+"px) scale("+scale+")";out.textContent=Math.round(scale*100)+"%";};
   const fit=()=>{scale=1;x=0;y=0;paint();};
-  function close(){if(dialog.hidden)return;dialog.hidden=true;dialog.classList.remove("is-open");document.body.classList.remove("genui-image-open");image.removeAttribute("src");originFocus?.focus();originFocus=null;drag=null;}
+  function close(){if(dialog.hidden)return;dialog.hidden=true;dialog.classList.remove("is-open");document.body.classList.remove("genui-image-viewer-open");image.removeAttribute("src");originFocus?.focus();originFocus=null;drag=null;}
   function open(src,alt,focus){
    if(!dialog.hidden)return;
-   originFocus=focus;image.src=src;image.alt=alt;dialog.hidden=false;dialog.classList.add("is-open");document.body.classList.add("genui-image-open");fit();stage.focus();
+   originFocus=focus;image.src=src;image.alt=alt;image.loading="eager";dialog.hidden=false;dialog.classList.add("is-open");document.body.classList.add("genui-image-viewer-open");fit();stage.focus();
   }
   pics.forEach(pic=>{
    if(pic.dataset.genUiImageReady==="true")return;pic.dataset.genUiImageReady="true";

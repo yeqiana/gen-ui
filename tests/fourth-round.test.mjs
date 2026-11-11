@@ -27,12 +27,12 @@ test("八类架构图支持纯容器分层，未知字段与非法数据被拒�
  assert.equal(validate(m),m);
  for(const invalid of [{...m,script:"alert(1)"},{...m,groups:[{name:"x",items:[""]}]},{...m,layout:"madeup"},{...m,groups:[]}])assert.throws(()=>validate(invalid));
 });
-test("HTML 默认左侧导航三级折叠，编号单一，无可见时区偏移",()=>{
+test("HTML 默认双层章节导航，双击收展，图标默认隐藏且无可见时区偏移",()=>{
  const nav=read("assets/heading-nav.js");
  assert.match(nav,/genui-nav-level-/);
- assert.match(nav,/genui-nav-fold/);
+ assert.doesNotMatch(nav,/className="genui-nav-fold"/);
  assert.match(nav,/aria-expanded/);
- assert.match(nav,/depths\.get\(h\)-1/);
+ assert.match(nav,/main\.querySelectorAll\("h2,h3"\)/);
  assert.doesNotMatch(nav,/\^\\d\+\\\.\\d\+\\\.\\d\+/);
  for(const file of ["demo/report.html","demo/documents/architecture-design.html","demo/documents/project-analysis.html","demo/documents/implementation-plan.html","demo/documents/test-acceptance.html"]){
   const html=read(file);
@@ -44,7 +44,7 @@ test("HTML 默认左侧导航三级折叠，编号单一，无可见时区偏移
  const report=read("demo/report.html");
  assert.match(report,/data-navigation="left"/);
  assert.match(report,/（一） 状态构成/);
- assert.match(report,/<h4>甲、 七类专业关系图/);
+ assert.match(report,/<h4>七类专业关系图/);
 });
 test("复制与图片按钮首行对齐，全屏双击与滚轮可用，七类图图标尺寸一致",()=>{
  const css=read("demo/ui-refresh.css")+read("demo/documents/assets/document.css");
@@ -68,5 +68,5 @@ test("翻页、重置、打开与表格操作均为图标，状态单值且关�
  for(const kind of ["success","failure","warning"])assert.ok(css.includes('td[data-compare-status="'+kind+'"]'));
 });
 
-test("第五轮：标题层级只由语义标签决定，编号默认保留源内容",()=>{const nav=read("assets/heading-nav.js");assert.match(nav,/const level=Number\(h.tagName.slice\(1\)\)/);assert.match(nav,/scheme==="chinese"/);assert.match(nav,/dataset.headingNumbering\|\|"preserve"/);});
+test("第六轮：中文标题仅H2和H3编号，不再建立三级章节",()=>{const nav=read("assets/heading-nav.js");assert.match(nav,/const isChapter=/);assert.match(nav,/scheme==="chinese"/);assert.match(nav,/dataset.headingNumbering\|\|"preserve"/);assert.match(nav,/main.querySelectorAll\(".doc-section h4"\)/);});
 test("第五轮：架构图支持三层嵌套并拒绝超限或未知字段",()=>{const base={type:"系统架构",title:"系统",layout:"groups",groups:[{name:"A",children:[{name:"B",children:[{name:"C",items:["D"]}]}]}]};assert.equal(validate(base),base);assert.throws(()=>validate({...base,groups:[{name:"A",children:[{name:"B",children:[{name:"C",children:[{name:"D",items:["E"]}]}]}]}]}));assert.throws(()=>validate({...base,groups:[{name:"A",children:[{name:"B",items:["ok"],script:"x"}]}]}));});

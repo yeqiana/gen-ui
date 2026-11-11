@@ -190,7 +190,15 @@
   collapse:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8H3m5 0V3m8 5h5m-5 0V3m0 13h5m-5 0v5M8 16H3m5 0v5"/></svg>',
   layout:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="8" height="6" rx="1"/><rect x="13" y="14" width="8" height="6" rx="1"/><path d="M11 7h4v4m-4 6H7v-3"/></svg>',
   prev:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg>',
-  next:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg>'
+  next:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg>',
+  fields:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M10 10v9M14 14h4"/></svg>',
+  ports:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="7" height="8" rx="1"/><rect x="14" y="8" width="7" height="8" rx="1"/><path d="M10 12h4M7 8V4M17 8V4M7 16v4M17 16v4"/></svg>',
+  "path-normal":'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h8l3-4h5M15 8l3-3M15 8l3 3"/><circle cx="4" cy="12" r="2"/></svg>',
+  "path-retry":'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h9a6 6 0 1 1-5.8 7.5M5 7l4-4M5 7l4 4"/></svg>',
+  "path-all":'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h5l4-5h7M9 12l4 5h7M18 5l2 2-2 2M18 15l2 2-2 2"/></svg>',
+  lanes:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg>',
+  zones:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>',
+  "expand-all":'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M10 12h4M12 10v4"/></svg>',
  };
  function btn(parent,action,label,icon){const b=html("button","semantic-tool",parent);b.type="button";b.dataset.action=action;b.setAttribute("aria-label",label);b.title=label;b.innerHTML=icon||"";if(!icon)b.textContent=label;return b;}
  function fitSvgLabel(node,fullText,maxWidth){
@@ -205,7 +213,7 @@
  function edge(svgRoot,spec,lang,defs){
   const edgeIndex=Number(svgRoot.dataset.edgeCount||0);svgRoot.dataset.edgeCount=String(edgeIndex+1);const uniqueId="edge-"+(spec.id??svgRoot.dataset.markerId+"-"+edgeIndex);
    const g=svg("g",{class:"semantic-edge", "data-selectable":"true","data-id":uniqueId,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":text(spec.label,lang),"data-summary":text(spec.detail||T("该连线表示两个元素之间的关系。","This connector represents a relationship between two elements."),lang),"tabindex":"0","role":"button"},svgRoot);
-  svg("path",{d:spec.d,fill:"none",stroke:"#8fa6c0","stroke-width":"2","stroke-linecap":"round","stroke-linejoin":"round","marker-end":"url(#"+svgRoot.dataset.markerId+")","stroke-dasharray":spec.dashed?"6 5":null},g);
+  svg("path",{d:spec.d,fill:"none",stroke:"#748aa5","stroke-width":"2.2","stroke-linecap":"round","stroke-linejoin":"round","marker-end":"url(#"+svgRoot.dataset.markerId+")","stroke-dasharray":spec.dashed?"6 5":null},g);
   const value=text(spec.label,lang);
   if(value){const w=labelWidth(value,lang),x=spec.lx-w/2,y=spec.ly-11;const chip=svg("g",{class:"semantic-edge-chip","data-selectable":"true","data-id":g.dataset.id,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":g.dataset.title,"data-summary":g.dataset.summary,"data-detail":text(spec.detail||spec.label,lang),"data-base-x":spec.lx,"data-base-y":spec.ly,tabindex:"0",role:"button","aria-label":value},svgRoot);svg("rect",{class:"semantic-edge-label-bg",x,y,width:w,height:22,rx:6,fill:"#fff",stroke:"#d0d5dd","stroke-width":"1"},chip);svg("text",{class:"semantic-edge-label",x:spec.lx,y:spec.ly+4,"text-anchor":"middle","font-size":"12","font-family":"system-ui,sans-serif",fill:"#344054"},chip,value);svg("title",{},chip,value);if(spec.messageIndex!==undefined){g.dataset.messageIndex=spec.messageIndex;chip.dataset.messageIndex=spec.messageIndex;}if(spec.path){g.dataset.path=spec.path;chip.dataset.path=spec.path;}}
   return g;
@@ -330,7 +338,7 @@
    const h=type==="sequence"?Math.max(requestedHeight,Math.max(...model.messages.map((m,i)=>m.y??155+i*75))+95):requestedHeight;
   const svgRoot=svg("svg",{class:"semantic-svg",viewBox:"0 0 "+w+" "+h,role:"img","aria-label":text(model.title,lang),"preserveAspectRatio":"xMinYMin meet"},root);
   svg("title",{},svgRoot,text(model.title,lang));svg("desc",{},svgRoot,text(model.desc,lang));
-  const markerId="semantic-arrow-"+type+"-"+(++instanceCounter);svgRoot.dataset.markerId=markerId;const defs=svg("defs",{},svgRoot),marker=svg("marker",{id:markerId,markerWidth:"8",markerHeight:"8",refX:"7",refY:"3",orient:"auto"},defs);svg("path",{d:"M0 0 L7 3 L0 6",fill:"#8fa6c0"},marker);
+  const markerId="semantic-arrow-"+type+"-"+(++instanceCounter);svgRoot.dataset.markerId=markerId;const defs=svg("defs",{},svgRoot),marker=svg("marker",{id:markerId,viewBox:"0 0 10 10",markerWidth:"9",markerHeight:"9",refX:"9",refY:"5",orient:"auto"},defs);svg("path",{d:"M0 0 L9 5 L0 10 Z",fill:"#627a95"},marker);
   if(type==="sequence")renderSequence(svgRoot,model,lang,h);
   if(type==="mind")renderMind(svgRoot,model,lang);
   if(type==="deploy")renderDeploy(svgRoot,model,lang);
@@ -354,7 +362,10 @@
   const collide=(a,b,pad=5)=>a.x<b.x+b.w+pad&&a.x+a.w+pad>b.x&&a.y<b.y+b.h+pad&&a.y+a.h+pad>b.y;
   const nodes=[...svgRoot.querySelectorAll(".semantic-node-shape,.semantic-actor>rect")].filter(n=>n.getClientRects().length&&n.getBoundingClientRect().width>0).map(box);
   const chips=[...svgRoot.querySelectorAll(".semantic-edge-chip")].filter(n=>!n.classList.contains("is-hidden"));const fallback=svgRoot.closest(".genui-semantic-diagram")?.querySelector(".semantic-label-fallbacks");if(fallback)fallback.replaceChildren();
-  const placed=[];
+  const arrowTips=[...svgRoot.querySelectorAll(".semantic-edge path[marker-end]")].flatMap(path=>{
+    try{const length=path.getTotalLength(),tip=path.getPointAtLength(length),unitPixels=Math.max(.02,Math.hypot(matrix.a,matrix.b)),margin=Math.min(220,Math.max(22,18/unitPixels));return [{x:tip.x-margin,y:tip.y-margin,w:margin*2,h:margin*2}];}
+    catch{return [];}
+   });const placed=[];
   const offsets=[0,-28,28,-56,56,-84,84,-112,112,-140,140,-168,168,-196,196,-224,224,-252,252];
   const candidates=offsets.flatMap(dy=>offsets.map(dx=>({dx,dy,cost:dx*dx+dy*dy*1.06}))).sort((a,b)=>a.cost-b.cost);
   for(const chip of chips){
@@ -371,7 +382,7 @@
     const cx2=cx+dx,cy2=cy+dy;
     const r={x:cx2-w/2,y:cy2-h/2,w,h};
     if(r.x<5||r.y<5||r.x+r.w>graph.w-5||r.y+r.h>graph.h-5)continue;
-    if(nodes.some(n=>collide(r,n))||placed.some(n=>collide(r,n)))continue;
+    if(nodes.some(n=>collide(r,n))||arrowTips.some(n=>collide(r,n,2))||placed.some(n=>collide(r,n)))continue;
     best={cx:cx2,cy:cy2,rect:r};break;
    }
    chip.dataset.layoutOk=String(!!best);
@@ -451,7 +462,8 @@
   const shell=html("div","semantic-shell",host),toolbar=html("div","semantic-toolbar",shell);
   html("strong","semantic-title",toolbar,text(model.title,lang));
   const tools=html("div","semantic-tools",toolbar);
-  const add=(a,l,i)=>btn(tools,a,l,i);
+  const add=(a,l,i)=>btn(tools,a,l,i||ICON[a]);
+   const labelButton=(button,label)=>{button.title=label;button.setAttribute("aria-label",label);};
   if(type==="sequence"){add("prev",text(T("上一步消息","Previous message"),lang),ICON.prev);add("next",text(T("下一步消息","Next message"),lang),ICON.next);}
   if(type==="er")add("fields",text(T("隐藏普通字段","Hide non-key fields"),lang),"");
   if(type==="component")add("ports",text(T("隐藏接口端口","Hide interface ports"),lang),"");
@@ -481,13 +493,13 @@
    const b=e.target.closest("button[data-action]");if(!b)return;const a=b.dataset.action;
    if(a==="read")read();else if(a==="zoom-in")zoom(.8);else if(a==="zoom-out")zoom(1.25);else if(a==="fit")fit();else if(a==="fullscreen")full();
    else if(a==="prev"||a==="next"){const count=model.messages.length;sequenceIndex=Math.max(0,Math.min(count-1,sequenceIndex+(a==="next"?1:-1)));selectMessage(sequenceIndex);}
-   else if(a==="fields"){fieldsVisible=!fieldsVisible;stage.querySelectorAll(".semantic-entity").forEach(entity=>{let index=0;entity.querySelectorAll("[data-field]").forEach(row=>{const hide=!fieldsVisible&&!["PK","FK"].includes(row.dataset.fieldType);row.classList.toggle("is-hidden",hide);if(!hide){row.setAttribute("transform","translate(0 "+(46+index*29)+")");index++;}});const height=56+index*29;entity.dataset.h=height;entity.querySelector(".semantic-node-shape")?.setAttribute("height",height);});b.textContent=text(T(fieldsVisible?"隐藏普通字段":"显示普通字段",fieldsVisible?"Hide non-key fields":"Show non-key fields"),lang);scheduleLabelLayout();}
-   else if(a==="ports"){portsVisible=!portsVisible;stage.querySelectorAll("[data-port]").forEach(n=>n.classList.toggle("is-hidden",!portsVisible));b.textContent=text(T(portsVisible?"隐藏接口端口":"显示接口端口",portsVisible?"Hide ports":"Show ports"),lang);}
+   else if(a==="fields"){fieldsVisible=!fieldsVisible;stage.querySelectorAll(".semantic-entity").forEach(entity=>{let index=0;entity.querySelectorAll("[data-field]").forEach(row=>{const hide=!fieldsVisible&&!["PK","FK"].includes(row.dataset.fieldType);row.classList.toggle("is-hidden",hide);if(!hide){row.setAttribute("transform","translate(0 "+(46+index*29)+")");index++;}});const height=56+index*29;entity.dataset.h=height;entity.querySelector(".semantic-node-shape")?.setAttribute("height",height);});labelButton(b,text(T(fieldsVisible?"隐藏普通字段":"显示普通字段",fieldsVisible?"Hide non-key fields":"Show non-key fields"),lang));scheduleLabelLayout();}
+   else if(a==="ports"){portsVisible=!portsVisible;stage.querySelectorAll("[data-port]").forEach(n=>n.classList.toggle("is-hidden",!portsVisible));labelButton(b,text(T(portsVisible?"隐藏接口端口":"显示接口端口",portsVisible?"Hide ports":"Show ports"),lang));}
    else if(a==="path-normal"||a==="path-retry"){const wanted=a==="path-normal"?new Set(["normal"]):new Set(["retry","reject"]);stage.querySelectorAll("[data-path],[data-paths]").forEach(n=>{const paths=(n.dataset.paths??n.dataset.path??"").split(",").filter(Boolean);n.classList.toggle("is-path-muted",paths.length>0&&!paths.some(path=>wanted.has(path)));});}
    else if(a==="path-all")stage.querySelectorAll(".is-path-muted").forEach(n=>n.classList.remove("is-path-muted"));
    else if(a==="expand-all"){stage.querySelectorAll("[data-parent]").forEach(n=>n.classList.remove("is-hidden"));stage.querySelectorAll("[data-toggle-branch]").forEach(n=>{n.dataset.expanded="true";n.setAttribute("aria-expanded","true");n.querySelector("path")?.setAttribute("d","M161 34h10");});}
-   else if(a==="zones"){zonesCollapsed=!zonesCollapsed;stage.querySelectorAll("[data-zone-content]").forEach(n=>n.classList.toggle("is-hidden",zonesCollapsed));syncEdges();b.textContent=text(T(zonesCollapsed?"展开部署区域":"折叠部署区域",zonesCollapsed?"Expand zones":"Collapse zones"),lang);}
-   else if(a==="lanes"){lanesCollapsed=!lanesCollapsed;stage.querySelectorAll("[data-lane-content]").forEach(n=>n.classList.toggle("is-hidden",lanesCollapsed));syncEdges();b.textContent=text(T(lanesCollapsed?"展开泳道":"折叠泳道",lanesCollapsed?"Expand lanes":"Collapse lanes"),lang);}
+   else if(a==="zones"){zonesCollapsed=!zonesCollapsed;stage.querySelectorAll("[data-zone-content]").forEach(n=>n.classList.toggle("is-hidden",zonesCollapsed));syncEdges();labelButton(b,text(T(zonesCollapsed?"展开部署区域":"折叠部署区域",zonesCollapsed?"Expand zones":"Collapse zones"),lang));}
+   else if(a==="lanes"){lanesCollapsed=!lanesCollapsed;stage.querySelectorAll("[data-lane-content]").forEach(n=>n.classList.toggle("is-hidden",lanesCollapsed));syncEdges();labelButton(b,text(T(lanesCollapsed?"展开泳道":"折叠泳道",lanesCollapsed?"Expand lanes":"Collapse lanes"),lang));}
   });
   function syncEdges(){stage.querySelectorAll(".semantic-edge,.semantic-edge-chip").forEach(e=>{const a=stage.querySelector('[data-id="'+e.dataset.source+'"]'),b=stage.querySelector('[data-id="'+e.dataset.target+'"]');e.classList.toggle("is-hidden",!!(a?.closest(".is-hidden")||b?.closest(".is-hidden")));});}
   function selectMessage(index){sequenceIndex=index;stage.querySelectorAll(".is-selected,.is-related").forEach(n=>n.classList.remove("is-selected","is-related"));const same=[...stage.querySelectorAll('[data-message-index="'+index+'"]')];same.forEach(n=>n.classList.add("is-selected"));const n=same.find(x=>x.classList.contains("semantic-edge"))??same[0];if(n){[n.dataset.source,n.dataset.target].forEach(id=>stage.querySelector('[data-id="'+id+'"]')?.classList.add("is-related"));show(n);}}
