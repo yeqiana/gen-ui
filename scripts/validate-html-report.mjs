@@ -13,6 +13,16 @@ export function validateHtml(html,sourcePath){
  if(sidebar&&!nav)issues.push('左侧导航缺少 nav 静态结构');
  const toc=nav?.match(/<(?:ul|ol)\b[^>]*class=["'][^"']*\b(?:nav-list|toc-list)\b[^"']*["'][^>]*>[\s\S]*?<\/(?:ul|ol)>/i)?.[0];
  if(nav&&(!toc||!/<a\b[^>]*href=["']#[^"']+["']/i.test(toc)))issues.push('缺少无脚本可用的静态目录链接');
+ if(nav){
+  const mainMarkup=html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0]||"";
+  const ids=new Set([...mainMarkup.matchAll(/\bid=["\x27]([^"\x27]+)["\x27]/gi)].map(m=>m[1]));
+  for(const m of nav.matchAll(/<a\b([^>]*)>/gi)){
+   const href=m[1].match(/\bhref=["\x27]([^"\x27]+)["\x27]/i)?.[1];
+   if(!href||!href.startsWith('#')||href.length===1){issues.push('静态目录链接必须指向本页标题');continue;}
+   let id;try{id=decodeURIComponent(href.slice(1));}catch{issues.push('静态目录锚点编码错误');continue;}
+   if(!ids.has(id))issues.push('静态目录锚点不存在：'+id);
+  }
+ }
  const scriptPath=html.match(/<script\b[^>]*src=["']([^"']*heading-nav\.js)["']/i)?.[1];
  if(!scriptPath)issues.push('缺少 heading-nav.js 导航增强脚本');
  if(scriptPath && sourcePath){
@@ -34,6 +44,35 @@ export function validateHtml(html,sourcePath){
   for(const h of headings){if(decimal.test(h.text)){const dots=h.text.match(/^\d+(?:\.\d+)*/)?.[0].split('.').length||0;if(dots!==h.level-1)issues.push('数字标题层级与 H 标签不一致：'+h.text.slice(0,40));}}
  }
  if(/<time\b[^>]*>[^<]*[+-]\d{2}:\d{2}<\/time>/i.test(html))issues.push('可见时间包含时区偏移');
+ // 检查离线资源：外链引用允许，页面自动加载的资源必须本地可访问。
+ for(const item of html.matchAll(/<(script|link|img|iframe|source|video|audio)\b([^>]*)>/gi)){
+  const tag=item[1].toLowerCase(),attrs=item[2];
+  const rel=attrs.match(/\brel\s*=\s*(?:(["\x27])([^"\x27]*)\1|([^\s>]+))/i);
+  if(tag==='link'&&!/\b(?:stylesheet|icon|shortcut icon|preload|modulepreload)\b/i.test(rel?.[2]??rel?.[3]??''))continue;
+  const found=attrs.match(/\b(?:src|href)\s*=\s*(?:(["\x27])([^"\x27]*)\1|([^\s>]+))/i);
+  if(!found)continue;
+  const url=found[2]??found[3];
+  if(/^data:/i.test(url)){
+   if(tag!=='img'&&tag!=='link')issues.push('不允许脚本或框架 data URI');
+   continue;
+  }
+  if(/^(?:[a-z][\w+.-]*:|\/\/|\/|\\\\)/i.test(url)){issues.push('自动加载的 '+tag+' 资源不允许外部地址');continue;}
+  let name;try{name=decodeURIComponent(url.split(/[?#]/,1)[0]);}catch{issues.push('资源地址编码错误');continue;}
+  if(!name||(sourcePath&&!fs.existsSync(path.resolve(path.dirname(sourcePath),name))))issues.push(tag+' 本地资源不存在：'+name);
+ }
+ // Responsive image source sets must also remain entirely offline.
+ for(const item of html.matchAll(/<(?:img|source)\b([^>]*)>/gi)){
+  const found=item[1].match(/\bsrcset\s*=\s*(?:(["\x27])([^"\x27]*)\1|([^\s>]+))/i);
+  if(!found)continue;
+  const value=found[2]??found[3];
+  if(value.startsWith('data:'))continue;
+  for(const entry of value.split(',').map(x=>x.trim().split(/\s+/)[0]).filter(Boolean)){
+   if(/^(?:[a-z][\w+.-]*:|\/\/|\/|\\\\)/i.test(entry)){issues.push('srcset 禁止自动加载外部图片');continue;}
+   const name=entry.split(/[?#]/,1)[0];
+   if(sourcePath&&!fs.existsSync(path.resolve(path.dirname(sourcePath),name)))issues.push('srcset 本地图片不存在：'+name);
+  }
+ }
+ if(/(?:@import\s+(?:url\()?\s*["\x27]?|url\(\s*["\x27]?)(?:https?:\/\/|\/\/)/i.test(html))issues.push('CSS 禁止远程加载资源');
  return issues;
 }
 let failed=false;

@@ -1,7 +1,8 @@
 {
   "seed": "0xC0FFEE",
-  "cases": 120,
-  "pass": 120,
+  "viewport": 900,
+  "cases": 280,
+  "pass": 280,
   "failed": 0,
   "failures": []
 }

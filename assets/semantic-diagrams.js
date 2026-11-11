@@ -185,7 +185,7 @@
  const ICON={
   plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4-4M8 11h6M11 8v6"/></svg>',
   minus:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4-4M8 11h6"/></svg>',
-  fit:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M3 3l7 7M16 3h5v5m0-5-7 7M21 16v5h-5m5 0-7-7M8 21H3v-5m0 5 7-7"/></svg>',
+  fit:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>',
   expand:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M3 3l7 7M16 3h5v5m0-5-7 7M21 16v5h-5m5 0-7-7M8 21H3v-5m0 5 7-7"/></svg>',
   collapse:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8H3m5 0V3m8 5h5m-5 0V3m0 13h5m-5 0v5M8 16H3m5 0v5"/></svg>',
   layout:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="8" height="6" rx="1"/><rect x="13" y="14" width="8" height="6" rx="1"/><path d="M11 7h4v4m-4 6H7v-3"/></svg>',
@@ -451,7 +451,7 @@
   const shell=html("div","semantic-shell",host),toolbar=html("div","semantic-toolbar",shell);
   html("strong","semantic-title",toolbar,text(model.title,lang));
   const tools=html("div","semantic-tools",toolbar);
-  const add=(a,l,i)=>btn(tools,a,l,ICON[i]);
+  const add=(a,l,i)=>btn(tools,a,l,i);
   if(type==="sequence"){add("prev",text(T("上一步消息","Previous message"),lang),ICON.prev);add("next",text(T("下一步消息","Next message"),lang),ICON.next);}
   if(type==="er")add("fields",text(T("隐藏普通字段","Hide non-key fields"),lang),"");
   if(type==="component")add("ports",text(T("隐藏接口端口","Hide interface ports"),lang),"");

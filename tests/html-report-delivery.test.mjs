@@ -38,3 +38,21 @@ test('导航脚本路径必须实际存在且不可依赖远程资源',()=>{
  assert.notEqual(run(html.replace('assets/heading-nav.js','https://example.org/heading-nav.js')).status,0);
  assert.equal(run(html).status,0);
 });
+
+test('不存在的目录锚点与离线资源必须拒绝',()=>{
+ const html=base('<h2>一、背景</h2>');
+ assert.notEqual(run(html.replace('href="#chapter"','href="#unknown"')).status,0);
+ assert.notEqual(run(html.replace('href="#chapter"','href="#%ZZ"')).status,0);
+ assert.notEqual(run(html.replace('</main>','<img src="missing-image.png"></main>')).status,0);
+ assert.notEqual(run(html.replace('</html>','<script src="https://example.com/code.js"></script></html>')).status,0);
+ assert.notEqual(run(html.replace('</html>','<link rel="stylesheet" href="https://example.com/x.css"></html>')).status,0);
+ assert.notEqual(run(html.replace('</html>','<iframe src="https://example.com/"></iframe></html>')).status,0);
+ assert.notEqual(run(html.replace('</html>','<style>.x{background:url(https://example.com/a.png)}</style></html>')).status,0);
+ assert.equal(run(html.replace('</html>','<a href="https://github.com">查看源码</a></html>')).status,0);
+});
+test('unquoted src and srcset are not a network escape hatch',()=>{
+ const html=base('<h2>一、背景</h2>');
+ assert.notEqual(run(html.replace('</html>','<script src=https://example.com/x.js></script></html>')).status,0);
+ assert.notEqual(run(html.replace('</html>','<link rel=stylesheet href=https://example.com/x.css></html>')).status,0);
+ assert.notEqual(run(html.replace('</html>','<img srcset="https://example.com/img.png 2x"></html>')).status,0);
+});

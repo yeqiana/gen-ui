@@ -66,6 +66,8 @@ jobs:
             & node $script
             if ($LASTEXITCODE -ne 0) { throw "Browser smoke failed: $script" }
           }
+          & node tests/chrome-semantic-stress.mjs --mobile
+          if ($LASTEXITCODE -ne 0) { throw "Mobile semantic stress failed" }
           foreach ($case_id in @("HTML02","HTML03","HTML04")) {
             $inputPath = "evals/artifacts/${case_id}-webcodex-gpt6-20261106/report.html"
             $reportPath = Join-Path $env:RUNNER_TEMP "${case_id}-browser-evidence.json"

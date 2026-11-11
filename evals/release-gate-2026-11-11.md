@@ -26,3 +26,11 @@
 对真实 Codex 输出还需执行 `scripts/validate-html-report.mjs` 和 Chrome 浏览器验收，并区分内容错误、格式错误与运行时交互缺陷。压力测试仅覆盖指定三类图的确定性样本，不能证明任意合法输入无碰撞；其余四类图随机压力测试也尚未完成。
 
 **结论：代码和回归门禁就绪，正式封版仍需真实模型 A/B 证据。** 本文是本地验收快照，不代表 GitHub Actions 已完成或远端已发布。
+
+## 第四轮缺口整改复检（同日增量）
+
+- HTML 交付验证器增加正文内真实锚点检查，兼容包含标题的 section，阻断远程自动加载脚本、样式、图片、iframe、srcset 和本地缺失资源，公开点击引用仍可使用。新增负例验证见 tests/html-report-delivery.test.mjs。
+- 七类语义图从三类/120 份扩展到七类/280 份，每类 40 份固定种子 JSON，桌面 900px 和移动 375px 均实际渲染、检查关系标签避让、节点文字边界、类型交互及重复初始化。证据分别为 evals/artifacts/stress-2026-11-11/result.json 与 result-mobile.json。
+- README 对应中英文技术文档截图通过 Chrome --update-previews 从当前源码重新生成（9 张），英文测试验收矩阵已移动到正确章节并在截图中可见。修复图表工具栏 SVG icon 参数传递错误及 fit/fullscreen 图标重复问题。
+- 真实 Codex Skill A/B：本轮在 WebCodex SYSTEM Runner 上调用单次 MD-light 任务仍超时。未产生真实可验收模型输出；不能据此认为 Skill 行为提升。桌面账户方式受工具授权限制，未进行越权操作。**A/B 仍为封版阻塞项。**
+- 上述回归仅代表本地 Runner 验证，不能替代 GitHub Actions 远端流水线或真实 Agent A/B。正式封版结论维持“暂不封版”，直到真实模型对照闭环。

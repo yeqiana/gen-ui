@@ -137,7 +137,11 @@ Claude Code 可放入项目的 `.claude/skills/gen-ui/`，其他 Agent 可按照
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1
 node tests/chrome-report-smoke.mjs
 node tests/chrome-documents-smoke.mjs
+node tests/chrome-semantic-stress.mjs
+node tests/chrome-semantic-stress.mjs --mobile
 ~~~
+
+如需从真实 HTML 和 Chrome 重新生成当前 9 张技术文档截图，运行 `node tests/chrome-documents-smoke.mjs --update-previews`。七类专业图现覆盖每类 40 份固定种子业务模型及桌面/移动端回归，但不等于所有输入都绝对无碰撞。
 
 测试仅验证**仓库内的固定示例**；不等于真实目标项目已通过审计、执行或发布。关于安全边界、宿主适配与操作许可，参见 [SKILL.md](SKILL.md)、[集成说明](docs/integration.md) 和 [FAQ](docs/faq.md)。
 
