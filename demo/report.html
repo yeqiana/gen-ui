@@ -16,7 +16,7 @@
   <script src="../assets/media-viewer.js" defer></script>
   <script src="./report.js" defer></script>
   <script src="../assets/code-blocks.js" defer></script>
-<link rel="stylesheet" href="../assets/diagram-types.css"><link rel="stylesheet" href="../assets/semantic-diagrams.css"><script src="../assets/semantic-diagrams.js" defer></script></head>
+<link rel="stylesheet" href="../assets/diagram-types.css"><link rel="stylesheet" href="../assets/semantic-diagrams.css"><script src="../assets/semantic-diagrams.js" defer></script><link rel="stylesheet" href="../assets/heading-nav.css"><script src="../assets/heading-nav.js" defer></script></head>
 <body>
 <a class="skip" href="#main">跳到主要内容</a>
 <div class="app" data-report-app data-navigation="left">
@@ -46,7 +46,7 @@
         <p class="eyebrow"><img class="heading-mark" src="../assets/icons/gen-ui-mark.svg" width="20" height="20" alt="">GEN-UI / 可交互报告示例 · 模拟数据</p>
         <h1 id="report-title">工程质量分析</h1>
       </div>
-      <div class="masthead-actions"><p class="generated-at"><span>报告生成时间</span><time id="generated-at" datetime="2026-11-10T10:48:21+08:00">2026-11-10 10:48:21 +08:00</time></p>
+      <div class="masthead-actions"><p class="generated-at"><span>报告生成时间</span><time id="generated-at" datetime="2026-11-10T10:48:21+08:00">2026-11-10 10:48:21</time></p>
         <label class="inline-select" for="nav-mode">导航布局
           <select id="nav-mode">
             <option value="left" selected>左侧（默认）</option>
@@ -57,7 +57,7 @@
     </header>
 
     <section id="overview" class="jump" aria-labelledby="overview-heading">
-      <div class="section-title"><h2 id="overview-heading"><img class="section-icon" src="../assets/icons/gen-ui-spark.svg" alt=""> 一、执行概览</h2></div>
+      <div class="section-title"><h2 id="overview-heading"><img class="section-icon" src="../assets/icons/gen-ui-spark.svg" alt="">一、 执行概览</h2></div>
       <dl class="metrics">
         <div class="metric"><dt>全部记录</dt><dd id="count-total">—</dd></div>
         <div class="metric positive"><dt>成功</dt><dd id="count-success">—</dd></div>
@@ -83,7 +83,7 @@
   </div><p class="flow-hint">拖动平移 · ＋/− 缩放 · 0 适应窗口 · Esc 退出全屏</p>
 </div>
         <div class="overview-copy">
-          <h3>先看整体，再核对明细</h3>
+          <h3>（一） 先看整体，再核对明细</h3>
           <p>所有指标、图表和记录来自同一份筛选结果。先确认成功与失败分布，再按模块、批次和耗时定位具体问题。</p>
           <p class="muted">示例数据仅在当前页面临时生效，不会发送网络请求。</p>
         </div>
@@ -91,16 +91,16 @@
     </section>
 
     <section id="visuals" class="jump" aria-labelledby="visuals-heading">
-      <div class="section-title"><h2 id="visuals-heading"><img class="section-icon" src="../assets/icons/gen-ui-chart.svg" alt=""> 二、趋势与分布</h2></div>
+      <div class="section-title"><h2 id="visuals-heading"><img class="section-icon" src="../assets/icons/gen-ui-chart.svg" alt="">二、 趋势与分布</h2></div>
       <div class="chart-layout">
-        <article id="status-distribution" class="chart-section jump"><h3>2.1 状态构成 · 饼图</h3><figure id="pie"></figure></article>
-        <article id="module-analysis" class="chart-section jump"><h3>2.2 模块对比 · 柱状图</h3><figure id="bar"></figure></article>
-        <article id="batch-trend" class="chart-section jump"><h3>2.3 批次走势 · 折线图</h3><figure id="line"></figure></article>
+        <article id="status-distribution" class="chart-section jump"><h3>（一） 状态构成 · 饼图</h3><figure id="pie"></figure></article>
+        <article id="module-analysis" class="chart-section jump"><h3>（二） 模块对比 · 柱状图</h3><figure id="bar"></figure></article>
+        <article id="batch-trend" class="chart-section jump"><h3>（三） 批次走势 · 折线图</h3><figure id="line"></figure></article>
       </div>
     </section>
 
     <section id="records" class="jump" aria-labelledby="records-heading">
-      <div class="section-title"><h2 id="records-heading"><img class="section-icon" src="../assets/icons/gen-ui-table.svg" alt=""> 三、执行明细</h2></div>
+      <div class="section-title"><h2 id="records-heading"><img class="section-icon" src="../assets/icons/gen-ui-table.svg" alt="">三、 执行明细</h2></div>
       <div class="toolbar">
         <div class="tab-list" role="tablist" aria-label="内容切换">
           <button type="button" id="tab-records" role="tab" aria-controls="panel-records" aria-selected="true" tabindex="0" class="tab active">
@@ -111,8 +111,8 @@
           </button>
         </div>
         <div class="toolbar-actions">
-          <button type="button" id="open-create" class="primary"><img src="../assets/icons/gen-ui-form.svg" alt="">新增记录</button>
-          <button type="button" id="open-data-drawer"><img src="../assets/icons/gen-ui-drawer.svg" alt="">编辑数据</button><details id="column-picker" class="column-picker">
+          <button type="button" id="open-create" class="primary genui-action-icon" aria-label="新增记录" title="新增记录"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button type="button" id="open-data-drawer" class="genui-action-icon" aria-label="打开数据编辑抽屉" title="编辑数据"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16M9 9v10"/></svg></button><details id="column-picker" class="column-picker">
   <summary aria-label="选择表格显示列" title="选择显示列"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 4h14M3 10h14M3 16h14M7 2v4M13 8v4M9 14v4"/></svg><span>列显示</span></summary>
   <div class="column-picker-panel" role="group" aria-label="表格列显示设置">
     <label><input type="checkbox" id="column-module" checked>所属模块</label>
@@ -143,7 +143,7 @@
       <label><input type="checkbox" id="status-pending" value="pending" checked>待处理</label>
     </div>
   </details>
-  <button type="button" id="reset-filters" class="secondary">重置筛选</button>
+  <button type="button" id="reset-filters" class="secondary genui-action-icon" aria-label="重置筛选" title="重置筛选"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 3 7M3 4v7h7"/></svg></button>
 </form>
         <div class="detail-filters">
           <label for="threshold">耗时阈值</label>
@@ -168,13 +168,13 @@
             <nav id="page-numbers" class="page-numbers" aria-label="表格页码"></nav>
             <button type="button" id="next" aria-label="下一页"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8 4 6 6-6 6"/></svg></button>
             <label class="page-jump" for="page-jump-input">前往 <input id="page-jump-input" type="number" min="1" value="1" aria-label="跳转到第几页"> 页</label>
-            <button type="button" id="page-go">跳转</button>
+            <button type="button" id="page-go" class="genui-action-icon" aria-label="跳转到输入的页码" title="跳转"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-7-7 7 7-7 7"/></svg></button>
           </div>
         </div>
         <p class="help">可左右滚动查看完整列；长文本保留省略号，鼠标移入或键盘聚焦时显示完整内容。最后一页允许少于所选每页条数。</p>
       </div>
       <div id="panel-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
-        <h3>筛选与查看规则</h3>
+        <h3>（一） 筛选与查看规则</h3>
         <p>编号支持模糊搜索；模块、状态和批次分别对应表格关键字段；阈值筛选与所有统计及图表实时联动。</p>
         <p>筛选说明用于查看当前报告的字段口径与操作规则，不会改变原始数据。</p>
         <figure class="code-example">
@@ -189,7 +189,7 @@
     </section>
 
     <section id="showcase" class="jump showcase" aria-labelledby="showcase-heading">
-  <div class="section-title"><h2 id="showcase-heading">四、AI 回答的信息重构案例</h2><span class="muted">示例均为虚构场景，不代表已审计或已执行</span></div>
+  <div class="section-title"><h2 id="showcase-heading">四、 AI 回答的信息重构案例</h2><span class="muted">示例均为虚构场景，不代表已审计或已执行</span></div>
   <p class="showcase-lead">GEN-UI 首先解决<strong>文字墙、重点不明确、阅读顺序混乱、事实与计划混杂</strong>，然后才根据宿主能力决定是否使用图表与交互。以下案例展示从普通 AI 回答到可读工程信息的完整路径。</p>
   <div class="case-directory" aria-label="信息重构用例目录">
     <a href="#case-answer"><strong>01</strong><span>结论优先</span></a><a href="#case-compare"><strong>02</strong><span>方案对比</span></a>
@@ -199,15 +199,15 @@
     <a href="#case-guide"><strong>09</strong><span>技术文档</span></a><a href="#case-features"><strong>10</strong><span>交互能力矩阵</span></a>
   </div>
   <article id="case-answer" class="case-block jump">
-    <h3>4.1 结论优先：把一段文字墙改成三层信息</h3>
+    <h3>（一） 结论优先：把一段文字墙改成三层信息</h3>
     <div class="before-after">
-      <div><h4>原始回答（反例）</h4><p>线程池需要考虑 CPU 核数、任务类型、最大线程数、队列长度、拒绝策略和超时时间，还需要考虑各种运行环境、应用程序的性能指标以及运行时的资源情况。不同场景配置不同，最终需要做一些测试和调整……</p></div>
-      <div><h4>结构化回答</h4><p><strong>结论：</strong>优先使用有界队列和明确拒绝策略，线程数必须结合负载压测确定。</p><p><strong>核心依据：</strong>CPU 密集与阻塞型任务的资源瓶颈不同；队列积压会直接影响尾延迟。</p><p><strong>下一步：</strong>先记录 P95/P99、队列等待与 CPU 使用率，再按实际负载调参。</p></div>
+      <div><h4>甲、 原始回答（反例）</h4><p>线程池需要考虑 CPU 核数、任务类型、最大线程数、队列长度、拒绝策略和超时时间，还需要考虑各种运行环境、应用程序的性能指标以及运行时的资源情况。不同场景配置不同，最终需要做一些测试和调整……</p></div>
+      <div><h4>乙、 结构化回答</h4><p><strong>结论：</strong>优先使用有界队列和明确拒绝策略，线程数必须结合负载压测确定。</p><p><strong>核心依据：</strong>CPU 密集与阻塞型任务的资源瓶颈不同；队列积压会直接影响尾延迟。</p><p><strong>下一步：</strong>先记录 P95/P99、队列等待与 CPU 使用率，再按实际负载调参。</p></div>
     </div>
     <blockquote class="callout callout--confirm"><strong>❓ 需要确认：</strong>当前任务是 CPU 密集还是 IO 密集？该信息决定线程池容量估算方法，不能直接从通用公式推断生产配置。</blockquote>
   </article>
   <article id="case-compare" class="case-block jump">
-    <h3>4.2 方案对比：让读者直接看到取舍</h3>
+    <h3>（二） 方案对比：让读者直接看到取舍</h3>
     <div class="table-wrap" tabindex="0" role="region" aria-label="异步执行方式方案比较">
       <table><thead><tr><th>方案</th><th>优点</th><th>主要代价</th><th>建议场景</th></tr></thead><tbody>
       <tr><td>同步 HTTP</td><td>链路直观</td><td>超时与连接生命周期受限</td><td>短耗时且可预测的调用</td></tr>
@@ -218,12 +218,12 @@
     <div class="callout callout--success"><strong>推荐方向：</strong>对于需要长期运行、可恢复的多阶段流程，优先考虑持久化工作流。具体选型仍取决于真实 SLA 和故障成本。</div>
   </article>
   <article id="case-process" class="case-block jump">
-    <h3>4.3 步骤与流程：用可执行顺序替代散乱叙述</h3>
+    <h3>（三） 步骤与流程：用可执行顺序替代散乱叙述</h3>
     <ol class="action-steps"><li><strong>识别输入：</strong>检查需求、已有代码与约束。</li><li><strong>确定边界：</strong>列出本次涉及的模块与不改动范围。</li><li><strong>执行变更：</strong>小步实现并记录影响。</li><li><strong>核验证据：</strong>运行明确的测试并区分已完成与未验证事项。</li></ol>
     <p>上方的<strong>内嵌 SVG 工程流程图</strong>演示了可缩放、平移、全屏与文字说明的流程表达；缺少浏览器能力时应回退到上述编号步骤。</p>
   </article>
   <article id="case-review" class="case-block jump">
-    <h3>4.4 代码评审：按严重程度、证据和行动分组</h3>
+    <h3>（四） 代码评审：按严重程度、证据和行动分组</h3>
     <div class="table-wrap" tabindex="0" role="region" aria-label="虚构代码评审示例"><table><thead><tr><th>级别</th><th>位置（虚构）</th><th>风险</th><th>整改</th></tr></thead><tbody>
       <tr><td><span class="tag tag--red">高</span></td><td><code>JobWorker.java:88</code></td><td>租约失效后旧进程仍能更新结果</td><td>使用 fencing token 做条件更新</td></tr>
       <tr><td><span class="tag tag--amber">中</span></td><td><code>JobWorker.java:121</code></td><td>执行权丢失与临时故障混用同一异常码</td><td>拆分 Attempt 错误分类</td></tr>
@@ -236,7 +236,7 @@ WHERE task_id = :task_id
   AND status = 'RUNNING';</code></pre></figure>
   </article>
   <article id="case-plan" class="case-block jump">
-    <h3>4.5 实施计划：用状态标记任务，而不是声称已完成</h3>
+    <h3>（五） 实施计划：用状态标记任务，而不是声称已完成</h3>
     <ul class="task-state-list">
       <li><span class="task-state" role="img" aria-label="已完成" title="已完成">✅</span><span>编写本页的交互演示与规则说明</span></li>
       <li><span class="task-state" role="img" aria-label="失败" title="失败">❌</span><span>示例故障：旧 Worker 无条件写入导致并发冲突</span></li>
@@ -249,7 +249,7 @@ WHERE task_id = :task_id
     <p class="muted">这些符号展示的是不同语义，并非真实项目任务执行记录。</p>
   </article>
   <article id="case-test" class="case-block jump">
-    <h3>4.6 测试验收：把“如何验证”与“验证结果”严格分离</h3>
+    <h3>（六） 测试验收：把“如何验证”与“验证结果”严格分离</h3>
     <div class="table-wrap" tabindex="0" role="region" aria-label="虚构测试验收示例"><table><thead><tr><th>测试 ID</th><th>验证场景</th><th>通过条件</th><th>状态</th></tr></thead><tbody>
       <tr><td>TC-001</td><td>重复投递同一消息</td><td>仅产生一次有效业务结果</td><td><span class="tag tag--amber">⏳</span></td></tr>
       <tr><td>TC-002</td><td>旧 Worker 租约过期后恢复</td><td>过期 token 的更新影响行数为 0</td><td><span class="tag tag--amber">⏳</span></td></tr>
@@ -257,7 +257,7 @@ WHERE task_id = :task_id
     </tbody></table></div><div class="callout callout--attention"><strong>⚠️ 证据边界：</strong>以上测试案例均未执行，不能写成“验收通过”。</div>
   </article>
   <article id="case-triage" class="case-block jump">
-    <h3>4.7 问题排查：症状 → 假设 → 证据 → 下一步</h3>
+    <h3>（七） 问题排查：症状 → 假设 → 证据 → 下一步</h3>
     <div class="table-wrap" tabindex="0" role="region" aria-label="问题排查决策表"><table><thead><tr><th>症状</th><th>可能原因</th><th>优先采集</th><th>下一步</th></tr></thead><tbody>
       <tr><td>任务一直 RUNNING</td><td>Worker 心跳中断</td><td>心跳时间、租约、进程日志</td><td>核实后触发恢复对账</td></tr>
       <tr><td>消息重复消费</td><td>ACK 丢失或重投</td><td>事件 ID、幂等记录</td><td>核实去重约束</td></tr>
@@ -265,7 +265,7 @@ WHERE task_id = :task_id
     </tbody></table></div>
   </article>
   <article id="case-host" class="case-block jump">
-    <h3>4.8 宿主适配：能阅读优先，交互按需启用</h3>
+    <h3>（八） 宿主适配：能阅读优先，交互按需启用</h3>
     <div class="table-wrap" tabindex="0" role="region" aria-label="宿主输出适配表"><table><thead><tr><th>宿主</th><th>首选形式</th><th>能力边界</th></tr></thead><tbody>
       <tr><td>终端 / CLI</td><td>Markdown 结论、表格和步骤</td><td>不假装有可点击组件</td></tr>
       <tr><td>GitHub / IDE</td><td>GFM + 受支持的图示</td><td>提供文字回退</td></tr>
@@ -274,7 +274,7 @@ WHERE task_id = :task_id
     </tbody></table></div>
   </article>
   <article id="case-guide" class="case-block jump">
-    <h3>4.9 长篇技术文档：让目录、图表和代码分别服务理解</h3>
+    <h3>（九） 长篇技术文档：让目录、图表和代码分别服务理解</h3>
     <p>这四份相互关联的<strong>中文完整技术文档</strong>对应不同阅读目的：理解项目、理解设计、执行方案、验证交付。它们不是另外一套业务 UI。</p>
     <div class="doc-link-grid">
       <a href="documents/project-analysis.html"><strong>项目分析</strong><span>背景、领域模型、架构边界与风险</span></a>
@@ -285,7 +285,7 @@ WHERE task_id = :task_id
   </article>
   <figure class="image-example"><img data-zoomable src="./documents/assets/architecture-design-preview.png" alt="中文架构设计文档实际浏览器截图" loading="lazy"><figcaption>图像阅读案例：放大镜可在页面中打开全屏比例查看器，再进行缩放和拖动。</figcaption></figure>
 
-  <div id="diagram-type-gallery" class="diagram-type-gallery"><h3>4.9.1 七类专业关系图 · 真实结构与可操作交互</h3><p>每类图采用对应的图形语法：时序图有生命线与消息，ER 图有实体字段与基数，活动图有判断分支，泳道图有责任边界。点击节点、消息、关系或字段查看说明；使用图类型专属控件展开、筛选或演示。空白画布可平移，工具栏可缩放和全屏。</p><details class="diagram-type-entry" id="diagram-type-sequence"><summary><strong>时序图</strong><span>展示参与者之间按时间发生的请求、事件和返回。</span></summary><div class="genui-semantic-diagram" data-semantic-diagram="sequence"><p class="semantic-fallback">展示参与者之间按时间发生的请求、事件和返回。</p></div></details>
+  <div id="diagram-type-gallery" class="diagram-type-gallery"><h4>甲、 七类专业关系图 · 真实结构与可操作交互</h4><p>每类图采用对应的图形语法：时序图有生命线与消息，ER 图有实体字段与基数，活动图有判断分支，泳道图有责任边界。点击节点、消息、关系或字段查看说明；使用图类型专属控件展开、筛选或演示。空白画布可平移，工具栏可缩放和全屏。</p><details class="diagram-type-entry" id="diagram-type-sequence"><summary><strong>时序图</strong><span>展示参与者之间按时间发生的请求、事件和返回。</span></summary><div class="genui-semantic-diagram" data-semantic-diagram="sequence"><p class="semantic-fallback">展示参与者之间按时间发生的请求、事件和返回。</p></div></details>
 <details class="diagram-type-entry" id="diagram-type-mind"><summary><strong>思维导图</strong><span>以中心目标向外展开策划、生产、质量和恢复分支。</span></summary><div class="genui-semantic-diagram" data-semantic-diagram="mind"><p class="semantic-fallback">以中心目标向外展开策划、生产、质量和恢复分支。</p></div></details>
 <details class="diagram-type-entry" id="diagram-type-deploy"><summary><strong>部署拓扑图</strong><span>展示部署区域、服务节点、基础设施和通信协议。</span></summary><div class="genui-semantic-diagram" data-semantic-diagram="deploy"><p class="semantic-fallback">展示部署区域、服务节点、基础设施和通信协议。</p></div></details>
 <details class="diagram-type-entry" id="diagram-type-er"><summary><strong>ER 实体关系图</strong><span>展示实体字段、主外键和一对多关系。</span></summary><div class="genui-semantic-diagram" data-semantic-diagram="er"><p class="semantic-fallback">展示实体字段、主外键和一对多关系。</p></div></details>
@@ -293,7 +293,7 @@ WHERE task_id = :task_id
 <details class="diagram-type-entry" id="diagram-type-swim"><summary><strong>泳道图</strong><span>按责任角色分离步骤，展示跨泳道交接。</span></summary><div class="genui-semantic-diagram" data-semantic-diagram="swim"><p class="semantic-fallback">按责任角色分离步骤，展示跨泳道交接。</p></div></details>
 <details class="diagram-type-entry" id="diagram-type-component"><summary><strong>组件图</strong><span>展示组件边界、端口接口和依赖关系。</span></summary><div class="genui-semantic-diagram" data-semantic-diagram="component"><p class="semantic-fallback">展示组件边界、端口接口和依赖关系。</p></div></details></div>
 <article id="case-features" class="case-block jump">
-    <h3>4.10 Skill HTML 能力覆盖矩阵</h3>
+    <h3>（十） Skill HTML 能力覆盖矩阵</h3>
     <p>以下映射帮助检查每个交互是否有<strong>具体阅读目的</strong>，避免仅为美化而增加控件。</p>
     <div class="table-wrap" tabindex="0" role="region" aria-label="GEN-UI HTML 能力与实际位置映射"><table><thead><tr><th>能力</th><th>实际演示位置</th><th>解决的问题</th></tr></thead><tbody>
       <tr><td>结论优先、重要加粗</td><td><a href="#case-answer">4.1</a>、一、执行概览</td><td>减少寻找结论的时间</td></tr>
@@ -312,7 +312,7 @@ WHERE task_id = :task_id
   </article>
 </section>
     <section id="references" class="references" aria-labelledby="references-heading">
-  <div class="section-title"><h2 id="references-heading">参考资料</h2><span class="muted">交互与可访问性规范</span></div>
+  <div class="section-title"><h2 id="references-heading">五、 参考资料</h2><span class="muted">交互与可访问性规范</span></div>
   <ul class="reference-list">
     <li><a class="external-link" href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/" target="_blank" rel="noopener noreferrer">W3C WAI-ARIA APG：模态对话框模式</a><span>对话框焦点管理、键盘交互与模态语义</span></li>
     <li><a class="external-link" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog" target="_blank" rel="noopener noreferrer">MDN：HTML dialog 元素</a><span>原生对话框的打开、关闭与可访问性说明</span></li>
@@ -337,7 +337,7 @@ WHERE task_id = :task_id
       <label for="new-batch"><span class="form-label" id="label-new-batch" title="执行批次">执行批次</span><select id="new-batch"><option value="1">批次 1</option><option value="2">批次 2</option><option value="3">批次 3</option><option value="4">批次 4</option><option value="5">批次 5</option><option value="6">批次 6</option><option value="7">批次 7</option><option value="8">批次 8</option><option value="9">批次 9</option><option value="10">批次 10</option><option value="11">批次 11</option><option value="12">批次 12</option></select></label>
     </div>
     <p id="create-status" role="status" aria-live="polite"></p>
-    <div class="dialog-actions"><button type="button" id="cancel-create">取消</button><button class="primary" type="submit">添加到当前报告</button></div>
+    <div class="dialog-actions"><button type="button" id="cancel-create" class="genui-action-icon" aria-label="取消新增" title="取消"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button><button class="primary genui-action-icon" type="submit" aria-label="添加到当前报告" title="添加到当前报告"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg></button></div>
   </form>
 </dialog>
 
@@ -352,7 +352,7 @@ WHERE task_id = :task_id
   <p class="muted">仅允许 <code>gen-ui-html-report/v1</code> 数据字段。禁用脚本、HTML、事件属性和任意网络地址。</p>
   <label for="report-json">报告 JSON</label>
   <textarea id="report-json" spellcheck="false" aria-describedby="json-status"></textarea>
-  <div class="dialog-actions"><button type="button" class="primary" id="apply-json">校验并更新当前报告</button></div>
+  <div class="dialog-actions"><button type="button" class="primary genui-action-icon" id="apply-json" aria-label="校验并更新当前报告" title="校验并更新"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg></button></div>
   <p id="json-status" role="status" aria-live="polite"></p>
 </dialog>
 </body>

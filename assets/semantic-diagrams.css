@@ -58,3 +58,8 @@
 .semantic-label-fallbacks:not([hidden]){padding:9px 12px;border-top:1px solid #e4e7ec;display:flex;flex-wrap:wrap;gap:6px;max-height:130px;overflow:auto}
 .semantic-fallback-link{font:12px/1.4 system-ui,sans-serif;max-width:min(100%,300px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid #c9d7e8;background:#f8fbff;color:#315276;border-radius:5px;padding:5px 9px;cursor:pointer}
 .semantic-fallback-link:focus-visible{outline:2px solid #3a83f7}
+
+/* Unified icon-only view controls for all seven semantic diagrams. */
+.semantic-tools .semantic-tool{min-width:27px;min-height:27px;padding:4px 6px;font-size:11px}
+.semantic-tools [data-action="zoom-in"],.semantic-tools [data-action="zoom-out"],.semantic-tools [data-action="fit"],.semantic-tools [data-action="fullscreen"]{width:27px;height:27px;padding:4px;display:grid;place-items:center}
+.semantic-tools .semantic-tool svg{width:15px;height:15px}

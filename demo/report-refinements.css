@@ -81,3 +81,19 @@ dialog.modal{width:min(620px,94vw)}
 .case-block .action-steps{padding-left:23px}
 @media(max-width:900px){.case-directory{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:580px){.case-directory{grid-template-columns:repeat(2,minmax(0,1fr))}.before-after,.doc-link-grid{grid-template-columns:1fr}}
+
+/* Compact icon-only operations (touch targets expand on narrow screens). */
+.toolbar-actions button,.paging-actions button,.filters button,.dialog-actions button,.inline-button,.icon-only{min-height:27px;height:27px;padding:3px 6px;font-size:12px}
+.toolbar-actions button.genui-action-icon,.dialog-actions button.genui-action-icon,.filters button.genui-action-icon,.paging-actions button.genui-action-icon,.inline-button.genui-action-icon{width:27px;min-width:27px;display:inline-grid;place-items:center;padding:4px;border-radius:5px}
+.genui-action-icon svg{display:block;width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.status::before{display:none!important}.status{gap:0;padding:2px 7px;font-size:12px}
+.compare-value{display:inline-block;padding:1px 6px;border-radius:4px;font-weight:650;white-space:nowrap}
+.compare-value--success{color:#23764f;background:#edf8f2}.compare-value--failure{color:#a33b3b;background:#fff1f0}
+.compare-value--warning{color:#8a5a12;background:#fff8e8}.compare-value--neutral{color:#344054;background:#f5f7fa}
+@media(max-width:700px){.toolbar-actions button.genui-action-icon,.dialog-actions button.genui-action-icon,.filters button.genui-action-icon,.paging-actions button.genui-action-icon,.inline-button.genui-action-icon{width:30px;min-width:30px;height:30px;min-height:30px}}
+
+/* Preserve native table-cell layout; highlight key comparisons directly on td. */
+td[data-compare-status="success"]{color:#23764f;background:#f4fbf7;font-weight:650}
+td[data-compare-status="failure"]{color:#a33b3b;background:#fff1f0;font-weight:650}
+td[data-compare-status="warning"]{color:#8a5a12;background:#fff8e8;font-weight:650}
+td[data-compare-status="neutral"]{color:#344054}

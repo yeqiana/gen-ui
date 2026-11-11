@@ -399,13 +399,18 @@
       statusCell.append(dom("span", STATUS_TEXT[row.status], "status " + row.status));
       const actionCell = dom("td");
       actionCell.dataset.column = "action";
-      const detail = dom("button", "查看详情 · 站内抽屉", "inline-button");
+      const detail = dom("button", undefined, "inline-button genui-action-icon");
+      detail.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12s3-5 8-5 8 5 8 5-3 5-8 5-8-5z"/><circle cx="12" cy="12" r="2"/></svg>';
+      detail.title = "查看详情";
       detail.type = "button";
       detail.setAttribute("aria-label", "查看任务 " + row.id + " 的详情（站内抽屉）");
       detail.addEventListener("click", () => showRecord(row));
       actionCell.append(detail);
+      const durationCell = clippedCell(row.durationMs.toLocaleString("zh-CN") + " 毫秒", "duration");
+      const severity = row.status === "failure" ? "failure" : row.durationMs > filter.threshold ? "warning" : row.status === "success" ? "success" : "neutral";
+      durationCell.dataset.compareStatus = severity;
       tr.append(clippedCell(row.id, "id"), clippedCell(row.module, "module"), statusCell,
-        clippedCell(row.durationMs.toLocaleString("zh-CN") + " 毫秒", "duration"),
+        durationCell,
         clippedCell("第 " + row.batch + " 批", "batch"), actionCell);
       body.append(tr);
     }

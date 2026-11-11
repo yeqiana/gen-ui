@@ -539,7 +539,7 @@ test("HTML content emphasis, semantic callouts, numbered headings and task-state
   assert.match(html,/一、执行概览/);
   assert.match(html,/二、趋势与分布/);
   assert.match(html,/三、执行明细/);
-  assert.match(html,/2\.1 状态构成/);
+  assert.match(html,/（一） 状态构成/);
   assert.match(html,/class="callout callout--important"/);
   assert.match(html,/<blockquote class="callout callout--confirm"/);
   assert.match(html,/关键结论：<\/strong>/);

@@ -1,0 +1,18 @@
+/* Heading navigation: 3 levels, default left, collapsible children. */
+.genui-tree,.genui-nav-children{list-style:none;padding:0;margin:0}.genui-tree>li,.genui-nav-children>li{position:relative;min-width:0}
+.genui-nav-children{padding-left:11px;margin-left:11px;border-left:1px solid #e6eaf0}.genui-nav-children[hidden]{display:none!important}
+.genui-tree a{display:flex;align-items:center;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:24px}
+.genui-tree .genui-nav-level-2>a{font-size:12px!important;padding-left:12px!important}
+.genui-tree .genui-nav-level-3>a{font-size:11px!important;padding-left:15px!important}
+.genui-tree .genui-nav-fold{position:absolute;top:3px;right:0;width:23px;height:25px;padding:0!important;min-height:25px!important;display:grid;place-items:center;border:0;background:transparent;color:#667085;cursor:pointer;font-size:16px}
+.genui-tree .genui-nav-fold:focus-visible{outline:2px solid #3a83f7}
+.genui-tree a img{width:16px;height:16px;flex-shrink:0}
+.app[data-sidebar-collapsed=true] .genui-tree .genui-nav-fold,.app[data-sidebar-collapsed=true] .genui-nav-children{display:none!important}
+.app[data-sidebar-collapsed=true] .genui-tree .genui-nav-level-1>a{font-size:0;padding-right:0}
+.doc-toc .genui-tree a{padding:6px 24px 6px 8px;font-size:12px;line-height:1.4;text-decoration:none;color:#475467}
+.doc-toc .genui-tree a:hover{color:#3a83f7;background:#eff6ff}
+.doc-toc .genui-tree{max-height:calc(100vh - 140px);overflow-y:auto}
+@media(max-width:700px){.mobile-toc .genui-tree{max-height:65vh;overflow:auto}.doc-toc .genui-tree{max-height:none}}
+
+.genui-tree a svg{width:16px;height:16px;flex:0 0 16px}
+.app[data-sidebar-collapsed=true] .genui-tree .genui-nav-level-1>a svg{width:19px;height:19px}

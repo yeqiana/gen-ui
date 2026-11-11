@@ -161,6 +161,7 @@
    setIcon(trigger,"expand",lang==="en"?"Open image fullscreen":"全屏查看图片");
    trigger.setAttribute("aria-haspopup","dialog");trigger.dataset.imageOpen="true";frame.appendChild(trigger);
    trigger.addEventListener("click",()=>open(pic.currentSrc||pic.src,pic.alt,trigger));
+   pic.addEventListener("dblclick",()=>open(pic.currentSrc||pic.src,pic.alt,trigger));
   });
   const change=delta=>{scale=Math.max(.25,Math.min(4,Math.round((scale+delta)*100)/100));paint();};
   dialog.querySelector("[data-image-plus]").addEventListener("click",()=>change(.25));
@@ -176,6 +177,7 @@
   stage.addEventListener("pointermove",e=>{if(!drag||e.pointerId!==drag.id)return;x=drag.ox+e.clientX-drag.x;y=drag.oy+e.clientY-drag.y;paint();});
   ["pointerup","pointercancel","lostpointercapture"].forEach(k=>stage.addEventListener(k,()=>{drag=null;}));
   stage.addEventListener("wheel",e=>{e.preventDefault();change(e.deltaY<0?.2:-.2);},{passive:false});
+  stage.addEventListener("dblclick",e=>{e.preventDefault();if(scale>1)fit();else change(.5);});
   document.addEventListener("keydown",e=>{
    if(dialog.hidden)return;
    if(e.key==="Escape"){e.preventDefault();close();}
