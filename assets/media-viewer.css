@@ -28,3 +28,7 @@ body.genui-image-open{overflow:hidden}
 blockquote>:last-child,blockquote.callout>:last-child,.callout>:last-child{margin-bottom:0!important}
 blockquote>p:empty,blockquote>div:empty{display:none}
 @media(max-width:700px){.genui-image-toolbar{padding:9px 12px}.genui-image-stage img{max-width:96vw}}
+
+/* Compact icon-only media controls and double-click source image. */
+.genui-image-toolbar button,.genui-image-open{width:27px;height:27px;padding:5px}
+img[data-zoomable]{cursor:zoom-in}

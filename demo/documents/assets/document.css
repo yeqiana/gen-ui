@@ -20,3 +20,7 @@
 
 /* Icon-only code copy control: fixed to the code block upper-right corner. */
 .doc-section pre{position:relative;padding-top:43px}.doc-section pre .code-copy{position:absolute;top:7px;right:8px;z-index:4;display:grid;place-items:center;width:30px;height:30px;min-height:30px;padding:5px;border:1px solid #d8e1ee;border-radius:6px;background:rgba(255,255,255,.97);color:#344054;cursor:pointer}.doc-section pre .code-copy svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.doc-section pre .code-copy-status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* Code-copy control: first-line alignment without an empty leading row. */
+.doc-section pre{padding-top:14px;padding-right:50px}
+.doc-section pre .code-copy{width:27px;height:27px;min-height:27px}

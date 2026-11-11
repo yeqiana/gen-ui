@@ -142,3 +142,6 @@ node tests/chrome-documents-smoke.mjs
 测试仅验证**仓库内的固定示例**；不等于真实目标项目已通过审计、执行或发布。关于安全边界、宿主适配与操作许可，参见 [SKILL.md](SKILL.md)、[集成说明](docs/integration.md) 和 [FAQ](docs/faq.md)。
 
 MIT License · [LICENSE](LICENSE)。
+
+
+延伸阅读：[八类架构图的分层/容器示例](demo/architecture-patterns.html) · [轻量化 Skill 设计原则](docs/skill-principles.md)。

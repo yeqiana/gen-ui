@@ -133,3 +133,7 @@ pre.code-block>code{display:block;padding:0;background:transparent;color:inherit
 .code-copy:hover:not(:disabled),.code-copy:focus-visible{border-color:var(--accent);color:var(--accent)}
 .code-example{margin:16px 0}.code-example figcaption{margin-bottom:7px;color:var(--muted);font-size:14px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Copy icon is aligned with the first code line, not on a separate toolbar row. */
+pre.code-block{padding:14px 52px 15px 15px}
+pre.code-block .code-copy{top:7px;right:8px;width:27px;height:27px;min-height:27px}

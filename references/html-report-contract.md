@@ -2,6 +2,16 @@
 
 This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
+### Fourth-round layout invariants
+
+- Single-page HTML reports default to a **visible left sidebar**, not top or hidden navigation. Build at most three collapsible heading levels (H2/H3/H4, including headings equivalent to 4 / 4.1 / 4.1.1). Generate links from actual heading IDs and preserve a usable static fallback.
+- Choose exactly one heading scheme per Chinese document: 一、/（一）/甲、 or 1. / 1.1 / 1.1.1. **Never mix Chinese-numbered top levels with decimal-numbered subheadings.**
+- Display local timestamps as YYYY-MM-DD HH:mm:ss **without a visible +08:00 or other timezone offset**; retain machine-readable timezone in datetime attributes when available.
+- Code copy icons align horizontally with the **first code line**. Reserve right-side space; do not create an empty toolbar row above code.
+- Compact previous/next, jump, reset, preview, open, close, modal and table-row operations use icon-only controls with accessible aria-label and title. A state cell uses **one** representation; do not combine status word, OK and a redundant icon. Critical comparison cells use distinct success/failure/warning semantic colors plus readable text.
+- Image preview opens on double-click of source and on its icon, supports fullscreen overlay, wheel zoom, upper-right icon zoom, fit and close. Seven diagram classes keep compact zoom/fit/fullscreen icons.
+- For eight architecture categories (business, product, system, data, technology, application, function and information) **do not force every diagram into boxes + connecting lines**. Use layered, stacked, grouped or nested containers where relationships are not explicit. See [Architecture patterns](architecture-patterns.md).
+
 ## 1. Audience-language interface and semantic hierarchy
 
 - Render all nonessential user-facing text in **Simplified Chinese** by default: page headings, section titles, tables, form labels, filters, buttons, navigation, empty states, validation messages, chart captions and tooltips.

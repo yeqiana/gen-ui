@@ -136,3 +136,6 @@ node tests/chrome-documents-smoke.mjs
 These checks validate fixed, trusted repository examples; they do not establish general model compliance or results from a real project. See [SKILL.md](SKILL.md), [integration](docs/integration.md), and [FAQ](docs/faq.md) for capability and safety boundaries.
 
 MIT License · [LICENSE](LICENSE).
+
+
+See also: [Eight architecture views — layered/container models](demo/architecture-patterns.html) and [Lightweight Skill principles](docs/skill-principles.md).

@@ -5,6 +5,10 @@ description: Use when AI responses become hard to understand, too long, or diffi
 
 # Gen UI — Information Design Skill for AI Responses
 
+## Design invariants
+
+**Lightweight Skill entry, full capability, no functional or visual regression.** Load additional contracts, assets and scripts only when a deliverable needs them; progressively enhance Markdown to offline HTML to semantic interaction. Read [Skill principles](docs/skill-principles.md) for reusable positioning and regression checks.
+
 ## Purpose
 
 Gen UI reduces **walls of text, comprehension effort, and reading friction**. It is an **Information Design Skill**, not a general UI framework or a replacement for coding, review, testing, or deployment tools.
@@ -20,6 +24,7 @@ Choose the **least complex supported output**. Never load advanced assets by def
 | Everyday explanation, analysis, code review, plan | Short Markdown | This file |
 | Explicit standalone HTML deliverable | Offline HTML report | [HTML report contract](references/html-report-contract.md) |
 | Semantic SVG, topology, interaction, custom business model | HTML plus diagram support | [Semantic diagram model](references/semantic-diagram-model.md) and [HTML report contract](references/html-report-contract.md) |
+| Business, product, system, data, technology, application, function or information architecture | Layered, stacked or nested containers; connect only true relationships | [Architecture patterns](references/architecture-patterns.md) |
 | Host explicitly supports `gen-ui-demo/v1` | Validated UI data and complete Markdown fallback | [Renderer contract](references/renderer-contract.md) |
 | Directory of multiple HTML documents | Thin offline navigation shell | [HTML report contract](references/html-report-contract.md) and `scripts/build-html-portal.mjs` |
 
