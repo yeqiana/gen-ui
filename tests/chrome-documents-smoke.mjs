@@ -70,7 +70,7 @@ async function main(){
     results.push({width,id:spec.id,sections:state.sections,overflow:state.overflow});
    }
   }
-  console.log(JSON.stringify({result:"PASS",documents:10,viewportScenarios:results.length,results,captured:capture?9:0}));
+  console.log(JSON.stringify({result:"PASS",documents:specs.length,viewportScenarios:results.length,results,captured:capture?9:0}));
  }finally{try{socket?.close();}catch{}proc.kill();await sleep(200);fs.rmSync(profile,{recursive:true,force:true,maxRetries:4,retryDelay:100});}
 }
 main().catch(e=>{console.error(e.stack||e);process.exitCode=1;});
