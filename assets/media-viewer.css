@@ -4,7 +4,11 @@
 .genui-image-open:focus-visible,.genui-image-toolbar button:focus-visible{outline:2px solid #3A83F7;outline-offset:2px}
 .genui-image-open svg,.genui-image-toolbar button svg,.flow-actions button svg,.diagram-actions button svg{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 img[data-zoomable]{max-width:100%;height:auto}
-.genui-image-open{margin:7px 0;vertical-align:middle}
+.genui-image-frame{position:relative;display:inline-block;vertical-align:middle;max-width:100%;line-height:0;border-radius:7px}
+.genui-image-frame>img{display:block;max-width:100%;height:auto;border-radius:7px}
+.genui-image-open{position:absolute;top:8px;right:8px;z-index:3;margin:0;opacity:0;box-shadow:0 2px 8px rgba(16,24,40,.18);transition:opacity .15s ease}
+.genui-image-frame:hover .genui-image-open,.genui-image-open:focus-visible{opacity:1}
+@media(hover:none){.genui-image-open{opacity:1}}
 .genui-image-overlay{position:fixed;inset:0;z-index:19999;background:rgba(14,22,35,.94);display:flex;flex-direction:column;color:#fff}
 .genui-image-overlay[hidden]{display:none!important}
 .genui-image-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px;background:#1c273b;border-bottom:1px solid rgba(255,255,255,.15)}

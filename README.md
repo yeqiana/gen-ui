@@ -65,13 +65,22 @@ Risk-based test cases, fault injection, performance evaluation, and acceptance g
 
 [Explore ten English reading scenarios](demo/report.en.html): answer-first summaries, decision tables, procedures, reviews, task statuses, acceptance evidence, troubleshooting, host adaptation, long documents, and purposeful interaction. The [complete interactive Chinese report](demo/report.html) separately demonstrates the full offline HTML control set.
 
-## Robust diagrams, icon-only copy, and image inspection
+## Semantic diagrams and real interactions (2026-11-10)
 
-The offline HTML examples now include a **shared SVG viewer** with familiar zoom-magnifier, fit-to-view, expand, and collapse icons. The state machine serializes fullscreen transitions, preserves pan/zoom across entry and exit, supports native Escape and browser fullscreen events, and falls back to a local overlay if the browser rejects fullscreen.
+The seven diagram types no longer share a generic “boxes + straight lines + dragging” template. Each uses the visual grammar appropriate to its information structure and provides type-specific operations:
 
-Use **one or more of seven diagram types only when the information calls for it**: sequence, mind map, deployment/topology, ER, activity, swimlane, and component diagrams. Nodes can be armed with a double click and repositioned without overlapping other labels; connectors follow them. Full text descriptions remain available when graphics are unsupported.
+- **Sequence:** participants, lifelines, activation bars, synchronous/asynchronous/return messages; select a participant or message to inspect it and step through messages.
+- **Mind map:** central topic, branches, child topics, and hierarchy; expand/collapse a branch with mouse or keyboard.
+- **Deployment topology:** clients, services, workers, cache, message queue, database, and deployment boundaries; collapse a zone with its nodes and dependent edges.
+- **ER:** entity tables, fields, PK/FK markers, and 1:N cardinalities; hide non-key fields and inspect entities, fields, or relationships.
+- **Activity:** start/end, actions, decision diamonds, guarded branches, and normal/recovery paths; highlight either path independently.
+- **Swimlane:** User, API, Worker, and persistence ownership lanes; collapse a lane and inspect cross-role handoffs.
+- **Component:** component boundaries, ports, interface types, and dependencies; toggle ports and highlight component dependencies.
 
-Code blocks use an icon-only Copy → Check/Error → Copy cycle (1-second reset, no visible success text). Content images can open a same-page fullscreen-style zoom viewer. Quoted callouts end cleanly at their final nonempty line, and standalone documents default to a left navigation and the local M-shaped favicon.
+**Shared interaction:** click an element to select it and read its responsibility in the inspector; click an edge to inspect the relationship; drag the empty canvas to pan; use zoom, fit, and fullscreen controls. Node dragging is no longer the only interaction or the default action.
+
+**Connector labels:** use opaque label backgrounds and dedicated label lanes; route connectors around node shapes. SVG bounding-box checks verify labels do not intersect nodes. Image fullscreen controls sit at the image's upper-right corner, and code-copy icons sit at the code block's upper-right corner.
+
 
 ## Install
 

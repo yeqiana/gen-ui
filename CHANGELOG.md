@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — semantic SVG diagrams and control placement (2026-11-10)
+
+- Replace seven generic node-and-edge examples with diagram-specific semantic SVG models: sequence, mind map, deployment topology, ER, activity, swimlane, and component.
+- Add type-specific interactions: sequence stepping, branch expand/collapse, deployment-zone collapse, ER field visibility, activity path filters, swimlane collapse, and component-port visibility; every selectable element updates an inspector.
+- Give connector labels opaque backgrounds and dedicated routes; add geometry checks that labels do not overlap nodes.
+- Anchor image fullscreen controls to the image upper-right and code-copy icons to the code block upper-right.
+- Add Chrome coverage for all seven graph grammars and interactions, connector-label clearance, image/code control placement, and bilingual document rendering.
+
+
 ## Unreleased — SVG, media interaction and navigation reliability (2026-11-10)
 
 - Add one shared offline SVG viewer for report and technical documents with serialized native/fallback fullscreen, zoom/pan, repeatable Escape handling, and consistent line icons.

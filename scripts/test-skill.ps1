@@ -58,6 +58,10 @@ $required = @(
   "assets/icons/gen-ui-tab.svg",
   "assets/icons/gen-ui-drawer.svg",
   "assets/icons/gen-ui-form.svg",
+  "assets/semantic-diagrams.js",
+  "assets/semantic-diagrams.css",
+  "demo/report.en.html",
+  "tests/semantic-diagrams.test.mjs",
   "assets/media-viewer.js",
   "assets/media-viewer.css",
   "assets/code-blocks.js",
@@ -134,6 +138,9 @@ $node = Get-Command node -ErrorAction SilentlyContinue
 if ($null -eq $node) {
   throw "需要 Node.js 18+ 才能执行完整验证；请安装后重试"
 }
+& node --check (Join-Path $root "assets/semantic-diagrams.js")
+if ($LASTEXITCODE -ne 0) { throw "Semantic diagram renderer JS syntax failed" }
+Write-Output "[PASS] Semantic SVG renderer syntax"
 & node --check (Join-Path $root "demo/renderer.js")
 if ($LASTEXITCODE -ne 0) { throw "Renderer JS 语法失败" }
 Write-Output "[PASS] Renderer JS 语法"
@@ -171,6 +178,6 @@ Write-Output "[PASS] Technical document test syntax"
 if ($LASTEXITCODE -ne 0) { throw "Chrome smoke JS syntax failed" }
 Write-Output "[PASS] Chrome smoke JS syntax（浏览器实测请单独运行）"
 
-& node --test (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
+& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
