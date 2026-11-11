@@ -148,4 +148,8 @@ node tests/chrome-semantic-stress.mjs --mobile
 MIT License · [LICENSE](LICENSE)。
 
 
+真实项目案例：[Yopu / StoryOS / IM 八类架构视图](demo/architecture-patterns.html)。按实际模块分层，并展示 24 条带方向的关键协作链路；图中是结构与设计资料的示意，不代表生产环境部署验收。
+
+![Yopu、StoryOS 与 IM 架构分层及容器链路示例](demo/documents/assets/architecture-patterns-preview.png)
+
 延伸阅读：[八类架构图的分层/容器示例](demo/architecture-patterns.html) · [轻量化 Skill 设计原则](docs/skill-principles.md)。

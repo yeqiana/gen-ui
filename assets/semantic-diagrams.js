@@ -215,7 +215,7 @@
    const g=svg("g",{class:"semantic-edge", "data-selectable":"true","data-id":uniqueId,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":text(spec.label,lang),"data-summary":text(spec.detail||T("该连线表示两个元素之间的关系。","This connector represents a relationship between two elements."),lang),"tabindex":"0","role":"button"},svgRoot);
   svg("path",{d:spec.d,fill:"none",stroke:"#748aa5","stroke-width":"2.2","stroke-linecap":"round","stroke-linejoin":"round","marker-end":"url(#"+svgRoot.dataset.markerId+")","stroke-dasharray":spec.dashed?"6 5":null},g);
   const value=text(spec.label,lang);
-  if(value){const w=labelWidth(value,lang),x=spec.lx-w/2,y=spec.ly-11;const chip=svg("g",{class:"semantic-edge-chip","data-selectable":"true","data-id":g.dataset.id,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":g.dataset.title,"data-summary":g.dataset.summary,"data-detail":text(spec.detail||spec.label,lang),"data-base-x":spec.lx,"data-base-y":spec.ly,tabindex:"0",role:"button","aria-label":value},svgRoot);svg("rect",{class:"semantic-edge-label-bg",x,y,width:w,height:22,rx:6,fill:"#fff",stroke:"#d0d5dd","stroke-width":"1"},chip);svg("text",{class:"semantic-edge-label",x:spec.lx,y:spec.ly+4,"text-anchor":"middle","font-size":"12","font-family":"system-ui,sans-serif",fill:"#344054"},chip,value);svg("title",{},chip,value);if(spec.messageIndex!==undefined){g.dataset.messageIndex=spec.messageIndex;chip.dataset.messageIndex=spec.messageIndex;}if(spec.path){g.dataset.path=spec.path;chip.dataset.path=spec.path;}}
+  if(value){const w=labelWidth(value,lang),x=spec.lx-w/2,y=spec.ly-11;const chip=svg("g",{class:"semantic-edge-chip","data-selectable":"true","data-id":g.dataset.id,"data-source":spec.from,"data-target":spec.to,"data-kind":"relationship","data-title":g.dataset.title,"data-summary":g.dataset.summary,"data-detail":text(spec.detail||spec.label,lang),"data-base-x":spec.lx,"data-base-y":spec.ly,"data-label-span":spec.labelSpan||"",tabindex:"0",role:"button","aria-label":value},svgRoot);svg("rect",{class:"semantic-edge-label-bg",x,y,width:w,height:22,rx:6,fill:"#fff",stroke:"#d0d5dd","stroke-width":"1"},chip);svg("text",{class:"semantic-edge-label",x:spec.lx,y:spec.ly+4,"text-anchor":"middle","font-size":"12","font-family":"system-ui,sans-serif",fill:"#344054"},chip,value);svg("title",{},chip,value);if(spec.messageIndex!==undefined){g.dataset.messageIndex=spec.messageIndex;chip.dataset.messageIndex=spec.messageIndex;}if(spec.path){g.dataset.path=spec.path;chip.dataset.path=spec.path;}}
   return g;
  }
  function selectable(g,id,kind,title,summary,detail){g.dataset.selectable="true";g.dataset.id=id;g.dataset.kind=kind;g.dataset.title=text(title,window.__genUiLang);g.dataset.summary=text(summary||title,window.__genUiLang);g.dataset.detail=text(detail||summary||title,window.__genUiLang);g.setAttribute("tabindex","0");g.setAttribute("role","button");g.setAttribute("aria-label",g.dataset.title);}
@@ -253,13 +253,29 @@
   });
   return g;
  }
- function renderSequence(root,m,lang,height){
-  const xs=m.participants.map((p,i)=>145+i*210),map={};m.participants.forEach((p,i)=>map[p.id]=xs[i]);
+ function measureEdgeText(value,lang){
+ const str=text(value,lang),canvas=measureEdgeText.canvas||(measureEdgeText.canvas=document.createElement("canvas"));
+ const context=canvas.getContext("2d");
+ if(!context)return [...str].reduce((n,c)=>n+(c.codePointAt(0)>255?12:7),0);
+ context.font="12px system-ui, sans-serif";
+ return Math.ceil(context.measureText(str).width);
+}
+function sequencePositions(m,lang){
+ const xs=[145];
+ for(let i=1;i<m.participants.length;i++){
+  const prev=m.participants[i-1].id,current=m.participants[i].id;
+  const widest=m.messages.filter(x=>(x.from===prev&&x.to===current)||(x.to===prev&&x.from===current)).reduce((n,x)=>Math.max(n,measureEdgeText(x.label,lang)),0);
+  xs.push(xs[i-1]+Math.max(210,Math.min(640,widest+56)));
+ }
+ return xs;
+}
+function renderSequence(root,m,lang,height,xs){
+  const map={};m.participants.forEach((p,i)=>map[p.id]=xs[i]);
   m.participants.forEach((p,i)=>actorNode(root,p,lang,xs[i],height));
   m.participants.slice(1).forEach(p=>{const msgs=m.messages.map((x,i)=>({from:x.from,to:x.to,y:x.y??155+i*75})).filter(x=>x.from===p.id||x.to===p.id);if(!msgs.length)return;const from=Math.min(...msgs.map(x=>x.y)),to=Math.max(...msgs.map(x=>x.y));svg("rect",{class:"semantic-activation",x:map[p.id]-6,y:from+10,width:12,height:Math.max(32,to-from-10),rx:3,fill:"#dceafe",stroke:"#5b91d6","stroke-width":"1"},root);});
   m.messages.forEach((msg,i)=>{
    const x1=map[msg.from],x2=map[msg.to],y=msg.y??155+i*75,ret=msg.kind==="return";
-   const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:(x1+x2)/2,ly:y-17,d:"M"+x1+" "+y+" H"+x2,dashed:ret,detail:msg.detail,messageIndex:i};
+   const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:(x1+x2)/2,ly:y-17,d:"M"+x1+" "+y+" H"+x2,dashed:ret,detail:msg.detail,messageIndex:i,labelSpan:Math.abs(x2-x1)};
    const g=edge(root,edgeSpec,lang);g.dataset.messageIndex=i;g.dataset.kind="message";g.dataset.title=text(msg.label,lang);g.dataset.summary=text(T("消息类型："+(ret?"返回":msg.kind==="async"?"异步":"同步"),"Message type: "+(ret?"return":msg.kind),lang),lang);g.dataset.detail=text(msg.detail,lang);
    if(msg.kind==="async")g.querySelector("path").setAttribute("stroke","#3a83f7");
   });
@@ -333,13 +349,14 @@
  }
  function render(model,type,root,lang){
   const requestedWidth=model.canvas?.width??(type==="sequence"?960:type==="mind"?920:type==="deploy"?1100:type==="er"?1040:type==="activity"?1640:type==="swim"?1060:1100);
-   const w=type==="sequence"?Math.max(requestedWidth,145+210*(model.participants.length-1)+100):requestedWidth;
+   const sequenceXs=type==="sequence"?sequencePositions(model,lang):null;
+   const w=type==="sequence"?Math.max(requestedWidth,sequenceXs[sequenceXs.length-1]+110):requestedWidth;
   const requestedHeight=model.canvas?.height??(type==="sequence"?620:type==="mind"?590:type==="deploy"?560:type==="er"?560:type==="activity"?590:type==="swim"?535:550);
    const h=type==="sequence"?Math.max(requestedHeight,Math.max(...model.messages.map((m,i)=>m.y??155+i*75))+95):requestedHeight;
   const svgRoot=svg("svg",{class:"semantic-svg",viewBox:"0 0 "+w+" "+h,role:"img","aria-label":text(model.title,lang),"preserveAspectRatio":"xMinYMin meet"},root);
   svg("title",{},svgRoot,text(model.title,lang));svg("desc",{},svgRoot,text(model.desc,lang));
-  const markerId="semantic-arrow-"+type+"-"+(++instanceCounter);svgRoot.dataset.markerId=markerId;const defs=svg("defs",{},svgRoot),marker=svg("marker",{id:markerId,viewBox:"0 0 10 10",markerWidth:"9",markerHeight:"9",refX:"9",refY:"5",orient:"auto"},defs);svg("path",{d:"M0 0 L9 5 L0 10 Z",fill:"#627a95"},marker);
-  if(type==="sequence")renderSequence(svgRoot,model,lang,h);
+  const markerId="semantic-arrow-"+type+"-"+(++instanceCounter);svgRoot.dataset.markerId=markerId;const defs=svg("defs",{},svgRoot),marker=svg("marker",{id:markerId,viewBox:"0 0 10 10",markerWidth:"7",markerHeight:"7",refX:"9",refY:"5",orient:"auto"},defs);svg("path",{d:"M0 0 L9 5 L0 10 Z",fill:"#627a95"},marker);
+  if(type==="sequence")renderSequence(svgRoot,model,lang,h,sequenceXs);
   if(type==="mind")renderMind(svgRoot,model,lang);
   if(type==="deploy")renderDeploy(svgRoot,model,lang);
   if(type==="er")renderER(svgRoot,model,lang);
@@ -372,7 +389,7 @@
    chip.classList.remove("is-layout-fallback");const bg=chip.querySelector(".semantic-edge-label-bg"),caption=chip.querySelector(".semantic-edge-label");
    if(!bg||!caption)continue;
    const fullText=chip.querySelector("title")?.textContent||caption.textContent;caption.textContent=fullText;
-   const maxWidth=Math.min(244,graph.w-40);const chars=Array.from(fullText);
+   const available=Number(chip.dataset.labelSpan)||244;const maxWidth=Math.min(560,Math.max(44,available-34),graph.w-40);const chars=Array.from(fullText);
    if(caption.getComputedTextLength()>maxWidth){let lo=0,hi=chars.length;while(lo<hi){const mid=Math.ceil((lo+hi)/2);caption.textContent=chars.slice(0,mid).join("")+"…";if(caption.getComputedTextLength()<=maxWidth)lo=mid;else hi=mid-1;}caption.textContent=chars.slice(0,lo).join("")+"…";}
    chip.dataset.truncated=String(caption.textContent!==fullText);const w=Math.max(36,Math.ceil(caption.getComputedTextLength()+20)),h=22;
    const cx=Number(chip.dataset.baseX),cy=Number(chip.dataset.baseY);
