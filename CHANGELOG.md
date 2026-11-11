@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — 屏幕坐标避让、交互状态一致性和 JSON 图表输入（2026-11-11）
+
+- 修正部署/活动等 SVG 连线标签遮挡，分离标签层并根据实际文字与最终浏览器坐标自动避让。
+- 修复思维导图折叠后孤立连线与焦点恢复、ER 隐藏字段后实体外框留白。
+- 新增移动端概览/聚焦阅读、全屏退出异常兜底和浏览器事件恢复。
+- 增加七类语义图表离线 JSON 输入契约与校验，提供独立的订单 ER / 时序图案例。
+- Chrome 回归覆盖中文和英文、375/768/1440px、动态折叠与筛选、真实碰撞、无效模型及全屏故障。
+
+
 ## Unreleased — semantic SVG diagrams and control placement (2026-11-10)
 
 - Replace seven generic node-and-edge examples with diagram-specific semantic SVG models: sequence, mind map, deployment topology, ER, activity, swimlane, and component.

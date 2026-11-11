@@ -1,0 +1,203 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GEN-UI · 自定义业务图表 JSON 案例</title><link rel="icon" href="../assets/icons/gen-ui-mark.svg"><link rel="stylesheet" href="../assets/semantic-diagrams.css"><style>body{margin:0;background:#fff;color:#1a1c1f;font:14px/1.65 system-ui,sans-serif}.shell{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100dvh}aside.nav{padding:22px;border-right:1px solid #e4e7ec}aside.nav a{display:block;padding:8px;color:#3a83f7}main{padding:24px;min-width:0;max-width:1180px}h1{font-size:24px}h2{font-size:18px;margin-top:28px}.sub{color:#667085}.example{margin-bottom:22px}@media(max-width:760px){.shell{display:block}aside.nav{position:static;border-right:0;border-bottom:1px solid #e4e7ec;padding:8px}aside.nav a{display:inline-block}main{padding:14px}}</style><script src="../assets/semantic-diagrams.js" defer></script></head><body><div class="shell"><aside class="nav"><strong>GEN-UI / JSON</strong><nav aria-label="文档导航"><a href="#introduction">输入约定</a><a href="#custom-er">ER 关系</a><a href="#custom-sequence">消息时序</a><a href="report.html">完整报告</a></nav></aside><main><h1>自定义业务数据生成专业关系图</h1><p class="sub" id="introduction">以下图表不使用内置 StoryOS 示例数据，而是直接读取 <code>type="application/json"</code> 的本地模型。无需网络请求和外部图形库；节点、字段和关系均可交互。</p><section class="example" id="custom-er"><h2>一、订单业务 ER 图</h2><div class="genui-semantic-diagram" data-semantic-diagram="er"><script type="application/json" data-diagram-model>{
+  "title": {
+    "zh": "订购业务实体关系",
+    "en": "Order domain ER diagram"
+  },
+  "desc": {
+    "zh": "示例数据从页面内 JSON 输入，展示账户和订单的一对多关系。",
+    "en": "An inline JSON model illustrates one-to-many account/order relationships."
+  },
+  "canvas": {
+    "width": 760,
+    "height": 410
+  },
+  "entities": [
+    {
+      "id": "account",
+      "title": {
+        "zh": "ACCOUNT",
+        "en": "ACCOUNT"
+      },
+      "sub": {
+        "zh": "账户信息",
+        "en": "Account"
+      },
+      "detail": {
+        "zh": "一个账户可拥有多个订单。",
+        "en": "One account can own multiple orders."
+      },
+      "x": 35,
+      "y": 90,
+      "w": 230,
+      "h": 184,
+      "fields": [
+        [
+          "account_id",
+          "PK",
+          "账户主键",
+          "Account key"
+        ],
+        [
+          "display_name",
+          "字段",
+          "展示名称",
+          "Display name"
+        ],
+        [
+          "created_at",
+          "时间",
+          "创建时间",
+          "Created"
+        ]
+      ]
+    },
+    {
+      "id": "order",
+      "title": {
+        "zh": "ORDER",
+        "en": "ORDER"
+      },
+      "sub": {
+        "zh": "订单记录",
+        "en": "Order"
+      },
+      "detail": {
+        "zh": "每张订单属于一个账户。",
+        "en": "Each order belongs to exactly one account."
+      },
+      "x": 445,
+      "y": 90,
+      "w": 245,
+      "h": 210,
+      "fields": [
+        [
+          "order_id",
+          "PK",
+          "订单主键",
+          "Order key"
+        ],
+        [
+          "account_id",
+          "FK",
+          "所属账户",
+          "Owning account"
+        ],
+        [
+          "total",
+          "金额",
+          "订单金额",
+          "Order total"
+        ],
+        [
+          "status",
+          "状态",
+          "业务状态",
+          "Order state"
+        ]
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "account",
+      "to": "order",
+      "label": "1 : N",
+      "d": "M265 171 H445",
+      "lx": 355,
+      "ly": 142,
+      "detail": {
+        "zh": "ACCOUNT.account_id → ORDER.account_id",
+        "en": "ACCOUNT.account_id → ORDER.account_id"
+      }
+    }
+  ]
+}</script><p>订单关系示例</p></div></section><section class="example" id="custom-sequence"><h2>二、订单处理时序图</h2><div class="genui-semantic-diagram" data-semantic-diagram="sequence"><script type="application/json" data-diagram-model>{
+  "title": {
+    "zh": "订单处理消息时序",
+    "en": "Order processing sequence"
+  },
+  "desc": {
+    "zh": "独立于内置示例的业务消息序列。",
+    "en": "A separate business-message timeline from inline JSON."
+  },
+  "canvas": {
+    "width": 960,
+    "height": 620
+  },
+  "participants": [
+    {
+      "id": "customer",
+      "name": {
+        "zh": "用户",
+        "en": "Customer"
+      },
+      "sub": {
+        "zh": "提交订单",
+        "en": "Submits order"
+      }
+    },
+    {
+      "id": "api",
+      "name": {
+        "zh": "订单 API",
+        "en": "Order API"
+      },
+      "sub": {
+        "zh": "校验请求",
+        "en": "Validation"
+      }
+    },
+    {
+      "id": "store",
+      "name": {
+        "zh": "数据存储",
+        "en": "Database"
+      },
+      "sub": {
+        "zh": "持久化",
+        "en": "Persist"
+      }
+    }
+  ],
+  "messages": [
+    {
+      "from": "customer",
+      "to": "api",
+      "label": {
+        "zh": "POST /orders",
+        "en": "POST /orders"
+      },
+      "kind": "sync",
+      "detail": {
+        "zh": "提交订单",
+        "en": "Submit order"
+      }
+    },
+    {
+      "from": "api",
+      "to": "store",
+      "label": {
+        "zh": "写入订单",
+        "en": "Persist order"
+      },
+      "kind": "sync",
+      "detail": {
+        "zh": "事务保存记录",
+        "en": "Commit the record"
+      }
+    },
+    {
+      "from": "api",
+      "to": "customer",
+      "label": {
+        "zh": "返回订单编号",
+        "en": "Return order ID"
+      },
+      "kind": "return",
+      "detail": {
+        "zh": "返回处理结果",
+        "en": "Return the result"
+      }
+    }
+  ]
+}</script><p>订单处理示例</p></div></section><p class="sub">JSON 输入契约见 <code>references/semantic-diagram-model.md</code>。固定尺寸及坐标属于本示例的初始布局，生产使用需要按节点数量计算或提供合理坐标。</p></main></div></body></html>

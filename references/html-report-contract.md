@@ -120,6 +120,14 @@ When a directory is specified, **do not generate only a standalone index that ig
 
 **Regression gates:** Explicitly assert the above through Chrome at 375/768/1440px including three or more fullscreen cycles, denied native fullscreen, SVG node drag and connector updates, image zoom and Esc closure, one-second copy reset, and no body horizontal overflow.
 
+### Data-driven, collision-verified diagram input
+
+Read `references/semantic-diagram-model.md` before generating custom semantic SVG input. Prefer embedded, bounded `type="application/json"` models; this is a **document structure contract**, not a license to invent business data. The renderer can inspect the `[data-semantic-diagram]` host's direct-child JSON model, validates unique IDs, references, field structure and bounded coordinates, and uses fixed offline assets.
+
+Place edge-label chips in a dedicated topmost SVG layer. Reposition using the **rendered viewport coordinate space** including parent transforms; labels must never overlap nodes or other labels. Test both zh/en at 375/768/1440px. Branch collapse must remove all child connectors and preserve focus; ER field hiding must shrink entity bounding geometry. Mobile rendering offers fit-to-view and focused reading.
+
+Do not advertise automatic node layout: complex diagrams currently require explicit initial positions/routes. See the standalone `demo/custom-diagram-model.html` showing two **nonbuilt-in** business models.
+
 ## 9. GEN-UI personal IP icon set
 
 - Use the [GEN-UI monochrome SVG set](../assets/icons/README.md). The personal mark must be one double-peak cat-ear stroke (one path only), without a full head, face details, frame or ornament; keep it legible at 16/20/24px. Functional icons should use at most 1–2 geometric primitives while preserving clear meaning and consistent visual weight. Avoid gradients, colorful mascots, coral accents and decorative icon overload.

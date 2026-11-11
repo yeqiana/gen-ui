@@ -65,3 +65,8 @@ node tests/chrome-documents-smoke.mjs
 ~~~
 
 页面样本可通过本地浏览器离线查看。所有声称的测试通过情况只适用于本仓库的固定测试，不代表虚构业务系统已完成审计、压测或发布。
+
+## 自定义业务数据图表
+
+- `custom-diagram-model.html`：直接读取页面内 JSON 生成订单 ER 图和时序图，不使用内置演示节点。
+- 七类图的 JSON 数据契约、输入校验与屏幕坐标避让规则：`../references/semantic-diagram-model.md`。

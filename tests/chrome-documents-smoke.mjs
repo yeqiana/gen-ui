@@ -19,6 +19,7 @@ const specs=[
  {id:"en-architecture-design",file:"en/architecture-design.html",title:"System architecture design",article:true,english:true},
  {id:"en-implementation-plan",file:"en/implementation-plan.html",title:"Technical implementation plan",article:true,english:true},
  {id:"en-test-acceptance",file:"en/test-acceptance.html",title:"Test and acceptance plan",article:true,english:true},
+ {id:"custom-model",file:"../custom-diagram-model.html",title:"GEN-UI · 自定义业务图表 JSON 案例",article:false,custom:true},
  {id:"en-report",file:"../report.en.html",title:"Information design case gallery",article:true,english:true}
 ];
 const capture=process.argv.includes("--update-previews");
@@ -50,7 +51,9 @@ async function main(){
     let state;
     for(let i=0;i<90;i++){try{state=await evalPage("(()=>({ready:document.readyState==='complete',title:document.title,h1:document.querySelector('h1')?.innerText||'',overflow:document.documentElement.scrollWidth>innerWidth+2,sections:document.querySelectorAll('main h2').length,toc:document.querySelectorAll('.toc-list a').length,svg:document.querySelectorAll('svg[role=img]').length,tables:document.querySelectorAll('table').length,code:document.querySelectorAll('pre code').length,copies:document.querySelectorAll('.code-copy').length,remote:[...document.querySelectorAll('script[src],link[href],img[src]')].filter(x=>/^(https?:)?\\/\\//i.test(x.getAttribute('src')||x.getAttribute('href')||'')).length,metrics:document.querySelectorAll('.metrics,.metric,.app').length,semantic:document.querySelectorAll('[data-semantic-diagram] .semantic-svg').length}))()");if(state.ready&&state.h1)break;}catch{}await sleep(100);}
     check("page ready "+width+" "+spec.id,state,state?.ready&&state.h1&&state.title.includes(spec.title)&&!state.overflow&&state.remote===0);
-    if(spec.article){
+    if(spec.custom){const custom=await evalPage("(()=>({entities:document.querySelectorAll('[data-semantic-diagram=er] .semantic-entity').length,messages:document.querySelectorAll('[data-semantic-diagram=sequence] [data-message-index]').length}))()");check("自定义 JSON 图/"+width,custom,state.semantic===2&&custom.entities===2&&custom.messages===3);}
+     if(state.semantic){await evalPage("[...document.querySelectorAll('.diagram-type-entry')].forEach(d=>d.open=true)");await sleep(140);const geometry=await evalPage("(()=>{\nconst hit=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;\nreturn [...document.querySelectorAll('[data-semantic-diagram]')].map(host=>{\nconst svg=host.querySelector('.semantic-svg');if(!svg)return{type:host.dataset.semanticDiagram,fail:['missing SVG']};\nconst chips=[...svg.querySelectorAll('.semantic-edge-chip')].filter(n=>n.getBoundingClientRect().width>0&&!n.classList.contains('is-hidden'));\nconst nodes=[...svg.querySelectorAll('.semantic-node-shape,.semantic-actor>rect')].filter(n=>n.getBoundingClientRect().width>0);\nconst fail=[];\nchips.forEach((chip,i)=>{const a=chip.querySelector('.semantic-edge-label-bg').getBoundingClientRect(),t=chip.querySelector('text').getBoundingClientRect();if(chip.dataset.layoutOk!=='true')fail.push({kind:'unplaced',i});if(t.left<a.left-2||t.right>a.right+2)fail.push({kind:'text',i});nodes.forEach((n,j)=>{if(hit(a,n.getBoundingClientRect()))fail.push({kind:'node',i,j});});chips.slice(i+1).forEach((b,j)=>{if(hit(a,b.querySelector('rect').getBoundingClientRect()))fail.push({kind:'label',i,j});});});\nconst stage=host.querySelector('.semantic-stage');return{type:host.dataset.semanticDiagram,count:chips.length,fail,overflow:stage.scrollWidth>stage.clientWidth+2};});\n})()");check("中英文图表像素碰撞/"+width+"/"+spec.id,geometry,geometry.length===state.semantic&&geometry.every(x=>x.fail.length===0&&(width!==375||!x.overflow)));}
+     if(spec.article){
      if(spec.english){check("English document structure "+spec.id,state,state.sections>=5&&state.toc===state.sections*2&&state.tables>=1&&state.copies===state.code&&state.metrics===0);}else{check("document structure "+spec.id,state,state.sections>=7&&state.toc===state.sections*2&&state.svg>=1&&state.tables>=2&&state.code>=1&&state.copies===state.code&&state.metrics===0);}
       const copyPosition=await evalPage("(()=>{const b=document.querySelector('.code-copy');if(!b)return null;const s=getComputedStyle(b);return{position:s.position,top:s.top,right:s.right,icon:!!b.querySelector('svg')}})()");
       check("document code-copy icon top-right "+spec.id,copyPosition,state.code===0?copyPosition===null:copyPosition?.position==="absolute"&&copyPosition.top==="7px"&&copyPosition.right==="8px"&&copyPosition.icon);
@@ -67,7 +70,7 @@ async function main(){
     results.push({width,id:spec.id,sections:state.sections,overflow:state.overflow});
    }
   }
-  console.log(JSON.stringify({result:"PASS",documents:9,viewportScenarios:results.length,results,captured:capture?9:0}));
+  console.log(JSON.stringify({result:"PASS",documents:10,viewportScenarios:results.length,results,captured:capture?9:0}));
  }finally{try{socket?.close();}catch{}proc.kill();await sleep(200);fs.rmSync(profile,{recursive:true,force:true,maxRetries:4,retryDelay:100});}
 }
 main().catch(e=>{console.error(e.stack||e);process.exitCode=1;});

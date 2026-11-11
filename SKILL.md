@@ -30,6 +30,15 @@ Follow the user's language unless explicitly requested otherwise. The normative 
 - **Images:** meaningful report images gain a magnifier button to open a same-page fullscreen-style overlay, then zoom in/out, fit, pan, Escape/close, and return focus to the opener. Decorative images and branding must not receive an image viewer; controls must work offline.
 - **Verify real browser behavior:** include repeated fullscreen toggle/ESC/re-entry, native API rejection fallback, zoom/pan before and after fullscreen, copy reset after one second, image overlay closure and focus return, node movement/edge tracking and layout overflow at mobile/tablet/desktop widths.
 
+### Data-driven semantic diagram contract
+
+- Accept independent business diagrams through a direct-child `<script type="application/json" data-diagram-model>` inside `[data-semantic-diagram]`. Use `window.GenUISemantic.validateModel(type, model)` to verify the bounded contract before rendering. The full schema and executable example are in `references/semantic-diagram-model.md` and `demo/custom-diagram-model.html`.
+- Prefer data-driven diagrams over hardcoding project-specific cases. For topology, ER, activity, component and swimlane, explicit coordinates and edge routes are still required; do **not** claim fully automatic layout.
+- For every SVG, reserve a distinct topmost label layer; measure text widths and resolve label/node and label/label collisions in final transformed screen coordinates, not with untransformed SVG `getBBox()`. Revalidate at 375, 768 and 1440px in both languages.
+- Collapsing a branch or zone must hide **nodes and all attached connectors**, keeping keyboard focus valid. ER field filtering must recompute visible rows and the enclosing entity box size.
+- Mobile documents must show a fit-to-view overview and a usable focused reading mode without global horizontal page overflow. Handle rejected `requestFullscreen` and `exitFullscreen` calls, browser-driven fullscreen exits, and repeated rapid button clicks.
+- Reject malformed JSON, duplicate IDs, unknown edges, invalid coordinate types and oversized models without attempting remote requests or injecting model strings as HTML. Escape `<` in embedded JSON to protect the enclosing script tag.
+
 ## 1. Detect host capabilities before choosing a format
 
 | Host | Safe assumption | Preferred output |
