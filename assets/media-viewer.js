@@ -157,8 +157,9 @@
   pics.forEach(pic=>{
    if(pic.dataset.genUiImageReady==="true")return;pic.dataset.genUiImageReady="true";
    const trigger=document.createElement("button");trigger.className="genui-image-open";trigger.type="button";
-   setIcon(trigger,"plus",lang==="en"?"Magnify image":"放大查看图片");
-   pic.insertAdjacentElement("afterend",trigger);
+   const frame=pic.closest(".genui-image-frame")||(()=>{const n=document.createElement("span");n.className="genui-image-frame";pic.parentNode.insertBefore(n,pic);n.appendChild(pic);return n;})();
+   setIcon(trigger,"expand",lang==="en"?"Open image fullscreen":"全屏查看图片");
+   trigger.setAttribute("aria-haspopup","dialog");trigger.dataset.imageOpen="true";frame.appendChild(trigger);
    trigger.addEventListener("click",()=>open(pic.currentSrc||pic.src,pic.alt,trigger));
   });
   const change=delta=>{scale=Math.max(.25,Math.min(4,Math.round((scale+delta)*100)/100));paint();};

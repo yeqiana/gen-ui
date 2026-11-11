@@ -18,19 +18,19 @@ test("HTML reports use idempotent offline icon-only SVG viewer and M favicon",()
  assert.match(mark,/<path d="M5 24 9 7 16 15 23 7 27 24"/);
 });
 
-test("Seven diagrams are contextual and labels do not overlap at rest",()=>{
- const h=read("demo/report.html");
+test("Seven diagrams are contextual semantic models with selectable relationships",()=>{
+ const h=read("demo/report.html"),js=read("assets/semantic-diagrams.js");
  const types=["sequence","mind","deploy","er","activity","swim","component"];
  for(const type of types){
-  assert.ok(h.includes('data-diagram-type="'+type+'"'),type);
+  assert.ok(h.includes('data-semantic-diagram="'+type+'"'),type);
   const file=type==="mind"?"project-analysis":["sequence","deploy","er","component"].includes(type)?"architecture-design":["activity","swim"].includes(type)?"implementation-plan":"test-acceptance";
   const page=read("demo/documents/"+file+".html");
-  assert.ok(page.includes('data-diagram-type="'+type+'"'),"contextual document missing "+type);
+  assert.ok(page.includes('data-semantic-diagram="'+type+'"'),"contextual document missing "+type);
  }
- assert.match(read("assets/media-viewer.js"),/overlaps/);
- assert.match(read("assets/media-viewer.js"),/reposition\(n,nx,ny\)/);
+ for(const marker of ["data-selectable","semantic-inspector","data-toggle-branch","data-zone-toggle","data-field","data-lane-toggle","data-port","data-message-index","data-path"])assert.ok(js.includes(marker),marker);
+ assert.match(js,/semantic-edge-label-bg/);
+ assert.match(js,/fill:"#fff"/);
 });
-
 test("Copy and images use accessible icons without visible clipboard status strings",()=>{
  const js=read("assets/code-blocks.js"),media=read("assets/media-viewer.js"),h=read("demo/report.html"),css=read("assets/media-viewer.css");
  assert.match(js,/innerHTML=svg\.copy/);
