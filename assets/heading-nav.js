@@ -24,10 +24,10 @@ function run(){
    let textNode;while((textNode=walker.nextNode())){if(textNode.nodeValue.trim()){textNode.nodeValue=textNode.nodeValue.replace(prefix,"");textNode.nodeValue=textNode.nodeValue.replace(/^\s*/,number+" ");break;}}
   }
  }
- const targets=[...sidebar.querySelectorAll("nav .nav-list,nav .toc-list"),...document.querySelectorAll(".mobile-toc .toc-list")];
+ const targets=[...sidebar.querySelectorAll(".nav-list,.toc-list"),...document.querySelectorAll(".mobile-toc .toc-list")];
  if(!targets.length)return;
- function makeList(){
-  const root=document.createElement("ul");root.className=targets[0].className+" genui-tree";let last1=null,last2=null;
+ function makeList(source){
+  const root=document.createElement("ul");root.className=source.className+" genui-tree";let last1=null,last2=null;
   for(const h of headings){
    const level=Math.max(1,Math.min(3,depths.get(h)-1));
    const li=document.createElement("li");li.className="genui-nav-level-"+level+(level>1?" sub":"");
@@ -45,7 +45,7 @@ function run(){
   root.querySelectorAll("li").forEach(li=>{const group=li.querySelector(":scope > ul"),fold=li.querySelector(":scope > button");if(group&&!group.children.length){group.remove();fold?.remove();}});
   return root;
  }
- targets.forEach(target=>{const tree=makeList();target.replaceWith(tree);});
+ targets.forEach(target=>{const tree=makeList(target);target.replaceWith(tree);});
  sidebar.dataset.headingNavReady="true";
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true});else run();

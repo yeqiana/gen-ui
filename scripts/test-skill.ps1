@@ -47,6 +47,11 @@ $required = @(
   "docs/html-document-examples.md",
   "tests/documents.test.mjs",
   "tests/chrome-documents-smoke.mjs",
+  "scripts/validate-html-report.mjs",
+  "tests/html-report-delivery.test.mjs",
+  "tests/fourth-round.test.mjs",
+  "evals/skill-ab-runner.mjs",
+  "tests/skill-ab-runner.test.mjs",
   "demo/report.js",
   "demo/report.css",
   "demo/quality-flow.svg",
@@ -172,6 +177,9 @@ if ($LASTEXITCODE -ne 0) { throw "Portal security tests syntax failed" }
 if ($LASTEXITCODE -ne 0) { throw "CI workflow guard tests syntax failed" }
 & node --check (Join-Path $root "tests/documents.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Document structure tests syntax failed" }
+& node --check (Join-Path $root "tests/chrome-semantic-stress.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Semantic seeded stress test JS syntax failed" }
+Write-Output "[PASS] Semantic seeded stress test syntax"
 & node --check (Join-Path $root "tests/chrome-documents-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Technical document Chrome smoke syntax failed" }
 Write-Output "[PASS] Technical document test syntax"
@@ -180,6 +188,18 @@ Write-Output "[PASS] Technical document test syntax"
 if ($LASTEXITCODE -ne 0) { throw "Chrome smoke JS syntax failed" }
 Write-Output "[PASS] Chrome smoke JS syntax（浏览器实测请单独运行）"
 
-& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs")
+$standaloneHtml = @(
+  "demo/report.html", "demo/report.en.html", "demo/architecture-patterns.html",
+  "demo/documents/project-analysis.html", "demo/documents/architecture-design.html",
+  "demo/documents/implementation-plan.html", "demo/documents/test-acceptance.html",
+  "demo/documents/en/project-analysis.html", "demo/documents/en/architecture-design.html",
+  "demo/documents/en/implementation-plan.html", "demo/documents/en/test-acceptance.html"
+)
+$reportPaths = @($standaloneHtml | ForEach-Object { Join-Path $root $_ })
+& node (Join-Path $root "scripts/validate-html-report.mjs") @reportPaths
+if ($LASTEXITCODE -ne 0) { throw "Standalone HTML delivery gate failed" }
+Write-Output "[PASS] Standalone HTML delivery gate"
+
+& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
