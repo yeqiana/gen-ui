@@ -14,7 +14,15 @@ function validate(m){
  if(!m||typeof m!=="object"||Array.isArray(m)||Object.keys(m).some(k=>!["type","title","layout","groups"].includes(k)))throw Error("invalid architecture");
  if(!TYPES.includes(m.type)||!LAYOUTS.includes(m.layout)||typeof m.title!=="string"||!m.title.trim()||m.title.length>100)throw Error("invalid metadata");
  if(!Array.isArray(m.groups)||m.groups.length<1||m.groups.length>16)throw Error("invalid groups");
- m.groups.forEach(g=>{if(!g||Array.isArray(g)||typeof g!=="object"||Object.keys(g).some(k=>!["name","items"].includes(k))||typeof g.name!=="string"||!g.name.trim()||g.name.length>64)throw Error("invalid group");if(!Array.isArray(g.items)||!g.items.length||g.items.length>24||g.items.some(x=>typeof x!=="string"||!x.trim()||x.length>100))throw Error("invalid items");});
+ const checkGroup=(g,depth=1)=>{
+  if(!g||Array.isArray(g)||typeof g!=="object"||Object.keys(g).some(k=>!["name","items","children"].includes(k))||typeof g.name!=="string"||!g.name.trim()||g.name.length>64)throw Error("invalid group");
+  if(depth>3)throw Error("architecture nesting exceeds 3 levels");
+  const items=g.items??[];const children=g.children??[];
+  if(!Array.isArray(items)||items.length>24||items.some(x=>typeof x!=="string"||!x.trim()||x.length>100))throw Error("invalid items");
+  if(!Array.isArray(children)||children.length>16||(!items.length&&!children.length))throw Error("invalid children");
+  children.forEach(child=>checkGroup(child,depth+1));
+ };
+ m.groups.forEach(g=>checkGroup(g));
  return m;
 }
 const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};
@@ -36,7 +44,8 @@ function init(host){
  function sync(){const on=document.fullscreenElement===frame||fallback;frame.classList.toggle("architecture-fallback-fullscreen",fallback);full.innerHTML=ICONS[on?"collapse":"expand"];full.setAttribute("aria-pressed",String(on));full.title=on?"退出全屏":"全屏查看架构图";full.setAttribute("aria-label",full.title);}
  document.addEventListener("fullscreenchange",sync);document.addEventListener("fullscreenerror",sync);document.addEventListener("keydown",e=>{if(e.key==="Escape"&&fallback){fallback=false;sync();}});
  head.append(actions);
- model.groups.forEach(group=>{const section=el("details","architecture-group");section.open=true;section.append(el("summary","architecture-group-title",group.name));const items=el("div","architecture-items");group.items.forEach(item=>items.append(el("div","architecture-item",item)));section.append(items);layers.append(section);});
+ const renderGroup=(group)=>{const section=el("details","architecture-group");section.open=true;section.append(el("summary","architecture-group-title",group.name));const items=el("div","architecture-items");(group.items||[]).forEach(item=>items.append(el("div","architecture-item",item)));(group.children||[]).forEach(child=>items.append(renderGroup(child)));section.append(items);return section;};
+ model.groups.forEach(group=>layers.append(renderGroup(group)));
  stage.append(layers);frame.append(head,stage);host.append(frame);update();sync();
 }
 if(typeof module!=="undefined"&&module.exports)module.exports={validate};

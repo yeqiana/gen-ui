@@ -12,12 +12,13 @@ function run(){
  const headings=[...main.querySelectorAll("h2,h3,h4")].filter(h=>!h.closest("dialog,[role=dialog],#panel-rules,.modal,.drawer")&&!h.hidden);
  if(!headings.length)return;
  const zh=document.documentElement.lang?.startsWith("zh");
+ const scheme=document.documentElement.dataset.headingNumbering||"preserve";
  let top=0,second=0,third=0;const depths=new Map();
  for(const [index,h] of headings.entries()){
-  const level=Number(h.tagName.slice(1))===3 && /^\d+\.\d+\.\d+/.test(h.textContent.trim())?4:Number(h.tagName.slice(1));depths.set(h,level);
+  const level=Number(h.tagName.slice(1));depths.set(h,level);
   if(level===2){top++;second=0;third=0;}else if(level===3){second++;third=0;}else third++;
   if(!h.id)h.id="genui-heading-"+index;
-  if(zh){
+  if(zh && scheme==="chinese"){
    const number=level===2?han(top)+"、":level===3?"（"+han(second)+"）":(tertiary[third-1]||"第"+han(third)+"项")+"、";
    const walker=document.createTreeWalker(h,NodeFilter.SHOW_TEXT);
    let textNode;while((textNode=walker.nextNode())){if(textNode.nodeValue.trim()){textNode.nodeValue=textNode.nodeValue.replace(prefix,"");textNode.nodeValue=textNode.nodeValue.replace(/^\s*/,number+" ");break;}}

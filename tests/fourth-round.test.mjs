@@ -32,6 +32,7 @@ test("HTML 默认左侧导航三级折叠，编号单一，无可见时区偏移
  assert.match(nav,/genui-nav-fold/);
  assert.match(nav,/aria-expanded/);
  assert.match(nav,/depths\.get\(h\)-1/);
+ assert.doesNotMatch(nav,/\^\\d\+\\\.\\d\+\\\.\\d\+/);
  for(const file of ["demo/report.html","demo/documents/architecture-design.html","demo/documents/project-analysis.html","demo/documents/implementation-plan.html","demo/documents/test-acceptance.html"]){
   const html=read(file);
   assert.match(html,/<aside\b/);
@@ -64,3 +65,6 @@ test("翻页、重置、打开与表格操作均为图标，状态单值且关�
  assert.match(css,/\.status::before\{display:none/);
  for(const kind of ["success","failure","warning"])assert.ok(css.includes('td[data-compare-status="'+kind+'"]'));
 });
+
+test("第五轮：标题层级只由语义标签决定，编号默认保留源内容",()=>{const nav=read("assets/heading-nav.js");assert.match(nav,/const level=Number\(h.tagName.slice\(1\)\)/);assert.match(nav,/scheme==="chinese"/);assert.match(nav,/dataset.headingNumbering\|\|"preserve"/);});
+test("第五轮：架构图支持三层嵌套并拒绝超限或未知字段",()=>{const base={type:"系统架构",title:"系统",layout:"groups",groups:[{name:"A",children:[{name:"B",children:[{name:"C",items:["D"]}]}]}]};assert.equal(validate(base),base);assert.throws(()=>validate({...base,groups:[{name:"A",children:[{name:"B",children:[{name:"C",children:[{name:"D",items:["E"]}]}]}]}]}));assert.throws(()=>validate({...base,groups:[{name:"A",children:[{name:"B",items:["ok"],script:"x"}]}]}));});
