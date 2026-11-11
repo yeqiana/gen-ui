@@ -1,0 +1,20 @@
+[
+  {
+    "case": "MD",
+    "variant": "legacy",
+    "status": null,
+    "error": "ETIMEDOUT",
+    "outputLength": 0,
+    "output": "",
+    "stderr": ""
+  },
+  {
+    "case": "MD",
+    "variant": "light",
+    "status": null,
+    "error": "ETIMEDOUT",
+    "outputLength": 0,
+    "output": "",
+    "stderr": ""
+  }
+]

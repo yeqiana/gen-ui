@@ -57,7 +57,7 @@ button.secondary,.secondary{background:var(--soft);border-color:#e4e7ed;color:#6
 .status.success{color:#529b2e;background:#f0f9eb;border-color:#e1f3d8}
 .status.failure{color:#f56c6c;background:#fef0f0;border-color:#fde2e2}
 .status.pending{color:#b88230;background:#fdf6ec;border-color:#faecd8}
-.status::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+
 .table-wrap{border-radius:8px;border-color:#ebeef5}
 thead th{background:#f5f7fa;color:#606266}
 thead th:first-child{background:#f5f7fa}

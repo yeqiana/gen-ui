@@ -193,6 +193,14 @@
   next:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg>'
  };
  function btn(parent,action,label,icon){const b=html("button","semantic-tool",parent);b.type="button";b.dataset.action=action;b.setAttribute("aria-label",label);b.title=label;b.innerHTML=icon||"";if(!icon)b.textContent=label;return b;}
+ function fitSvgLabel(node,fullText,maxWidth){
+  node.textContent=fullText;
+  if(node.getComputedTextLength()<=maxWidth)return;
+  const chars=Array.from(fullText);let low=0,high=chars.length;
+  while(low<high){const middle=Math.ceil((low+high)/2);node.textContent=chars.slice(0,middle).join("")+"…";if(node.getComputedTextLength()<=maxWidth)low=middle;else high=middle-1;}
+  node.textContent=chars.slice(0,low).join("")+"…";
+  const title=svg("title",{},node,fullText);title.setAttribute("data-full-label","true");
+ }
  function labelWidth(value,lang){return Math.max(44,[...value].reduce((n,c)=>n+(c.charCodeAt(0)>255?12:7),0)+18);}
  function edge(svgRoot,spec,lang,defs){
   const edgeIndex=Number(svgRoot.dataset.edgeCount||0);svgRoot.dataset.edgeCount=String(edgeIndex+1);const uniqueId="edge-"+(spec.id??svgRoot.dataset.markerId+"-"+edgeIndex);
@@ -207,16 +215,16 @@
   const g=svg("g",{class:"semantic-node semantic-node-"+(opts?.kind||"service"),transform:"translate("+n.x+" "+n.y+")","data-x":n.x,"data-y":n.y,"data-w":n.w,"data-h":n.h},root);
   selectable(g,n.id,opts?.kind||"component",n.title,n.sub,n.detail);
   svg("rect",{class:"semantic-node-shape",width:n.w,height:n.h,rx:opts?.radius||9,fill:opts?.fill||"#f5f9ff",stroke:opts?.stroke||"#9dbce3","stroke-width":"1.6"},g);
-  svg("text",{x:n.w/2,y:n.sub?26:n.h/2+5,"text-anchor":"middle","font-size":"14","font-weight":"650",fill:"#1a1c1f","font-family":"system-ui,sans-serif"},g,text(n.title,lang));
-  if(n.sub)svg("text",{x:n.w/2,y:46,"text-anchor":"middle","font-size":"11",fill:"#667085","font-family":"system-ui,sans-serif"},g,text(n.sub,lang));
+  fitSvgLabel(svg("text",{x:n.w/2,y:n.sub?26:n.h/2+5,"text-anchor":"middle","font-size":"14","font-weight":"650",fill:"#1a1c1f","font-family":"system-ui,sans-serif"},g),text(n.title,lang),Math.max(15,n.w-20));
+  if(n.sub)fitSvgLabel(svg("text",{x:n.w/2,y:46,"text-anchor":"middle","font-size":"11",fill:"#667085","font-family":"system-ui,sans-serif"},g),text(n.sub,lang),Math.max(15,n.w-20));
   if(n.ports){n.ports.forEach((port,i)=>{const p=svg("g",{class:"semantic-port","data-port":"true"},g);svg("circle",{cx:n.w-10,cy:16+i*15,r:4,fill:"#fff",stroke:"#3a83f7","stroke-width":"1.4"},p);svg("title",{},p,text(T("接口：","Port: "),lang)+port);});}
   return g;
  }
  function actorNode(root,p,lang,x,height){
   const g=svg("g",{class:"semantic-node semantic-actor","transform":"translate("+(x-68)+" 28)"},root);selectable(g,p.id,"participant",p.name,p.sub,T("参与者，点击可高亮其生命线及相关消息。","Participant; click to highlight its lifeline and related messages."));
   svg("rect",{width:136,height:54,rx:8,fill:"#eff6ff",stroke:"#7aa8e8","stroke-width":"1.6"},g);
-  svg("text",{x:68,y:23,"text-anchor":"middle","font-size":"14","font-weight":"650",fill:"#1a1c1f"},g,text(p.name,lang));
-  svg("text",{x:68,y:42,"text-anchor":"middle","font-size":"10.5",fill:"#667085"},g,text(p.sub,lang));
+  fitSvgLabel(svg("text",{x:68,y:23,"text-anchor":"middle","font-size":"14","font-weight":"650",fill:"#1a1c1f"},g),text(p.name,lang),116);
+  fitSvgLabel(svg("text",{x:68,y:42,"text-anchor":"middle","font-size":"10.5",fill:"#667085"},g),text(p.sub,lang),116);
   svg("line",{class:"semantic-lifeline",x1:68,y1:54,x2:68,y2:height-30,stroke:"#9aa9bb","stroke-dasharray":"5 5","stroke-width":"1.5"},g);
   return g;
  }
@@ -226,13 +234,13 @@
   svg("rect",{class:"semantic-node-shape",width:e.w,height,rx:7,fill:"#fff",stroke:"#8ba8cc","stroke-width":"1.5"},g);
   svg("rect",{width:e.w,height:46,rx:7,fill:"#eaf2ff",stroke:"#8ba8cc","stroke-width":"1.3"},g);
   svg("path",{d:"M0 39 H"+e.w,stroke:"#8ba8cc","stroke-width":"1"},g);
-  svg("text",{x:14,y:20,"font-size":"14","font-weight":"750",fill:"#1a1c1f"},g,text(e.title,lang));
-  svg("text",{x:14,y:36,"font-size":"10.5",fill:"#667085"},g,text(e.sub,lang));
+  fitSvgLabel(svg("text",{x:14,y:20,"font-size":"14","font-weight":"750",fill:"#1a1c1f"},g),text(e.title,lang),Math.max(15,e.w-28));
+  if(e.sub)fitSvgLabel(svg("text",{x:14,y:36,"font-size":"10.5",fill:"#667085"},g),text(e.sub,lang),Math.max(15,e.w-28));
   e.fields.forEach((f,i)=>{
    const row=svg("g",{class:"semantic-field","data-field":"true","data-field-type":f[1],"data-entity":e.id,transform:"translate(0 "+(46+i*29)+")"},g);
    selectable(row,e.id+"-"+f[0],"field",T(f[0],f[0]),T(f[2],f[3]),T("字段类型："+f[1]+"；所属实体："+text(e.title,lang),"Field type: "+f[1]+"; entity: "+text(e.title,lang)));
    svg("rect",{x:1,y:0,width:e.w-2,height:28,fill:i%2?"#fbfcfe":"#fff",stroke:"#eef1f5","stroke-width":".6"},row);
-   svg("text",{x:12,y:18,"font-size":"11.5","font-family":"ui-monospace,monospace",fill:"#344054"},row,f[0]);
+   fitSvgLabel(svg("text",{x:12,y:18,"font-size":"11.5","font-family":"ui-monospace,monospace",fill:"#344054"},row),f[0],Math.max(15,e.w-62));
    svg("text",{x:e.w-12,y:18,"font-size":"10","text-anchor":"end","font-weight":"700",fill:f[1]==="PK"?"#23764f":f[1]==="FK"?"#3a83f7":"#667085"},row,f[1]);
   });
   return g;

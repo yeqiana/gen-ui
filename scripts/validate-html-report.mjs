@@ -4,12 +4,25 @@ import fs from 'node:fs';
 import path from 'node:path';
 const files=process.argv.slice(2);
 if(!files.length){console.error('用法: node scripts/validate-html-report.mjs <report.html> [...]');process.exit(2);}
-export function validateHtml(html){
+export function validateHtml(html,sourcePath){
  const issues=[];
  const lang=html.match(/<html\b[^>]*\blang=["']([^"']+)/i)?.[1]||'';
- const hasSidebar=/<aside\b[^>]*(?:class=["'][^"']*doc-toc|id=["']report-sidebar)[^>]*>/i.test(html);
- if(!hasSidebar)issues.push('缺少默认左侧导航容器');
- if(!/<script\b[^>]*\bsrc=["'][^"']*heading-nav\.js["']/i.test(html))issues.push('缺少 heading-nav.js 导航增强脚本');
+ const sidebar=html.match(/<aside\b[^>]*(?:(?:class=["'][^"']*\bdoc-toc\b[^"']*["'])|(?:id=["']report-sidebar["']))[^>]*>[\s\S]*?<\/aside>/i)?.[0];
+ if(!sidebar)issues.push('缺少默认左侧导航容器');
+ const nav=sidebar?.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0];
+ if(sidebar&&!nav)issues.push('左侧导航缺少 nav 静态结构');
+ const toc=nav?.match(/<(?:ul|ol)\b[^>]*class=["'][^"']*\b(?:nav-list|toc-list)\b[^"']*["'][^>]*>[\s\S]*?<\/(?:ul|ol)>/i)?.[0];
+ if(nav&&(!toc||!/<a\b[^>]*href=["']#[^"']+["']/i.test(toc)))issues.push('缺少无脚本可用的静态目录链接');
+ const scriptPath=html.match(/<script\b[^>]*src=["']([^"']*heading-nav\.js)["']/i)?.[1];
+ if(!scriptPath)issues.push('缺少 heading-nav.js 导航增强脚本');
+ if(scriptPath && sourcePath){
+  const local=scriptPath.split(/[?#]/,1)[0];
+  if(/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(local)||!fs.existsSync(path.resolve(path.dirname(sourcePath),local)))issues.push('导航增强脚本必须为可访问的本地文件');
+ }
+ for(const button of html.matchAll(/<button\b([^>]*\bclass=["'][^"']*\b(?:genui-action-icon|icon-only)\b[^"']*["'][^>]*)>([\s\S]*?)<\/button>/gi)){
+  const attrs=button[1],body=button[2];
+  if(!/\baria-label=["'][^"']+["']/i.test(attrs)||!/\btitle=["'][^"']+["']/i.test(attrs)||!/<svg\b/i.test(body))issues.push('图标按钮缺少 aria-label、title 或 SVG');
+ }
  if(!/<main\b[^>]*(?:class=["'][^"']*doc-main|id=["']main)[^>]*>/i.test(html))issues.push('缺少正文 main 容器');
  const headings=[...html.matchAll(/<h([234])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map(m=>({level:Number(m[1]),text:m[2].replace(/<[^>]+>/g,'').trim()}));
  if(!headings.length)issues.push('缺少可导航的 H2/H3/H4 标题');
@@ -24,5 +37,5 @@ export function validateHtml(html){
  return issues;
 }
 let failed=false;
-for(const file of files){const target=path.resolve(file);try{const issues=validateHtml(fs.readFileSync(target,'utf8'));console.log((issues.length?'FAIL':'PASS')+' '+file);issues.forEach(i=>console.error('  - '+i));failed||=issues.length>0;}catch(e){failed=true;console.error('FAIL '+file+': '+e.message);}}
+for(const file of files){const target=path.resolve(file);try{const issues=validateHtml(fs.readFileSync(target,'utf8'),target);console.log((issues.length?'FAIL':'PASS')+' '+file);issues.forEach(i=>console.error('  - '+i));failed||=issues.length>0;}catch(e){failed=true;console.error('FAIL '+file+': '+e.message);}}
 if(failed)process.exitCode=1;

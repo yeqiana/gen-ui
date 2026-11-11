@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createRequire} from 'node:module';
+import os from 'node:os';
+import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 const root=new URL('../',import.meta.url);
-const run=(html)=>{const tmp=new URL('tests/.genui-delivery-temp.html',root);try{fs.writeFileSync(tmp,html);return spawnSync(process.execPath,['scripts/validate-html-report.mjs','tests/.genui-delivery-temp.html'],{cwd:root,encoding:'utf8'});}finally{fs.rmSync(tmp,{force:true});}};
-const base=(headings,extra='')=>'<html lang="zh-CN"><aside class="doc-toc"></aside><main class="doc-main">'+headings+'</main><script src="assets/heading-nav.js"></script>'+extra+'</html>';
+const run=html=>{const temp=fs.mkdtempSync(path.join(os.tmpdir(),'genui-html-'));try{const file=path.join(temp,'report.html');fs.writeFileSync(file,html);fs.mkdirSync(path.join(temp,'assets'));fs.copyFileSync(new URL('../assets/heading-nav.js',import.meta.url),path.join(temp,'assets','heading-nav.js'));return spawnSync(process.execPath,['scripts/validate-html-report.mjs',file],{cwd:root,encoding:'utf8'});}finally{fs.rmSync(temp,{recursive:true,force:true});}};
+const base=(headings,extra='')=>'<html lang="zh-CN"><aside class="doc-toc"><nav aria-label="目录"><ul class="toc-list"><li><a href="#chapter">章节</a></li></ul></nav></aside><main class="doc-main">'+headings.replace('<h2>','<h2 id="chapter">')+'</main><script src="assets/heading-nav.js"></script>'+extra+'</html>';
 test('交付门禁拒绝缺失导航、混用编号、数字层级错误及可见时区',()=>{
  assert.notEqual(run('<html><main><h2>一、背景</h2></main></html>').status,0);
  assert.notEqual(run(base('<h2>一、背景</h2><h3>1.1 细节</h3>')).status,0);
@@ -15,4 +16,25 @@ test('交付门禁拒绝缺失导航、混用编号、数字层级错误及可�
 test('交付门禁允许统一中文与十进制编号',()=>{
  assert.equal(run(base('<h2>一、背景</h2><h3>（一） 范围</h3>')).status,0);
  assert.equal(run(base('<h2>1. 背景</h2><h3>1.1 范围</h3><h4>1.1.1 细节</h4>')).status,0);
+});
+
+test('无脚本静态目录需真实存在于左侧 aside 的 nav 中',()=>{
+ const content='<h2 id="chapter">一、背景</h2>';
+ assert.notEqual(run(base(content).replace('<nav aria-label="目录">','<div aria-label="目录">').replace('</nav>','</div>')).status,0);
+ assert.notEqual(run(base(content).replace('<li><a href="#chapter">章节</a></li>','')).status,0);
+ assert.equal(run(base(content)).status,0);
+});
+
+test('图标操作必须具备可访问名称、提示及 SVG 图形',()=>{
+ const report=base('<h2>一、背景</h2>');
+ assert.notEqual(run(report.replace('</main>','<button class="icon-only" title="关闭"><svg viewBox="0 0 20 20"></svg></button></main>')).status,0);
+ assert.notEqual(run(report.replace('</main>','<button class="genui-action-icon" aria-label="关闭" title="关闭">×</button></main>')).status,0);
+ assert.equal(run(report.replace('</main>','<button class="genui-action-icon" aria-label="关闭" title="关闭"><svg viewBox="0 0 20 20"></svg></button></main>')).status,0);
+});
+
+test('导航脚本路径必须实际存在且不可依赖远程资源',()=>{
+ const html=base('<h2>一、背景</h2>');
+ assert.notEqual(run(html.replace('assets/heading-nav.js','missing/heading-nav.js')).status,0);
+ assert.notEqual(run(html.replace('assets/heading-nav.js','https://example.org/heading-nav.js')).status,0);
+ assert.equal(run(html).status,0);
 });

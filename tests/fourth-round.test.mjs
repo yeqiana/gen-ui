@@ -21,6 +21,7 @@ test("八类架构图支持纯容器分层，未知字段与非法数据被拒�
  for(const type of types)assert.ok(html.includes('"type":"'+type+'"'),type);
  assert.equal((html.match(/data-architecture-view/g)||[]).length,8);
  assert.doesNotMatch(html,/<path[^>]+d=/);
+ assert.match(html,/"children":\[/);
  assert.match(js,/textContent=text/);
  const m={type:"业务架构",title:"演示",layout:"stack",groups:[{name:"业务域",items:["账户","订单"]}]};
  assert.equal(validate(m),m);
@@ -62,7 +63,8 @@ test("翻页、重置、打开与表格操作均为图标，状态单值且关�
   assert.match(html,new RegExp('id="'+id+'"[^>]*aria-label='));
  assert.match(js,/genui-action-icon/);
  assert.match(js,/dataset\.compareStatus = severity/);
- assert.match(css,/\.status::before\{display:none/);
+ assert.doesNotMatch(css,/\.status::before/);
+ assert.doesNotMatch(read("demo/ui-refresh.css"),/\.status::before/);
  for(const kind of ["success","failure","warning"])assert.ok(css.includes('td[data-compare-status="'+kind+'"]'));
 });
 
