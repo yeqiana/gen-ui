@@ -142,4 +142,8 @@ These checks validate fixed, trusted repository examples; they do not establish 
 MIT License · [LICENSE](LICENSE).
 
 
+Real-project examples: [Yopu / StoryOS / IM architecture gallery](demo/architecture-patterns.html), covering eight viewpoints and 24 explicit directional relationships. The diagrams are based on local module structures and design documents, not proof of deployed production topology.
+
+![Yopu, StoryOS and IM layered architecture examples](demo/documents/assets/architecture-patterns-preview.png)
+
 See also: [Eight architecture views — layered/container models](demo/architecture-patterns.html) and [Lightweight Skill principles](docs/skill-principles.md).

@@ -25,6 +25,15 @@ test("八类架构图支持纯容器分层，未知字段与非法数据被拒�
  assert.match(js,/textContent=text/);
  const m={type:"业务架构",title:"演示",layout:"stack",groups:[{name:"业务域",items:["账户","订单"]}]};
  assert.equal(validate(m),m);
+ const rich={...m,groups:[{name:"接入层",items:["Gateway"]},{name:"业务层",items:["IM"]}],flows:[{from:"接入层",to:"业务层",label:"带方向的服务调用"}]};
+ assert.equal(validate(rich),rich);
+ for(const invalid of [
+  {...rich,flows:[{from:"缺失层",to:"业务层",label:"假的连接"}]},
+  {...rich,flows:[{from:"接入层",to:"业务层",label:""}]},
+  {...rich,flows:[{from:"接入层",to:"接入层",label:"循环"}]},
+  {...rich,flows:[{from:"接入层",to:"业务层",label:"合法",script:"evil()"}]}
+ ])assert.throws(()=>validate(invalid));
+ for(const term of ["yopu-gateway-core","yopu-im-core","yopu-trade-order","StoryOS","Task / Attempt"])assert.ok(html.includes(term),term);
  for(const invalid of [{...m,script:"alert(1)"},{...m,groups:[{name:"x",items:[""]}]},{...m,layout:"madeup"},{...m,groups:[]}])assert.throws(()=>validate(invalid));
 });
 test("HTML 默认双层章节导航，双击收展，图标默认隐藏且无可见时区偏移",()=>{

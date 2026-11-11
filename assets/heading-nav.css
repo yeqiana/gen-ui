@@ -35,3 +35,12 @@
 .doc-layout[data-sidebar-collapsed="true"] .doc-toc nav{display:block!important;flex:1;min-height:0;overflow-y:auto}
 .doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-level-1>a{font-size:0;padding:10px 3px!important;justify-content:center}
 .doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-children{display:none!important}
+
+/* Unified navigation icon visibility: only a collapsed rail shows destination icons. */
+.sidebar nav a > svg,.sidebar nav a > img,
+.doc-toc nav a > svg,.doc-toc nav a > img,
+.mobile-toc nav a > svg,.mobile-toc nav a > img{display:none!important}
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1 > a > svg,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1 > a > img,
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1 > a > svg,
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1 > a > img{display:block!important;flex:0 0 20px;width:20px;height:20px}

@@ -11,7 +11,7 @@ const ICONS={
  collapse:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8H3m5 0V3m8 5h5m-5 0V3m0 13h5m-5 0v5M8 16H3m5 0v5"/></svg>'
 };
 function validate(m){
- if(!m||typeof m!=="object"||Array.isArray(m)||Object.keys(m).some(k=>!["type","title","layout","groups"].includes(k)))throw Error("invalid architecture");
+ if(!m||typeof m!=="object"||Array.isArray(m)||Object.keys(m).some(k=>!["type","title","layout","groups","flows"].includes(k)))throw Error("invalid architecture");
  if(!TYPES.includes(m.type)||!LAYOUTS.includes(m.layout)||typeof m.title!=="string"||!m.title.trim()||m.title.length>100)throw Error("invalid metadata");
  if(!Array.isArray(m.groups)||m.groups.length<1||m.groups.length>16)throw Error("invalid groups");
  const checkGroup=(g,depth=1)=>{
@@ -23,6 +23,10 @@ function validate(m){
   children.forEach(child=>checkGroup(child,depth+1));
  };
  m.groups.forEach(g=>checkGroup(g));
+  if(m.flows!==undefined){
+   const names=new Set(m.groups.map(g=>g.name));
+   if(!Array.isArray(m.flows)||m.flows.length>12||m.flows.some(f=>!f||Array.isArray(f)||Object.keys(f).some(k=>!["from","to","label"].includes(k))||!names.has(f.from)||!names.has(f.to)||f.from===f.to||typeof f.label!=="string"||!f.label.trim()||f.label.length>100))throw Error("invalid architecture flows");
+  }
  return m;
 }
 const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};
@@ -46,6 +50,21 @@ function init(host){
  head.append(actions);
  const renderGroup=(group)=>{const section=el("details","architecture-group");section.open=true;section.append(el("summary","architecture-group-title",group.name));const items=el("div","architecture-items");(group.items||[]).forEach(item=>items.append(el("div","architecture-item",item)));(group.children||[]).forEach(child=>items.append(renderGroup(child)));section.append(items);return section;};
  model.groups.forEach(group=>layers.append(renderGroup(group)));
+  if(model.flows?.length){
+   const flows=el("section","architecture-flows"),title=el("h3","architecture-flows-title","关键链路 · 按模块归属标注");
+   const list=el("div","architecture-flow-list");flows.append(title,list);
+   model.flows.forEach((f,i)=>{
+    const row=el("div","architecture-flow-row"),start=el("span","architecture-flow-endpoint",f.from),end=el("span","architecture-flow-endpoint",f.to);
+    const connector=el("span","architecture-flow-connector"),label=el("span","architecture-flow-label",f.label);
+    const track=el("span","architecture-flow-track");
+    track.innerHTML='<span class="architecture-flow-line"></span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1 L11 6 L1 11 Z" fill="currentColor"/></svg>';
+    connector.append(label,track);row.append(start,connector,end);
+    row.dataset.flowIndex=String(i);
+    row.setAttribute("aria-label",f.from+"，"+f.label+"，"+f.to);
+    list.append(row);
+   });
+   stage.append(flows);
+  }
  stage.append(layers);frame.append(head,stage);host.append(frame);update();sync();
 }
 if(typeof module!=="undefined"&&module.exports)module.exports={validate};

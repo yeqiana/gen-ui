@@ -97,3 +97,7 @@ button{cursor:pointer}button:focus-visible,a:focus-visible,iframe:focus-visible,
  .portal.is-collapsed .portal-rail-resize{display:none}
 }
 @media(max-width:700px){.portal-rail-resize{display:none}}
+
+/* Portal link icons: expanded vs collapsed. */
+.portal:not(.is-collapsed) #page-nav .nav-glyph,.portal:not(.is-collapsed) #page-nav .page-link > svg,.portal:not(.is-collapsed) #page-nav .page-link > img{display:none!important}
+.portal.is-collapsed #page-nav .nav-glyph{display:flex!important}
