@@ -82,6 +82,14 @@ The seven diagram types no longer share a generic “boxes + straight lines + dr
 **Connector labels:** use opaque label backgrounds and dedicated label lanes; route connectors around node shapes. SVG bounding-box checks verify labels do not intersect nodes. Image fullscreen controls sit at the image's upper-right corner, and code-copy icons sit at the code block's upper-right corner.
 
 
+### JSON-powered diagrams and collision-safe labels
+
+All seven SVG diagram grammars can consume a separate local `<script type="application/json" data-diagram-model>` input instead of the built-in examples. See the [custom order-domain ER and sequence diagrams](demo/custom-diagram-model.html) and the [diagram JSON contract](references/semantic-diagram-model.md).
+
+Edge labels use an independent white-background overlay, measured text, and viewport-normalized collision avoidance. Branch collapse hides child nodes **and** connectors; ER field filtering resizes entity boxes. Mobile reading supports an overview/focused mode and fullscreen controls recover from rejected browser API calls.
+
+**Scope:** complex deployment, activity, and component diagrams still require initial node coordinates and connector paths. This is not yet an automatic graph-layout engine.
+
 ## Install
 
 Windows PowerShell, Codex:

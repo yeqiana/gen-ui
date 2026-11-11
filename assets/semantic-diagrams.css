@@ -48,3 +48,8 @@
 .semantic-shell:fullscreen .semantic-svg,.semantic-shell.is-fallback-fullscreen .semantic-svg{min-height:100%;width:100%}
 @media(max-width:760px){.semantic-body{grid-template-columns:1fr}.semantic-inspector{border-left:0;border-top:1px solid #e4e7ec}.semantic-stage{min-height:280px}.semantic-toolbar{align-items:flex-start}.semantic-title{width:100%}.semantic-tools{gap:4px}.semantic-tool{min-height:28px;padding:4px 6px;font-size:11px}}
 @media(prefers-reduced-motion:reduce){.semantic-node,.semantic-edge path,.semantic-branch-child{transition:none}}
+
+.semantic-edge-chip{cursor:pointer;outline:none}.semantic-edge-chip.is-selected .semantic-edge-label-bg,.semantic-edge-chip.is-related .semantic-edge-label-bg{stroke:#3a83f7;stroke-width:2.2}.semantic-edge-chip.is-hidden,.semantic-branch-edge.is-hidden{display:none!important}.semantic-edge-chip:focus-visible .semantic-edge-label-bg{stroke:#3a83f7;stroke-width:2.5}
+@media(max-width:760px){.semantic-svg{min-width:0;width:100%}.semantic-stage{overflow:hidden;touch-action:none}.semantic-tools [data-action=fit]{font-weight:600}}
+
+.semantic-tools [data-action="read"]{display:none}@media(max-width:760px){.semantic-tools [data-action="read"]{display:inline-flex}.semantic-stage{min-height:290px}.semantic-svg{height:290px;min-width:0;width:100%}.semantic-tool[data-action="read"][aria-pressed=true]{background:#eaf2ff;color:#225ab2;border-color:#3a83f7}}

@@ -61,6 +61,8 @@ $required = @(
   "assets/semantic-diagrams.js",
   "assets/semantic-diagrams.css",
   "demo/report.en.html",
+  "demo/custom-diagram-model.html",
+  "references/semantic-diagram-model.md",
   "tests/semantic-diagrams.test.mjs",
   "assets/media-viewer.js",
   "assets/media-viewer.css",
