@@ -53,3 +53,8 @@
 @media(max-width:760px){.semantic-svg{min-width:0;width:100%}.semantic-stage{overflow:hidden;touch-action:none}.semantic-tools [data-action=fit]{font-weight:600}}
 
 .semantic-tools [data-action="read"]{display:none}@media(max-width:760px){.semantic-tools [data-action="read"]{display:inline-flex}.semantic-stage{min-height:290px}.semantic-svg{height:290px;min-width:0;width:100%}.semantic-tool[data-action="read"][aria-pressed=true]{background:#eaf2ff;color:#225ab2;border-color:#3a83f7}}
+
+.semantic-edge-chip.is-layout-fallback{display:none!important}
+.semantic-label-fallbacks:not([hidden]){padding:9px 12px;border-top:1px solid #e4e7ec;display:flex;flex-wrap:wrap;gap:6px;max-height:130px;overflow:auto}
+.semantic-fallback-link{font:12px/1.4 system-ui,sans-serif;max-width:min(100%,300px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid #c9d7e8;background:#f8fbff;color:#315276;border-radius:5px;padding:5px 9px;cursor:pointer}
+.semantic-fallback-link:focus-visible{outline:2px solid #3a83f7}

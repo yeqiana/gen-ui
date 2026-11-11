@@ -29,6 +29,10 @@
 
 This is an example of information structure, not production sizing advice.
 
+[![The same engineering facts before and after GEN-UI information design](demo/assets/before-after-en-preview.png)](demo/before-after.en.html)
+
+This real HTML preview compares **the same asynchronous workflow reliability facts** as dense prose versus an answer-first summary, risk/control table, and next action. [View the English Before/After example](demo/before-after.en.html).
+
 ## Four complete English HTML examples
 
 The following examples are **English content with English page previews**, not links to Chinese articles. They use one fictional asynchronous AI workflow to demonstrate four distinct reading tasks. These are design examples, not verified audit or benchmark results.
@@ -37,25 +41,25 @@ The following examples are **English content with English page previews**, not l
 
 [![English project analysis report preview](demo/documents/assets/en-project-analysis-preview.png)](demo/documents/en/project-analysis.html)
 
-Context, module responsibilities, workflow boundaries, risks, and recommendations. [Read the project analysis](demo/documents/en/project-analysis.html).
+**Preview focus: business mind map.** Context, module responsibilities, workflow boundaries, risks, and recommendations. [Read the project analysis](demo/documents/en/project-analysis.html).
 
 ### 02 · System architecture design
 
 [![English system architecture design preview](demo/documents/assets/en-architecture-design-preview.png)](demo/documents/en/architecture-design.html)
 
-Task states, component responsibilities, fenced execution, transactional delivery, and recovery. [Read the architecture design](demo/documents/en/architecture-design.html).
+**Preview focus: message sequence and deployment topology.** Task states, component responsibilities, fenced execution, transactional delivery, and recovery. [Read the architecture design](demo/documents/en/architecture-design.html).
 
 ### 03 · Technical implementation plan
 
 [![English implementation plan preview](demo/documents/assets/en-implementation-plan-preview.png)](demo/documents/en/implementation-plan.html)
 
-Phases, dependencies, database migration, rollout, rollback, and evidence-based exit criteria. [Read the implementation plan](demo/documents/en/implementation-plan.html).
+**Preview focus: activity paths and responsibility lanes.** Phases, dependencies, database migration, rollout, rollback, and evidence-based exit criteria. [Read the implementation plan](demo/documents/en/implementation-plan.html).
 
 ### 04 · Test and acceptance plan
 
 [![English test and acceptance plan preview](demo/documents/assets/en-test-acceptance-preview.png)](demo/documents/en/test-acceptance.html)
 
-Risk-based test cases, fault injection, performance evaluation, and acceptance gates. [Read the test plan](demo/documents/en/test-acceptance.html).
+**Preview focus: test-case matrix and failure injection.** Risk-based test cases, fault injection, performance evaluation, and acceptance gates. [Read the test plan](demo/documents/en/test-acceptance.html).
 
 [**Browse the English document gallery**](demo/documents/en/index.html).
 

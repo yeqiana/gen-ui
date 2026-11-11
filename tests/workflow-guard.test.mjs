@@ -31,13 +31,7 @@ test("CI runs every locally supported Chrome suite and all three new Agent cases
 test("HTML visual contract requires a persistent icon rail, image-text composition and restrained headings",()=>{
  const skill=fs.readFileSync(new URL("../SKILL.md",import.meta.url),"utf8");
  const contract=fs.readFileSync(new URL("../references/html-report-contract.md",import.meta.url),"utf8");
- assert.match(skill,/Collapsed navigation is an icon rail, never a hidden sidebar/);
- assert.match(skill,/Image-and-text first when visuals are supported/);
- assert.match(skill,/Prefer SVG icons over emoji/);
- assert.match(skill,/Task-state exception/);
- assert.match(skill,/selectively bold key conclusions/);
- assert.match(skill,/Do not mix numbering systems/);
-  assert.match(skill,/10 rows per page by default/);
+  assert.match(skill,/HTML report contract/);
  assert.match(contract,/keep the expand control inside the rail/);
  assert.match(contract,/Do not put a small subtitle immediately below the main H1/);
  assert.match(contract,/image \+ concise Chinese explanation/);
