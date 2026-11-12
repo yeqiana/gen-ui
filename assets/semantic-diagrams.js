@@ -283,8 +283,10 @@ function renderSequence(root,m,lang,height,xs){
   m.participants.forEach((p,i)=>actorNode(root,p,lang,xs[i],height));
   m.participants.slice(1).forEach(p=>{const msgs=m.messages.map((x,i)=>({from:x.from,to:x.to,y:x.y??155+i*75})).filter(x=>x.from===p.id||x.to===p.id);if(!msgs.length)return;const from=Math.min(...msgs.map(x=>x.y)),to=Math.max(...msgs.map(x=>x.y));svg("rect",{class:"semantic-activation",x:map[p.id]-6,y:from+10,width:12,height:Math.max(32,to-from-10),rx:3,fill:"#dceafe",stroke:"#5b91d6","stroke-width":"1"},root);});
   m.messages.forEach((msg,i)=>{
-   const x1=map[msg.from],x2=map[msg.to],y=msg.y??155+i*75,ret=msg.kind==="return";
-   const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:(x1+x2)/2,ly:y-17,d:"M"+x1+" "+y+" H"+x2,dashed:ret,detail:msg.detail,messageIndex:i,labelSpan:Math.abs(x2-x1)};
+   const x1=map[msg.from],x2=map[msg.to],y=msg.y??155+i*75,ret=msg.kind==="return",self=msg.from===msg.to;
+   const loopWidth=64,labelWidth=measureEdgeText(msg.label,lang),d=self?("M"+x1+" "+y+" H"+(x1+loopWidth)+" V"+(y+26)+" H"+(x1+2)):("M"+x1+" "+y+" H"+x2);
+    // Keep the self-call loop compact; place its full message label in a dedicated right-side span.
+    const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:self?x1+loopWidth+18+labelWidth/2:(x1+x2)/2,ly:y-17,d,dashed:ret,detail:msg.detail,messageIndex:i,labelSpan:self?labelWidth+32:Math.abs(x2-x1)};
    const g=edge(root,edgeSpec,lang);g.dataset.messageIndex=i;g.dataset.kind="message";g.dataset.title=text(msg.label,lang);g.dataset.summary=text(T("消息类型："+(ret?"返回":msg.kind==="async"?"异步":"同步"),"Message type: "+(ret?"return":msg.kind),lang),lang);g.dataset.detail=text(msg.detail,lang);
    if(msg.kind==="async")g.querySelector("path").setAttribute("stroke","#3a83f7");
   });
@@ -359,7 +361,8 @@ function renderSequence(root,m,lang,height,xs){
  function render(model,type,root,lang){
   const requestedWidth=model.canvas?.width??(type==="sequence"?960:type==="mind"?920:type==="deploy"?1100:type==="er"?1040:type==="activity"?1640:type==="swim"?1060:1100);
    const sequenceXs=type==="sequence"?sequencePositions(model,lang):null;
-   const w=type==="sequence"?Math.max(requestedWidth,sequenceXs[sequenceXs.length-1]+110):requestedWidth;
+   const selfLabelRight=type==="sequence"?Math.max(0,...model.messages.filter(msg=>msg.from===msg.to).map(msg=>{const participantIndex=model.participants.findIndex(p=>p.id===msg.from);return sequenceXs[participantIndex]+64+18+measureEdgeText(msg.label,lang)+40;})):0;
+   const w=type==="sequence"?Math.max(requestedWidth,sequenceXs[sequenceXs.length-1]+110,selfLabelRight):requestedWidth;
   const requestedHeight=model.canvas?.height??(type==="sequence"?620:type==="mind"?590:type==="deploy"?560:type==="er"?560:type==="activity"?590:type==="swim"?535:550);
    const h=type==="sequence"?Math.max(requestedHeight,Math.max(...model.messages.map((m,i)=>m.y??155+i*75))+95):requestedHeight;
   const svgRoot=svg("svg",{class:"semantic-svg",viewBox:"0 0 "+w+" "+h,role:"img","aria-label":text(model.title,lang),"preserveAspectRatio":"xMinYMin meet"},root);
@@ -398,7 +401,7 @@ function renderSequence(root,m,lang,height,xs){
    chip.classList.remove("is-layout-fallback");const bg=chip.querySelector(".semantic-edge-label-bg"),caption=chip.querySelector(".semantic-edge-label");
    if(!bg||!caption)continue;
    const fullText=chip.querySelector("title")?.textContent||caption.textContent;caption.textContent=fullText;
-   const available=Number(chip.dataset.labelSpan)||244;const maxWidth=Math.min(1800,Math.max(44,available-28),graph.w-40);const chars=Array.from(fullText);
+   const available=Number(chip.dataset.labelSpan)||244;const maxWidth=Math.min(Math.max(44,available-28),graph.w-40);const chars=Array.from(fullText);
    if(caption.getComputedTextLength()>maxWidth){let lo=0,hi=chars.length;while(lo<hi){const mid=Math.ceil((lo+hi)/2);caption.textContent=chars.slice(0,mid).join("")+"…";if(caption.getComputedTextLength()<=maxWidth)lo=mid;else hi=mid-1;}caption.textContent=chars.slice(0,lo).join("")+"…";}
    chip.dataset.truncated=String(caption.textContent!==fullText);const w=Math.max(36,Math.ceil(caption.getComputedTextLength()+20)),h=22;
    const cx=Number(chip.dataset.baseX),cy=Number(chip.dataset.baseY);

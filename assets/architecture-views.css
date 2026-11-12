@@ -30,6 +30,7 @@
  padding:7px 9px;border:1px solid #d7e3f2;border-radius:6px;background:#fff;color:#344054;
  font-size:11px;line-height:1.4;overflow-wrap:anywhere;box-shadow:0 1px 4px rgba(24,44,70,.04)}
 .architecture-wire-title{font-size:11px;font-weight:650}
+.architecture-wire-endpoints{font-size:10px;font-weight:750;color:#475467;padding-bottom:3px;border-bottom:1px solid #e6eaf0;margin-bottom:2px}
 .architecture-wire-evidence{font-size:10px;color:#667085;line-height:1.4;overflow-wrap:anywhere}
 .architecture-wire-label[data-basis="implementation"]{border-left:3px solid #4f9576}
 .architecture-wire-label[data-basis="design"]{border-left:3px solid #8da9d2}

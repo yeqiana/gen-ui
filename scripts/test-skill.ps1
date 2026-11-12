@@ -50,6 +50,9 @@ $required = @(
   "scripts/validate-html-report.mjs",
   "tests/html-report-delivery.test.mjs",
   "tests/fourth-round.test.mjs",
+  "tests/architecture-views.test.mjs",
+  "assets/architecture-views.js",
+  "demo/architecture-patterns.html",
   "evals/skill-ab-runner.mjs",
   "tests/skill-ab-runner.test.mjs",
   "demo/report.js",
@@ -182,6 +185,8 @@ if ($LASTEXITCODE -ne 0) { throw "Semantic seeded stress test JS syntax failed" 
 Write-Output "[PASS] Semantic seeded stress test syntax"
 & node --check (Join-Path $root "tests/chrome-layout-edge-cases.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Chrome edge cases syntax failed" }
+& node --check (Join-Path $root "tests/architecture-views.test.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Architecture model boundary tests syntax failed" }
 & node --check (Join-Path $root "tests/chrome-documents-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Technical document Chrome smoke syntax failed" }
 Write-Output "[PASS] Technical document test syntax"
@@ -202,6 +207,6 @@ $reportPaths = @($standaloneHtml | ForEach-Object { Join-Path $root $_ })
 if ($LASTEXITCODE -ne 0) { throw "Standalone HTML delivery gate failed" }
 Write-Output "[PASS] Standalone HTML delivery gate"
 
-& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs")
+& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
