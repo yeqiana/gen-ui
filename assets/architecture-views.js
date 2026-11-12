@@ -106,30 +106,75 @@ if(model.flows?.length){
  }
  scene.append(overlay);
  const groupCenter=ref=>{const r=groupElements.get(ref).getBoundingClientRect();return r.top+r.height/2;};
- const directionCounts=()=>{let left=0,right=0;for(const relation of relationships){if(groupCenter(relation.to)<groupCenter(relation.from))left++;else right++;}return{left,right};};
+ const relationshipNote=el("p","architecture-relationship-note","关系较密集，已切换为关系清单，避免连线交叉；所有起点、终点和依据均保留。");relationshipNote.hidden=true;scene.append(relationshipNote);
  const layout=()=>{
-  const rect=scene.getBoundingClientRect(),scaleFactor=rect.width/Math.max(1,scene.offsetWidth),layerWidth=layers.offsetWidth,leftGutter=Number(scene.dataset.leftGutter||0);
-  const groupRect=(group,side)=>{const r=groupElements.get(group).getBoundingClientRect();return{x:((side==="left"?r.left:r.right)-rect.left)/scaleFactor,y:(r.top+r.height/2-rect.top)/scaleFactor,height:r.height/scaleFactor};};
-  const resolved=relationships.map(relation=>{const side=groupCenter(relation.to)<groupCenter(relation.from)?"left":"right";return{relation,a:groupRect(relation.from,side),b:groupRect(relation.to,side),side};});
-  const left=resolved.filter(route=>route.side==="left").sort((a,b)=>a.a.y-b.a.y||a.b.y-b.b.y),right=resolved.filter(route=>route.side==="right").sort((a,b)=>b.a.y-a.a.y||b.b.y-a.b.y);
-  let maxBottom=layers.offsetHeight;
-  const place=(routes,side)=>{let lower=12;const count=routes.length,labelX=side==="left"?8:leftGutter+layerWidth+24+count*16,labelWidth=205;
+  const sceneRect=scene.getBoundingClientRect(),scaleFactor=sceneRect.width/Math.max(1,scene.offsetWidth),layerWidth=layers.offsetWidth,leftGutter=Number(scene.dataset.leftGutter||0);
+  const nodes=[...new Set(groupElements.values())],incident=new Map(nodes.map(node=>[node,[]]));
+  relationships.forEach((relation,index)=>{
+   const from=groupElements.get(relation.from),to=groupElements.get(relation.to);
+   incident.get(from).push({relation,other:to,role:"from",index});
+   incident.get(to).push({relation,other:from,role:"to",index});
+  });
+  for(const [node,links] of incident)node.style.minHeight=links.length?(18+(links.length+1)*10)+"px":"";
+  const ports=new Map();
+  for(const [node,links] of incident){
+   const rect=node.getBoundingClientRect(),height=rect.height/scaleFactor,margin=Math.min(10,height*.15);
+   links.sort((a,b)=>{const ar=a.other.getBoundingClientRect(),br=b.other.getBoundingClientRect();return ar.top+ar.height/2-(br.top+br.height/2)||a.index-b.index;});
+   links.forEach((link,index)=>{
+    const y=(rect.top-sceneRect.top)/scaleFactor+margin+(index+1)*(height-2*margin)/(links.length+1),entry=ports.get(link.relation)||{};
+    entry[link.role==="from"?"startY":"endY"]=y;ports.set(link.relation,entry);
+   });
+  }
+  const resolved=relationships.map(relation=>{
+   const a=groupElements.get(relation.from).getBoundingClientRect(),b=groupElements.get(relation.to).getBoundingClientRect(),port=ports.get(relation);
+   const side=groupCenter(relation.to)<groupCenter(relation.from)?"left":"right";
+   return{relation,side,startY:port.startY,endY:port.endY,a:{left:(a.left-sceneRect.left)/scaleFactor,right:(a.right-sceneRect.left)/scaleFactor},b:{left:(b.left-sceneRect.left)/scaleFactor,right:(b.right-sceneRect.left)/scaleFactor}};
+  });
+  const left=resolved.filter(route=>route.side==="left").sort((a,b)=>a.startY-b.startY||a.endY-b.endY),right=resolved.filter(route=>route.side==="right").sort((a,b)=>a.startY-b.startY||a.endY-b.endY);
+  const segmentsFor=route=>[{x1:route.startX,y1:route.startY,x2:route.railX,y2:route.startY},{x1:route.railX,y1:route.startY,x2:route.railX,y2:route.endY},{x1:route.railX,y1:route.endY,x2:route.endX,y2:route.endY}];
+  const segmentConflict=(a,b)=>{const endpoint=(seg,x,y)=>(Math.abs(seg.x1-x)<.1&&Math.abs(seg.y1-y)<.1)||(Math.abs(seg.x2-x)<.1&&Math.abs(seg.y2-y)<.1);
+   const ah=Math.abs(a.y1-a.y2)<.1,bh=Math.abs(b.y1-b.y2)<.1,av=Math.abs(a.x1-a.x2)<.1,bv=Math.abs(b.x1-b.x2)<.1;
+   if(ah&&bv){const x=b.x1,y=a.y1,hit=x>=Math.min(a.x1,a.x2)-.1&&x<=Math.max(a.x1,a.x2)+.1&&y>=Math.min(b.y1,b.y2)-.1&&y<=Math.max(b.y1,b.y2)+.1;return hit&&!(endpoint(a,x,y)&&endpoint(b,x,y));}
+   if(av&&bh){const x=a.x1,y=b.y1,hit=x>=Math.min(b.x1,b.x2)-.1&&x<=Math.max(b.x1,b.x2)+.1&&y>=Math.min(a.y1,a.y2)-.1&&y<=Math.max(a.y1,a.y2)+.1;return hit&&!(endpoint(a,x,y)&&endpoint(b,x,y));}
+   if(ah&&bh){const overlap=Math.min(Math.max(a.x1,a.x2),Math.max(b.x1,b.x2))-Math.max(Math.min(a.x1,a.x2),Math.min(b.x1,b.x2));return Math.abs(a.y1-b.y1)<4.4&&overlap>4;}
+   if(av&&bv){const overlap=Math.min(Math.max(a.y1,a.y2),Math.max(b.y1,b.y2))-Math.max(Math.min(a.y1,a.y2),Math.min(b.y1,b.y2));return Math.abs(a.x1-b.x1)<4.4&&overlap>4;}
+   return false;
+  };
+  const assign=(routes,side)=>{
+   const count=routes.length,labelWidth=205;
    for(const [index,route] of routes.entries()){
-    const {relation:r,a,b}=route,railX=side==="left"?8+labelWidth+12+index*16:leftGutter+layerWidth+12+index*16;
-    r.label.style.left=labelX+"px";r.label.style.width=labelWidth+"px";
-    const height=Math.max(36,r.label.offsetHeight),top=Math.max((a.y+b.y)/2-height/2,lower),labelY=top+height/2;r.label.style.top=Math.round(top)+"px";lower=top+height+8;
-    const portGap=Math.min(14,Math.max(6,Math.min(a.height,b.height)*.22)),portOffset=(index-(count-1)/2)*Math.min(1.5,Math.min(a.height,b.height)*.035),startY=a.y+(side==="left"?-portGap:portGap)+portOffset,endY=b.y+(side==="left"?portGap:-portGap)+portOffset;
-    const startX=side==="left"?a.x-2:a.x+2,endX=side==="left"?b.x-7:b.x+7;
+    const {relation:r,a,b,startY,endY}=route,railX=side==="left"?8+labelWidth+12+index*16:leftGutter+layerWidth+12+index*16;
+    const startX=side==="left"?a.left:a.right,endX=side==="left"?b.left:b.right;
+    Object.assign(route,{railX,startX,endX});
     r.path.setAttribute("d","M"+startX+" "+startY+" H"+railX+" V"+endY+" H"+endX);
     const midY=(startY+endY)/2;r.dot.setAttribute("cx",String(railX));r.dot.setAttribute("cy",String(midY));
-    r.path.dataset.railX=String(railX);r.path.dataset.labelY=String(midY);r.path.dataset.startX=String(a.x);r.path.dataset.startY=String(startY);r.path.dataset.endX=String(b.x);r.path.dataset.endY=String(endY);r.path.dataset.routeSide=side;
-    r.label.dataset.routeSide=side;r.label.dataset.labelY=String(labelY);maxBottom=Math.max(maxBottom,lower+12,Math.max(a.y,b.y)+12);
+    r.path.dataset.railX=String(railX);r.path.dataset.startX=String(startX);r.path.dataset.startY=String(startY);r.path.dataset.endX=String(endX);r.path.dataset.endY=String(endY);r.path.dataset.routeSide=side;
+    r.label.dataset.routeSide=side;r.label.dataset.labelY=String(midY);
    }
   };
-  place(left,"left");place(right,"right");scene.style.minHeight=Math.ceil(maxBottom)+"px";overlay.setAttribute("viewBox","0 0 "+scene.offsetWidth+" "+scene.offsetHeight);
+  assign(left,"left");assign(right,"right");
+  let crossings=0;
+  for(let i=0;i<resolved.length;i++)for(let j=i+1;j<resolved.length;j++){
+   const a=resolved[i],b=resolved[j];if(a.side!==b.side)continue;
+   if(segmentsFor(a).some(x=>segmentsFor(b).some(y=>segmentConflict(x,y))))crossings++;
+  }
+  const listMode=crossings>0;
+  scene.dataset.relationshipMode=listMode?"list":"graph";scene.dataset.relationshipCrossings=String(crossings);relationshipNote.hidden=!listMode;relationshipNote.style.left=left.length?"8px":(leftGutter+layerWidth+24+right.length*16)+"px";
+  for(const route of resolved){route.relation.path.style.display=listMode?"none":"";route.relation.dot.style.display=listMode?"none":"";}
+  let maxBottom=layers.offsetHeight;
+  const placeLabels=(routes,side)=>{
+   let lower=listMode?46:12;const count=routes.length,labelX=side==="left"?8:leftGutter+layerWidth+24+count*16,labelWidth=205;
+   for(const route of routes){
+    const label=route.relation.label,height=Math.max(36,label.offsetHeight),top=Math.max((route.startY+route.endY)/2-height/2,lower);
+    label.style.left=labelX+"px";label.style.width=labelWidth+"px";label.style.top=Math.round(top)+"px";lower=top+height+8;
+    maxBottom=Math.max(maxBottom,lower+12,route.startY+12,route.endY+12);
+   }
+  };
+  placeLabels(left,"left");placeLabels(right,"right");
+  scene.style.minHeight=Math.ceil(maxBottom)+"px";overlay.setAttribute("viewBox","0 0 "+scene.offsetWidth+" "+scene.offsetHeight);
  };
  let pending=false;const schedule=()=>{if(pending||destroyed)return;pending=true;requestAnimationFrame(()=>{pending=false;if(!destroyed)layout();});};
- listen(layers,"toggle",schedule,true);if(typeof ResizeObserver!=="undefined"){ro=new ResizeObserver(()=>{resizeScene();schedule();});ro.observe(stage);}
+ listen(layers,"toggle",()=>{resizeScene();schedule();},true);if(typeof ResizeObserver!=="undefined"){ro=new ResizeObserver(()=>{resizeScene();schedule();});ro.observe(stage);}
  scene.dataset.architectureConnected="true";scene._drawConnections=schedule;schedule();
 }
 let scale=1,fallback=false,busy=false;
