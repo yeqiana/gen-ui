@@ -56,13 +56,27 @@
   sidebar.dataset.genUiSidebarReady="true";
   const host=sidebar.closest(".app,.doc-layout");if(!host)return;
   const brand=sidebar.querySelector(".brand,.toc-brand");
-  const originalButton=sidebar.querySelector("#toggle-sidebar");
-  const toggle=()=>{
-   if(originalButton){originalButton.click();return;}
-   const next=host.dataset.sidebarCollapsed!=="true";
-   host.dataset.sidebarCollapsed=String(next);
-   if(brand)brand.setAttribute("aria-expanded",String(!next));
+  let toggleButton=sidebar.querySelector("#toggle-sidebar,.genui-sidebar-toggle");
+  const syncToggle=collapsed=>{
+   if(brand)brand.setAttribute("aria-expanded",String(!collapsed));
+   if(toggleButton&&toggleButton.id!=="toggle-sidebar"){
+    const label=collapsed?"展开导航":"折叠导航";
+    toggleButton.setAttribute("aria-expanded",String(!collapsed));
+    toggleButton.setAttribute("aria-label",label);toggleButton.title=label;
+    const glyph=toggleButton.querySelector("svg");if(glyph)glyph.style.transform=collapsed?"rotate(180deg)":"none";
+   }
   };
+  if(!toggleButton){
+   const nav=sidebar.querySelector("nav");if(nav&&!nav.id)nav.id=(sidebar.id||"genui-sidebar")+"-nav";
+   toggleButton=document.createElement("button");toggleButton.type="button";toggleButton.className="genui-sidebar-toggle";
+   toggleButton.setAttribute("aria-controls",nav?.id||sidebar.id||"");
+   const glyph=document.createElementNS("http://www.w3.org/2000/svg","svg");glyph.setAttribute("viewBox","0 0 20 20");glyph.setAttribute("aria-hidden","true");
+   const path=document.createElementNS("http://www.w3.org/2000/svg","path");path.setAttribute("d","M12 4 6 10l6 6");path.setAttribute("fill","none");path.setAttribute("stroke","currentColor");path.setAttribute("stroke-width","1.8");path.setAttribute("stroke-linecap","round");path.setAttribute("stroke-linejoin","round");glyph.appendChild(path);toggleButton.appendChild(glyph);
+   toggleButton.addEventListener("click",()=>{const collapsed=host.dataset.sidebarCollapsed!=="true";host.dataset.sidebarCollapsed=String(collapsed);syncToggle(collapsed);});
+   sidebar.insertBefore(toggleButton,brand?.nextSibling||sidebar.firstChild);
+  }else toggleButton.addEventListener("click",()=>syncToggle(host.dataset.sidebarCollapsed==="true"));
+  syncToggle(host.dataset.sidebarCollapsed==="true");
+  const toggle=()=>toggleButton?.click();
   if(brand){
    brand.tabIndex=0;
    brand.title="双击折叠或展开左侧导航（Enter 键也可操作）";

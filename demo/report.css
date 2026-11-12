@@ -273,7 +273,6 @@ blockquote.callout{margin-inline:0}
  .app:not([data-navigation="top"]) .sidebar>nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
  .app:not([data-navigation="top"]) .sidebar .genui-tree{max-height:none;overflow:visible}
 }
-#toggle-sidebar{display:none!important}
 .sidebar>.brand{cursor:pointer;user-select:none}
 .app[data-navigation="top"] .genui-nav-resize,.app[data-sidebar-collapsed="true"] .genui-nav-resize{display:none!important}
 .app[data-sidebar-collapsed="true"] .sidebar>.brand{cursor:pointer}

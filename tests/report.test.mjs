@@ -30,6 +30,9 @@ test("侧边栏收起保留纵向图标栏，展开按钮始终位于侧栏内�
   assert.match(html,/<aside id="report-sidebar"[\s\S]*?<button id="toggle-sidebar"/);
   assert.match(css,/grid-template-columns:68px minmax\(0,1fr\)/);
   assert.doesNotMatch(css,/\.app\[data-sidebar-collapsed="true"\]\s+\.sidebar\s*\{\s*display:\s*none/);
+  assert.doesNotMatch(css,/#toggle-sidebar\s*\{\s*display:\s*none/i,"折叠导航按钮不能被隐藏");
+  assert.match(html,/id="toggle-sidebar"[^>]*>[\s\S]*?<svg id="sidebar-toggle-glyph"/,"导航折叠按钮必须保留 SVG 图标");
+  assert.match(read("assets/heading-nav.css"),/\.sidebar>\.brand>img\{display:none!important\}/,"导航标题左侧装饰图标默认隐藏");
 });
 
 test("标题不带冗余小标题，统一 SVG 图标并嵌入可操作流程图", () => {
@@ -419,9 +422,9 @@ test("1000 条合法数据能够格式化后往返导入，同时保留 JSON 输
 
 test("HTML 规范适用于最终 HTML 交付物，不改变默认 Markdown 路由",()=>{
   const skill=read("SKILL.md"),contract=read("references/html-report-contract.md");
-  assert.match(skill,/Whenever the final deliverable is HTML/);
+  assert.match(skill,/For HTML deliverables, follow its contract/);
   assert.match(contract,/whenever HTML is the chosen or required final deliverable/);
-  assert.match(skill,/Do not change ordinary Markdown/);
+  assert.match(skill,/never upgrade ordinary answers to HTML without a request/);
   assert.match(contract,/Markdown remains the default/);
 });
 

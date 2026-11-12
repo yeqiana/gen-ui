@@ -66,7 +66,7 @@
         <div class="metric pending"><dt>待处理</dt><dd id="count-pending">—</dd></div>
         <div class="metric slow"><dt>超过耗时阈值</dt><dd id="count-slow">—</dd></div>
       </dl>
-      <div class="callout callout--important" role="note"><strong>关键结论：</strong>指标、图表与执行明细必须来自同一份筛选数据集，避免统计口径不一致。</div>
+      <div class="callout callout--important" role="note"><span class="content-marker" role="img" aria-label="关键洞察">🎯</span><strong>关键结论：</strong>指标、图表与执行明细必须来自同一份筛选数据集，避免统计口径不一致。</div>
       <blockquote class="callout callout--confirm"><strong>⚠️ 待确认：</strong>本示例使用模拟数据；真实项目报告必须先核实数据来源和测试范围。</blockquote>
       <ul class="task-state-list" aria-label="实施任务状态示例"><li><span class="task-state" role="img" aria-label="已完成" title="已完成">✅</span><span>统一主题与字号检查</span></li><li><span class="task-state" role="img" aria-label="待执行" title="待执行">⏳</span><span>对目标项目执行真实压测</span></li><li><span class="task-state" role="img" aria-label="暂停" title="暂停">⏸️</span><span>等待测试环境授权后继续</span></li></ul>
       <div class="overview-story">
@@ -229,7 +229,9 @@
       <tr><td><span class="tag tag--red">高</span></td><td><code>JobWorker.java:88</code></td><td>租约失效后旧进程仍能更新结果</td><td>使用 fencing token 做条件更新</td></tr>
       <tr><td><span class="tag tag--amber">中</span></td><td><code>JobWorker.java:121</code></td><td>执行权丢失与临时故障混用同一异常码</td><td>拆分 Attempt 错误分类</td></tr>
     </tbody></table></div>
-    <p><strong>证据推演：</strong>假设锁租约为 30 秒而任务耗时 45 秒，旧 Worker 仍可能在新 Worker 接管后写入。此处只是故障模型，<strong>没有实际扫描 Java 仓库</strong>。</p>
+    <p><span class="content-marker" role="img" aria-label="错误观点">❌</span><strong>错误观点：</strong>只加 Redis 分布式锁就能彻底阻止旧 Worker 写入。</p>
+     <p><span class="content-marker" role="img" aria-label="正确判断">🎯</span><strong>正确判断：</strong>写入端仍需校验 fencing token，才能拒绝过期执行者。</p>
+     <p><strong>证据推演：</strong>假设锁租约为 30 秒而任务耗时 45 秒，旧 Worker 仍可能在新 Worker 接管后写入。此处只是故障模型，<strong>没有实际扫描 Java 仓库</strong>。</p>
     <figure class="code-example"><figcaption>实现机制示例 · SQL 条件更新</figcaption><pre><code class="language-sql">UPDATE task
 SET status = 'SUCCEEDED', version = version + 1
 WHERE task_id = :task_id
