@@ -22,7 +22,7 @@
 .genui-tree a{padding-right:9px!important}
 .genui-nav-children{padding-left:8px;margin-left:8px}
 .genui-tree .genui-nav-level-1>a[aria-expanded]{cursor:pointer}
-.sidebar>.brand>img{display:none!important}
+.sidebar>.brand>img{display:block!important;flex:0 0 auto;object-fit:contain}
 .doc-toc>.toc-brand{padding-right:40px}
 .doc-toc>.genui-sidebar-toggle{position:absolute;top:0;right:8px;z-index:5;display:grid;place-items:center;width:30px;height:30px;min-height:30px;padding:0;border:1px solid #d0d5dd;border-radius:6px;background:#fff;color:#475467;cursor:pointer}
 .genui-sidebar-toggle svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s ease}

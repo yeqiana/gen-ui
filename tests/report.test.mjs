@@ -32,7 +32,8 @@ test("侧边栏收起保留纵向图标栏，展开按钮始终位于侧栏内�
   assert.doesNotMatch(css,/\.app\[data-sidebar-collapsed="true"\]\s+\.sidebar\s*\{\s*display:\s*none/);
   assert.doesNotMatch(css,/#toggle-sidebar\s*\{\s*display:\s*none/i,"折叠导航按钮不能被隐藏");
   assert.match(html,/id="toggle-sidebar"[^>]*>[\s\S]*?<svg id="sidebar-toggle-glyph"/,"导航折叠按钮必须保留 SVG 图标");
-  assert.match(read("assets/heading-nav.css"),/\.sidebar>\.brand>img\{display:none!important\}/,"导航标题左侧装饰图标默认隐藏");
+  assert.match(read("assets/heading-nav.css"),/\.sidebar>\.brand>img\{display:block!important;/,"导航个人 IP 标识必须展示");
+  assert.match(html,/<div class="brand">[\s\S]*?<img src="\.\.\/assets\/icons\/gen-ui-mark\.svg" width="44" height="44" alt="GEN-UI 标识"/,"导航品牌图标必须具有可访问名称");
 });
 
 test("标题不带冗余小标题，统一 SVG 图标并嵌入可操作流程图", () => {
