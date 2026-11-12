@@ -127,7 +127,7 @@ test("Chinese report demonstrates all ten information-design use cases",()=>{
 test("Skill focuses on reading comprehension rather than UI decoration",()=>{
  const skill=read("SKILL.md");
  assert.match(skill,/Information Design Skill/);
- assert.match(skill,/walls of text, comprehension effort, and reading friction/);
+ assert.match(skill,/walls of text and reading friction/);
  assert.match(skill,/Reader-first transformation procedure/);
  assert.match(skill,/Choose the smallest effective structure/);
  assert.ok(fs.existsSync(path.join(root,"examples/code-review.zh-CN.md")));

@@ -8,6 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (name) => fs.readFileSync(path.join(root, name), "utf8");
 const docs = [
   "SKILL.md", "README.md", "README.zh-CN.md", "CHANGELOG.md",
+  "references/information-design-decision.md", "evals/information-design-cases.json", "evals/agent-evaluation.md",
   "docs/integration.md", "docs/faq.md", "docs/geo.md", "docs/geo.zh-CN.md",
   "evals/manual-evaluation.md", "evals/discovery-baseline.md",
   "references/renderer-contract.md", "references/html-report-contract.md", "assets/icons/README.md", "examples/code-review.md",

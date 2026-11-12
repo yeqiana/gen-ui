@@ -97,6 +97,9 @@ $required = @(
   "evals/real-agent-baseline-2026-11-05.md",
   "evals/chrome-demo-baseline-2026-11-05.json",
   "evals/agent-cases.json",
+  "evals/information-design-cases.json",
+  "references/information-design-decision.md",
+  "tests/information-design.test.mjs",
   "evals/agent-evaluation.md",
   "scripts/evaluate-agent-output.mjs",
   "tests/agent-evaluation.test.mjs",
@@ -207,6 +210,6 @@ $reportPaths = @($standaloneHtml | ForEach-Object { Join-Path $root $_ })
 if ($LASTEXITCODE -ne 0) { throw "Standalone HTML delivery gate failed" }
 Write-Output "[PASS] Standalone HTML delivery gate"
 
-& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs")
+& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"

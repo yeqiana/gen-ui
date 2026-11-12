@@ -1,0 +1,107 @@
+{
+  "version": "gen-ui-information-design-eval/v1",
+  "purpose": "固定人工评审用例；验证表达形式选择与信息完整性。静态测试只验证用例结构，不代表真实 Agent 已通过。",
+  "cases": [
+    {
+      "id": "simple-explanation",
+      "readerGoal": "理解一个概念",
+      "informationShape": "单一技术问题",
+      "expectedForm": "markdown-prose",
+      "prompt": "用中文解释 Java 线程池为什么需要有界队列，并给出最重要的一条风险。",
+      "avoid": [
+        "HTML",
+        "装饰性图表",
+        "固定章节模板"
+      ],
+      "acceptance": [
+        "直接解释核心机制",
+        "保留关键风险",
+        "短而完整"
+      ]
+    },
+    {
+      "id": "option-comparison",
+      "readerGoal": "比较并选择",
+      "informationShape": "多个方案具有相同比较维度",
+      "expectedForm": "markdown-table",
+      "prompt": "比较 RabbitMQ 与 Kafka 在消息模型、吞吐、顺序、消费方式和典型场景上的差异，并给出选择建议。",
+      "avoid": [
+        "无统一维度的散文罗列",
+        "无依据的绝对结论"
+      ],
+      "acceptance": [
+        "比较维度一致",
+        "突出关键差异",
+        "结论说明适用前提"
+      ]
+    },
+    {
+      "id": "implementation-steps",
+      "readerGoal": "按顺序完成任务",
+      "informationShape": "存在先后依赖的实施步骤",
+      "expectedForm": "markdown-steps",
+      "prompt": "给出为订单接口增加幂等能力的实施步骤，覆盖幂等键、存储约束、并发请求、异常重试和验收。",
+      "avoid": [
+        "无意义流程图",
+        "省略前置条件",
+        "把建议写成已执行"
+      ],
+      "acceptance": [
+        "步骤顺序合理",
+        "包含并发与失败路径",
+        "验收可操作"
+      ]
+    },
+    {
+      "id": "architecture-without-evidence",
+      "readerGoal": "理解组件边界",
+      "informationShape": "有分组归属但调用关系未验证",
+      "expectedForm": "markdown-groups",
+      "prompt": "根据给出的模块清单解释网关、订单、库存、支付和数据库的职责边界。材料没有调用链或部署证据，不要推断实际依赖。",
+      "avoid": [
+        "无证据连线",
+        "虚构调用顺序",
+        "强制生成拓扑图"
+      ],
+      "acceptance": [
+        "按职责分组",
+        "明确未知关系",
+        "不把设计推断写成事实"
+      ]
+    },
+    {
+      "id": "explicit-html-report",
+      "readerGoal": "阅读独立长篇交付物",
+      "informationShape": "用户明确要求离线 HTML 且需要章节导航",
+      "expectedForm": "offline-html",
+      "prompt": "请生成一份离线可打开的中文技术实施报告 HTML，包含多章节导航、实施步骤、风险表格和验收清单。",
+      "avoid": [
+        "远程 CDN 依赖",
+        "把 HTML 规则塞进普通 Markdown",
+        "伪造交互"
+      ],
+      "acceptance": [
+        "按需读取 HTML 合约",
+        "离线可用",
+        "导航与正文一致"
+      ]
+    },
+    {
+      "id": "evidence-bounded-review",
+      "readerGoal": "判断风险和下一步",
+      "informationShape": "事实、推论与未知证据混合",
+      "expectedForm": "markdown-evidence",
+      "prompt": "分析旧 Worker 可能覆盖新 Worker 结果的风险。当前只有设计描述，没有生产日志和压测结果。请给出结论、依据、风险和下一步。",
+      "avoid": [
+        "声称已复现",
+        "虚构测试结果",
+        "过度展开无关背景"
+      ],
+      "acceptance": [
+        "区分事实与推论",
+        "明确未验证项",
+        "结论和下一步清晰"
+      ]
+    }
+  ]
+}

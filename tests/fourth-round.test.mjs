@@ -44,11 +44,17 @@ test("八类架构图支持纯容器分层，未知字段与非法数据被拒�
  assert.ok(modelSource.every(x=>x.flows.every(f=>f.basis==="design"&&!!f.evidence)&&new Set(x.groups.map(g=>g.id)).size===x.groups.length));
  for(const invalid of [{...m,script:"alert(1)"},{...m,groups:[{name:"x",items:[""]}]},{...m,layout:"madeup"},{...m,groups:[]}])assert.throws(()=>validate(invalid));
 });
-test("HTML 默认双层章节导航，双击收展，图标默认隐藏且无可见时区偏移",()=>{
+test("HTML 默认双层章节导航，标题装饰图标隐藏但折叠导航图标始终可见",()=>{
  const nav=read("assets/heading-nav.js");
  assert.match(nav,/genui-nav-level-/);
  assert.doesNotMatch(nav,/className="genui-nav-fold"/);
  assert.match(nav,/aria-expanded/);
+  assert.match(nav,/genui-sidebar-toggle/);
+  assert.match(nav,/aria-controls/);
+  const navCss=read("assets/heading-nav.css");
+  assert.match(navCss,/\.doc-toc>\.genui-sidebar-toggle/);
+  assert.doesNotMatch(navCss,/\.genui-sidebar-toggle\s*\{[^}]*display:\s*none/);
+  assert.match(navCss,/\.sidebar>\.brand>img\{display:none!important\}/);
  assert.match(nav,/main\.querySelectorAll\("h2,h3"\)/);
  assert.doesNotMatch(nav,/\^\\d\+\\\.\\d\+\\\.\\d\+/);
  for(const file of ["demo/report.html","demo/documents/architecture-design.html","demo/documents/project-analysis.html","demo/documents/implementation-plan.html","demo/documents/test-acceptance.html"]){
