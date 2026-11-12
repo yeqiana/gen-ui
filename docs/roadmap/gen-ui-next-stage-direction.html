@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="GEN-UI 下一阶段产品方向：从 UI 展示能力转向 AI 信息设计能力。">
+<title>GEN-UI 下一阶段方向指导 · AI Information Design Skill</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/icons/gen-ui-mark.svg">
+<link rel="stylesheet" href="../../assets/heading-nav.css">
+<script src="../../assets/heading-nav.js" defer></script>
+<style>
+:root{color-scheme:light;--bg:#fff;--fg:#1a1c1f;--muted:#667085;--line:#e6eaf0;--soft:#f5f8fc;--blue:#3a83f7;--blue-soft:#edf4ff;--green:#16834a;--amber:#a15c00;--red:#c03939;--radius:13px;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--fg);font-size:14px;line-height:1.72}
+a{color:#246bd0;text-decoration:none}a:hover{text-decoration:underline}
+.doc-layout{display:grid;grid-template-columns:270px minmax(0,1fr);min-height:100vh}
+.doc-toc{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);background:#fbfcfe;padding:24px 18px}
+.toc-brand{font-size:11px;letter-spacing:.13em;font-weight:750;color:var(--blue);margin:0 0 22px}.toc-label{font-size:12px;color:var(--muted);font-weight:650;margin:0 0 10px}
+.toc-list,.genui-tree{list-style:none;margin:0;padding:0}.toc-list li,.genui-tree li{margin:0;padding:0}.toc-list a,.genui-tree a{display:block;color:#475467;padding:7px 9px;border-radius:7px;font-size:12px;line-height:1.5}.toc-list a:hover,.genui-tree a:hover{background:var(--blue-soft);color:#175fc4;text-decoration:none}
+.genui-tree .genui-nav-level-2>a{padding-left:19px;color:#667085}.genui-nav-children{list-style:none;padding:0;margin:0 0 0 8px}.genui-nav-fold{float:right;border:0;background:transparent;color:#667085;cursor:pointer;padding:2px 6px}.genui-nav-fold:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.mobile-toc{display:none}
+.doc-main{width:min(100%,1120px);padding:32px clamp(22px,5vw,68px) 72px;margin:0 auto;min-width:0}
+.doc-topline{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding:0 0 15px;margin-bottom:28px;color:var(--muted);font-size:12px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;color:#246bd0;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block}
+.hero{padding:30px clamp(20px,4vw,42px);border:1px solid #dce8fb;background:linear-gradient(135deg,#f4f8ff,#fff 72%);border-radius:18px}
+h1{font-size:clamp(29px,4vw,42px);line-height:1.18;letter-spacing:-.035em;margin:13px 0 12px}.subtitle{font-size:17px;color:#344054;max-width:760px;margin:0}.thesis{margin:22px 0 0;padding:14px 17px;border-left:3px solid var(--blue);background:rgba(58,131,247,.07);font-weight:650}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:12px;margin-top:20px}.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;background:#edf4ff;color:#245eae;font-size:11px;font-weight:650}
+section{margin-top:42px;scroll-margin-top:20px}h2{font-size:23px;line-height:1.35;letter-spacing:-.02em;margin:0 0 15px;padding-bottom:10px;border-bottom:1px solid var(--line)}h3{font-size:16px;line-height:1.45;margin:25px 0 9px}p{margin:9px 0 13px}ul,ol{padding-left:23px}li{margin:6px 0}strong{font-weight:700}
+.callout{border:1px solid #dce8fb;border-radius:var(--radius);padding:17px 19px;background:#f7faff;margin:16px 0}.callout strong{color:#174f9b}.priority-rule{border:2px solid var(--blue);background:#f2f7ff;border-radius:var(--radius);padding:19px 21px;margin:16px 0 20px}.priority-rule .priority-label{font-size:10px;font-weight:800;letter-spacing:.1em;color:#1d63c4;margin-bottom:8px}.priority-rule h3{font-size:16px;margin:0 0 8px;color:#174f9b}.priority-rule p{margin:7px 0}.priority-rule p:last-child{margin-bottom:0}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.capability,.principle,.phase{border:1px solid var(--line);border-radius:var(--radius);padding:16px;background:#fff;min-width:0}.capability h3,.principle h3,.phase h3{margin:0 0 7px;font-size:14px}.capability p,.principle p,.phase p{margin:0;color:#596579;font-size:13px}.num{display:inline-flex;width:25px;height:25px;border-radius:7px;background:var(--blue-soft);color:#1d63c4;align-items:center;justify-content:center;font-weight:750;margin-bottom:10px}
+.table-wrap{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:14px 0}table{border-collapse:collapse;width:100%;min-width:600px;font-size:13px}th,td{text-align:left;vertical-align:top;padding:11px 13px;border-bottom:1px solid var(--line)}th{background:#f6f8fb;color:#344054;font-weight:700}tr:last-child td{border-bottom:0}td:first-child{font-weight:650;color:#26354a}
+.flow{counter-reset:step;list-style:none;padding:0;margin:18px 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.flow li{counter-increment:step;position:relative;border:1px solid var(--line);border-radius:11px;padding:14px 14px 14px 48px;margin:0;min-height:90px}.flow li:before{content:counter(step);position:absolute;left:14px;top:14px;width:24px;height:24px;display:grid;place-items:center;background:var(--blue-soft);color:#1d63c4;border-radius:7px;font-weight:750}.flow b{display:block;margin-bottom:4px}.flow span{font-size:12px;color:var(--muted)}
+.phase-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.phase{position:relative}.phase .phase-tag{font-size:10px;color:#246bd0;font-weight:750;letter-spacing:.08em}.phase ul{font-size:12px;color:#596579;margin-bottom:0}
+.checklist{list-style:none;padding:0}.checklist li{padding-left:25px;position:relative}.checklist li:before{content:"";position:absolute;left:2px;top:7px;width:13px;height:13px;border:1.5px solid #8b98a9;border-radius:3px}
+.quote{padding:20px 22px;border-left:4px solid var(--blue);background:#f5f8fd;border-radius:0 12px 12px 0;font-size:16px;font-weight:650;line-height:1.7}
+footer{border-top:1px solid var(--line);margin-top:48px;padding-top:18px;color:var(--muted);font-size:12px}
+@media(max-width:900px){.doc-layout{grid-template-columns:1fr}.doc-toc{position:static;height:auto;overflow:visible;border-right:0;border-bottom:1px solid var(--line);padding:13px 20px}.toc-brand{margin:0}.toc-label,.desktop-nav{display:none}.mobile-toc{display:block;margin-top:10px}.mobile-toc summary{cursor:pointer;color:#344054;font-size:12px;font-weight:650}.mobile-toc nav{max-height:45vh;overflow:auto;padding-top:8px}.doc-main{padding-top:22px}.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.doc-topline{align-items:flex-start;flex-direction:column}.hero{padding:23px 18px}.grid,.phase-grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.doc-main{padding-left:17px;padding-right:17px}h2{font-size:20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="doc-layout">
+<aside class="doc-toc" aria-label="文档目录">
+  <p class="toc-brand">GEN-UI / INFORMATION DESIGN</p>
+  <p class="toc-label">本文目录</p>
+  <nav class="desktop-nav" aria-label="桌面文档目录">
+    <ul class="toc-list">
+      <li><a href="#decision">方向结论</a></li><li><a href="#position">产品定位与边界</a></li><li><a href="#capabilities">五项核心能力</a></li><li><a href="#workflow">工作闭环</a></li><li><a href="#representation">表达形式决策</a></li><li><a href="#principles">设计原则</a></li><li><a href="#layers">Skill 能力分层</a></li><li><a href="#roadmap">下一阶段路线</a></li><li><a href="#admission">功能准入评审</a></li><li><a href="#quality">质量指标</a></li><li><a href="#non-goals">非目标</a></li><li><a href="#deliverables">交付清单</a></li><li><a href="#mission">最终产品原则</a></li>
+    </ul>
+  </nav>
+  <details class="mobile-toc">
+    <summary>查看本文目录</summary>
+    <nav aria-label="移动端文档目录"><ul class="toc-list">
+      <li><a href="#decision">方向结论</a></li><li><a href="#position">产品定位与边界</a></li><li><a href="#capabilities">五项核心能力</a></li><li><a href="#workflow">工作闭环</a></li><li><a href="#representation">表达形式决策</a></li><li><a href="#principles">设计原则</a></li><li><a href="#layers">Skill 能力分层</a></li><li><a href="#roadmap">下一阶段路线</a></li><li><a href="#admission">功能准入评审</a></li><li><a href="#quality">质量指标</a></li><li><a href="#non-goals">非目标</a></li><li><a href="#deliverables">交付清单</a></li><li><a href="#mission">最终产品原则</a></li>
+    </ul></nav>
+  </details>
+</aside>
+<main class="doc-main" id="main">
+  <div class="doc-topline"><span>产品方向 / 下一阶段指导</span><span>GEN-UI · OFFLINE DOCUMENT</span></div>
+  <header class="hero">
+    <span class="eyebrow"><span class="dot"></span> AI INFORMATION DESIGN SKILL</span>
+    <h1>GEN-UI 下一阶段方向</h1>
+    <p class="subtitle">从“让 AI 生成更漂亮的界面”，转向“教 AI 理解信息、组织知识、选择表达形式，并交付高可读性内容”。</p>
+    <p class="thesis">UI 是表达手段，信息理解才是目的。</p>
+    <div class="meta"><span class="pill">方向指导 · 非功能排期</span><span>生成时间：<time datetime="2026-11-12T10:10:18+08:00">2026-11-12 10:10:18</time> <span>UTC+08:00</span></span><span>适用：Skill / References / Assets / Tests / Evals</span></div>
+  </header>
+
+  <section id="decision">
+    <h2>方向结论</h2>
+    <div class="priority-rule">
+      <div class="priority-label">最高优先级 · PRODUCT BOUNDARY</div>
+      <h3>GEN-UI 永远以 Skill 为唯一产品定位。</h3>
+      <p>不盲目扩张产品边界，不为了功能丰富而增加功能，不把 Skill 发展成 UI 框架、组件库、独立工具平台或复杂运行时。</p>
+      <p>所有能力建设必须围绕一个目标：教会 AI 更好地理解信息、组织知识、选择表达形式并交付高质量内容。新能力优先通过更好的指导原则、决策规则和按需加载的参考资料解决；只有当 Skill 指导本身无法解决真实问题，且有充分证据证明必要时，才考虑增加实现资源。</p>
+      <p><strong>本原则对所有后续功能、路线、技术选型和版本规划拥有最高优先级与否决权。与其冲突的提案不进入 GEN-UI 范围。</strong></p>
+    </div>
+    <div class="callout"><strong>保持 Skill 产品形态，不转型为 UI 框架。</strong> GEN-UI 的核心价值不是拥有多少组件，而是让 AI 在面对不同信息任务时，能够作出恰当的信息设计决策。</div>
+    <p>下一阶段的主线应从“继续增加表现能力”切换为“提升表达决策和输出质量”。保留现有 HTML、七类语义图和架构视图，但它们都应是按需使用的表达手段，而不是默认目标。</p>
+    <ul><li>Markdown 默认，HTML 按需，复杂语义图按需。</li><li>优先建设信息理解、知识组织、表达决策和质量自检。</li><li>暂缓新增图表类型和复杂装饰组件。</li><li>用真实 Agent 行为评估证明规则有效，而不只看静态规范或截图。</li></ul>
+  </section>
+
+  <section id="position">
+    <h2>产品定位与边界</h2>
+    <h3>使命</h3>
+    <p>让复杂信息更清晰，让重要知识更容易被理解，让有价值的内容更容易被使用。</p>
+    <h3>GEN-UI 是什么</h3>
+    <ul><li>指导 AI 进行信息理解、知识组织和表达决策的 Skill。</li><li>按需加载的表达规范与实现资源。</li><li>验证输出质量、规则遵循和跨 Agent 兼容性的测试体系。</li></ul>
+    <h3>GEN-UI 不是什么</h3>
+    <ul><li>不是通用前端框架或 UI 组件库。</li><li>不是把普通回答强制转换为 HTML 的渲染器。</li><li>不是图表越多越好的可视化集合。</li><li>不是事实核查、代码评审、测试或业务判断的替代品。</li><li>不是绑定某个模型或 Coding Agent 的专有工作流。</li></ul>
+  </section>
+
+  <section id="capabilities">
+    <h2>五项核心能力</h2>
+    <div class="grid">
+      <article class="capability"><span class="num">01</span><h3>信息理解</h3><p>识别任务目标、读者、上下文、约束和决策点，知道读者真正需要理解什么。</p></article>
+      <article class="capability"><span class="num">02</span><h3>知识组织</h3><p>提炼结论、证据、概念、因果、依赖、风险和行动，把零散信息组织成结构。</p></article>
+      <article class="capability"><span class="num">03</span><h3>表达决策</h3><p>判断文字、列表、表格、流程图、语义图或 HTML 是否必要。</p></article>
+      <article class="capability"><span class="num">04</span><h3>信息呈现</h3><p>控制层级、重点、布局、可读性和必要交互，降低阅读与理解成本。</p></article>
+      <article class="capability"><span class="num">05</span><h3>质量自检</h3><p>检查事实边界、完整性、可访问性、表达适配和安全回退能力。</p></article>
+    </div>
+  </section>
+
+  <section id="workflow">
+    <h2>端到端工作闭环</h2>
+    <p>这是 AI 的内部工作方法，不是要求每个回答都输出六个固定章节。简单问题直接回答，复杂任务才逐步展开。</p>
+    <ol class="flow">
+      <li><b>理解任务与读者</b><span>需要理解、比较、决策、执行还是验收？</span></li>
+      <li><b>识别信息结构</b><span>区分事实、输入、推断、建议、风险与待确认事项。</span></li>
+      <li><b>组织知识</b><span>梳理结论、证据、原因、关系、步骤和行动。</span></li>
+      <li><b>选择表达形式</b><span>选择足以解决理解问题的最简单形式。</span></li>
+      <li><b>生成内容</b><span>内容准确优先，再使用视觉和交互手段。</span></li>
+      <li><b>质量自检</b><span>检查遗漏、误用、复杂度和回退能力。</span></li>
+    </ol>
+  </section>
+
+  <section id="representation">
+    <h2>表达形式决策</h2>
+    <div class="table-wrap"><table><thead><tr><th>信息特征 / 阅读任务</th><th>首选表达</th><th>使用边界</th></tr></thead><tbody>
+      <tr><td>简单解释、结论、短建议</td><td>Markdown 段落</td><td>不为视觉效果增加容器</td></tr>
+      <tr><td>并列要点、操作步骤</td><td>列表</td><td>有顺序才使用有序列表</td></tr>
+      <tr><td>多方案、多指标比较</td><td>表格</td><td>控制列数，突出决策数据</td></tr>
+      <tr><td>明确的先后、分支、状态流转</td><td>流程图 / 活动图</td><td>关系能帮助理解时才画</td></tr>
+      <tr><td>多参与者调用与消息顺序</td><td>时序图</td><td>参与者、消息和顺序必须有依据</td></tr>
+      <tr><td>层级、归属、分类</td><td>思维导图 / 分层结构</td><td>归属关系不伪装成调用连线</td></tr>
+      <tr><td>系统边界、组件、部署与依赖</td><td>架构视图 / 拓扑图</td><td>只连接真实依赖</td></tr>
+      <tr><td>长篇、分章节、需要导航的文档</td><td>离线 HTML</td><td>明确请求或阅读场景确有价值时使用</td></tr>
+      <tr><td>复杂关系探索</td><td>可交互语义图</td><td>交互必须提升理解，不能只是装饰</td></tr>
+    </tbody></table></div>
+    <div class="callout"><strong>决策顺序：</strong>先判断信息要解决什么理解问题，再选表达形式；不能先决定画图，再勉强寻找内容填充。</div>
+  </section>
+
+  <section id="principles">
+    <h2>必须坚持的设计原则</h2>
+    <div class="grid">
+      <article class="principle"><h3>Content First · 内容优先</h3><p>事实、逻辑和完整性优先于视觉效果。</p></article>
+      <article class="principle"><h3>Reader First · 读者优先</h3><p>围绕读者的理解任务组织内容，不围绕组件组织内容。</p></article>
+      <article class="principle"><h3>Right Representation · 恰当表达</h3><p>只使用能降低理解成本的表达形式。</p></article>
+      <article class="principle"><h3>Minimalism · 最小复杂度</h3><p>能用 Markdown 讲清楚，就不生成 HTML；能用表格讲清楚，就不强行画图。</p></article>
+      <article class="principle"><h3>Progressive Enhancement · 渐进增强</h3><p>Markdown 是可靠基础，HTML 与交互按需加载；增强失败不能损坏主要内容。</p></article>
+      <article class="principle"><h3>Information Integrity · 信息真实</h3><p>不得为了视觉简化而改变含义、遗漏限制或虚构证据。</p></article>
+      <article class="principle"><h3>Agent Agnostic · 跨 Agent</h3><p>优先使用标准 Markdown、HTML、JSON、SVG 和可移植约定。</p></article>
+      <article class="principle"><h3>Graceful Fallback · 安全回退</h3><p>宿主不支持交互时，仍交付可读文本或静态解释。</p></article>
+    </div>
+    <p class="small">补充原则：Evidence Before Claims。示例、推断、计划和实际执行结果必须明确区分。</p>
+  </section>
+
+  <section id="layers">
+    <h2>Skill 能力分层</h2>
+    <div class="table-wrap"><table><thead><tr><th>层级</th><th>加载策略</th><th>内容边界</th></tr></thead><tbody>
+      <tr><td>L1 · Core</td><td>默认加载</td><td>任务理解、知识组织、表达决策、Markdown 基础和质量原则</td></tr>
+      <tr><td>L2 · HTML</td><td>明确需要 HTML 时加载</td><td>页面层级、导航、布局、表格、代码、离线与可访问性规范</td></tr>
+      <tr><td>L3 · Visualization</td><td>复杂关系确实需要时加载</td><td>七类语义图、JSON 契约、SVG 引擎、交互与专项测试</td></tr>
+      <tr><td>QA · Evaluation</td><td>开发、评审和验收时使用</td><td>自动化测试、浏览器测试、Agent A/B 和案例库</td></tr>
+    </tbody></table></div>
+    <h3>仓库资源职责</h3>
+    <ul><li>SKILL.md：入口、意图识别、决策路由和最小验收要求。</li><li>references/：按需读取的详细原则、HTML 契约、图表模型和架构规则。</li><li>assets/：经过审查的 CSS、JavaScript、SVG 实现资源。</li><li>tests/：功能、边界、回归和离线能力验证。</li><li>evals/：不同 Agent 对 Skill 的理解和使用评估。</li><li>docs/：产品定位、设计决策、版本方向和开发说明。</li></ul>
+    <p>不要把高级实现细节重新复制进核心 Skill，也不要因为资源默认不加载就删除成熟能力。</p>
+  </section>
+
+  <section id="roadmap">
+    <h2>下一阶段建设路线</h2>
+    <div class="phase-grid">
+      <article class="phase"><span class="phase-tag">STAGE 0 · STABILIZE</span><h3>完成当前版本稳定性收口</h3><p>先让现有能力可靠，不把已知缺陷带入下一阶段。</p><ul><li>整合当前并行改动并完成评审</li><li>修复桌面与移动端目录等回归</li><li>验证语义图、架构视图和 HTML 离线行为</li><li>保留可重复的压力与回归测试</li></ul></article>
+      <article class="phase"><span class="phase-tag">STAGE 1 · DECISION</span><h3>智能信息设计决策</h3><p>下一阶段主线：让 AI 知道应该怎样表达，而不只是有哪些组件。</p><ul><li>新增轻量决策参考规则</li><li>覆盖读者任务、复杂度、形式选择和反例</li><li>测试 HTML / 图表误用与过度设计</li><li>核心入口保持轻量</li></ul></article>
+      <article class="phase"><span class="phase-tag">STAGE 2 · EVALUATION</span><h3>真实 Agent 行为评估</h3><p>证明轻量化没有损害能力，并验证新决策是否提升质量。</p><ul><li>Markdown、HTML、Visualization 三类任务</li><li>同模型、同任务的新旧 Skill 对照</li><li>保留原始输出、参数、评分和失败原因</li><li>额度不足或超时不计入通过</li></ul></article>
+      <article class="phase"><span class="phase-tag">STAGE 3 · EXAMPLES</span><h3>案例与交互能力增强</h3><p>让用户看到理解成本的改善，而不是只看到页面更漂亮。</p><ul><li>项目分析、架构设计、实施、测试验收案例</li><li>真实 Before / After</li><li>探索节点详情、步骤浏览和正文联动</li><li>只有确实提升理解的交互才保留</li></ul></article>
+    </div>
+  </section>
+
+  <section id="admission">
+    <h2>功能准入评审</h2>
+    <p>任何新功能、规范或资源进入 GEN-UI 前，都必须回答以下问题：</p>
+    <ol><li>它解决了哪一种真实的信息理解问题？</li><li>现有 Markdown、表格或图表为什么不够？</li><li>它会不会增加默认上下文、安装、运行或维护成本？</li><li>能否按需加载，并在不支持时安全回退？</li><li>是否跨 Agent、离线可用，且不依赖不可信脚本？</li><li>是否有独立测试证明收益，并覆盖回归风险？</li></ol>
+    <div class="callout"><strong>准入规则：</strong>没有明确理解收益不做；只是视觉装饰不做或降级为可选；默认增加复杂度优先重设计加载路径；无法验证效果先做实验；已有能力足够就复用。</div>
+  </section>
+
+  <section id="quality">
+    <h2>质量指标与验收方法</h2>
+    <p>以下是建议建立的指标，不代表当前已经达到的成绩。先收集基线，再确定正式阈值。</p>
+    <div class="table-wrap"><table><thead><tr><th>维度</th><th>观察指标</th><th>验收方法</th></tr></thead><tbody>
+      <tr><td>决策质量</td><td>表达形式适配率、过度设计率</td><td>固定任务集与人工评分</td></tr>
+      <tr><td>信息质量</td><td>结论、依据、限制、行动完整度</td><td>结构化评分与事实核对</td></tr>
+      <tr><td>信息完整性</td><td>虚构事实、丢失约束、语义失真</td><td>对照输入逐项检查</td></tr>
+      <tr><td>轻量化</td><td>默认加载资源、上下文 Token、输出长度</td><td>真实 Agent 运行数据</td></tr>
+      <tr><td>可用性</td><td>离线、键盘、移动端、交互成功率</td><td>浏览器自动化与人工抽检</td></tr>
+      <tr><td>兼容性</td><td>不同 Agent 的规则遵循情况</td><td>跨 Agent 同题评测</td></tr>
+      <tr><td>稳定性</td><td>边界缺陷、回归失败、重复初始化问题</td><td>固定种子压力测试与回归套件</td></tr>
+    </tbody></table></div>
+    <p><strong>禁止只用测试通过率代表产品质量。</strong>测试集是否覆盖真实任务、失败样本是否有代表性、评估是否独立，同样重要。</p>
+  </section>
+
+  <section id="non-goals">
+    <h2>明确的非目标</h2>
+    <ul><li>新增第八、第九种语义图类型。</li><li>为普通 Markdown 回答增加页面外壳。</li><li>大量动画、装饰卡片和无业务意义的交互。</li><li>独立在线图表编辑器、账户系统或协作平台。</li><li>绑定某个模型或 Coding Agent 的专有实现。</li><li>仅为截图观感改变内容结构。</li><li>把 HTML、SVG、JavaScript 细节重新塞进核心 Skill。</li></ul>
+  </section>
+
+  <section id="deliverables">
+    <h2>下一阶段建议交付清单</h2>
+    <ul class="checklist">
+      <li>当前版本已知回归全部收口，形成可信稳定基线。</li>
+      <li>梳理并确定信息设计决策模型及反例。</li>
+      <li>新增按需加载的决策参考文档，不显著增加核心 Skill 体积。</li>
+      <li>建立 Markdown / HTML / Visualization 三类代表性任务集。</li>
+      <li>完成新旧 Skill 的真实 Agent A/B，保留原始输出与评分。</li>
+      <li>根据失败样本迭代规则，而不是凭主观继续增加规则。</li>
+      <li>更新 Before / After 案例，证明信息理解成本确实下降。</li>
+      <li>完成跨 Agent 与浏览器回归，再决定下一版本是否封版。</li>
+    </ul>
+  </section>
+
+  <section id="mission">
+    <h2>最终产品原则</h2>
+    <div class="quote">GEN-UI 不是教 AI 如何生成漂亮的页面，而是教 AI 如何理解信息、组织知识、选择表达形式，并交付高可读性、高质量的信息成果。</div>
+    <p>无论最终交付的是一段 Markdown、一张表格、一幅架构图，还是一份交互式 HTML 文档，都必须服务于同一个目标：让复杂的信息变得清晰，让重要的知识更容易被理解，让有价值的内容更容易被使用。</p>
+    <p><strong>UI 是手段，信息理解才是目的。</strong></p>
+  </section>
+  <footer><strong>GEN-UI · AI Information Design Skill</strong><br>产品方向指导文档 · 离线可读 · 不代表功能已经实现或排期已经批准</footer>
+</main>
+</div>
+</body>
+</html>
