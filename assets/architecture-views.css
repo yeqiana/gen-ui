@@ -16,18 +16,22 @@
 .architecture-view:fullscreen .architecture-stage,.architecture-fallback-fullscreen .architecture-stage{flex:1;min-height:0;overflow:auto}
 @media(max-width:700px){.architecture-head{flex-wrap:wrap}.architecture-actions{margin-left:0}.architecture-groups,.architecture-columns{grid-template-columns:1fr}}
 
-/* Evidence-based architecture relationships; text determines connector span. */
-.architecture-flows{margin-top:14px;padding:13px;border:1px solid #dce4ef;border-radius:8px;background:#fbfcff}
-.architecture-flows-title{margin:0 0 11px;font-size:12px;font-weight:680;color:#344054}
-.architecture-flow-list{display:grid;gap:10px}
-.architecture-flow-row{display:flex;align-items:center;min-width:max-content;gap:10px}
-.architecture-flow-endpoint{flex:0 0 152px;display:grid;align-items:center;justify-items:center;min-height:37px;padding:7px 10px;border:1px solid #a9c2e6;background:#fff;border-radius:6px;font-size:12px;font-weight:650;line-height:1.3;color:#24486e;text-align:center}
-.architecture-flow-connector{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:100px;width:max-content;flex:0 0 auto;padding-inline:12px;gap:3px;color:#47698d}
-.architecture-flow-label{font-size:11px;line-height:1.3;white-space:nowrap;color:#455975;min-width:100%;text-align:center}
-.architecture-flow-track{height:14px;width:100%;display:block}
-.architecture-flow-track{display:flex;align-items:center;min-width:100px}
-.architecture-flow-line{display:block;flex:1;height:2px;background:currentColor}
-.architecture-flow-track svg{display:block;flex:0 0 12px;width:12px;height:12px;overflow:visible}
-.architecture-group{box-shadow:0 1px 3px rgba(27,52,83,.035)}
-.architecture-item{border-left:3px solid #b3cdea;line-height:1.5}
-@media(max-width:700px){.architecture-flows{padding:10px}.architecture-flow-endpoint{flex-basis:118px;font-size:11px}.architecture-flow-connector{min-width:86px}}
+/* A single readable, zoomable scene: actual group cards and their anchored connections. */
+.architecture-scene{position:relative;min-width:0}
+.architecture-scene.has-flows{min-width:850px;width:100%;padding:2px 0}
+.architecture-scene.has-flows .architecture-layers{width:calc(100% - 360px);grid-template-columns:minmax(0,1fr);gap:18px;position:relative;z-index:1}
+.architecture-scene.has-flows .architecture-group{box-shadow:0 1px 3px rgba(27,52,83,.035)}
+.architecture-scene.has-flows .architecture-item{border-left:3px solid #b3cdea;line-height:1.5}
+.architecture-wires{position:absolute;inset:0;width:100%;height:100%;z-index:2;overflow:visible;pointer-events:none}
+.architecture-wire{fill:none;stroke:#4c719c;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.architecture-wire-callout{fill:none;stroke:#86a5ca;stroke-width:1.5;stroke-dasharray:3 3}
+.architecture-wire-dot{fill:#4c719c}
+.architecture-wire-label{position:absolute;z-index:3;display:flex;flex-direction:column;gap:3px;min-width:0;box-sizing:border-box;
+ padding:7px 9px;border:1px solid #d7e3f2;border-radius:6px;background:#fff;color:#344054;
+ font-size:11px;line-height:1.4;overflow-wrap:anywhere;box-shadow:0 1px 4px rgba(24,44,70,.04)}
+.architecture-wire-title{font-size:11px;font-weight:650}
+.architecture-wire-evidence{font-size:10px;color:#667085;line-height:1.4;overflow-wrap:anywhere}
+.architecture-wire-label[data-basis="implementation"]{border-left:3px solid #4f9576}
+.architecture-wire-label[data-basis="design"]{border-left:3px solid #8da9d2}
+.architecture-stage{overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#dbe5f1 transparent}
+@media(max-width:700px){.architecture-scene.has-flows{min-width:850px}.architecture-head{gap:6px}}

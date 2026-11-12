@@ -48,7 +48,10 @@
   const width=Math.ceil(x+8);
   root.setAttribute("viewBox","0 0 "+width+" 180");
   root.setAttribute("width",String(width));
+  // Fit should preserve readable text: oversized diagrams scroll inside the canvas.
+  root.style.minWidth=Math.ceil(width*0.9)+"px";
   root.dataset.adaptiveConnections="true";
+  if(root.id==="flow-svg")window.GenUIFlow?.refreshBase?.();
   return true;
  }
  const init=()=>{

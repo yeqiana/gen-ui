@@ -22,7 +22,7 @@ test("八类架构图支持纯容器分层，未知字段与非法数据被拒�
  assert.equal((html.match(/data-architecture-view/g)||[]).length,8);
  assert.doesNotMatch(html,/<path[^>]+d=/);
  assert.match(html,/"children":\[/);
- assert.match(js,/textContent=text/);
+ assert.match(js,/node.textContent=content/);
  const m={type:"业务架构",title:"演示",layout:"stack",groups:[{name:"业务域",items:["账户","订单"]}]};
  assert.equal(validate(m),m);
  const rich={...m,groups:[{name:"接入层",items:["Gateway"]},{name:"业务层",items:["IM"]}],flows:[{from:"接入层",to:"业务层",label:"带方向的服务调用"}]};
@@ -34,6 +34,14 @@ test("八类架构图支持纯容器分层，未知字段与非法数据被拒�
   {...rich,flows:[{from:"接入层",to:"业务层",label:"合法",script:"evil()"}]}
  ])assert.throws(()=>validate(invalid));
  for(const term of ["yopu-gateway-core","yopu-im-core","yopu-trade-order","StoryOS","Task / Attempt"])assert.ok(html.includes(term),term);
+  const ambiguous={...rich,groups:[{name:"同名",items:["A"]},{name:"同名",items:["B"]}],flows:[]};
+ assert.throws(()=>validate(ambiguous),/duplicate/);
+ assert.throws(()=>validate({...rich,groups:[{id:"same",name:"接入层",items:["API"]},{id:"same",name:"业务层",items:["IM"]}]}),/duplicate/);
+ const evidence={...rich,flows:[{from:"接入层",to:"业务层",label:"设计链路",basis:"design",evidence:"Yopu/docs/architecture/项目架构全景.md"}]};
+ assert.equal(validate(evidence),evidence);
+ const modelSource=[...html.matchAll(/<script type="application\/json">([\s\S]*?)<\/script>/g)].map(x=>JSON.parse(x[1]));
+ assert.equal(modelSource.length,8);
+ assert.ok(modelSource.every(x=>x.flows.every(f=>f.basis==="design"&&!!f.evidence)&&new Set(x.groups.map(g=>g.id)).size===x.groups.length));
  for(const invalid of [{...m,script:"alert(1)"},{...m,groups:[{name:"x",items:[""]}]},{...m,layout:"madeup"},{...m,groups:[]}])assert.throws(()=>validate(invalid));
 });
 test("HTML 默认双层章节导航，双击收展，图标默认隐藏且无可见时区偏移",()=>{

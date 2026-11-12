@@ -261,12 +261,21 @@
  return Math.ceil(context.measureText(str).width);
 }
 function sequencePositions(m,lang){
- const xs=[145];
- for(let i=1;i<m.participants.length;i++){
-  const prev=m.participants[i-1].id,current=m.participants[i].id;
-  const widest=m.messages.filter(x=>(x.from===prev&&x.to===current)||(x.to===prev&&x.from===current)).reduce((n,x)=>Math.max(n,measureEdgeText(x.label,lang)),0);
-  xs.push(xs[i-1]+Math.max(210,Math.min(640,widest+56)));
+ const index=new Map(m.participants.map((p,i)=>[p.id,i]));
+ const gaps=Array(Math.max(0,m.participants.length-1)).fill(210);
+ // All directed messages constrain their full span (adjacent, reverse and cross-participant).
+ const constraints=m.messages.filter(msg=>index.has(msg.from)&&index.has(msg.to)&&msg.from!==msg.to)
+  .map(msg=>{
+   const from=index.get(msg.from),to=index.get(msg.to);
+   return {lo:Math.min(from,to),hi:Math.max(from,to),need:Math.min(1800,measureEdgeText(msg.label,lang)+80)};
+  }).sort((a,b)=>(a.hi-a.lo)-(b.hi-b.lo));
+ for(const c of constraints){
+  const current=gaps.slice(c.lo,c.hi).reduce((sum,n)=>sum+n,0);
+  if(current>=c.need)continue;
+  const delta=(c.need-current)/(c.hi-c.lo);
+  for(let k=c.lo;k<c.hi;k++)gaps[k]+=delta;
  }
+ const xs=[145];for(const gap of gaps)xs.push(xs[xs.length-1]+gap);
  return xs;
 }
 function renderSequence(root,m,lang,height,xs){
@@ -389,7 +398,7 @@ function renderSequence(root,m,lang,height,xs){
    chip.classList.remove("is-layout-fallback");const bg=chip.querySelector(".semantic-edge-label-bg"),caption=chip.querySelector(".semantic-edge-label");
    if(!bg||!caption)continue;
    const fullText=chip.querySelector("title")?.textContent||caption.textContent;caption.textContent=fullText;
-   const available=Number(chip.dataset.labelSpan)||244;const maxWidth=Math.min(560,Math.max(44,available-34),graph.w-40);const chars=Array.from(fullText);
+   const available=Number(chip.dataset.labelSpan)||244;const maxWidth=Math.min(1800,Math.max(44,available-28),graph.w-40);const chars=Array.from(fullText);
    if(caption.getComputedTextLength()>maxWidth){let lo=0,hi=chars.length;while(lo<hi){const mid=Math.ceil((lo+hi)/2);caption.textContent=chars.slice(0,mid).join("")+"…";if(caption.getComputedTextLength()<=maxWidth)lo=mid;else hi=mid-1;}caption.textContent=chars.slice(0,lo).join("")+"…";}
    chip.dataset.truncated=String(caption.textContent!==fullText);const w=Math.max(36,Math.ceil(caption.getComputedTextLength()+20)),h=22;
    const cx=Number(chip.dataset.baseX),cy=Number(chip.dataset.baseY);
