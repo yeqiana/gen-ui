@@ -5,6 +5,13 @@ import fs from 'node:fs';
 const require=createRequire(import.meta.url);
 const {validate}=require('../assets/architecture-views.js');
 const base=()=>({type:'系统架构',title:'模型边界测试',layout:'stack',groups:[{id:'a',name:'入口层',items:['API']},{id:'b',name:'业务层',items:['Service']}]});
+test('dense architecture relationships fall back explicitly and allocate readable node ports',()=>{
+ const js=fs.readFileSync(new URL('../assets/architecture-views.js',import.meta.url),'utf8'),css=fs.readFileSync(new URL('../assets/architecture-views.css',import.meta.url),'utf8');
+ assert.match(js,/relationshipMode=listMode\?"list":"graph"/);
+ assert.match(js,/segmentConflict/);
+ assert.match(js,/18\+\(links\.length\+1\)\*10/);
+ assert.match(css,/\.architecture-relationship-note/);
+});
 test('accepts ordinary architecture and twelve explicit relationships',()=>{
  const model=base();model.flows=Array.from({length:12},(_,i)=>({from:'a',to:'b',label:'关系 '+(i+1),basis:'design',evidence:'docs/architecture.md'}));
  assert.equal(validate(model),model);

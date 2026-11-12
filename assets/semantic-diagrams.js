@@ -286,7 +286,7 @@ function renderSequence(root,m,lang,height,xs){
    const x1=map[msg.from],x2=map[msg.to],y=msg.y??155+i*75,ret=msg.kind==="return",self=msg.from===msg.to;
    const loopWidth=64,labelWidth=measureEdgeText(msg.label,lang),d=self?("M"+x1+" "+y+" H"+(x1+loopWidth)+" V"+(y+26)+" H"+(x1+2)):("M"+x1+" "+y+" H"+x2);
     // Keep the self-call loop compact; place its full message label in a dedicated right-side span.
-    const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:self?x1+loopWidth+18+labelWidth/2:(x1+x2)/2,ly:y-17,d,dashed:ret,detail:msg.detail,messageIndex:i,labelSpan:self?labelWidth+32:Math.abs(x2-x1)};
+    const edgeSpec={from:msg.from,to:msg.to,label:msg.label,lx:self?xs[xs.length-1]+80+labelWidth/2:(x1+x2)/2,ly:y-17,d,dashed:ret,detail:msg.detail,messageIndex:i,labelSpan:self?labelWidth+32:Math.abs(x2-x1)};
    const g=edge(root,edgeSpec,lang);g.dataset.messageIndex=i;g.dataset.kind="message";g.dataset.title=text(msg.label,lang);g.dataset.summary=text(T("消息类型："+(ret?"返回":msg.kind==="async"?"异步":"同步"),"Message type: "+(ret?"return":msg.kind),lang),lang);g.dataset.detail=text(msg.detail,lang);
    if(msg.kind==="async")g.querySelector("path").setAttribute("stroke","#3a83f7");
   });
@@ -361,7 +361,7 @@ function renderSequence(root,m,lang,height,xs){
  function render(model,type,root,lang){
   const requestedWidth=model.canvas?.width??(type==="sequence"?960:type==="mind"?920:type==="deploy"?1100:type==="er"?1040:type==="activity"?1640:type==="swim"?1060:1100);
    const sequenceXs=type==="sequence"?sequencePositions(model,lang):null;
-   const selfLabelRight=type==="sequence"?Math.max(0,...model.messages.filter(msg=>msg.from===msg.to).map(msg=>{const participantIndex=model.participants.findIndex(p=>p.id===msg.from);return sequenceXs[participantIndex]+64+18+measureEdgeText(msg.label,lang)+40;})):0;
+   const selfLabelRight=type==="sequence"?Math.max(0,...model.messages.filter(msg=>msg.from===msg.to).map(msg=>sequenceXs[sequenceXs.length-1]+80+measureEdgeText(msg.label,lang)+40)):0;
    const w=type==="sequence"?Math.max(requestedWidth,sequenceXs[sequenceXs.length-1]+110,selfLabelRight):requestedWidth;
   const requestedHeight=model.canvas?.height??(type==="sequence"?620:type==="mind"?590:type==="deploy"?560:type==="er"?560:type==="activity"?590:type==="swim"?535:550);
    const h=type==="sequence"?Math.max(requestedHeight,Math.max(...model.messages.map((m,i)=>m.y??155+i*75))+95):requestedHeight;
@@ -389,7 +389,9 @@ function renderSequence(root,m,lang,height,xs){
    return {x:Math.min(a.x,b.x),y:Math.min(a.y,b.y),w:Math.abs(b.x-a.x),h:Math.abs(b.y-a.y)};
   };
   const collide=(a,b,pad=5)=>a.x<b.x+b.w+pad&&a.x+a.w+pad>b.x&&a.y<b.y+b.h+pad&&a.y+a.h+pad>b.y;
-  const nodes=[...svgRoot.querySelectorAll(".semantic-node-shape,.semantic-actor>rect")].filter(n=>n.getClientRects().length&&n.getBoundingClientRect().width>0).map(box);
+  const isSequence=!!svgRoot.querySelector(".semantic-actor");
+  const protectedSelectors=".semantic-node-shape,.semantic-actor>rect";
+  const protectedNodes=[...svgRoot.querySelectorAll(isSequence?protectedSelectors+",.semantic-lifeline,.semantic-activation,.semantic-edge path":protectedSelectors)].filter(n=>{const r=n.getBoundingClientRect();return n.getClientRects().length&&(r.width>0||r.height>0);}).map(n=>{const r=box(n),pad=n.matches(".semantic-lifeline")?4:n.matches(".semantic-activation,.semantic-edge path")?3:0;return{x:r.x-pad,y:r.y-pad,w:Math.max(8,r.w+pad*2),h:Math.max(8,r.h+pad*2)};});
   const chips=[...svgRoot.querySelectorAll(".semantic-edge-chip")].filter(n=>!n.classList.contains("is-hidden"));const fallback=svgRoot.closest(".genui-semantic-diagram")?.querySelector(".semantic-label-fallbacks");if(fallback)fallback.replaceChildren();
   const arrowTips=[...svgRoot.querySelectorAll(".semantic-edge path[marker-end]")].flatMap(path=>{
     try{const length=path.getTotalLength(),tip=path.getPointAtLength(length),unitPixels=Math.max(.02,Math.hypot(matrix.a,matrix.b)),margin=Math.min(220,Math.max(22,18/unitPixels));return [{x:tip.x-margin,y:tip.y-margin,w:margin*2,h:margin*2}];}
@@ -411,7 +413,7 @@ function renderSequence(root,m,lang,height,xs){
     const cx2=cx+dx,cy2=cy+dy;
     const r={x:cx2-w/2,y:cy2-h/2,w,h};
     if(r.x<5||r.y<5||r.x+r.w>graph.w-5||r.y+r.h>graph.h-5)continue;
-    if(nodes.some(n=>collide(r,n))||arrowTips.some(n=>collide(r,n,2))||placed.some(n=>collide(r,n)))continue;
+    if(protectedNodes.some(n=>collide(r,n))||arrowTips.some(n=>collide(r,n,2))||placed.some(n=>collide(r,n)))continue;
     best={cx:cx2,cy:cy2,rect:r};break;
    }
    chip.dataset.layoutOk=String(!!best);

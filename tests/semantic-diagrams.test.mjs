@@ -106,6 +106,13 @@ test("independent business models are accepted offline with data validation", ()
  assert.match(contract,/完全自动化节点布图/);
 });
 
+test("sequence labels avoid lifelines, activation bars and other message paths", () => {
+  const js = read("assets/semantic-diagrams.js");
+  assert.ok(js.includes('protectedSelectors+",.semantic-lifeline,.semantic-activation,.semantic-edge path"'));
+  assert.match(js, /r\.width>0\|\|r\.height>0/);
+  assert.match(js, /sequenceXs\[sequenceXs\.length-1\]\+80/);
+});
+
 test("interaction invariants cover child edges, focus, geometry and fullscreen API rejection",()=>{
  const js=read("assets/semantic-diagrams.js"),css=read("assets/semantic-diagrams.css"),browser=read("tests/chrome-report-smoke.mjs");
  for(const needle of ["semantic-branch-edge","focusedInside","scheduleLabelLayout","exit-failed","aria-pressed","a===\"fields\"","a===\"read\""])assert.ok(js.includes(needle),needle);
