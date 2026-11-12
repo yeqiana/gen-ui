@@ -60,6 +60,7 @@ jobs:
             "tests/chrome-portal-http-smoke.mjs",
             "tests/chrome-portal-directory-smoke.mjs",
             "tests/chrome-documents-smoke.mjs",
+            "tests/chrome-layout-edge-cases.mjs",
             "tests/chrome-semantic-stress.mjs"
           )
           foreach ($script in $scripts) {

@@ -180,6 +180,8 @@ if ($LASTEXITCODE -ne 0) { throw "Document structure tests syntax failed" }
 & node --check (Join-Path $root "tests/chrome-semantic-stress.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Semantic seeded stress test JS syntax failed" }
 Write-Output "[PASS] Semantic seeded stress test syntax"
+& node --check (Join-Path $root "tests/chrome-layout-edge-cases.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Chrome edge cases syntax failed" }
 & node --check (Join-Path $root "tests/chrome-documents-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Technical document Chrome smoke syntax failed" }
 Write-Output "[PASS] Technical document test syntax"

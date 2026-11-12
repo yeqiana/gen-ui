@@ -34,6 +34,15 @@
    view={x:view.x+(view.w-w)/2,y:view.y+(view.h-h)/2,w,h};apply();
   }
   function fit(){view={...base};apply();}
+ function refreshBase(){
+  const next=svg.getAttribute("viewBox")?.trim().split(/[\s,]+/).map(Number);
+  if(!next||next.length!==4||!next.every(Number.isFinite)||next[2]<=0||next[3]<=0)return false;
+  const oldWidth=base.w,ratio=view.w/Math.max(1,base.w);
+  base.x=next[0];base.y=next[1];base.w=next[2];base.h=next[3];
+  const width=base.w*ratio,height=width*base.h/base.w;
+  view={x:base.x+(base.w-width)/2,y:base.y+(base.h-height)/2,w:width,h:height};
+  apply();return Math.abs(oldWidth-base.w)>0.01;
+ }
   function sync(){
    if(document.fullscreenElement===panel)fallback=false;
    else if(document.fullscreenElement)fallback=false;
@@ -131,7 +140,7 @@
   });
   stage.addEventListener("wheel",e=>{if(!e.ctrlKey&&!isFullscreen())return;e.preventDefault();zoom(e.deltaY<0?.88:1.14);},{passive:false});
   sync();apply();
-  const controller={zoom,fit,fullscreen,getView:()=>({...view}),isFullscreen};
+  const controller={zoom,fit,fullscreen,refreshBase,getView:()=>({...view}),isFullscreen};
   if(panel.id==="flow-panel")window.GenUIFlow=controller;
   return controller;
  }
