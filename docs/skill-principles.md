@@ -19,7 +19,8 @@
 | 场景 | 最小输出 | 仅加载 |
 | --- | --- | --- |
 | 日常解答、代码审查、计划 | Markdown | SKILL.md |
-| 明确请求 HTML 报告 | 默认左导航 HTML | references/html-report-contract.md |
+| 明确请求静态 HTML 报告 | 有真实左导航的离线 HTML | references/html-report-essentials.md |
+| 复杂交互、单文件 HTML 或多页门户 | 按需增强的离线 HTML | references/html-report-contract.md |
 | 七类专业关系图 | HTML + 安全 JSON | references/semantic-diagram-model.md |
 | 八类架构视图 | 分层、容器、矩阵或关系视图 | references/architecture-patterns.md |
 | 多 HTML 文档 | 离线 iframe 门户 | scripts/build-html-portal.mjs |
