@@ -3,10 +3,16 @@ main.genui-typography{
   --genui-prose-width:72ch;--genui-prose-leading:1.65;
   --genui-prose-gap:.85em;--genui-heading-gap:1.25em;
 }
+/* Chinese prose uses full-width ideographs; 72ch is an English width token. */
+html:lang(zh) main.genui-typography{--genui-prose-width:46ic}
 main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
   max-width:min(100%,var(--genui-prose-width));
   overflow-wrap:break-word;
   line-height:var(--genui-prose-leading);
+}
+/* Distribute short Chinese paragraphs instead of leaving 1–3 characters alone. */
+html:lang(zh) main.genui-typography :is(p.genui-prose,.genui-prose-group>p){
+  word-break:normal;line-break:strict;text-wrap:balance;
 }
 main.genui-typography .genui-prose-group>p+p{margin-block-start:var(--genui-prose-gap)}
 main.genui-typography .genui-prose-group>:is(h2,h3,h4){margin-block-start:var(--genui-heading-gap)}

@@ -11,7 +11,7 @@
 .app[data-sidebar-collapsed=true] .genui-tree .genui-nav-level-1>a{font-size:0;padding-right:0}
 .doc-toc .genui-tree a{padding:6px 24px 6px 8px;font-size:12px;line-height:1.4;text-decoration:none;color:#475467}
 .doc-toc .genui-tree a:hover{color:#3a83f7;background:#eff6ff}
-.doc-toc .genui-tree{max-height:calc(100vh - 140px);overflow-y:auto}
+.doc-toc .genui-tree{max-height:none;overflow:visible}
 @media(max-width:700px){.mobile-toc .genui-tree{max-height:65vh;overflow:auto}.doc-toc .genui-tree{max-height:none}}
 
 .genui-tree a svg{width:16px;height:16px;flex:0 0 16px}
@@ -24,7 +24,7 @@
 .genui-tree .genui-nav-level-1>a[aria-expanded]{cursor:pointer}
 .sidebar>.brand>img{display:block!important;flex:0 0 auto;object-fit:contain}
 .doc-toc>.toc-brand{padding-right:40px}
-.doc-toc>.genui-sidebar-toggle{position:absolute;top:0;right:8px;z-index:5;display:grid;place-items:center;width:30px;height:30px;min-height:30px;padding:0;border:1px solid #d0d5dd;border-radius:6px;background:#fff;color:#475467;cursor:pointer}
+.doc-toc>.genui-sidebar-toggle{position:absolute;top:0;right:8px;z-index:5;display:grid;place-items:center;width:30px;height:30px;min-height:30px;padding:0;border:0;border-radius:6px;background:transparent;color:#475467;cursor:pointer}
 .genui-sidebar-toggle svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s ease}
 .genui-sidebar-toggle:hover{background:#eff6ff;border-color:#b7d2fa}
 .genui-sidebar-toggle:focus-visible{outline:2px solid #3a83f7;outline-offset:2px}
@@ -50,3 +50,35 @@
 .app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1 > a > img,
 .doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1 > a > svg,
 .doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1 > a > img{display:block!important;flex:0 0 20px;width:20px;height:20px}
+/* One scroll host for each left navigation rail. */
+.app:not([data-navigation="top"]) .sidebar,.doc-layout>.doc-toc{overflow-y:hidden}
+.app:not([data-navigation="top"]) .sidebar>nav,.doc-layout>.doc-toc>nav{min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+.app:not([data-navigation="top"]) .sidebar .genui-tree,.doc-layout .doc-toc .genui-tree{max-height:none;overflow:visible}
+/* The collapsed brand is the original M mark only, not extra letters. */
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{content:"";display:block;width:30px;height:30px;margin:0 auto;background:url("./icons/gen-ui-mark.svg") center / 25px 25px no-repeat}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.genui-sidebar-toggle{top:40px;right:6px;border:0;box-shadow:none;background:transparent}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>nav{padding-top:34px}
+.app[data-sidebar-collapsed="true"] .sidebar>.brand>img{display:block!important}
+.genui-sidebar-toggle{box-shadow:none}
+
+/* Folded identity doubles as the expand control: M normally, chevron on hover/focus. */
+.genui-brand-expand-icon{display:none}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.genui-sidebar-toggle,
+.app[data-sidebar-collapsed="true"] .sidebar .brand>.nav-toggle{display:none!important}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>nav{padding-top:0}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand{
+ position:relative;display:grid;place-items:center;flex:none;box-sizing:border-box;
+ width:40px;height:40px;min-height:40px;margin:0 auto 8px;padding:0!important;
+ border-radius:7px;cursor:pointer;user-select:none;gap:0;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{margin:0}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible),
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible){background:#eff6ff;color:#3a83f7}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible)::before,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible)>img{opacity:0}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible)>.genui-brand-expand-icon,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible)>.genui-brand-expand-icon{
+ display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:20px;height:20px;pointer-events:none;fill:none;stroke:currentColor;
+}

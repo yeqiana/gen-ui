@@ -109,7 +109,7 @@
 
 ## 轻量 Typography 与离线 HTML 排版（2026-11-13）
 
-仅在明确要求离线 HTML 时，GEN-UI 才按需加载 [轻量排版规则](references/typography.md) 和本地 [`assets/typography.css`](assets/typography.css)。正文建议使用 `main.genui-typography` 与 `.genui-prose`，保持约 72ch 的英文阅读宽度基准；**72ch 不代表 72 个汉字**。导航展开/折叠后正文仍保持阅读行宽，表格、代码和图表继续使用独立的横向空间。
+仅在明确要求离线 HTML 时，GEN-UI 才按需加载 [轻量排版规则](references/typography.md) 和本地 [`assets/typography.css`](assets/typography.css)。正文建议使用 `main.genui-typography` 与 `.genui-prose`，英文使用 72ch 阅读宽度基准，中文改用 46ic 并对短段落均衡换行，避免几个字孤立在末行；**72ch 不代表 72 个汉字**。导航展开/折叠后正文仍保持阅读行宽，表格、代码和图表继续使用独立的横向空间。
 
 静态技术文档复用 `div.doc-layout`、`aside.doc-toc`、`main.doc-main.genui-typography`、移动端 `details.mobile-toc` 及仓库已有的本地文档 CSS/导航脚本，不添加新的框架或远程字体。确需单文件 HTML 时内联小型排版规则，普通问答仍默认 Markdown。
 

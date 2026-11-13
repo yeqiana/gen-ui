@@ -36,3 +36,15 @@ img[data-zoomable]{cursor:zoom-in}
 .genui-image-overlay{width:100vw;height:100dvh;max-height:100dvh}
 .genui-image-stage{display:flex;align-items:center;justify-content:center}
 .genui-image-stage img{flex:none;max-width:96vw;max-height:calc(100dvh - 75px);object-fit:contain;display:block}
+
+/* In-page image modal; fullscreen is a distinct toolbar action. */
+.genui-image-overlay{padding:clamp(10px,3vw,32px);align-items:center;justify-content:center;background:rgba(15,23,42,.76)}
+.genui-image-toolbar,.genui-image-stage{width:min(1100px,100%);flex:none}
+.genui-image-toolbar{border-radius:10px 10px 0 0;border:1px solid rgba(255,255,255,.18);border-bottom:0}
+.genui-image-stage{height:min(78dvh,820px);background:#0f172a;border:1px solid rgba(255,255,255,.18);border-top:0;border-radius:0 0 10px 10px;box-shadow:0 24px 70px rgba(0,0,0,.3)}
+.genui-image-frame>img{cursor:zoom-in}
+.genui-image-overlay.is-fullscreen,.genui-image-overlay:fullscreen{padding:0}
+.genui-image-overlay.is-fullscreen .genui-image-toolbar,.genui-image-overlay:fullscreen .genui-image-toolbar,
+.genui-image-overlay.is-fullscreen .genui-image-stage,.genui-image-overlay:fullscreen .genui-image-stage{width:100%;max-width:none;border-radius:0}
+.genui-image-overlay.is-fullscreen .genui-image-stage,.genui-image-overlay:fullscreen .genui-image-stage{height:auto;flex:1}
+@media(max-width:700px){.genui-image-overlay{padding:8px}.genui-image-stage{height:min(81dvh,720px)}}
