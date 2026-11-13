@@ -19,7 +19,7 @@ Gen UI reduces reading friction. It is an **Information Design Skill**, not a re
 
 ## Progressive capability routing
 
-Choose the **least complex supported output**. Never load advanced assets by default.
+Route by **requested output**, not topic: "report" alone means Markdown. Load HTML or diagrams only when the deliverable requires them.
 
 | Request / host | Use | Open only when needed |
 | --- | --- | --- |
