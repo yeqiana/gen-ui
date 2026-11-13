@@ -20,6 +20,7 @@
 
 - SKILL.md：基础路由、阅读目标、准确性和检查边界。
 - information-design-decision.md：结构选择、内容压缩与事实、建议、未验证区分。
+- reading-layers.md：仅在长文、信息密集或多轮评审时，按需控制阅读层次并延续已确认决策、证据与未决项；不保存会话、不替代评审与测试。
 - html-report-essentials.md：简单静态 HTML 的必要内容与离线交付。
 - html-report-contract.md：高级 HTML、单文件、交互、离线资源和完整验收规范。
 - architecture-patterns.md：分层、归属与架构关系表达。

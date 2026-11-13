@@ -42,7 +42,7 @@ Without a trusted renderer, use Markdown. For HTML deliverables, follow its cont
 5. **Progressive detail:** remove filler and repetition, not facts, evidence, constraints, or required steps; expand when needed.
 6. **Validate:** one summary only, if requested, required by another Skill, or useful in long docs.
 
-For complex or ambiguous format choices, consult [Information design decision](references/information-design-decision.md) only when needed.
+For ambiguous formats, read [Information design](references/information-design-decision.md). For dense content or iterative reviews, read [Reading layers](references/reading-layers.md) only when needed.
 
 ## Default formatting
 
