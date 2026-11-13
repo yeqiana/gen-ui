@@ -145,3 +145,11 @@ pre.code-block .code-copy{top:7px;right:8px;width:27px;height:27px;min-height:27
 /* Preserve table borders and status badges; only color comparison text. */
 .table-wrap .compare-value{background:none;border:0;box-shadow:none;border-radius:0;padding:0}
 .table-wrap th,.table-wrap td{text-align:left!important}
+
+/* Lightweight typography layer: prose stays readable when the rail collapses. */
+:root{--genui-prose-width:72ch;--genui-prose-leading:1.65;--genui-prose-gap:.85em;--genui-heading-gap:1.25em}
+#main :is(.overview-copy,.showcase-lead,.case-block>p,.case-block>ul,.case-block>ol,.before-after p,#panel-rules>p,.reading-prose,.prose,.article-body,.markdown-body){max-width:min(100%,var(--genui-prose-width));overflow-wrap:break-word}
+#main :is(.overview-copy,.showcase-lead,.case-block>p,.case-block>ul,.case-block>ol,.before-after p,#panel-rules>p,.reading-prose,.prose,.article-body,.markdown-body) :is(p,li){line-height:var(--genui-prose-leading)}
+#main :is(.overview-copy p,.showcase-lead,.case-block>p,.before-after p,#panel-rules>p){line-height:var(--genui-prose-leading)}
+#main :is(.reading-prose,.prose,.article-body,.markdown-body) p+p{margin-block-start:var(--genui-prose-gap)}
+#main :is(.reading-prose,.prose,.article-body,.markdown-body) :is(h2,h3,h4){margin-block-start:var(--genui-heading-gap)}

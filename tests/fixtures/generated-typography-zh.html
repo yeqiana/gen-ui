@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StoryOS 任务链路分析 · 生成 HTML 排版验收样例</title><link rel="icon" href="../../assets/icons/gen-ui-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/typography.css"><link rel="stylesheet" href="../../assets/heading-nav.css">
+<script defer src="../../assets/heading-nav.js"></script><style>
+*{box-sizing:border-box}html{font:14px/1.65 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+body{margin:0;color:#1A1C1F;background:#fff}.doc-layout{display:grid;grid-template-columns:248px minmax(0,1fr);gap:28px;max-width:1650px;margin:auto;padding:24px}
+.doc-layout[data-sidebar-collapsed="true"]{grid-template-columns:58px minmax(0,1fr)}
+.doc-toc{position:relative;min-width:0}.toc-brand{font-weight:700;margin:0 0 18px}.toc-list{list-style:none;margin:0;padding:0}.toc-list a{display:block;padding:9px 4px;color:#3A83F7}
+.doc-main{min-width:0;width:100%}.genui-section{margin:24px 0 34px}.genui-section h2{font-size:20px}
+.genui-section h3{font-size:16px}.table-wrap{width:100%;max-width:100%;overflow-x:auto;border:1px solid #E6EAF0;border-radius:5px}
+table{min-width:900px;border-collapse:collapse}th,td{border-bottom:1px solid #E6EAF0;text-align:left;padding:12px}
+pre{background:#F5F7FA;padding:18px;font:12px/1.65 Consolas,monospace}
+.diagram{width:100%;max-width:100%;overflow-x:auto;border:1px solid #E6EAF0}.diagram svg{width:100%;min-width:680px;height:auto}
+.mobile-toc{display:none}
+@media(max-width:700px){.doc-layout{display:block;padding:16px}.doc-toc{display:none}.mobile-toc{display:block}}
+</style></head><body>
+<div class="doc-layout">
+<aside class="doc-toc" aria-label="本文目录"><p class="toc-brand">GEN-UI · HTML</p><nav aria-label="本文目录"><ul class="toc-list"><li><a href="#scope">一、范围</a></li><li><a href="#evidence">二、证据与结构</a></li><li><a href="#conclusion">三、结论</a></li></ul></nav></aside>
+<main class="doc-main genui-typography">
+<details class="mobile-toc"><summary>本文目录</summary><ul class="toc-list"><li><a href="#scope">一、范围</a></li><li><a href="#evidence">二、证据与结构</a></li><li><a href="#conclusion">三、结论</a></li></ul></details>
+<h1>StoryOS 任务链路分析 · 生成 HTML 排版验收样例</h1>
+<section id="scope" class="genui-section"><h2>一、范围</h2>
+<div class="genui-prose-group"><p>本页用于演示离线 HTML 报告生成后的阅读排版。StoryOS 的异步流程涉及任务创建、外部调用、状态聚合、失败重试和断点恢复，页面需要呈现足够长的连续叙述，但导航折叠以后仍应该保持合理的正文行宽，避免读者横向扫视整块大屏幕。</p><p>第二段讨论执行权围栏与幂等性：旧 Worker 即使在租约过期后完成了外部请求，也必须在写回时验证当前执行权。这里的描述只是工程示例，并不是对某个线上环境完成测试或具备某项能力的声明。</p><h3>（一） 阅读节奏</h3><p>验收结论必须区分已执行的浏览器排版验证和仍需由真实系统提供的运行证据。若缺少生产日志和故障注入结果，应明确标记为待验证，而不是把演示结构直接当作项目实际完成情况。</p></div></section>
+<section id="evidence" class="genui-section"><h2>二、证据与结构</h2>
+<p class="genui-prose">下方比较表格属于结构化宽内容，应使用完整画布并支持独立横向滚动；代码块也应单独容纳长命令。流程图允许使用比叙述段落更宽的空间，不能因为阅读行宽限制而导致节点和连接线拥挤。</p>
+<div class="table-wrap"><table><thead><tr><th>维度</th><th>Task</th><th>Attempt</th><th>Artifact</th><th>验收状态</th><th>证据引用</th></tr></thead>
+<tbody><tr><td>职责</td><td>业务任务</td><td>执行尝试</td><td>生成产物</td><td>待验证</td><td>TRACE-DEMO-2026-001</td></tr></tbody></table></div>
+<pre><code>const canWrite = current.fencingToken === attempt.fencingToken && current.status === "RUNNING";</code></pre>
+<div class="diagram"><svg viewBox="0 0 800 110" role="img" aria-label="工作流示意"><rect x="20" y="18" width="175" height="75" fill="#eff6ff" stroke="#3a83f7"/><rect x="312" y="18" width="175" height="75" fill="#eff6ff" stroke="#3a83f7"/><rect x="604" y="18" width="175" height="75" fill="#eff6ff" stroke="#3a83f7"/><path d="M195 55H312M487 55H604" stroke="#667085" stroke-width="2"/><text x="108" y="62" text-anchor="middle">Task</text><text x="400" y="62" text-anchor="middle">Attempt</text><text x="691" y="62" text-anchor="middle">Artifact</text></svg></div>
+</section><section id="conclusion" class="genui-section"><h2>三、结论</h2><p class="genui-prose">验收结论必须区分已执行的浏览器排版验证和仍需由真实系统提供的运行证据。若缺少生产日志和故障注入结果，应明确标记为待验证，而不是把演示结构直接当作项目实际完成情况。</p></section>
+</main></div></body></html>

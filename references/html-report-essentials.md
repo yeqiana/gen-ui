@@ -11,10 +11,12 @@
 ## 二、离线与阅读要求
 
 - **真实左侧导航：** 保留可见的 `<aside class="doc-toc">`、`<nav>`、`<ul class="toc-list">` 和指向 `<main>` 内真实 ID 的锚点。即使 JavaScript 失效，也必须能点击静态目录。按现有项目契约引入**本地** `heading-nav.js`，不要凭空引用不存在的资源。
+- **结构不能自由改写：** 静态技术文档必须用同一个 `<div class="doc-layout">` 同时包住 `<aside class="doc-toc">` 与 `<main class="doc-main genui-typography">`。`heading-nav.js` 实际只为 `main.doc-main` 和位于 `.doc-layout` 中的 `.doc-toc` 初始化折叠控件，缺任一层都会让折叠失效；不要用自制的 fixed 侧栏替代此结构。侧栏内保留 `<p class="toc-brand">` 和上述静态目录；`main` 顶部提供 `<details class="mobile-toc">` 及同一批有效锚点，让 375px 能开合目录。引用仓库现有的 `demo/documents/assets/document.css`、`assets/heading-nav.css`、`assets/heading-nav.js`、`assets/typography.css`（输出时按实际路径计算相对引用），不要只引用 JS 却忽略布局 CSS。
 - **样式：** 背景 `#FFFFFF`、正文 `#1A1C1F`、强调 `#3A83F7`，正文 14px、代码 12px、系统字体。移动端不出现整页横向溢出；宽表格单独可横向滚动。
+- **阅读排版：** 按需应用 [轻量 Typography 规则](typography.md)，正文标记 `genui-prose`、使用 72ch 阅读宽度上限与行高 Token；导航折叠后仍维持正文上限，宽表格、代码和 SVG 不受限。单文件 HTML 将小型 CSS 内联。
 - **资源：** CSS/JS/SVG 使用本地相对路径并核对资源存在；不依赖 CDN、远程字体或在线图片。引用外部公开资料时，放在文末参考资料中，不将其当作运行依赖。
 - **交互与可访问性：** 链接、导航和必要的折叠控件可用键盘访问；有图标按钮时必须有可读名称。无需交互的报告就不要制造可点击假按钮。
-- **元数据：** 报告生成时间据实记录到秒，页面可见时间不附带生硬的时区后缀，机器可读属性可以保留时区；使用项目中实际存在的本地 GEN-UI SVG favicon，不伪造路径或图片。
+- **元数据：** 报告生成时间据实记录到秒。可见 `<time>` 必须如 `2026-11-13 11:30:00`，不要在正文显示 `+08:00` 或 `Z`；机器可读 `datetime` 可带时区。使用仓库中实际存在的本地 GEN-UI SVG favicon，不伪造路径。
 
 ## 三、交付与边界
 

@@ -101,6 +101,19 @@ Route by the requested **deliverable**, not topic keywords: ordinary Q&A, review
 See [four usage scenarios](docs/usage-examples.en.md) and the [capability routing guide](docs/capability-routing.md). Examples are illustrative, not a claim of successful model or browser tests.
 
 
+## Lightweight HTML typography (2026-11-13)
+
+For explicitly requested offline HTML, Gen UI loads the [typography guidance](references/typography.md) and local [`assets/typography.css`](assets/typography.css) on demand. Scope readable prose with `main.genui-typography` and `.genui-prose`; the 72ch cap is an English-character width reference, **not a 72-Chinese-character target**. Sidebar folding does not stretch prose, while tables, code and diagrams retain their own scrolling or wide regions. Normal answers remain Markdown-first; no extra runtime dependencies or remote fonts are required.
+
+Static documents reuse `div.doc-layout`, `aside.doc-toc`, `main.doc-main.genui-typography`, a mobile `details.mobile-toc`, and the existing local document CSS/navigation script. To validate a generated HTML artifact:
+
+~~~powershell
+node scripts/validate-html-report.mjs path/to/report.html
+node tests/chrome-typography-smoke.mjs --generated path/to/report.html
+~~~
+
+After tightening the structure contract, three local native Codex representative tasks passed static delivery checks and **18/18 Chrome viewport/sidebar scenarios**; the repository also passed **144/144 Node.js tests**. This is evidence for those samples, not a guarantee for arbitrary model outputs or independent Skill discovery. Native Codex shell reads remained blocked by a local execution policy, so the runner supplied the original Skill text read-only. See the [Chinese blind evaluation and limitations](evals/gen-ui-typography-blind-2026-11-13.md).
+
 ## Install
 
 Windows PowerShell, Codex:

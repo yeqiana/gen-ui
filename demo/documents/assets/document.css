@@ -43,3 +43,11 @@
 /* Comparison values are highlighted only through their text. */
 .doc-main .table-wrap th,.doc-main .table-wrap td{text-align:left}
 .doc-main .table-wrap td .tag,.doc-main .table-wrap td .tag--blue,.doc-main .table-wrap td .tag--green,.doc-main .table-wrap td .tag--amber,.doc-main .table-wrap td .tag--red{background:transparent;border:0;padding-inline:0}
+
+/* Typography tokens apply to narrative content, not tables, diagrams or code. */
+:root{--genui-prose-width:72ch;--genui-prose-leading:1.85;--genui-prose-gap:.85em;--genui-heading-gap:1.6em}
+.doc-main :is(.doc-lede,.doc-summary>p,.doc-section>p,.doc-section>ul,.doc-section>ol,.doc-section>blockquote,.doc-section>.callout,.doc-section .callout>p,.doc-section blockquote>p){max-width:min(100%,var(--genui-prose-width));overflow-wrap:break-word}
+.doc-main .doc-section>p{line-height:var(--genui-prose-leading)}
+.doc-main .doc-section>p+p{margin-block-start:var(--genui-prose-gap)}
+.doc-main .doc-section> :is(h3,h4){margin-block-start:var(--genui-heading-gap)}
+@media(max-width:700px){:root{--genui-prose-width:100%}}

@@ -9,6 +9,14 @@ export function validateHtml(html,sourcePath){
  const lang=html.match(/<html\b[^>]*\blang=["']([^"']+)/i)?.[1]||'';
  const sidebar=html.match(/<aside\b[^>]*(?:(?:class=["'][^"']*\bdoc-toc\b[^"']*["'])|(?:id=["']report-sidebar["']))[^>]*>[\s\S]*?<\/aside>/i)?.[0];
  if(!sidebar)issues.push('缺少默认左侧导航容器');
+ // 文档侧栏增强脚本依赖 doc-layout 宿主与 doc-main，且需要移动端静态目录。
+ // 演示报告 #report-sidebar 属于 app 宿主，不套用此约束。
+ const documentSidebar=/<aside\b[^>]*class=["'][^"']*\bdoc-toc\b[^"']*["']/i.test(html);
+ if(documentSidebar){
+  if(!/<div\b[^>]*class=["'][^"']*\bdoc-layout\b[^"']*["']/i.test(html))issues.push('文档导航缺少 doc-layout 宿主，无法初始化折叠');
+  if(!/<details\b[^>]*class=["'][^"']*\bmobile-toc\b[^"']*["']/i.test(html))issues.push('文档缺少 mobile-toc 移动目录');
+ }
+
  const nav=sidebar?.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0];
  if(sidebar&&!nav)issues.push('左侧导航缺少 nav 静态结构');
  const toc=nav?.match(/<(?:ul|ol)\b[^>]*class=["'][^"']*\b(?:nav-list|toc-list)\b[^"']*["'][^>]*>[\s\S]*?<\/(?:ul|ol)>/i)?.[0];
@@ -34,6 +42,8 @@ export function validateHtml(html,sourcePath){
   if(!/\baria-label=["'][^"']+["']/i.test(attrs)||!/\btitle=["'][^"']+["']/i.test(attrs)||!/<svg\b/i.test(body))issues.push('图标按钮缺少 aria-label、title 或 SVG');
  }
  if(!/<main\b[^>]*(?:class=["'][^"']*doc-main|id=["']main)[^>]*>/i.test(html))issues.push('缺少正文 main 容器');
+ if(documentSidebar&&!/<main\b[^>]*class=["'][^"']*\bdoc-main\b[^"']*["']/i.test(html))issues.push('文档必须使用 main.doc-main 供导航脚本定位');
+
  const headings=[...html.matchAll(/<h([234])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map(m=>({level:Number(m[1]),text:m[2].replace(/<[^>]+>/g,'').trim()}));
  if(!headings.length)issues.push('缺少可导航的 H2/H3/H4 标题');
  if(lang.toLowerCase().startsWith('zh')){
