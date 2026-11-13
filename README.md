@@ -100,6 +100,8 @@ Route by the requested **deliverable**, not topic keywords: ordinary Q&A, review
 
 See [four usage scenarios](docs/usage-examples.en.md) and the [capability routing guide](docs/capability-routing.md). Examples are illustrative, not a claim of successful model or browser tests.
 
+**Dense reading and iterative reviews:** Load [reading layers and review continuity](references/reading-layers.md) only when needed. Lead with changes, evidence, current decisions and unresolved items while keeping full details accessible. Never turn unrun checks into passing evidence or accept nonfatal risks on the user's behalf. Ordinary answers need no fixed summary template.
+
 
 ## Lightweight HTML typography (2026-11-13)
 
