@@ -2,6 +2,10 @@
 
 This contract applies **whenever HTML is the chosen or required final deliverable**, whether the user explicitly says "HTML" or the task establishes a web page or HTML artifact. Do not silently change an ordinary Markdown/CLI answer into HTML: Markdown remains the default when no HTML deliverable has been established. These rules govern **user-facing HTML**, not the normative language of this document.
 
+### Scope: content first, features only when needed
+
+This is a **conditional delivery contract, not a feature checklist**. Every HTML report needs truthful content, semantic headings, offline resources, accessible static chapter navigation, and a readable mobile layout. For a simple report, implement those essentials before anything interactive. Only add data filtering, pagination, charts, forms, drawers, image previews or semantic diagrams when the task and available data warrant them; never manufacture records, visual relationships or clickable controls to satisfy an example. For static pages, [HTML essentials](html-report-essentials.md) summarizes applicable requirements; feature-specific clauses here apply **only when present or requested**. Mandatory delivery-gate requirements (including the local navigation enhancer) still apply. Preserve the full contract for rich interactive pages rather than silently downgrading requested functionality.
+
 ### Delivery gate (required for standalone HTML reports)
 
 Before accepting a generated standalone report, run `node scripts/validate-html-report.mjs <report.html>`. An enhancement script does not count as static navigation: include an `<aside>` containing a `<nav>` and a real list of fragment links as a usable no-JavaScript fallback. Icon-only `.genui-action-icon` and `.icon-only` buttons require nonempty `aria-label`, `title` and an SVG icon. Render a status as one readable value; never rely on a CSS `::before` suppression rule to hide a second marker. A nonzero exit code blocks acceptance: missing left navigation container, missing heading-nav.js, missing main, missing navigable headings, mixed Chinese/decimal heading schemes, invalid decimal heading depth or visible timezone suffix. This is a **static contract check**, not a substitute for browser and accessibility tests. Chapter navigation uses semantic H2/H3 only; H4 is unnumbered body content and never belongs in the left menu. For Chinese-numbered headings, the enhancer normalizes H2 into 一、二、 and real chapter H3 into （一）（二）, without adding numbering to H4. Preserve decimal numbering for decimal documents. Do not classify chart labels as chapters.
@@ -118,9 +122,9 @@ When a directory is specified, **do not generate only a standalone index that ig
 
 ### Interaction reliability and diagram selection
 
-**Navigation:** Standalone HTML pages and documentation indexes must present a usable left-side navigation by default. On mobile it can collapse into a simple accessible menu. Generated iframe children can rely on their parent portal navigation, but the portal shell itself always provides a left rail. The page/tab favicon is the repository's newest local **M-shaped** `gen-ui-mark.svg` mark.
+**Navigation:** Follow sections 1 and 8 for the visible left rail, accessible mobile menu, portal navigation and local **M-shaped** `gen-ui-mark.svg` favicon.
 
-**Diagram selection and semantics:** Use sequence diagrams with lifelines, activation bars and labeled messages; mind maps with expandable hierarchy; deployment topology with runtime zones and protocol-labeled dependencies; ER diagrams with entity tables, fields, PK/FK and cardinalities; activity diagrams with start/end, actions, decision diamonds and labeled branches; swimlanes with role boundaries and handoffs; component diagrams with boundaries, ports and interfaces. Every diagram is inline SVG and local/offline, with `title`, `desc`, a caption, and a text equivalent. Do not render seven generic box-and-line diagrams.
+**Diagram selection and semantics:** Sequence/lifelines, mind maps/hierarchy, topology/zones, ER/cardinality, activity/decisions, swimlanes/handoffs and components/interfaces are distinct. Use [semantic diagram model](semantic-diagram-model.md) for full rules; include local SVG `title`, `desc`, caption and text equivalent. Never render seven generic box-and-line diagrams.
 
 **Diagram interaction:** A click selects an element and updates a nearby inspector; edges, messages and fields are selectable too. Add diagram-specific controls: sequence step-through; mind-map expand/collapse; deployment-zone collapse; ER non-key-field visibility; activity path filters; swimlane collapse; component-port visibility. Canvas pan/zoom/fit/fullscreen are common navigation only. Node dragging is optional and cannot replace semantic interaction.
 
@@ -130,11 +134,11 @@ When a directory is specified, **do not generate only a standalone index that ig
 
 **Fullscreen state machine:** Fullscreen enter/exit is serialized and idempotent. Handle rapid repeated clicks, browser Escape, `fullscreenchange`, `fullscreenerror`, denied native API (local overlay fallback), and return to normal layout. Preserve zoom and pan while changing modes. All toolbar icons retain visible SVG markup and update only their SVG state and accessible name. The top-right toolbar uses compact recognizable zoom magnifier, fit-brackets, and expand/shrink icons, inspired by a consistent 24px line icon vocabulary.
 
-**Copy icon:** Every multi-line code block has an icon-only button showing Copy, Check on success, and Error on failure. After **1000ms**, the icon returns to Copy; cancel older timeouts to avoid stale feedback. Clipboard API and offline `execCommand` fallback remain supported. Do not emit visible success/failure copy messages or extra blank status lines; use accessible labels and nonvisual status when appropriate.
+**Copy icon:** Section 7 specifies Copy/Check/Error, clipboard confirmation, **1000ms** reset and offline fallback. Cancel older timers; keep feedback accessible without extra visible status lines.
 
 **Quote termination:** Strip trailing blank quoted lines and empty trailing paragraph nodes; enforce zero bottom margin on the final actual quote element.
 
-**Images:** Content images may have a magnifying-glass button that opens an in-page fullscreen-style preview. Show zoom percentage and icon-only zoom in/out, fit, close; allow dragging, Esc, and focus restoration. Never attach it to logos, icons or decorative assets. All operations must work without network access.
+**Images:** When needed, content images—not logos or decoration—support offline zoom percentage, fit, drag, Esc and focus restoration; see section 1 for placement and double-click.
 
 **Regression gates:** Explicitly assert the above through Chrome at 375/768/1440px including three or more fullscreen cycles, denied native fullscreen, SVG node drag and connector updates, image zoom and Esc closure, one-second copy reset, and no body horizontal overflow.
 
