@@ -94,6 +94,13 @@ Edge labels use an independent white-background overlay, measured text, and view
 
 **Scope:** complex deployment, activity, and component diagrams still require initial node coordinates and connector paths. This is not yet an automatic graph-layout engine.
 
+## Choose the smallest useful output
+
+Route by the requested **deliverable**, not topic keywords: ordinary Q&A, reviews, and unspecified reports default to Markdown. Static offline HTML uses concise essentials; single-file output, complex interaction and semantic diagrams load full contracts only when required.
+
+See [four usage scenarios](docs/usage-examples.en.md) and the [capability routing guide](docs/capability-routing.md). Examples are illustrative, not a claim of successful model or browser tests.
+
+
 ## Install
 
 Windows PowerShell, Codex:
