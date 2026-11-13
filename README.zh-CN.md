@@ -105,6 +105,21 @@
 参见 [四种任务使用示例](docs/usage-examples.md) 和 [能力路由与加载边界](docs/capability-routing.md)。示例仅展示推荐形态，不表示实测通过。
 
 
+## 轻量 Typography 与离线 HTML 排版（2026-11-13）
+
+仅在明确要求离线 HTML 时，GEN-UI 才按需加载 [轻量排版规则](references/typography.md) 和本地 [`assets/typography.css`](assets/typography.css)。正文建议使用 `main.genui-typography` 与 `.genui-prose`，保持约 72ch 的英文阅读宽度基准；**72ch 不代表 72 个汉字**。导航展开/折叠后正文仍保持阅读行宽，表格、代码和图表继续使用独立的横向空间。
+
+静态技术文档复用 `div.doc-layout`、`aside.doc-toc`、`main.doc-main.genui-typography`、移动端 `details.mobile-toc` 及仓库已有的本地文档 CSS/导航脚本，不添加新的框架或远程字体。确需单文件 HTML 时内联小型排版规则，普通问答仍默认 Markdown。
+
+可以对实际生成的 HTML 运行以下交付门禁：
+
+~~~powershell
+node scripts/validate-html-report.mjs path/to/report.html
+node tests/chrome-typography-smoke.mjs --generated path/to/report.html
+~~~
+
+本地原生 Codex 在三类代表性 HTML 任务的无强化提示验证中，经规则收口后通过静态检查及 **18/18 个 Chrome 视口/目录状态场景**；仓库回归有 **144/144 项 Node.js 测试**通过。该结论限于已测样本，并非未来所有生成结果的合规保证。原生 Codex 的本地命令读取仍受执行策略阻挡，评测由 Runner 只读提供 Skill 文件正文。详见 [盲测与已知边界](evals/gen-ui-typography-blind-2026-11-13.md)。
+
 ## 安装与使用
 
 Windows PowerShell 中安装到 Codex：

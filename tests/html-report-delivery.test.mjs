@@ -6,7 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 const root=new URL('../',import.meta.url);
 const run=html=>{const temp=fs.mkdtempSync(path.join(os.tmpdir(),'genui-html-'));try{const file=path.join(temp,'report.html');fs.writeFileSync(file,html);fs.mkdirSync(path.join(temp,'assets'));fs.copyFileSync(new URL('../assets/heading-nav.js',import.meta.url),path.join(temp,'assets','heading-nav.js'));return spawnSync(process.execPath,['scripts/validate-html-report.mjs',file],{cwd:root,encoding:'utf8'});}finally{fs.rmSync(temp,{recursive:true,force:true});}};
-const base=(headings,extra='')=>'<html lang="zh-CN"><aside class="doc-toc"><nav aria-label="目录"><ul class="toc-list"><li><a href="#chapter">章节</a></li></ul></nav></aside><main class="doc-main">'+headings.replace('<h2>','<h2 id="chapter">')+'</main><script src="assets/heading-nav.js"></script>'+extra+'</html>';
+const base=(headings,extra='')=>'<html lang="zh-CN"><div class="doc-layout"><aside class="doc-toc"><nav aria-label="目录"><ul class="toc-list"><li><a href="#chapter">章节</a></li></ul></nav></aside><main class="doc-main"><details class="mobile-toc"><summary>目录</summary><ul class="toc-list"><li><a href="#chapter">章节</a></li></ul></details>'+headings.replace('<h2>','<h2 id="chapter">')+'</main></div><script src="assets/heading-nav.js"></script>'+extra+'</html>';
 test('交付门禁拒绝缺失导航、混用编号、数字层级错误及可见时区',()=>{
  assert.notEqual(run('<html><main><h2>一、背景</h2></main></html>').status,0);
  assert.notEqual(run(base('<h2>一、背景</h2><h3>1.1 细节</h3>')).status,0);
@@ -23,6 +23,14 @@ test('无脚本静态目录需真实存在于左侧 aside 的 nav 中',()=>{
  assert.notEqual(run(base(content).replace('<nav aria-label="目录">','<div aria-label="目录">').replace('</nav>','</div>')).status,0);
  assert.notEqual(run(base(content).replace('<li><a href="#chapter">章节</a></li>','')).status,0);
  assert.equal(run(base(content)).status,0);
+});
+
+test('文档侧栏必须具备可折叠的 doc-layout 宿主及移动目录',()=>{
+ const html=base('<h2>一、背景</h2>');
+ assert.equal(run(html).status,0);
+ assert.notEqual(run(html.replace('<div class="doc-layout">','<div class="custom-layout">')).status,0);
+ assert.notEqual(run(html.replace('class="doc-main"','class="genui-typography"')).status,0);
+ assert.notEqual(run(html.replace('class="mobile-toc"','class="custom-toc"')).status,0);
 });
 
 test('图标操作必须具备可访问名称、提示及 SVG 图形',()=>{

@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — 轻量 Typography、离线 HTML 导航合约与生成验收（2026-11-13）
+
+- 新增按需使用的 `assets/typography.css`、`references/typography.md`，统一正文阅读行宽、行高与标题节奏；代码、表格、SVG 保持独立宽内容区域，不增加第三方依赖。
+- 明确静态 HTML 文档必须使用 `doc-layout` + `doc-toc` + `doc-main` 的真实导航宿主，并提供移动端目录；补齐八类架构案例的移动端目录。
+- 升级离线 HTML 静态交付门禁与 Chrome Typography 专项，支持 `.table-wrap` / `.table-scroll`、导航两态和表格自身滚动；集成既有 CI 与本地脚本。
+- 保留原生 Codex 三类生成案例的失败原因、对照过程与验收边界。收口后所选三份报告静态检查 3/3、Chrome 18/18；此前仓库 Node.js 测试 144/144、Typography 示例浏览器 66/66、技术文档浏览器 45/45 均通过。
+- 由于本机 Codex 工具读取受到执行策略限制，模型输入通过 Runner 只读传递原始 Skill 文件；该结果不等于任意模型、任意输入或自动 Skill 发现的普遍合规认证。
+- 本条为仓库改动记录，不代表已经创建 Git Tag、GitHub Release 或发布安装包。
+
+
 ## Unreleased — vNext 能力路由与规范收口（2026-11-13，未测试）
 
 - 细化 Markdown、静态 HTML、复杂 HTML 与专业语义图的按需加载边界，继续限制核心 Skill 的常驻体积。

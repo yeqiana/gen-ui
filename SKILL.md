@@ -9,11 +9,11 @@ description: Use when AI responses become hard to understand, too long, or diffi
 
 **Lightweight entry, full capability, no regression.** Load assets and contracts only when needed; enhance Markdown progressively. See [Skill principles](docs/skill-principles.md).
 
-For standalone HTML, run `node scripts/validate-html-report.mjs <report.html>` before acceptance unless testing was declined.
+For HTML, run `node scripts/validate-html-report.mjs <report.html>` unless testing is declined; apply [typography](references/typography.md) only to generated HTML prose.
 
 ## Purpose
 
-Gen UI reduces reading friction. It is an **Information Design Skill**, not a replacement for coding, review, testing, or deployment.
+Gen UI reduces walls of text and reading friction. It is an **Information Design Skill**, not a coding or testing replacement.
 
 **Goal:** make conclusions, evidence, limits, and next actions clear without losing facts. Follow the user's language; never invent results or sources.
 
@@ -31,22 +31,22 @@ Route by **requested output**, not topic: "report" alone means Markdown. Load HT
 | Host explicitly supports `gen-ui-demo/v1` | Validated UI data and complete Markdown fallback | [Renderer contract](references/renderer-contract.md) |
 | Directory of multiple HTML documents | Thin offline navigation shell | [HTML report contract](references/html-report-contract.md) and `scripts/build-html-portal.mjs` |
 
-Markdown has no interactive controls. Without a trusted renderer, use Markdown. For HTML deliverables, follow its contract; never upgrade ordinary answers to HTML without a request.
+Without a trusted renderer, use Markdown. For HTML deliverables, follow its contract; never upgrade ordinary answers to HTML without a request.
 
 ## Reader-first transformation procedure
 
 1. **Identify the reader's decision:** what must be understood, compared, chosen, verified, or done?
 2. **Lead with the answer:** then give the minimum evidence, limits, risks, and next action.
-3. **Choose the simplest form:** prose for simple questions, tables for comparisons, steps for workflows, risk/acceptance matrices for evidence, diagrams only for hard-to-read relationships.
+3. **Choose the smallest effective structure:** prose, tables, steps, evidence matrices or diagrams only when needed.
 4. **Preserve factual boundaries:** distinguish facts, proposals, unrun tests and unknown state-transition gates; state conditions, not assumed rules.
-5. **Progressive detail:** remove filler, not facts, evidence, constraints or required steps; expand when asked or brevity obscures meaning.
+5. **Progressive detail:** remove filler and repetition, not facts, evidence, constraints, or required steps; expand when needed.
 6. **Validate:** one summary only, if requested, required by another Skill, or useful in long docs.
 
 For complex or ambiguous format choices, consult [Information design decision](references/information-design-decision.md) only when needed.
 
 ## Default formatting
 
-- Be concise without losing detail. Preserve code, commands, paths, numbers, errors and technical terms; use visuals only for real differences or relationships.
+- Keep code, commands, paths, numbers, errors, and technical terms exact. Use visuals only for meaningful differences.
 - Distinguish **planned / in progress / completed / tested / failed**; do not claim unrun tests succeeded.
 - Bold only key conclusions. Use consistent section numbering, meaningful links, and chart descriptions.
 - Keep source numbers consistent with tables; label estimates and fictional demos.
