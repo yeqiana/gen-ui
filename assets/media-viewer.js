@@ -152,38 +152,52 @@ function observeDiagrams(){if(diagramObserver||typeof MutationObserver==="undefi
    function destroyDiagram(panel){diagramInstances.get(panel)?.destroy();}
 function destroyAllDiagrams(){for(const [panel,instance] of [...activeDiagrams])instance.destroy();}
 function detachImageAttachment(attachment){
-   const {pic,frame,trigger,onClick,onDoubleClick,createdFrame}=attachment;
-   trigger.removeEventListener("click",onClick);pic.removeEventListener("dblclick",onDoubleClick);trigger.remove();
+   const {pic,frame,trigger,onClick,onDoubleClick,onImageClick,createdFrame}=attachment;
+   trigger.removeEventListener("click",onClick);pic.removeEventListener("dblclick",onDoubleClick);pic.removeEventListener("click",onImageClick);trigger.remove();
    delete pic.dataset.genUiImageReady;
    if(createdFrame&&frame.parentNode){if(pic.parentNode===frame)frame.parentNode.insertBefore(pic,frame);frame.remove();}
   }
   function observeImageAttachments(){
    if(imageObserver||typeof MutationObserver==="undefined"||!document.documentElement)return;
-   imageObserver=new MutationObserver(()=>{
+   imageObserver=new MutationObserver(records=>{
     if(!imageViewer)return;
     for(const attachment of [...imageViewer.attachments])if(!attachment.pic.isConnected){detachImageAttachment(attachment);imageViewer.attachments.splice(imageViewer.attachments.indexOf(attachment),1);}
-    if(imageViewer&&!imageViewer.attachments.length)destroyImages();
+    // Dynamically inserted content images use the same in-page modal.
+    for(const record of records)for(const node of record.addedNodes)if(node.nodeType===1&&!node.closest?.(".genui-image-overlay"))initImages(node);
    });
    imageObserver.observe(document.documentElement,{childList:true,subtree:true});
   }
   function initImages(root=document){
+   const selector='img[data-zoomable],main img:not([data-no-preview])';
+   const eligible=pic=>pic.matches(selector)&&!pic.closest('nav,button,.brand,.section-title,.page-footer,.eyebrow,[role="toolbar"]')&&!/\/icons\//.test(pic.getAttribute('src')||'');
    const pics=[];
-   if(root?.matches?.("img[data-zoomable]"))pics.push(root);
-   if(root?.querySelectorAll)pics.push(...root.querySelectorAll("img[data-zoomable]"));
-   if(!pics.length)return imageViewer;
+   if(root?.matches?.(selector)&&eligible(root))pics.push(root);
+   if(root?.querySelectorAll)pics.push(...[...root.querySelectorAll(selector)].filter(eligible));
+   const hasImageLinks=!!root?.querySelectorAll&&[...root.querySelectorAll("a[href]")].some(a=>!a.hasAttribute("download")&&/\.(?:png|jpe?g|gif|webp|svg|avif)(?:[?#].*)?$/i.test(a.getAttribute("href")||""));
+   if(!pics.length&&!hasImageLinks)return imageViewer;
    if(!imageViewer){
     if(!document.body)return null;
     const dialog=document.createElement("div");dialog.className="genui-image-overlay";dialog.hidden=true;
-    dialog.innerHTML='<div class="genui-image-toolbar" role="toolbar" aria-label="图片查看工具"><button data-image-minus type="button"></button><span data-image-percent>100%</span><button data-image-plus type="button"></button><button data-image-fit type="button"></button><button data-image-close type="button"></button></div><div class="genui-image-stage" tabindex="0"><img alt=""></div>';
+    dialog.innerHTML='<div class="genui-image-toolbar" role="toolbar" aria-label="图片查看工具"><button data-image-minus type="button"></button><span data-image-percent>100%</span><button data-image-plus type="button"></button><button data-image-fit type="button"></button><button data-image-fullscreen type="button"></button><button data-image-close type="button"></button></div><div class="genui-image-stage" tabindex="0"><img alt=""></div>';
     dialog.setAttribute("role","dialog");dialog.setAttribute("aria-modal","true");dialog.setAttribute("aria-label","图片查看");document.body.appendChild(dialog);
     const stage=dialog.querySelector(".genui-image-stage"),image=stage.querySelector("img"),out=dialog.querySelector("[data-image-percent]");
     const lang=document.documentElement.lang?.startsWith("en")?"en":"zh";
-    const labels=lang==="en"?{plus:"Zoom in",minus:"Zoom out",fit:"Fit image",close:"Close viewer"}:{plus:"放大图片",minus:"缩小图片",fit:"适应窗口",close:"关闭图片"};
+    const labels=lang==="en"?{plus:"Zoom in",minus:"Zoom out",fit:"Fit image",fullscreen:"Enter fullscreen",exit:"Exit fullscreen",close:"Close viewer"}:{plus:"放大图片",minus:"缩小图片",fit:"适应窗口",fullscreen:"进入全屏",exit:"退出全屏",close:"关闭图片"};
     for(const k of ["plus","minus","fit","close"])setIcon(dialog.querySelector("[data-image-"+k+"]"),k==="close"?"close":k,labels[k]);
+    const fullscreenButton=dialog.querySelector("[data-image-fullscreen]");
+    const syncFullscreen=()=>{const active=document.fullscreenElement===dialog||dialog.classList.contains("is-fullscreen");setIcon(fullscreenButton,active?"collapse":"expand",labels[active?"exit":"fullscreen"]);fullscreenButton.setAttribute("aria-pressed",String(active));};
+    const switchFullscreen=async()=>{if(document.fullscreenElement===dialog){try{await document.exitFullscreen();}catch{dialog.classList.remove("is-fullscreen");}}
+      else if(dialog.classList.contains("is-fullscreen"))dialog.classList.remove("is-fullscreen");
+      else if(!document.fullscreenElement&&typeof dialog.requestFullscreen==="function"){try{await dialog.requestFullscreen();}catch{dialog.classList.add("is-fullscreen");}}
+      else dialog.classList.add("is-fullscreen");
+      syncFullscreen();};
+    fullscreenButton.addEventListener("click",switchFullscreen);
+    document.addEventListener("fullscreenchange",syncFullscreen);
+    syncFullscreen();
     let scale=1,x=0,y=0,drag=null,originFocus=null;
     const paint=()=>{image.style.transform="translate("+x+"px,"+y+"px) scale("+scale+")";out.textContent=Math.round(scale*100)+"%";};
     const fit=()=>{scale=1;x=0;y=0;paint();};
-    function close(){if(dialog.hidden)return;dialog.hidden=true;dialog.classList.remove("is-open");document.body.classList.remove("genui-image-viewer-open");image.removeAttribute("src");originFocus?.focus();originFocus=null;drag=null;}
+    function close(){if(dialog.hidden)return;if(document.fullscreenElement===dialog)document.exitFullscreen?.().catch(()=>{});dialog.classList.remove("is-fullscreen");dialog.hidden=true;dialog.classList.remove("is-open");document.body.classList.remove("genui-image-viewer-open");image.removeAttribute("src");syncFullscreen();originFocus?.focus();originFocus=null;drag=null;}
     function open(src,alt,focus){if(!dialog.hidden)return;originFocus=focus;image.src=src;image.alt=alt;image.loading="eager";dialog.hidden=false;dialog.classList.add("is-open");document.body.classList.add("genui-image-viewer-open");fit();stage.focus();}
     const change=delta=>{scale=Math.max(.25,Math.min(4,Math.round((scale+delta)*100)/100));paint();};
     dialog.querySelector("[data-image-plus]").addEventListener("click",()=>change(.25));
@@ -196,20 +210,26 @@ function detachImageAttachment(attachment){
     ["pointerup","pointercancel","lostpointercapture"].forEach(k=>stage.addEventListener(k,()=>{drag=null;}));
     stage.addEventListener("wheel",e=>{e.preventDefault();change(e.deltaY<0?.2:-.2);},{passive:false});
     stage.addEventListener("dblclick",e=>{e.preventDefault();if(scale>1)fit();else change(.5);});
-    const keydown=e=>{if(dialog.hidden)return;if(e.key==="Escape"){e.preventDefault();close();}else if(e.key==="+"||e.key==="="){e.preventDefault();change(.25);}else if(e.key==="-"){e.preventDefault();change(-.25);}else if(e.key==="0"){e.preventDefault();fit();}else if(e.key==="Tab"){const buttons=[...dialog.querySelectorAll("button")],idx=buttons.indexOf(document.activeElement),next=e.shiftKey?(idx<=0?buttons.length-1:idx-1):(idx>=buttons.length-1?0:idx+1);e.preventDefault();buttons[next].focus();}};
+    const keydown=e=>{if(dialog.hidden)return;if(e.key==="Escape"){e.preventDefault();if(dialog.classList.contains("is-fullscreen")){dialog.classList.remove("is-fullscreen");syncFullscreen();}else if(document.fullscreenElement!==dialog)close();}else if(e.key==="+"||e.key==="="){e.preventDefault();change(.25);}else if(e.key==="-"){e.preventDefault();change(-.25);}else if(e.key==="0"){e.preventDefault();fit();}else if(e.key==="Tab"){const buttons=[...dialog.querySelectorAll("button")],idx=buttons.indexOf(document.activeElement),next=e.shiftKey?(idx<=0?buttons.length-1:idx-1):(idx>=buttons.length-1?0:idx+1);e.preventDefault();buttons[next].focus();}};
     document.addEventListener("keydown",keydown);
-    imageViewer={dialog,attachments:[],close,keydown,open};
+    // Image URLs remain in the same page: opening an image never navigates to its bare address.
+    const onImageLinkClick=e=>{const a=e.target.closest?.("a[href]");if(!a||a.hasAttribute("download")||a.closest("nav,.sidebar,.doc-toc")||!/(?:(?:png|jpe?g|gif|webp|svg|avif))(?:[?#].*)?$/i.test(a.getAttribute("href")||""))return;
+      e.preventDefault();e.stopPropagation();open(a.href,a.querySelector("img")?.alt||a.textContent.trim()||"图片",a);};
+    document.addEventListener("click",onImageLinkClick);
+    imageViewer={dialog,attachments:[],close,keydown,open,onImageLinkClick,syncFullscreen};
    }
    for(const pic of pics){
     if(pic.dataset.genUiImageReady==="true")continue;
     const trigger=document.createElement("button");trigger.className="genui-image-open";trigger.type="button";
     const existingFrame=pic.closest(".genui-image-frame"),createdFrame=!existingFrame;
     const frame=existingFrame||(()=>{const n=document.createElement("span");n.className="genui-image-frame";pic.parentNode.insertBefore(n,pic);n.appendChild(pic);return n;})();
-    setIcon(trigger,"expand",document.documentElement.lang?.startsWith("en")?"Open image fullscreen":"全屏查看图片");
+    setIcon(trigger,"expand",document.documentElement.lang?.startsWith("en")?"View image on this page":"在当前页面查看大图");
     trigger.setAttribute("aria-haspopup","dialog");trigger.dataset.imageOpen="true";frame.appendChild(trigger);
-    const onClick=()=>imageViewer?.open(pic.currentSrc||pic.src,pic.alt,trigger),onDoubleClick=()=>imageViewer?.open(pic.currentSrc||pic.src,pic.alt,trigger);
-    trigger.addEventListener("click",onClick);pic.addEventListener("dblclick",onDoubleClick);pic.dataset.genUiImageReady="true";
-    imageViewer.attachments.push({pic,frame,trigger,onClick,onDoubleClick,createdFrame});
+    const onClick=e=>{e?.preventDefault?.();e?.stopPropagation?.();imageViewer?.open(pic.currentSrc||pic.src,pic.alt,trigger);};
+    const onDoubleClick=e=>{e.preventDefault();e.stopPropagation();onClick(e);};
+    const onImageClick=e=>{onClick(e);};
+    trigger.addEventListener("click",onClick);pic.addEventListener("click",onImageClick);pic.addEventListener("dblclick",onDoubleClick);pic.dataset.genUiImageReady="true";
+    imageViewer.attachments.push({pic,frame,trigger,onClick,onDoubleClick,onImageClick,createdFrame});
    }
    observeImageAttachments();return imageViewer;
   }
@@ -217,7 +237,7 @@ function detachImageAttachment(attachment){
    if(!imageViewer)return;
    const viewer=imageViewer;viewer.close();viewer.attachments.slice().forEach(detachImageAttachment);
    viewer.attachments.length=0;viewer.dialog.remove();document.removeEventListener("keydown",viewer.keydown);
-   document.body?.classList.remove("genui-image-viewer-open");imageViewer=null;
+   document.body?.classList.remove("genui-image-viewer-open");document.removeEventListener("click",viewer.onImageLinkClick);imageViewer=null;
    if(imageObserver){imageObserver.disconnect();imageObserver=null;}
   }
 function destroyAll(){destroyAllDiagrams();destroyImages();}

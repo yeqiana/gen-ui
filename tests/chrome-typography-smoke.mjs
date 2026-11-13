@@ -59,10 +59,11 @@ function measure(kind){
   const metrics=targets.map((el,index)=>{
     const box=el.getBoundingClientRect(),style=getComputedStyle(el);
     const cap=document.createElement("span");
-    cap.style.cssText="position:absolute;display:block;visibility:hidden;width:72ch;padding:0;border:0;max-width:none;box-sizing:content-box";
+    cap.style.cssText="position:absolute;display:block;visibility:hidden;padding:0;border:0;max-width:none;box-sizing:content-box";
     cap.style.font=style.font;
+    cap.style.width=getComputedStyle(el.closest("main")||el).getPropertyValue("--genui-prose-width").trim()||"72ch";
     document.body.appendChild(cap);
-    const max72=cap.getBoundingClientRect().width;
+    const maxReading=cap.getBoundingClientRect().width;
     cap.remove();
     const range=document.createRange();
     range.selectNodeContents(el);
@@ -80,13 +81,14 @@ function measure(kind){
       id:el.tagName.toLowerCase()+"."+el.className+"-"+index,
       chars:rawText.length,
       width:Math.round(box.width),
-      max72:Math.round(max72),
+      maxReading:Math.round(maxReading),
       maxWidth:style.maxWidth,
       lines:lines.length,
       maxLine:Math.round(Math.max(0,...lineWidths)),
       badLines:badLines.length,
       clipped:el.scrollWidth>el.clientWidth+2,
       leading:style.lineHeight,
+      textWrap:style.textWrap,
       font:style.fontSize,
       bodyParagraph:kind==="report"?el.matches(".overview-copy p,.case-block>p,.before-after p,.showcase-lead"):kind==="generated"?el.matches("p"):el.matches(".doc-section>p")
     };
@@ -102,8 +104,10 @@ function measure(kind){
   const diagram=main?.querySelector(".diagram");
   return {
     viewport:innerWidth,
+    language:document.documentElement.lang,
     collapsed:layout?.dataset.sidebarCollapsed==="true",
     mainWidth:Math.round(main.getBoundingClientRect().width),
+    mainCenter:Math.round(main.getBoundingClientRect().left+main.getBoundingClientRect().width/2),
     navWidth:Math.round(nav.getBoundingClientRect().width),
     navVisible:getComputedStyle(nav).display!=="none",
     docOverflow:document.documentElement.scrollWidth>innerWidth+2,
@@ -201,9 +205,12 @@ async function main(){
           check(reference+" has narrative samples",data,data.prose.length>=(page.kind==="generated"?1:3));
           if(page.kind==="generated"){
             check(reference+" typography layer is loaded",data.typography,
-              data.typography.enabled&&data.typography.widthToken==="72ch"
+              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"46ic":"72ch")
               &&parseFloat(data.typography.leadingToken)>=1.6
               &&parseFloat(data.typography.leadingToken)<=1.85);
+            if(/^zh(?:-|$)/i.test(data.language))
+              check(reference+" Chinese paragraphs use natural balanced wrapping",data,
+                data.prose.filter(x=>x.bodyParagraph).every(x=>x.textWrap==="balance"));
             if(data.wide.tableWidth!==null)check(reference+" table scroll stays inside its own container",data.wide,
               data.wide.tableOverflowX==="auto"||data.wide.tableOverflowX==="scroll");
             if(data.typography.headingMargin!==null)
@@ -211,8 +218,8 @@ async function main(){
                 Math.abs(data.typography.headingMargin/data.typography.headingFont-1.25)<.08);
           }
           check(reference+" page fits viewport",data,!data.docOverflow);
-          check(reference+" all narrative blocks capped to 72ch (or viewport)",data,
-            data.prose.every(x=>x.maxWidth!=="none"&&x.width<=x.max72+3));
+          check(reference+" all narrative blocks respect language-specific reading width",data,
+            data.prose.every(x=>x.maxWidth!=="none"&&x.width<=x.maxReading+3));
           check(reference+" visible text remains within its own box",data,
             data.prose.every(x=>x.badLines===0&&!x.clipped&&x.maxLine<=x.width+3));
           check(reference+" long text wraps",data,
@@ -242,13 +249,19 @@ async function main(){
           check(page.id+"/"+width+" fold changes navigation state",views,
             !views[0].data.collapsed&&views[1].data.collapsed
             &&views[1].data.navWidth<views[0].data.navWidth);
-          if(page.kind!=="report"||width>800){
-            check(page.id+"/"+width+" collapse expands reading canvas",views,
-              views[1].data.mainWidth>=views[0].data.mainWidth-2);
-          }else{
-            // At <=800px the report switches from stacked nav to a 56px icon rail.
+          if(page.kind==="doc"||(page.kind==="report"&&width>800)){
+            // A collapsed rail may enlarge the available column while the reading
+            // canvas itself is capped and centered for comfortable line lengths.
+            check(page.id+"/"+width+" collapsed content remains usable and centered",views,
+              views[1].data.mainWidth>=Math.min(views[0].data.mainWidth,960)-2
+              &&Math.abs(views[1].data.mainCenter-width/2)<=Math.max(80,width*.08));
+          }else if(page.kind==="report"){
+            // <=800px uses a stacked nav layout before switching to the icon rail.
             check(page.id+"/"+width+" report icon rail leaves usable reading canvas",views,
               views[1].data.mainWidth>=width-95);
+          }else{
+            check(page.id+"/"+width+" generated canvas expands after folding",views,
+              views[1].data.mainWidth>=views[0].data.mainWidth-2);
           }
         }
       }

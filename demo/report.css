@@ -276,3 +276,8 @@ blockquote.callout{margin-inline:0}
 .sidebar>.brand{cursor:pointer;user-select:none}
 .app[data-navigation="top"] .genui-nav-resize,.app[data-sidebar-collapsed="true"] .genui-nav-resize{display:none!important}
 .app[data-sidebar-collapsed="true"] .sidebar>.brand{cursor:pointer}
+
+/* Keep one sidebar scroller; center the report when its rail is collapsed. */
+.app:not([data-navigation="top"])[data-sidebar-collapsed="true"] .sidebar{overflow-y:hidden}
+.app:not([data-navigation="top"])[data-sidebar-collapsed="true"] .sidebar>nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
+.app:not([data-navigation="top"])[data-sidebar-collapsed="true"] main{width:100%;max-width:1180px;margin-inline:auto}

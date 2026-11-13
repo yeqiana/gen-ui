@@ -51,3 +51,6 @@
 .doc-main .doc-section>p+p{margin-block-start:var(--genui-prose-gap)}
 .doc-main .doc-section> :is(h3,h4){margin-block-start:var(--genui-heading-gap)}
 @media(max-width:700px){:root{--genui-prose-width:100%}}
+
+/* Restore centered reading composition after collapsing the document rail. */
+@media(min-width:701px){.doc-layout[data-sidebar-collapsed="true"]>.doc-main{width:100%;max-width:1100px;justify-self:center;margin-inline:auto}}

@@ -58,7 +58,22 @@
   const brand=sidebar.querySelector(".brand,.toc-brand");
   let toggleButton=sidebar.querySelector("#toggle-sidebar,.genui-sidebar-toggle");
   const syncToggle=collapsed=>{
-   if(brand)brand.setAttribute("aria-expanded",String(!collapsed));
+   if(brand){
+    brand.setAttribute("aria-expanded",String(!collapsed));
+    brand.tabIndex=collapsed?0:-1;
+    if(collapsed){
+     brand.setAttribute("role","button");
+     brand.setAttribute("aria-label","展开导航");
+     brand.title="展开导航";
+     const controls=toggleButton?.getAttribute("aria-controls");
+     if(controls)brand.setAttribute("aria-controls",controls);
+    }else{
+     brand.removeAttribute("role");
+     brand.removeAttribute("aria-label");
+     brand.removeAttribute("aria-controls");
+     brand.removeAttribute("title");
+    }
+   }
    if(toggleButton&&toggleButton.id!=="toggle-sidebar"){
     const label=collapsed?"展开导航":"折叠导航";
     toggleButton.setAttribute("aria-expanded",String(!collapsed));
@@ -78,15 +93,32 @@
   syncToggle(host.dataset.sidebarCollapsed==="true");
   const toggle=()=>toggleButton?.click();
   if(brand){
-   brand.tabIndex=0;
-   brand.title="双击折叠或展开左侧导航（Enter 键也可操作）";
-   brand.setAttribute("role","button");
-   brand.setAttribute("aria-label","双击折叠或展开左侧导航");
-   brand.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+   // A single M/expand icon occupies the folded brand slot; no separate button.
+   const ns="http://www.w3.org/2000/svg";
+   const icon=document.createElementNS(ns,"svg");
+   icon.classList.add("genui-brand-expand-icon");
+   icon.setAttribute("viewBox","0 0 20 20");
+   icon.setAttribute("aria-hidden","true");
+   const path=document.createElementNS(ns,"path");
+   path.setAttribute("d","M7 4 13 10 7 16");
+   path.setAttribute("fill","none");
+   path.setAttribute("stroke","currentColor");
+   path.setAttribute("stroke-width","1.8");
+   path.setAttribute("stroke-linecap","round");
+   path.setAttribute("stroke-linejoin","round");
+   icon.appendChild(path);brand.appendChild(icon);
+   brand.addEventListener("click",e=>{
+    if(host.dataset.sidebarCollapsed!=="true"||e.target.closest?.("button,a"))return;
+    e.preventDefault();e.stopPropagation();toggle();
+   });
+   brand.addEventListener("keydown",e=>{
+    if(host.dataset.sidebarCollapsed!=="true"||e.target!==brand)return;
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();toggle();}
+   });
   }
   sidebar.addEventListener("dblclick",e=>{
-   if(e.target.closest(".genui-nav-resize"))return;
-   if(e.target.closest("a,button,input,select,textarea")&&!e.target.closest(".brand,.toc-brand"))return;
+   if(e.target.closest(".genui-nav-resize,.brand,.toc-brand"))return;
+   if(e.target.closest("a,button,input,select,textarea"))return;
    e.preventDefault();toggle();
   });
   const handle=document.createElement("div");
