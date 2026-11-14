@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320" role="img" aria-labelledby="title desc">
+<title id="title">StoryOS 参考任务编排与可靠发布链路</title>
+<desc id="desc">抽象设计模型，Run 指向 Node，Node 指向 Task，Task 指向 Attempt；持久化状态和 Outbox 共同连接消息投递与 Worker 执行。</desc>
+<rect width="1000" height="320" fill="#ffffff"/>
+<text x="32" y="38" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#1a1c1f">StoryOS · 异步编排参考链路</text>
+<text x="32" y="65" font-family="Arial,sans-serif" font-size="12" fill="#667085">概念示意 / 非实际运行证据</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#3a83f7"/></marker></defs>
+<g font-family="Arial,sans-serif" font-size="19" text-anchor="middle" fill="#1a1c1f">
+<rect x="36" y="98" width="176" height="76" rx="10" fill="#eff6ff" stroke="#3a83f7"/><text x="124" y="145">Run</text>
+<rect x="280" y="98" width="176" height="76" rx="10" fill="#eff6ff" stroke="#3a83f7"/><text x="368" y="145">Node</text>
+<rect x="524" y="98" width="176" height="76" rx="10" fill="#eff6ff" stroke="#3a83f7"/><text x="612" y="145">Task</text>
+<rect x="768" y="98" width="196" height="76" rx="10" fill="#eff6ff" stroke="#3a83f7"/><text x="866" y="145">Attempt</text>
+<path d="M212 136H280 M456 136H524 M700 136H768" stroke="#3a83f7" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<rect x="36" y="221" width="274" height="67" rx="9" fill="#f5f7fa" stroke="#aab4c2"/><text x="173" y="260" font-size="16">持久化状态 / 事务</text>
+<rect x="365" y="221" width="247" height="67" rx="9" fill="#fff8e8" stroke="#e6a23c"/><text x="488" y="260" font-size="17">Outbox</text>
+<rect x="669" y="221" width="295" height="67" rx="9" fill="#f1f9eb" stroke="#67c23a"/><text x="816" y="260" font-size="16">消息发布 / Worker</text>
+<path d="M310 254H365 M612 254H669" stroke="#3a83f7" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+</g></svg>

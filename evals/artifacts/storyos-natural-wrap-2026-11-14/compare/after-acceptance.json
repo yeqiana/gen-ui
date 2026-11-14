@@ -1,0 +1,839 @@
+{
+  "schema": "gen-ui-html-gate/v1",
+  "source": "evals/artifacts/storyos-real-html-acceptance-2026-11-14/offline-package/report.html",
+  "runTime": "2026-11-14T14:38:20.773Z",
+  "checks": [
+    {
+      "stage": "static",
+      "name": "offline static report and resources",
+      "pass": true,
+      "details": {
+        "stdout": "PASS D:\\workspace\\YeQianWorkSpace\\yeqian\\gen-ui\\evals\\artifacts\\storyos-real-html-acceptance-2026-11-14\\offline-package\\report.html",
+        "stderr": ""
+      }
+    },
+    {
+      "stage": "static",
+      "name": "Chrome or Edge present",
+      "pass": true,
+      "details": null
+    },
+    {
+      "stage": "viewport-375",
+      "name": "headings, valid real navigation anchors",
+      "pass": true,
+      "details": {
+        "width": 375,
+        "overflow": false,
+        "headings": 1,
+        "tocLinks": 8,
+        "anchorsValid": true,
+        "asideVisible": false,
+        "mobileVisible": true,
+        "sidebarOverflow": "hidden",
+        "navOverflow": "auto",
+        "listOverflow": "visible",
+        "collapsed": false,
+        "mainWidth": 343,
+        "center": 188,
+        "imageCount": 1,
+        "imagesLoaded": true,
+        "hasBrand": true,
+        "hasToggle": true
+      }
+    },
+    {
+      "stage": "viewport-375",
+      "name": "no page horizontal overflow",
+      "pass": true,
+      "details": {
+        "width": 375,
+        "state": {
+          "width": 375,
+          "overflow": false,
+          "headings": 1,
+          "tocLinks": 8,
+          "anchorsValid": true,
+          "asideVisible": false,
+          "mobileVisible": true,
+          "sidebarOverflow": "hidden",
+          "navOverflow": "auto",
+          "listOverflow": "visible",
+          "collapsed": false,
+          "mainWidth": 343,
+          "center": 188,
+          "imageCount": 1,
+          "imagesLoaded": true,
+          "hasBrand": true,
+          "hasToggle": true
+        }
+      }
+    },
+    {
+      "stage": "viewport-375",
+      "name": "content images load offline",
+      "pass": true,
+      "details": {
+        "count": 1,
+        "loaded": true
+      }
+    },
+    {
+      "stage": "viewport-375",
+      "name": "Chinese prose wraps near reading column edge without balanced premature lines",
+      "pass": true,
+      "details": {
+        "skipped": false,
+        "count": 20,
+        "failures": [],
+        "pass": true,
+        "sample": [
+          {
+            "chars": 130,
+            "width": 283,
+            "parent": 283,
+            "cap": 868,
+            "firstLine": 275,
+            "lineCount": 6,
+            "textWrap": "wrap",
+            "ok": true
+          },
+          {
+            "chars": 108,
+            "width": 315,
+            "parent": 315,
+            "cap": 868,
+            "firstLine": 308,
+            "lineCount": 5,
+            "textWrap": "wrap",
+            "ok": true
+          },
+          {
+            "chars": 76,
+            "width": 315,
+            "parent": 315,
+            "cap": 868,
+            "firstLine": 308,
+            "lineCount": 4,
+            "textWrap": "wrap",
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "stage": "viewport-375",
+      "name": "mobile contents visible",
+      "pass": true,
+      "details": {
+        "width": 375,
+        "overflow": false,
+        "headings": 1,
+        "tocLinks": 8,
+        "anchorsValid": true,
+        "asideVisible": false,
+        "mobileVisible": true,
+        "sidebarOverflow": "hidden",
+        "navOverflow": "auto",
+        "listOverflow": "visible",
+        "collapsed": false,
+        "mainWidth": 343,
+        "center": 188,
+        "imageCount": 1,
+        "imagesLoaded": true,
+        "hasBrand": true,
+        "hasToggle": true
+      }
+    },
+    {
+      "stage": "viewport-375",
+      "name": "mobile TOC toggles",
+      "pass": true,
+      "details": {
+        "present": true,
+        "opened": true,
+        "closed": true
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "headings, valid real navigation anchors",
+      "pass": true,
+      "details": {
+        "width": 768,
+        "overflow": false,
+        "headings": 1,
+        "tocLinks": 8,
+        "anchorsValid": true,
+        "asideVisible": true,
+        "mobileVisible": false,
+        "sidebarOverflow": "hidden",
+        "navOverflow": "auto",
+        "listOverflow": "visible",
+        "collapsed": false,
+        "mainWidth": 429,
+        "center": 515,
+        "imageCount": 1,
+        "imagesLoaded": true,
+        "hasBrand": true,
+        "hasToggle": true
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "no page horizontal overflow",
+      "pass": true,
+      "details": {
+        "width": 768,
+        "state": {
+          "width": 768,
+          "overflow": false,
+          "headings": 1,
+          "tocLinks": 8,
+          "anchorsValid": true,
+          "asideVisible": true,
+          "mobileVisible": false,
+          "sidebarOverflow": "hidden",
+          "navOverflow": "auto",
+          "listOverflow": "visible",
+          "collapsed": false,
+          "mainWidth": 429,
+          "center": 515,
+          "imageCount": 1,
+          "imagesLoaded": true,
+          "hasBrand": true,
+          "hasToggle": true
+        }
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "content images load offline",
+      "pass": true,
+      "details": {
+        "count": 1,
+        "loaded": true
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "Chinese prose wraps near reading column edge without balanced premature lines",
+      "pass": true,
+      "details": {
+        "skipped": false,
+        "count": 20,
+        "failures": [],
+        "pass": true,
+        "sample": [
+          {
+            "chars": 130,
+            "width": 336,
+            "parent": 336,
+            "cap": 868,
+            "firstLine": 331,
+            "lineCount": 5,
+            "textWrap": "wrap",
+            "ok": true
+          },
+          {
+            "chars": 108,
+            "width": 368,
+            "parent": 368,
+            "cap": 868,
+            "firstLine": 364,
+            "lineCount": 5,
+            "textWrap": "wrap",
+            "ok": true
+          },
+          {
+            "chars": 76,
+            "width": 368,
+            "parent": 368,
+            "cap": 868,
+            "firstLine": 364,
+            "lineCount": 3,
+            "textWrap": "wrap",
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "left rail has single scrolling nav",
+      "pass": true,
+      "details": {
+        "width": 768,
+        "overflow": false,
+        "headings": 1,
+        "tocLinks": 8,
+        "anchorsValid": true,
+        "asideVisible": true,
+        "mobileVisible": false,
+        "sidebarOverflow": "hidden",
+        "navOverflow": "auto",
+        "listOverflow": "visible",
+        "collapsed": false,
+        "mainWidth": 429,
+        "center": 515,
+        "imageCount": 1,
+        "imagesLoaded": true,
+        "hasBrand": true,
+        "hasToggle": true
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "long TOC scroll stays inside nav",
+      "pass": true,
+      "details": {
+        "scrolled": true,
+        "navTop": 170,
+        "sidebarTop": 0,
+        "treeTop": 0
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "folded rail displays compact M without extra button",
+      "pass": true,
+      "details": {
+        "collapsed": true,
+        "toggleHidden": true,
+        "brandLabel": "展开导航",
+        "brandTabIndex": 0,
+        "markCount": 1,
+        "markHidden": true,
+        "center": 414,
+        "mainWidth": 631,
+        "reading": {
+          "center": 414,
+          "width": 570,
+          "left": 129
+        },
+        "railWidth": 58,
+        "railCenter": 43,
+        "brandWidth": 36,
+        "brandCenter": 42.5,
+        "destinationCenter": 42.5,
+        "destinationSize": 18,
+        "x": 42.5,
+        "y": 42
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "folded rail compact; M and destination icons share one centerline",
+      "pass": true,
+      "details": {
+        "collapsed": true,
+        "toggleHidden": true,
+        "brandLabel": "展开导航",
+        "brandTabIndex": 0,
+        "markCount": 1,
+        "markHidden": true,
+        "center": 414,
+        "mainWidth": 631,
+        "reading": {
+          "center": 414,
+          "width": 570,
+          "left": 129
+        },
+        "railWidth": 58,
+        "railCenter": 43,
+        "brandWidth": 36,
+        "brandCenter": 42.5,
+        "destinationCenter": 42.5,
+        "destinationSize": 18,
+        "x": 42.5,
+        "y": 42
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "folded main stays centered",
+      "pass": true,
+      "details": {
+        "collapsed": true,
+        "toggleHidden": true,
+        "brandLabel": "展开导航",
+        "brandTabIndex": 0,
+        "markCount": 1,
+        "markHidden": true,
+        "center": 414,
+        "mainWidth": 631,
+        "reading": {
+          "center": 414,
+          "width": 570,
+          "left": 129
+        },
+        "railWidth": 58,
+        "railCenter": 43,
+        "brandWidth": 36,
+        "brandCenter": 42.5,
+        "destinationCenter": 42.5,
+        "destinationSize": 18,
+        "x": 42.5,
+        "y": 42
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "actual narrative block stays centered after folding",
+      "pass": true,
+      "details": {
+        "reading": {
+          "center": 414,
+          "width": 570,
+          "left": 129
+        },
+        "viewport": 768,
+        "mainCenter": 414
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "M changes to aligned expand icon on hover",
+      "pass": true,
+      "details": {
+        "arrowVisible": true,
+        "logoOpacity": "0",
+        "arrowCenter": 42.5,
+        "brandCenter": 42.5,
+        "arrowSize": 18,
+        "hoverBg": "rgba(58, 131, 247, 0.04)",
+        "hoverAlpha": 0.04
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "hover surface uses very pale blue",
+      "pass": true,
+      "details": {
+        "arrowVisible": true,
+        "logoOpacity": "0",
+        "arrowCenter": 42.5,
+        "brandCenter": 42.5,
+        "arrowSize": 18,
+        "hoverBg": "rgba(58, 131, 247, 0.04)",
+        "hoverAlpha": 0.04
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "M single click expands rail",
+      "pass": true,
+      "details": {
+        "expanded": true,
+        "buttonVisible": true
+      }
+    },
+    {
+      "stage": "viewport-768",
+      "name": "M keyboard Enter expands rail",
+      "pass": true,
+      "details": {
+        "expanded": true,
+        "buttonVisible": true
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "headings, valid real navigation anchors",
+      "pass": true,
+      "details": {
+        "width": 1440,
+        "overflow": false,
+        "headings": 1,
+        "tocLinks": 8,
+        "anchorsValid": true,
+        "asideVisible": true,
+        "mobileVisible": false,
+        "sidebarOverflow": "hidden",
+        "navOverflow": "auto",
+        "listOverflow": "visible",
+        "collapsed": false,
+        "mainWidth": 1065,
+        "center": 851,
+        "imageCount": 1,
+        "imagesLoaded": true,
+        "hasBrand": true,
+        "hasToggle": true
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "no page horizontal overflow",
+      "pass": true,
+      "details": {
+        "width": 1440,
+        "state": {
+          "width": 1440,
+          "overflow": false,
+          "headings": 1,
+          "tocLinks": 8,
+          "anchorsValid": true,
+          "asideVisible": true,
+          "mobileVisible": false,
+          "sidebarOverflow": "hidden",
+          "navOverflow": "auto",
+          "listOverflow": "visible",
+          "collapsed": false,
+          "mainWidth": 1065,
+          "center": 851,
+          "imageCount": 1,
+          "imagesLoaded": true,
+          "hasBrand": true,
+          "hasToggle": true
+        }
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "content images load offline",
+      "pass": true,
+      "details": {
+        "count": 1,
+        "loaded": true
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "Chinese prose wraps near reading column edge without balanced premature lines",
+      "pass": true,
+      "details": {
+        "skipped": false,
+        "count": 20,
+        "failures": [],
+        "pass": true,
+        "sample": [
+          {
+            "chars": 130,
+            "width": 723,
+            "parent": 723,
+            "cap": 868,
+            "firstLine": 713,
+            "lineCount": 3,
+            "textWrap": "wrap",
+            "ok": true
+          },
+          {
+            "chars": 108,
+            "width": 755,
+            "parent": 755,
+            "cap": 868,
+            "firstLine": 742,
+            "lineCount": 3,
+            "textWrap": "wrap",
+            "ok": true
+          },
+          {
+            "chars": 76,
+            "width": 755,
+            "parent": 755,
+            "cap": 868,
+            "firstLine": 742,
+            "lineCount": 2,
+            "textWrap": "wrap",
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "left rail has single scrolling nav",
+      "pass": true,
+      "details": {
+        "width": 1440,
+        "overflow": false,
+        "headings": 1,
+        "tocLinks": 8,
+        "anchorsValid": true,
+        "asideVisible": true,
+        "mobileVisible": false,
+        "sidebarOverflow": "hidden",
+        "navOverflow": "auto",
+        "listOverflow": "visible",
+        "collapsed": false,
+        "mainWidth": 1065,
+        "center": 851,
+        "imageCount": 1,
+        "imagesLoaded": true,
+        "hasBrand": true,
+        "hasToggle": true
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "long TOC scroll stays inside nav",
+      "pass": true,
+      "details": {
+        "scrolled": true,
+        "navTop": 170,
+        "sidebarTop": 0,
+        "treeTop": 0
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "folded rail displays compact M without extra button",
+      "pass": true,
+      "details": {
+        "collapsed": true,
+        "toggleHidden": true,
+        "brandLabel": "展开导航",
+        "brandTabIndex": 0,
+        "markCount": 1,
+        "markHidden": true,
+        "center": 741,
+        "mainWidth": 1100,
+        "reading": {
+          "center": 741,
+          "width": 755,
+          "left": 363
+        },
+        "railWidth": 58,
+        "railCenter": 43,
+        "brandWidth": 36,
+        "brandCenter": 42.5,
+        "destinationCenter": 42.5,
+        "destinationSize": 18,
+        "x": 42.5,
+        "y": 42
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "folded rail compact; M and destination icons share one centerline",
+      "pass": true,
+      "details": {
+        "collapsed": true,
+        "toggleHidden": true,
+        "brandLabel": "展开导航",
+        "brandTabIndex": 0,
+        "markCount": 1,
+        "markHidden": true,
+        "center": 741,
+        "mainWidth": 1100,
+        "reading": {
+          "center": 741,
+          "width": 755,
+          "left": 363
+        },
+        "railWidth": 58,
+        "railCenter": 43,
+        "brandWidth": 36,
+        "brandCenter": 42.5,
+        "destinationCenter": 42.5,
+        "destinationSize": 18,
+        "x": 42.5,
+        "y": 42
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "folded main stays centered",
+      "pass": true,
+      "details": {
+        "collapsed": true,
+        "toggleHidden": true,
+        "brandLabel": "展开导航",
+        "brandTabIndex": 0,
+        "markCount": 1,
+        "markHidden": true,
+        "center": 741,
+        "mainWidth": 1100,
+        "reading": {
+          "center": 741,
+          "width": 755,
+          "left": 363
+        },
+        "railWidth": 58,
+        "railCenter": 43,
+        "brandWidth": 36,
+        "brandCenter": 42.5,
+        "destinationCenter": 42.5,
+        "destinationSize": 18,
+        "x": 42.5,
+        "y": 42
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "actual narrative block stays centered after folding",
+      "pass": true,
+      "details": {
+        "reading": {
+          "center": 741,
+          "width": 755,
+          "left": 363
+        },
+        "viewport": 1440,
+        "mainCenter": 741
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "M changes to aligned expand icon on hover",
+      "pass": true,
+      "details": {
+        "arrowVisible": true,
+        "logoOpacity": "0",
+        "arrowCenter": 42.5,
+        "brandCenter": 42.5,
+        "arrowSize": 18,
+        "hoverBg": "rgba(58, 131, 247, 0.04)",
+        "hoverAlpha": 0.04
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "hover surface uses very pale blue",
+      "pass": true,
+      "details": {
+        "arrowVisible": true,
+        "logoOpacity": "0",
+        "arrowCenter": 42.5,
+        "brandCenter": 42.5,
+        "arrowSize": 18,
+        "hoverBg": "rgba(58, 131, 247, 0.04)",
+        "hoverAlpha": 0.04
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "M single click expands rail",
+      "pass": true,
+      "details": {
+        "expanded": true,
+        "buttonVisible": true
+      }
+    },
+    {
+      "stage": "viewport-1440",
+      "name": "M keyboard Enter expands rail",
+      "pass": true,
+      "details": {
+        "expanded": true,
+        "buttonVisible": true
+      }
+    },
+    {
+      "stage": "image-1440",
+      "name": "image available for UI audit",
+      "pass": true,
+      "details": {
+        "imageCount": 1,
+        "required": true
+      }
+    },
+    {
+      "stage": "image-1440",
+      "name": "content image opens same-page modal with fullscreen",
+      "pass": true,
+      "details": {
+        "noImage": false,
+        "opened": true,
+        "percent": "100%",
+        "fullscreen": true,
+        "url": "file:///D:/workspace/YeQianWorkSpace/yeqian/gen-ui/evals/artifacts/storyos-real-html-acceptance-2026-11-14/offline-package/report.html",
+        "src": "file:///D:/workspace/YeQianWorkSpace/yeqian/gen-ui/evals/artifacts/storyos-real-html-acceptance-2026-11-14/offline-package/storyos-flow.svg"
+      }
+    },
+    {
+      "stage": "image-1440",
+      "name": "mouse wheel zoom works and does not navigate",
+      "pass": true,
+      "details": {
+        "before": "100%",
+        "after": "120%",
+        "url": "file:///D:/workspace/YeQianWorkSpace/yeqian/gen-ui/evals/artifacts/storyos-real-html-acceptance-2026-11-14/offline-package/report.html"
+      }
+    },
+    {
+      "stage": "image-1440",
+      "name": "image fullscreen is distinct from modal",
+      "pass": true,
+      "details": {
+        "active": true,
+        "pressed": "true"
+      }
+    },
+    {
+      "stage": "image-1440",
+      "name": "modal closes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "stage": "image-1440",
+      "name": "image-file hyperlink cannot navigate to bare image URL",
+      "pass": true,
+      "details": {
+        "link": {
+          "skipped": false,
+          "overlayOpen": true,
+          "url": "file:///D:/workspace/YeQianWorkSpace/yeqian/gen-ui/evals/artifacts/storyos-real-html-acceptance-2026-11-14/offline-package/report.html"
+        },
+        "urlAfter": "file:///D:/workspace/YeQianWorkSpace/yeqian/gen-ui/evals/artifacts/storyos-real-html-acceptance-2026-11-14/offline-package/report.html"
+      }
+    },
+    {
+      "stage": "image-1440",
+      "name": "every content image opens overlay without navigating",
+      "pass": true,
+      "details": {
+        "count": 1,
+        "allPass": true,
+        "details": [
+          {
+            "name": "./storyos-flow.svg",
+            "opened": true,
+            "samePage": true
+          }
+        ]
+      }
+    },
+    {
+      "stage": "image-1440",
+      "name": "every display image hyperlink opens overlay without navigating",
+      "pass": true,
+      "details": {
+        "count": 1,
+        "allPass": true,
+        "details": [
+          {
+            "href": "./storyos-flow.svg",
+            "opened": true,
+            "samePage": true
+          }
+        ]
+      }
+    },
+    {
+      "stage": "runtime",
+      "name": "no runtime JS exceptions",
+      "pass": true,
+      "details": []
+    },
+    {
+      "stage": "runtime",
+      "name": "offline: no HTTP(S) requests",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "screenshots": [
+    "375-expanded.png",
+    "768-expanded.png",
+    "1440-expanded.png",
+    "1440-folded.png",
+    "1440-M-hover.png",
+    "1440-image-overlay.png",
+    "1440-image-wheel-zoom.png"
+  ],
+  "browserErrors": [],
+  "externalRequests": [],
+  "pass": true
+}

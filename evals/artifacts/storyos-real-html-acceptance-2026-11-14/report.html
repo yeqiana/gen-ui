@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="StoryOS 异步任务编排架构的设计分析，覆盖核心实体、Outbox、Fencing Token、恢复、失败分类与风险。">
+  <title>StoryOS 异步任务编排架构分析</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/icons/gen-ui-mark.svg">
+  <link rel="stylesheet" href="../../../demo/documents/assets/document.css">
+  <link rel="stylesheet" href="../../../assets/heading-nav.css">
+  <link rel="stylesheet" href="../../../assets/typography.css">
+  <link rel="stylesheet" href="../../../assets/media-viewer.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --page-bg: #fff;
+      --page-fg: #1A1C1F;
+      --accent: #3A83F7;
+      --line: #e5e9f0;
+      --muted: #596273;
+      --soft-blue: #EFF6FF;
+      --soft-amber: #FFF8E8;
+      --soft-red: #FFF1F0;
+    }
+    html { background: var(--page-bg); color: var(--page-fg); }
+    body {
+      margin: 0;
+      background: var(--page-bg);
+      color: var(--page-fg);
+      font: 14px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: var(--accent); }
+    a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .doc-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 2rem; }
+    .doc-toc { min-width: 0; }
+    .toc-brand { font-weight: 700; }
+    .toc-list { padding-inline-start: 1.25rem; }
+    .toc-list li { margin-block: .45rem; }
+    .doc-main { min-width: 0; padding: 1.5rem clamp(1rem, 4vw, 3rem) 3rem; }
+    .doc-main > header, .doc-main > section, .doc-main > footer { max-width: 92ch; }
+    .doc-main h1 { font-size: clamp(1.7rem, 3vw, 2.35rem); line-height: 1.2; }
+    .meta { color: var(--muted); }
+    .callout { margin-block: 1.25rem; padding: .85rem 1rem; border-left: 4px solid; }
+    .callout--important { background: var(--soft-blue); border-color: var(--accent); }
+    .callout--confirm { background: var(--soft-amber); border-color: #E6A23C; }
+    .callout--attention { background: var(--soft-red); border-color: #F56C6C; }
+    .callout p { margin: .25rem 0; }
+    .table-scroll { max-width: 100%; overflow-x: auto; margin-block: 1rem; }
+    table { border-collapse: collapse; min-width: 620px; width: 100%; }
+    th, td { border-bottom: 1px solid var(--line); padding: .65rem .75rem; text-align: left; vertical-align: top; }
+    th { background: #f5f7fa; white-space: nowrap; }
+    td { white-space: normal; }
+    code { font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .term { white-space: nowrap; }
+    .section-rule { border: 0; border-top: 1px solid var(--line); margin-block: 2rem; }
+    .mobile-toc { display: none; }
+    .source-note { color: var(--muted); font-size: .92em; }
+    @media (max-width: 760px) {
+      .doc-layout { display: block; }
+      .doc-toc { display: none; }
+      .doc-main { padding: 1rem 1rem 2rem; }
+      .mobile-toc { display: block; margin-block: 0 1.25rem; padding: .65rem .8rem; border: 1px solid var(--line); }
+      .mobile-toc summary { cursor: pointer; font-weight: 600; }
+      .mobile-toc ul { padding-inline-start: 1.25rem; }
+    }
+  </style>
+  <script src="../../../assets/heading-nav.js" defer></script>
+  <script src="../../../assets/media-viewer.js" defer></script>
+</head>
+<body>
+  <div class="doc-layout">
+    <aside class="doc-toc" aria-label="报告目录">
+      <p class="toc-brand">StoryOS · 架构分析</p>
+      <nav aria-label="章节导航">
+        <ul class="toc-list">
+          <li><a href="#overview">一、结论与分析边界</a></li>
+          <li><a href="#entities">二、核心实体与职责</a></li>
+          <li><a href="#outbox">三、Outbox：可靠发布边界</a></li>
+          <li><a href="#fencing">四、Fencing Token：隔离过期执行者</a></li>
+          <li><a href="#recovery">五、恢复与重试</a></li>
+          <li><a href="#failures">六、失败分类与处置</a></li>
+          <li><a href="#risks">七、主要风险与验证重点</a></li>
+          <li><a href="#terms">八、术语与状态建议</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="doc-main genui-typography">
+      <details class="mobile-toc">
+        <summary>章节目录</summary>
+        <nav aria-label="移动端章节导航">
+          <ul>
+            <li><a href="#overview">一、结论与分析边界</a></li>
+            <li><a href="#entities">二、核心实体与职责</a></li>
+            <li><a href="#outbox">三、Outbox：可靠发布边界</a></li>
+            <li><a href="#fencing">四、Fencing Token：隔离过期执行者</a></li>
+            <li><a href="#recovery">五、恢复与重试</a></li>
+            <li><a href="#failures">六、失败分类与处置</a></li>
+            <li><a href="#risks">七、主要风险与验证重点</a></li>
+            <li><a href="#terms">八、术语与状态建议</a></li>
+          </ul>
+        </nav>
+      </details>
+
+      <header>
+        <p class="meta">技术报告 · 设计分析 · 生成时间
+          <time datetime="2026-11-13T12:12:41+08:00">2026-11-13 12:12:41</time>
+        </p>
+        <h1>StoryOS 异步任务编排架构分析</h1>
+        <div class="callout callout--important">
+          <p><strong>核心判断</strong></p>
+          <p class="genui-prose">可将 StoryOS 异步编排理解为：Run 承载一次工作流执行，Node 表达流程中的逻辑单元，Task 表达可调度工作，Attempt 记录一次具体执行。可靠性取决于状态变更与消息发布之间的一致性、重复执行的幂等处理，以及过期执行者能否被 fencing。</p>
+        </div>
+        <p class="source-note">交付说明：本文正文基于 2026-11-13 原生 Codex 输出，仅补充新版前端交付资源及标注的参考图；非模型重新生成，不能用此结果证明模型已自动遵循新规则。</p>
+        <p class="source-note">证据边界：当前没有实际仓库代码、数据库结构、运行配置或日志样本。本文对 StoryOS 的实体关系、状态流转和控制策略均属于设计分析与参考架构，不代表已确认的实现事实或线上行为。</p>
+      </header>
+
+      <section id="overview">
+        <h2>一、结论与分析边界</h2>
+        <p class="genui-prose">异步编排系统需要同时处理两类事实：业务执行到了哪里，以及哪些工作仍需被投递或恢复。建议把持久化状态作为恢复依据，把队列或消息通道视为唤醒执行器的手段。消息可能重复、延迟或丢失；系统应能从持久化状态重新发现可执行工作。</p>
+        <p class="genui-prose">关键设计原则是：一次逻辑执行可以有多个物理尝试；重试必须有边界且可观测；只有当前有效的执行者可以提交结果；跨越数据库与消息系统的发布应由可恢复机制衔接。</p>
+        <figure class="genui-storyos-reference-figure" style="max-width:920px;margin:18px 0 24px">
+          <a href="./storyos-flow.svg" title="当前页面打开 StoryOS 参考链路示意图">
+            <img data-zoomable src="./storyos-flow.svg" alt="StoryOS 编排参考链路：Run 到 Node、Task、Attempt，状态事务通过 Outbox 触发 Worker；属于抽象设计示意" loading="lazy" style="width:100%;max-width:100%;display:block;border:1px solid #e6eaf0;border-radius:8px">
+          </a>
+          <figcaption class="source-note" style="margin-top:9px">参考链路示意（依据本报告设计概念绘制，不是线上拓扑或代码实现证据）。点击图片在当前页面弹层查看，滚轮可放大缩小。</figcaption>
+        </figure>
+        <div class="callout callout--confirm">
+          <p><strong>待证实</strong></p>
+          <p class="genui-prose">实际是否采用关系型数据库、消息队列、租约、定时扫描、分布式锁或特定状态名称，均无法从现有材料确认。下文描述的是可供仓库与日志核对的设计模型。</p>
+        </div>
+      </section>
+
+      <section id="entities">
+        <h2>二、核心实体与职责</h2>
+        <p class="genui-prose">以下实体是对编排职责的划分建议。具体字段、基数、表名和生命周期需以实际模型为准。</p>
+        <div class="table-scroll" role="region" aria-label="核心实体职责表，可横向滚动" tabindex="0">
+          <table>
+            <thead>
+              <tr><th scope="col">实体</th><th scope="col">建议职责</th><th scope="col">生命周期与边界</th><th scope="col">需核对的证据</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><span class="term">Run</span></th>
+                <td>一次工作流实例的聚合边界，保存触发来源、输入引用、整体状态及完成结果摘要。</td>
+                <td>可包含多个 Node；终态应反映编排策略下的整体结果，而非简单等同于某个节点的结果。</td>
+                <td>Run 与 Node 的关联键、终态定义、取消和超时语义。</td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="term">Node</span></th>
+                <td>流程图中的逻辑步骤，描述依赖、输入输出和分支条件。</td>
+                <td>一个 Node 可能需要等待依赖，也可能由多个调度单元实现；依赖图应能检测循环或非法状态。</td>
+                <td>依赖解析、条件分支、节点重入与并发规则。</td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="term">Task</span></th>
+                <td>可被调度的工作单元，携带执行所需的稳定引用和策略。</td>
+                <td>标识“要做什么”；需明确它对应一个 Node、一个分片，还是一次可独立排队的工作。</td>
+                <td>唯一键、幂等键、调度状态、分片和优先级字段。</td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="term">Attempt</span></th>
+                <td>Task 的一次具体执行记录，承载执行者、开始与结束时间、租约或 fencing 代次、错误摘要。</td>
+                <td>标识“这次怎么执行”；失败重试应创建新 Attempt，避免覆盖此前尝试的诊断信息。</td>
+                <td>尝试序号、执行者身份、心跳、超时回收与终态写入条件。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>（一）逻辑身份与执行身份</h3>
+        <p class="genui-prose">Task 的稳定身份适合用于去重和幂等；Attempt 的身份适合用于诊断与隔离执行者。二者混用会产生典型问题：重试覆盖旧错误、重复消息新建重复业务任务，或无法辨别哪个执行者有权提交结果。</p>
+        <h3>（二）建议的关系视图</h3>
+        <p class="genui-prose">作为待验证的关系模型，可先检查 Run 是否拥有一组 Node，Node 如何映射到一个或多个 Task，以及 Task 是否保留多个历史 Attempt。若实际系统采用其他聚合方式，应以其状态所有权和幂等边界解释，而不应仅凭名称推断。</p>
+      </section>
+
+      <section id="outbox">
+        <h2>三、Outbox：可靠发布边界</h2>
+        <p class="genui-prose">Outbox 用于衔接持久化状态变更与异步消息发布。若业务记录已提交，但消息未发出，工作可能无人执行；若先发消息而业务事务回滚，消费者可能收到并不存在的工作。Outbox 的目标是让“状态变更”和“待发布事件”在同一持久化事务中提交。</p>
+        <h3>（一）建议的工作路径</h3>
+        <ol class="genui-prose">
+          <li>在一个事务中写入 Task 状态变更，并追加一条待发布的 Outbox 记录。</li>
+          <li>提交事务后，由发布器领取 Outbox 记录并发送到消息通道。</li>
+          <li>发送成功后标记记录已发布；若进程在发送后、标记前崩溃，可能再次发送。</li>
+          <li>消费者按稳定事件键或 Task 幂等键去重，并从持久化状态确认工作仍有效后执行。</li>
+        </ol>
+        <h3>（二）交付语义与消费约束</h3>
+        <p class="genui-prose">常见设计目标是至少一次发布，因此重复消息属于预期情况。消费者应幂等，且消息处理不能只靠“只投递一次”的假设。Outbox 解决状态提交与事件可恢复发布之间的缺口，但不自动提供跨系统的 exactly-once 业务效果。</p>
+        <p class="genui-prose">需明确 Outbox 的领取方式、并发锁定、重试间隔、最大保留期、死信或人工处置、发布顺序要求，以及已发布记录的清理策略。若事件顺序影响业务，应使用可验证的分区键或序号约束，而不是依赖偶然的扫描顺序。</p>
+      </section>
+
+      <section id="fencing">
+        <h2>四、Fencing Token：隔离过期执行者</h2>
+        <p class="genui-prose">租约或心跳只能帮助判断某个执行者是否可能失联。网络暂停、长时间 GC 或调度延迟都可能使旧执行者在租约过期后继续运行。Fencing Token 为每次有效领取分配单调递增的代次，并要求写入边界拒绝低于当前代次的结果。</p>
+        <h3>（一）参考检查规则</h3>
+        <ol class="genui-prose">
+          <li>领取 Task 时，在持久化边界原子地递增代次，并记录当前 Attempt 与执行者。</li>
+          <li>执行者提交进度或结果时，携带领取时获得的代次。</li>
+          <li>存储层仅在提交代次仍等于当前有效代次、且状态允许提交时接受写入。</li>
+          <li>若新执行者已获得更高代次，旧 Attempt 的迟到写入应被拒绝并记录为过期执行。</li>
+        </ol>
+        <h3>（二）适用边界</h3>
+        <p class="genui-prose">Token 必须在实际副作用的接收边界被校验。若执行者直接调用不认识该 Token 的外部系统，数据库中的 fencing 检查不能阻止外部副作用重复发生；此时仍需外部幂等键、条件写入、业务去重或补偿机制。Token 的分配也必须在并发领取下保持单调且原子。</p>
+      </section>
+
+      <section id="recovery">
+        <h2>五、恢复与重试</h2>
+        <p class="genui-prose">恢复流程应从持久化状态推导下一步动作，使进程重启、消息重复和执行者失联都能收敛到明确结果。以下是建议的恢复顺序，并非已观测到的 StoryOS 实现流程。</p>
+        <ol class="genui-prose">
+          <li><strong>发现：</strong>周期性扫描未完成且已满足执行条件的 Task，并扫描超过租约或心跳阈值的 Attempt。</li>
+          <li><strong>判定：</strong>确认依赖仍满足、Run 未取消、Task 未进入终态，并区分可重试错误与不可重试错误。</li>
+          <li><strong>隔离：</strong>回收过期执行权、推进 fencing 代次，防止旧执行者提交有效结果。</li>
+          <li><strong>重排：</strong>按退避策略安排下一次尝试；保留前次错误和 Attempt 历史。</li>
+          <li><strong>收敛：</strong>更新 Task、Node 和 Run 的状态，并确保完成事件同样经过可恢复发布路径。</li>
+        </ol>
+        <h3>（一）重试与幂等</h3>
+        <p class="genui-prose">重试次数、总时限、退避上限和随机抖动应按任务类型配置。对有副作用的工作，使用稳定的业务幂等键，并在副作用提交点记录结果或去重凭据。Attempt 新建不等于业务操作天然安全重放。</p>
+        <h3>（二）取消、超时与迟到结果</h3>
+        <p class="genui-prose">取消是期望停止执行的控制信号，不能保证正在运行的代码瞬间停止。应约定取消状态如何传播、外部副作用如何处理，以及取消后迟到结果是否拒绝。超时应区分执行期限、心跳过期和队列等待期限，避免用同一个计时器解释不同故障。</p>
+      </section>
+
+      <section id="failures">
+        <h2>六、失败分类与处置</h2>
+        <p class="genui-prose">建议将失败原因映射到可执行策略。分类应以可观测证据和明确错误码为基础；仅凭超时推断业务失败可能把暂时不可达误判成永久失败。</p>
+        <div class="table-scroll" role="region" aria-label="失败分类与处置表，可横向滚动" tabindex="0">
+          <table>
+            <thead>
+              <tr><th scope="col">类别</th><th scope="col">例子</th><th scope="col">建议处置</th><th scope="col">需要记录的信息</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">可重试的瞬时故障</th>
+                <td>依赖服务短暂不可用、网络中断、限流。</td>
+                <td>有限次数退避重试；遵循服务端限流提示；避免同步风暴。</td>
+                <td>错误码、依赖方、重试次数、退避时长。</td>
+              </tr>
+              <tr>
+                <th scope="row">不可重试的输入或业务错误</th>
+                <td>输入校验失败、业务前置条件不成立。</td>
+                <td>进入明确失败或需人工处理状态；不进行无意义重试。</td>
+                <td>稳定错误类型、关联输入版本、可定位的错误摘要。</td>
+              </tr>
+              <tr>
+                <th scope="row">执行器或进程故障</th>
+                <td>进程退出、心跳中断、容器被回收。</td>
+                <td>租约过期后回收；推进代次；在预算允许时创建新 Attempt。</td>
+                <td>执行器身份、心跳时间、租约、最后进度与退出原因。</td>
+              </tr>
+              <tr>
+                <th scope="row">协调与发布故障</th>
+                <td>Outbox 堆积、消息发布失败、消费者积压。</td>
+                <td>独立重试发布；提供积压告警和人工重放边界；消费者保持幂等。</td>
+                <td>Outbox 年龄、发布错误、队列延迟、重复消费计数。</td>
+              </tr>
+              <tr>
+                <th scope="row">并发冲突或过期写入</th>
+                <td>两个执行者争抢同一 Task，或旧 Attempt 迟到提交。</td>
+                <td>用原子领取、状态条件写入及 fencing 拒绝失效结果。</td>
+                <td>期望与实际代次、Attempt 标识、冲突次数。</td>
+              </tr>
+              <tr>
+                <th scope="row">不可判定的外部副作用</th>
+                <td>调用超时，但外部系统可能已完成操作。</td>
+                <td>先按幂等键查询或对账；若无法确认，进入人工核验或补偿流程。</td>
+                <td>请求关联键、外部回执、对账结论与补偿记录。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="risks">
+        <h2>七、主要风险与验证重点</h2>
+        <p class="genui-prose">以下风险是根据上述设计模型推导的检查项，不表示这些问题已在 StoryOS 中发生。</p>
+        <div class="table-scroll" role="region" aria-label="主要风险与验证重点表，可横向滚动" tabindex="0">
+          <table>
+            <thead>
+              <tr><th scope="col">风险</th><th scope="col">可能影响</th><th scope="col">设计控制</th><th scope="col">需要的仓库或运行证据</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">数据库提交与消息发布不一致</th>
+                <td>任务永久漏执行，或收到无效工作消息。</td>
+                <td>事务 Outbox、可恢复扫描、幂等消费。</td>
+                <td>事务边界、发布器代码、Outbox 状态与积压指标。</td>
+              </tr>
+              <tr>
+                <th scope="row">重复执行造成重复副作用</th>
+                <td>重复扣款、重复通知或重复写入。</td>
+                <td>稳定幂等键、外部去重、可对账补偿。</td>
+                <td>副作用调用点、幂等键来源、重复请求处理及对账记录。</td>
+              </tr>
+              <tr>
+                <th scope="row">租约过期后旧执行者仍写入</th>
+                <td>较新的结果被覆盖，状态与外部副作用不一致。</td>
+                <td>写入边界校验 fencing 代次；外部系统无法校验时增加幂等或条件更新。</td>
+                <td>领取与结果提交的原子性、代次比较逻辑、迟到结果日志。</td>
+              </tr>
+              <tr>
+                <th scope="row">Run、Node、Task 状态失去一致性</th>
+                <td>父级提前完成、永久等待或错误重开。</td>
+                <td>定义状态所有权、合法转移和汇总规则；定期检测不变量。</td>
+                <td>状态枚举、转移代码、依赖解析及状态修复作业。</td>
+              </tr>
+              <tr>
+                <th scope="row">重试风暴与队列饥饿</th>
+                <td>下游过载、延迟扩大、关键任务无法及时执行。</td>
+                <td>退避与抖动、并发上限、优先级公平策略、熔断或限流。</td>
+                <td>队列年龄分布、重试比例、并发配置、按优先级的延迟。</td>
+              </tr>
+              <tr>
+                <th scope="row">无限保留历史或敏感载荷</th>
+                <td>存储成本、隐私与访问控制风险上升。</td>
+                <td>分层保留、载荷最小化、脱敏和受控清理。</td>
+                <td>保留策略、字段敏感度、审计与清理日志。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>（一）优先核对的不变量</h3>
+        <ul class="genui-prose">
+          <li>一个 Task 同一时刻至多有一个当前有效的 Attempt；并发领取通过原子条件实现。</li>
+          <li>终态 Task 不因重复消息或迟到提交意外回到可执行状态。</li>
+          <li>每个待执行状态都有可恢复的触发来源：未发布 Outbox、待消费消息或可扫描记录。</li>
+          <li>父级状态可由子级事实解释；依赖未满足时，不会错误启动后继节点。</li>
+          <li>错误和执行历史不会在重试时被覆盖，且日志关联 Run、Task、Attempt 与事件键。</li>
+        </ul>
+        <h3>（二）建议收集的观测信号</h3>
+        <p class="genui-prose">至少按任务类型观察待处理数量与最老等待时长、Outbox 最老记录年龄、队列延迟、Attempt 成功率与重试次数、租约回收数、fencing 拒绝数、终态耗时以及外部副作用对账差异。告警阈值应基于服务目标与历史基线确定，不能由本文推定。</p>
+      </section>
+
+      <section id="terms">
+        <h2>八、术语与状态建议</h2>
+        <p class="genui-prose">为了让实现、日志和运维操作使用一致语言，建议分别记录逻辑任务状态与单次尝试状态。下面仅是命名参考，不是 StoryOS 已有枚举。</p>
+        <div class="table-scroll" role="region" aria-label="建议状态术语表，可横向滚动" tabindex="0">
+          <table>
+            <thead>
+              <tr><th scope="col">对象</th><th scope="col">建议区分的状态含义</th><th scope="col">注意事项</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Task</th><td>待调度、就绪、运行中、重试等待、成功、失败、取消</td><td>终态集合与可重开规则应显式定义。</td></tr>
+              <tr><th scope="row">Attempt</th><td>已领取、运行中、成功、失败、超时回收、被 fencing 拒绝</td><td>单次尝试的结束原因需与 Task 的最终结论区分。</td></tr>
+              <tr><th scope="row">Outbox</th><td>待发布、发布中、已发布、待重试、需人工处置</td><td>发布成功与消费者处理完成是不同事实。</td></tr>
+              <tr><th scope="row">Run / Node</th><td>等待依赖、进行中、成功、失败、部分完成、取消</td><td>部分完成是否允许及其向父级汇总方式需由业务语义决定。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout callout--attention">
+          <p><strong>设计结论</strong></p>
+          <p class="genui-prose">优先确认状态所有权、提交边界和恢复依据，再讨论队列产品或执行框架。只增加重试而没有幂等，只增加租约而没有 fencing，只增加 Outbox 而没有积压治理，都不能单独构成完整的可靠性方案。</p>
+        </div>
+      </section>
+
+      <footer>
+        <hr class="section-rule">
+        <p class="meta">GEN-UI · StoryOS 异步任务编排架构分析</p>
+        <p class="source-note">本文为基于通用异步编排模式的设计分析。获得仓库、配置、数据库结构及代表性运行日志后，应逐项核验实体映射、状态转移、事务边界、重试策略与外部副作用处理。</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

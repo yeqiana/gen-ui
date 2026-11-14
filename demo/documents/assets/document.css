@@ -46,6 +46,8 @@
 
 /* Typography tokens apply to narrative content, not tables, diagrams or code. */
 :root{--genui-prose-width:72ch;--genui-prose-leading:1.85;--genui-prose-gap:.85em;--genui-heading-gap:1.6em}
+/* Chinese documents fill their reading column before reaching the wide-screen cap. */
+html:lang(zh):root{--genui-prose-width:62ic}
 .doc-main :is(.doc-lede,.doc-summary>p,.doc-section>p,.doc-section>ul,.doc-section>ol,.doc-section>blockquote,.doc-section>.callout,.doc-section .callout>p,.doc-section blockquote>p){max-width:min(100%,var(--genui-prose-width));overflow-wrap:break-word}
 .doc-main .doc-section>p{line-height:var(--genui-prose-leading)}
 .doc-main .doc-section>p+p{margin-block-start:var(--genui-prose-gap)}
@@ -54,3 +56,18 @@
 
 /* Restore centered reading composition after collapsing the document rail. */
 @media(min-width:701px){.doc-layout[data-sidebar-collapsed="true"]>.doc-main{width:100%;max-width:1100px;justify-self:center;margin-inline:auto}}
+
+/* Keep actual reading blocks centered when the rail folds, not just the outer main box. */
+@media (min-width:701px){.doc-layout[data-sidebar-collapsed="true"]>.doc-main>:is(header,section,footer){margin-inline:auto}}
+
+/* Tighter visible left gutter and compact, symmetric folded document rail. */
+@media(min-width:701px){
+ .doc-layout[data-sidebar-collapsed="true"]{
+  grid-template-columns:58px minmax(0,1fr);
+  padding-inline-start:14px;
+  padding-block-start:24px;
+ }
+ .doc-layout[data-sidebar-collapsed="true"]>.doc-toc{
+  padding-inline:0;
+ }
+}
