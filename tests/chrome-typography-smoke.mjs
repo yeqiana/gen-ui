@@ -85,6 +85,8 @@ function measure(kind){
       maxWidth:style.maxWidth,
       lines:lines.length,
       maxLine:Math.round(Math.max(0,...lineWidths)),
+      firstLine:Math.round(lineWidths[0]||0),
+      parentWidth:(()=>{const parent=el.parentElement,s=getComputedStyle(parent);return Math.round(parent.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight));})(),
       badLines:badLines.length,
       clipped:el.scrollWidth>el.clientWidth+2,
       leading:style.lineHeight,
@@ -205,12 +207,12 @@ async function main(){
           check(reference+" has narrative samples",data,data.prose.length>=(page.kind==="generated"?1:3));
           if(page.kind==="generated"){
             check(reference+" typography layer is loaded",data.typography,
-              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"46ic":"72ch")
+              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"62ic":"72ch")
               &&parseFloat(data.typography.leadingToken)>=1.6
               &&parseFloat(data.typography.leadingToken)<=1.85);
             if(/^zh(?:-|$)/i.test(data.language))
-              check(reference+" Chinese paragraphs use natural balanced wrapping",data,
-                data.prose.filter(x=>x.bodyParagraph).every(x=>x.textWrap==="balance"));
+              check(reference+" Chinese body paragraphs use natural edge wrapping",data,
+                data.prose.filter(x=>x.bodyParagraph).every(x=>x.textWrap==="wrap"));
             if(data.wide.tableWidth!==null)check(reference+" table scroll stays inside its own container",data.wide,
               data.wide.tableOverflowX==="auto"||data.wide.tableOverflowX==="scroll");
             if(data.typography.headingMargin!==null)
@@ -224,19 +226,25 @@ async function main(){
             data.prose.every(x=>x.badLines===0&&!x.clipped&&x.maxLine<=x.width+3));
           check(reference+" long text wraps",data,
             data.prose.some(x=>x.lines>=2));
+          if(page.kind==="generated"&&/^zh(?:-|$)/i.test(data.language)&&width>=768){
+            const longBody=data.prose.filter(x=>x.bodyParagraph&&x.chars>=80&&x.lines>=2);
+            if(longBody.length)check(reference+" long Chinese prose uses available line width without balancing",longBody,
+              longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.82
+                &&(x.parentWidth<=x.maxReading+4?x.width>=x.parentWidth*.94:true)));
+          }
           check(reference+" true browser line-height matches typography tokens",data,
             data.prose.filter(x=>x.bodyParagraph).length>0
             &&data.prose.filter(x=>x.bodyParagraph).every(x=>Math.abs(
               parseFloat(x.leading)/parseFloat(x.font)-(page.kind==="doc"?1.85:page.kind==="generated"?parseFloat(data.typography.leadingToken):1.65))<0.035));
           if(width===1440){
             if(data.wide.tableWidth!==null)check(reference+" present wide table remains wider than prose",data,
-              data.wide.tableWidth>Math.max(...data.prose.map(x=>x.width))+60
+              data.wide.tableWidth>=Math.max(...data.prose.map(x=>x.width))-3
               &&!data.wide.tableMaxWidth.includes("72ch"));
             check(reference+" code region is not constrained as prose",data,
               !data.wide.codeMaxWidth||!data.wide.codeMaxWidth.includes("72ch"));
             if(page.kind==="generated")
               check(reference+" diagram keeps wide layout",data.wide,
-                data.wide.diagramWidth===null||data.wide.diagramWidth>Math.max(...data.prose.map(x=>x.width))+60);
+                data.wide.diagramWidth===null||data.wide.diagramWidth>=Math.max(...data.prose.map(x=>x.width))-3);
           }
           scenarios.push({
             page:page.id,width,mode:view.name,

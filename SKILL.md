@@ -9,7 +9,7 @@ description: Use when AI responses become hard to understand, too long, or diffi
 
 **Lightweight entry, full capability, no regression.** Load assets and contracts only when needed; enhance Markdown progressively. See [Skill principles](docs/skill-principles.md).
 
-For HTML, run `node scripts/validate-html-report.mjs <report.html>` unless testing is declined; apply [typography](references/typography.md) only to generated HTML prose.
+For HTML, use [HTML essentials](references/html-report-essentials.md) and [Typography](references/typography.md) only as needed; run `node scripts/validate-html-report.mjs <report.html>` unless tests are declined.
 
 ## Purpose
 

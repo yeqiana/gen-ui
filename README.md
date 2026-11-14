@@ -105,16 +105,19 @@ See [four usage scenarios](docs/usage-examples.en.md) and the [capability routin
 
 ## Lightweight HTML typography (2026-11-13)
 
-For explicitly requested offline HTML, Gen UI loads the [typography guidance](references/typography.md) and local [`assets/typography.css`](assets/typography.css) on demand. Scope readable prose with `main.genui-typography` and `.genui-prose`; English prose uses a 72ch reading cap; Chinese pages use 46ic and native balanced wrapping for short paragraphs to avoid orphaned trailing glyphs. **72ch is not a 72-Chinese-character target**. Sidebar folding does not stretch prose, while tables, code and diagrams retain their own scrolling or wide regions. Normal answers remain Markdown-first; no extra runtime dependencies or remote fonts are required.
+For explicitly requested offline HTML, Gen UI loads the [typography guidance](references/typography.md) and local [`assets/typography.css`](assets/typography.css) on demand. Scope readable prose with `main.genui-typography` and `.genui-prose`; English prose uses a 72ch reading cap; Chinese pages use a wider 62ic cap and natural line wrapping, never balanced wrapping on body paragraphs. **72ch is not a 72-Chinese-character target**. Sidebar folding lets prose use its available reading column, while tables, code and diagrams retain their own scrolling or wide regions. Normal answers remain Markdown-first; no extra runtime dependencies or remote fonts are required.
 
 Static documents reuse `div.doc-layout`, `aside.doc-toc`, `main.doc-main.genui-typography`, a mobile `details.mobile-toc`, and the existing local document CSS/navigation script. To validate a generated HTML artifact:
 
 ~~~powershell
 node scripts/validate-html-report.mjs path/to/report.html
 node tests/chrome-typography-smoke.mjs --generated path/to/report.html
+node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --require-image
 ~~~
 
 After tightening the structure contract, three local native Codex representative tasks passed static delivery checks and **18/18 Chrome viewport/sidebar scenarios**; the repository also passed **144/144 Node.js tests**. This is evidence for those samples, not a guarantee for arbitrary model outputs or independent Skill discovery. Native Codex shell reads remained blocked by a local execution policy, so the runner supplied the original Skill text read-only. See the [Chinese blind evaluation and limitations](evals/gen-ui-typography-blind-2026-11-13.md).
+
+**Real HTML interaction gate:** Run Chrome/Edge checks against trusted local HTML to verify navigation, scrolling, the folded M hover/click, the actual centered reading column, image overlays and wheel zoom. It records JSON and screenshots. Omit `--require-image` only when images are not required, and mark image coverage as not exercised. See the [StoryOS acceptance evidence](evals/storyos-real-html-acceptance-2026-11-14.md). The gate also measures compact rail width and brand/destination icon alignment; ordinary Markdown or static delivery does not trigger Chrome automatically.
 
 ## Install
 

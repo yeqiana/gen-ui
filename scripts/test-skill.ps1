@@ -48,6 +48,7 @@ $required = @(
   "tests/documents.test.mjs",
   "tests/chrome-documents-smoke.mjs",
   "scripts/validate-html-report.mjs",
+  "scripts/accept-html-delivery.mjs",
   "tests/html-report-delivery.test.mjs",
   "tests/fourth-round.test.mjs",
   "tests/architecture-views.test.mjs",
@@ -209,6 +210,9 @@ $reportPaths = @($standaloneHtml | ForEach-Object { Join-Path $root $_ })
 & node (Join-Path $root "scripts/validate-html-report.mjs") @reportPaths
 if ($LASTEXITCODE -ne 0) { throw "Standalone HTML delivery gate failed" }
 Write-Output "[PASS] Standalone HTML delivery gate"
+& node --check (Join-Path $root "scripts/accept-html-delivery.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Real HTML interaction delivery gate syntax failed" }
+Write-Output "[PASS] Optional Chrome HTML interaction gate syntax (browser checks are on demand)"
 
 & node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/typography-contract.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }

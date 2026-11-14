@@ -82,3 +82,41 @@
  display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
  width:20px;height:20px;pointer-events:none;fill:none;stroke:currentColor;
 }
+
+/* Folded rail refinement: share one centerline for brand, chevron and destinations. */
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand{
+ width:36px;height:36px;min-height:36px;margin:0 auto 8px;padding:0!important;
+ border-radius:8px;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{
+ width:27px;height:27px;background-size:24px 24px;
+}
+.app[data-sidebar-collapsed="true"] .sidebar>.brand>img{width:27px;height:27px;object-fit:contain}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible),
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible){
+ background:rgba(58,131,247,.04);color:#3a83f7;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible)>.genui-brand-expand-icon,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible)>.genui-brand-expand-icon{
+ width:18px;height:18px;
+}
+.genui-sidebar-toggle:hover{background:rgba(58,131,247,.04);border-color:transparent}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav :is(.genui-tree,.toc-list),
+.app[data-sidebar-collapsed="true"] .sidebar nav :is(.genui-tree,.nav-list){
+ margin-inline:0!important;padding-inline:0!important;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1>a,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1>a{
+ display:flex;align-items:center;justify-content:center;box-sizing:border-box;
+ min-width:0;width:100%;min-height:40px;height:40px;padding:10px 0!important;gap:0;
+ border-left:0;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1>a>svg,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1>a>svg{
+ width:18px!important;height:18px!important;flex:0 0 18px!important;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1>a:hover,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1>a:hover{
+ background:rgba(58,131,247,.04);
+}
