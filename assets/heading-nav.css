@@ -120,3 +120,12 @@
 .app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1>a:hover{
  background:rgba(58,131,247,.04);
 }
+
+/* Folded document rail: one M mark, even when the source brand contains an img. */
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand>img{display:none!important}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{
+ content:"";display:block!important;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:27px;height:27px;margin:0;padding:0;opacity:1;
+ background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M5%2024%209%207%2016%2015%2023%207%2027%2024%22%20fill%3D%22none%22%20stroke%3D%22%231A1C1F%22%20stroke-width%3D%224.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") center / 24px 24px no-repeat;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible)::before{opacity:0}

@@ -20,7 +20,7 @@ test('轻量 Typography 只作用于标注的 HTML 正文，不压缩宽内容',
  assert.doesNotMatch(css,/text-wrap:balance/);
  assert.match(css,/line-break:strict/);
  assert.match(css,/--genui-prose-leading:1\.65/);
- assert.match(css,/max-width:min\(100%,var\(--genui-prose-width\)\)/);
+ assert.match(css,/main\.genui-typography :is\(\.genui-prose[^}]*max-width:100%;/s);
  assert.doesNotMatch(css,/\b(?:table|figure|svg|canvas)\s*\{/i);
  assert.match(css,/main\.genui-typography pre\{[^}]*max-width:100%;overflow-x:auto/);
  assert.doesNotMatch(css,/@import|https?:\/\//i);

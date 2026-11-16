@@ -105,7 +105,7 @@ See [four usage scenarios](docs/usage-examples.en.md) and the [capability routin
 
 ## Lightweight HTML typography (2026-11-13)
 
-For explicitly requested offline HTML, Gen UI loads the [typography guidance](references/typography.md) and local [`assets/typography.css`](assets/typography.css) on demand. Scope readable prose with `main.genui-typography` and `.genui-prose`; English prose uses a 72ch reading cap; Chinese pages use a wider 62ic cap and natural line wrapping, never balanced wrapping on body paragraphs. **72ch is not a 72-Chinese-character target**. Sidebar folding lets prose use its available reading column, while tables, code and diagrams retain their own scrolling or wide regions. Normal answers remain Markdown-first; no extra runtime dependencies or remote fonts are required.
+For explicitly requested offline HTML, Gen UI loads the [typography guidance](references/typography.md) and local [`assets/typography.css`](assets/typography.css) on demand. Scope readable prose with `main.genui-typography` and `.genui-prose`; English 72ch and Chinese 62ic are advisory tokens; body paragraphs, quotations and text around figures/tables use their actual section width and natural line wrapping, never balanced wrapping on body paragraphs. **72ch is not a 72-Chinese-character target**. Sidebar folding lets prose use its available reading column, while tables, code and diagrams retain their own scrolling or wide regions. Normal answers remain Markdown-first; no extra runtime dependencies or remote fonts are required.
 
 Static documents reuse `div.doc-layout`, `aside.doc-toc`, `main.doc-main.genui-typography`, a mobile `details.mobile-toc`, and the existing local document CSS/navigation script. To validate a generated HTML artifact:
 
