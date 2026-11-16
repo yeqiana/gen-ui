@@ -10,7 +10,7 @@
 
 **2026-11-16 稳定基线：** 三个不同主题使用已安装的 Skill 并由本地 Runner 预置离线资源，完成 3/3 独立生成与 Chrome/排版验收；核心 Skill 保持轻量。详见 [验收与边界](evals/independent-html-stability-2026-11-16.md)。
 
-多轮设计评审可以只呈现**本轮变化、当前收口判断与未决证据**，不把「已修改」误判为「已验收」，也不替用户接受残留风险。参阅 [续评专项验收](evals/reading-continuity-2026-11-16.md)。
+多轮设计评审可以只呈现**本轮变化、当前收口判断与未决证据**，不把「已修改」误判为「已验收」，也不替用户接受残留风险。参阅 [续评专项验收](evals/reading-continuity-2026-11-16.md) 和 [Claude Code 调用/权限指引](docs/claude-code-skill-loading.md)。
 
 ## 为什么需要 Gen UI？
 

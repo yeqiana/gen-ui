@@ -19,6 +19,7 @@ test("多轮续接不会把代码变更、验收、根因与风险接受混为�
  }
  assert.ok(Buffer.byteLength(doc)<5500,"Reference should remain compact");
  assert.match(doc,/不能.*临时绕过当作根因修复/);
+ assert.match(doc,/相同 SHA-256 只证明被核对文件内容相同/);
 });
 test("真实模型评测案例覆盖续接、限定授权、冲突证据及简答密度",()=>{
  assert.equal(cases.version,"gen-ui-review-continuity-eval/v1");
