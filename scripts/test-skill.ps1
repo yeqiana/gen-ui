@@ -54,6 +54,9 @@ $required = @(
   "tests/architecture-views.test.mjs",
   "assets/architecture-views.js",
   "demo/architecture-patterns.html",
+  "references/product-architecture-panorama.md",
+  "demo/product-architecture-panorama.html",
+  "tests/product-architecture-panorama.test.mjs",
   "evals/skill-ab-runner.mjs",
   "tests/skill-ab-runner.test.mjs",
   "demo/report.js",
@@ -189,7 +192,7 @@ if ($LASTEXITCODE -ne 0) { throw "Semantic seeded stress test JS syntax failed" 
 Write-Output "[PASS] Semantic seeded stress test syntax"
 & node --check (Join-Path $root "tests/chrome-layout-edge-cases.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Chrome edge cases syntax failed" }
-& node --check (Join-Path $root "tests/architecture-views.test.mjs")
+& node --check (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Architecture model boundary tests syntax failed" }
 & node --check (Join-Path $root "tests/chrome-documents-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Technical document Chrome smoke syntax failed" }
