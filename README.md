@@ -10,7 +10,7 @@
 
 **2026-11-16 stable baseline:** Three independently authored offline HTML reports passed browser and typography checks with local asset staging; see the [evidence and limitations](evals/independent-html-stability-2026-11-16.md).
 
-For iterative reviews, carry forward **what changed, the current review decision, and outstanding evidence** without confusing implementation, verification, or explicitly scoped risk acceptance. See the [review-continuity evidence](evals/reading-continuity-2026-11-16.md).
+For iterative reviews, carry forward **what changed, the current review decision, and outstanding evidence** without confusing implementation, verification, or explicitly scoped risk acceptance. See the [review-continuity evidence](evals/reading-continuity-2026-11-16.md) and [Claude Code invocation guidance](docs/claude-code-skill-loading.md).
 
 ## Why Gen UI?
 

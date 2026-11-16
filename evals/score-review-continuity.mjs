@@ -68,7 +68,7 @@ function parseLog(file){
   if(e.type==="system"&&e.subtype==="init")init=e;
   if(e.type==="result")result=e;
   if(e.type==="assistant")for(const c of e.message?.content||[]){
-   if(c.type==="tool_use"&&c.name==="Skill")invokedSkill=true;
+   if(c.type==="tool_use"&&c.name==="Skill"&&c.input?.skill==="gen-ui")invokedSkill=true;
    if(c.type==="tool_use"&&c.name==="Read"&&/reading-layers\.md/i.test(String(c.input?.file_path||"")))readReadingLayers=true;
   }
  }

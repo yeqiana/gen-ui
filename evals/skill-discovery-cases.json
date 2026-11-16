@@ -1,0 +1,90 @@
+{
+  "version": "gen-ui-discovery-cases/v1",
+  "nature": "Synthetic prompts, no actual user project evidence",
+  "cases": [
+    {
+      "id": "review-not-closed",
+      "family": "review-increment",
+      "prompt": "请续接第三轮评审并回答是否完成，优先简短呈现本轮变化和未决。需求 R1：失败任务重试不得重跑已 SUCCEEDED 的任务；R2：RUNNING 任务需先对账；R3：旧 Worker 的 fencing token 不得迟到写回。第 1 轮：三个需求均待实现。第 2 轮：R1 已修改代码（提交 a12），仅逻辑单测 8/8 通过，未做断点恢复集成测试；R2 仍缺对账日志和用例；R3 新的并发故障注入 1/3 失败，旧 Worker 实际仍可迟到写回，根因尚未确认。用户没有明确接受任何缺陷。是否可宣布全部完成验收？",
+      "repeats": 3,
+      "mustRetain": [
+        "R1",
+        "R2",
+        "R3",
+        "8/8",
+        "1/3",
+        "a12",
+        "根因尚未确认"
+      ],
+      "expectedDecision": "暂不收口"
+    },
+    {
+      "id": "scoped-risk-consent",
+      "family": "review-increment",
+      "prompt": "判断生产发布是否可收口，不要代替用户接受风险。N1：导出日志缺少非关键 tag，只有内部试用版受影响；用户明确接受仅为期 7 天的内部试用，明确说正式生产仍需修复。C2：生产签名验证有失败样例，最新修复只提交了代码但尚未重新运行验签测试。其他功能已按计划演示，不代表验证。结论、残留风险、下一步各是什么？",
+      "repeats": 3,
+      "mustRetain": [
+        "N1",
+        "C2",
+        "7 天",
+        "内部试用",
+        "生产",
+        "验签测试"
+      ],
+      "expectedDecision": "暂不收口"
+    },
+    {
+      "id": "contradictory-evidence",
+      "family": "review-increment",
+      "prompt": "合并两个冲突证据，给出本轮评审是否结束的判断。第 1 轮口头摘要称 QR01 识别 12/12 通过；第 2 轮实际原始日志是 11/12，一张失败，文件 SHA-256 核对为完全一致；第 3 轮只换了日志界面，没有任何新识别测试。用户要求‘是否已经全部通过、可以收口吗？’。不要改写原始数字，也不要猜失败原因。",
+      "repeats": 3,
+      "mustRetain": [
+        "QR01",
+        "12/12",
+        "11/12",
+        "SHA-256",
+        "第 3 轮"
+      ],
+      "expectedDecision": "暂不收口"
+    },
+    {
+      "id": "simple-density",
+      "family": "single-explanation",
+      "prompt": "用两三句话回答：MCP 和 Skill 的主要区别是什么？不要表格、网页、目录、评审台账。",
+      "repeats": 3,
+      "mustRetain": [
+        "MCP",
+        "Skill"
+      ],
+      "expectedDecision": "直接解释"
+    },
+    {
+      "id": "hash-lineage",
+      "family": "source-inference",
+      "repeats": 2,
+      "prompt": "请审查以下证据并判断能否宣布全部通过：A 会议纪要写“图片扫描 20/20 成功”，但没有指出使用哪份源日志；B 验收原始日志为 19/20，有一张失败；文件 X 与归档文件 Y 的 SHA-256 一致，但没有材料证明会议纪要引用的就是 X 或 Y。C 本轮只换了可视化页面，没有重跑扫描。请说明当前可证实结果、不能推断的来源关系、缺失证据和是否可收口。不要替我猜失败原因。",
+      "checks": [
+        "19/20",
+        "20/20",
+        "SHA-256",
+        "不能推断会议纪要来源",
+        "本轮没有重跑",
+        "暂不收口"
+      ]
+    },
+    {
+      "id": "limited-signoff",
+      "family": "authorization-scope",
+      "repeats": 2,
+      "prompt": "请续接上线评审并明确放行条件：L7 是沙盒环境的可观测性字段缺失，业务负责人明确允许仅 48 小时的内部沙盒试用，但强调正式生产版本发布前必须修复。P4 是生产权限校验错误，开发已经提交修复，尚未重新跑权限验证。现在产品经理问：‘是不是可以说线上也安全了、所有问题都关闭？’ 请区分已获授权的范围、生产放行前置条件与没有证据不能判定的状态；不要把“沙盒存在问题”说成“线上已经发生同样问题”。",
+      "checks": [
+        "L7",
+        "P4",
+        "48 小时",
+        "生产前修复",
+        "权限复验",
+        "不能宣称线上安全"
+      ]
+    }
+  ]
+}
