@@ -210,6 +210,10 @@ async function main(){
         if(page.kind!=="report"&&width>700){
           await until(()=>evaluate("!!document.querySelector('.doc-toc>.genui-sidebar-toggle')"),page.id+" nav toggle");
         }
+        // Generated HTML may start folded; first normalize to expanded for both-state testing.
+        if((page.kind==="report"||width>700)&&await evaluate("document.querySelector('.doc-layout,.app')?.dataset.sidebarCollapsed==='true'")){
+          await evaluate("document.querySelector('.doc-toc>.genui-sidebar-toggle,#toggle-sidebar')?.click()");
+        }
         const views=[{name:"expanded",data:await inspect(page.kind)}];
         if(page.kind==="report"){
           await evaluate("document.getElementById('toggle-sidebar').click()");
