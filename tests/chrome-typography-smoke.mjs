@@ -245,8 +245,8 @@ async function main(){
                 Math.abs(data.typography.headingMargin/data.typography.headingFont-1.25)<.08);
           }
           check(reference+" page fits viewport",data,!data.docOverflow);
-          check(reference+" all narrative blocks respect language-specific reading width",data,
-            data.prose.every(x=>x.maxWidth!=="none"&&x.width<=x.maxReading+3));
+          check(reference+" narrative blocks fit their actual parent column",data,
+            data.prose.every(x=>x.maxWidth!=="none"&&x.width<=x.parentWidth+3));
           check(reference+" visible text remains within its own box",data,
             data.prose.every(x=>x.badLines===0&&!x.clipped&&x.maxLine<=x.width+3));
           check(reference+" long text wraps",data,

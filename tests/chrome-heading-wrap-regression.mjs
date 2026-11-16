@@ -25,6 +25,9 @@ function fixture(name,html){
  fs.mkdirSync(dir,{recursive:true});
  fs.writeFileSync(path.join(dir,"report.html"),html);
  fs.cpSync(path.join(source,"assets"),path.join(dir,"assets"),{recursive:true});
+ // The frozen model HTML stays byte-identical; regressions run against current public CSS.
+ for(const [src,dest] of [["assets/heading-nav.css","heading-nav.css"],["assets/typography.css","typography.css"],["demo/documents/assets/document.css","document.css"]])
+  fs.copyFileSync(path.join(root,src),path.join(dir,"assets",dest));
  return dir;
 }
 function run(name,dir){

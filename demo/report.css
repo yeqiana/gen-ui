@@ -297,3 +297,15 @@ blockquote.callout{margin-inline:0}
   grid-template-columns:56px minmax(0,1fr);
  }
 }
+
+
+/* Direct narrative copy and paragraphs following figures/tables use the report column. */
+.app:not([data-navigation="top"]) main :is(.showcase-lead,.genui-prose){
+  max-width:100%;text-wrap:wrap;text-indent:0;
+}
+.app:not([data-navigation="top"]) main :is(figure,.table-wrap,.table-scroll,blockquote,.callout)+p{
+  max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap;
+}
+.app:not([data-navigation="top"]) main blockquote:not(.callout){
+  margin-inline:0;padding:10px 14px;border-left:3px solid #dce7f5;
+}

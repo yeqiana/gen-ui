@@ -3,10 +3,10 @@ main.genui-typography{
   --genui-prose-width:72ch;--genui-prose-leading:1.65;
   --genui-prose-gap:.85em;--genui-heading-gap:1.25em;
 }
-/* Let Chinese prose fill normal reading columns; only cap exceptionally wide layouts. */
+/* Retain language tokens as guidance; the section owns the visible text width. */
 html:lang(zh) main.genui-typography{--genui-prose-width:62ic}
 main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
-  max-width:min(100%,var(--genui-prose-width));
+  max-width:100%;
   overflow-wrap:break-word;
   line-height:var(--genui-prose-leading);
 }
@@ -22,3 +22,15 @@ main.genui-typography .genui-prose-group>p+p{margin-block-start:var(--genui-pros
 main.genui-typography .genui-prose-group>:is(h2,h3,h4){margin-block-start:var(--genui-heading-gap)}
 /* Generated prose blocks may include a bare pre outside .doc-section. */
 main.genui-typography pre{max-width:100%;overflow-x:auto;font-size:12px}
+
+
+/* Narrative and nested callouts use the actual section width. */
+main.genui-typography p{text-indent:0}
+main.genui-typography :is(blockquote,.callout){max-width:100%;margin-inline:0}
+main.genui-typography blockquote:not(.callout){padding:10px 14px;border-left:3px solid #dce7f5}
+main.genui-typography :is(blockquote,.callout)>p{
+  max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap;
+}
+main.genui-typography :is(figure,.table-wrap,.table-scroll,table,blockquote,.callout)+p{
+  max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap;
+}
