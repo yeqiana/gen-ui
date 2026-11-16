@@ -135,11 +135,13 @@ node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --req
 
 ## 安装与使用
 
-Windows PowerShell 中安装到 Codex：
+Windows PowerShell 中安装到 Codex 用户级 Agent Skills 目录：
 
 ~~~powershell
-git clone https://github.com/yeqiana/gen-ui.git "$HOME\.codex\skills\gen-ui"
+git clone https://github.com/yeqiana/gen-ui.git "$HOME\.agents\skills\gen-ui"
 ~~~
+
+仅在某个项目中使用时安装到 `<项目>/.agents/skills/gen-ui/`。旧版 Codex 可能使用 `~/.codex/skills/`，请以当前宿主实际支持的发现路径为准，并验证 `$gen-ui` 已被加载。
 
 在 Coding Agent 中输入：
 
@@ -179,6 +181,8 @@ node tests/chrome-semantic-stress.mjs --mobile
 如需从真实 HTML 和 Chrome 重新生成当前 9 张技术文档截图，运行 `node tests/chrome-documents-smoke.mjs --update-previews`。七类专业图现覆盖每类 40 份固定种子业务模型及桌面/移动端回归，但不等于所有输入都绝对无碰撞。
 
 测试仅验证**仓库内的固定示例**；不等于真实目标项目已通过审计、执行或发布。关于安全边界、宿主适配与操作许可，参见 [SKILL.md](SKILL.md)、[集成说明](docs/integration.md) 和 [FAQ](docs/faq.md)。
+
+**发布边界：** `evals/artifacts/` 保留的是经过挑选的已跟踪验收证据，不是 Markdown 优先的 Skill 运行前提。保留现有证据，不批量删除；新产生的截图、日志和诊断结果需逐项审核后再决定是否提交，不能自动视为发行内容。
 
 MIT License · [LICENSE](LICENSE)。
 
