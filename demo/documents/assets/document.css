@@ -73,8 +73,7 @@ html:lang(zh):root{--genui-prose-width:62ic}
 }
 
 
-/* Folded and expanded document sections use the real content column, including text around media. */
-.doc-main{--genui-prose-width:100%}
+/* Folded and expanded reading blocks use their actual section width. */
 .doc-main :is(.doc-section,.doc-summary)>blockquote:not(.callout){
   margin-inline:0;padding:10px 14px;border-left:3px solid #dce7f5;
 }
