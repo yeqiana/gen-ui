@@ -1,6 +1,6 @@
 ---
 name: gen-ui
-description: Improve dense AI responses, technical reviews and evidence, or produce a user-requested readable offline HTML report with navigation and diagrams. Use Markdown by default unless HTML is explicitly requested.
+description: Use when AI responses are dense, reviews require evidence continuity, or users request readable offline HTML. Markdown by default.
 ---
 
 # Gen UI — Information Design Skill for AI Responses
@@ -9,7 +9,7 @@ description: Improve dense AI responses, technical reviews and evidence, or prod
 
 **Lightweight entry, full capability, no regression.** Load assets and contracts only when needed; enhance Markdown progressively. See [Skill principles](docs/skill-principles.md).
 
-For static offline HTML (even with a diagram/image viewer), read [HTML essentials](references/html-report-essentials.md) and [Typography](references/typography.md) as needed; use the full HTML contract only for custom interactions. **Write `report.html` first**, then optional diagrams. A permitted runner can stage public CSS/JS once with `node scripts/prepare-html-assets.mjs <output-dir>`; do not repeatedly retry blocked file-copy commands. Run `node scripts/validate-html-report.mjs <report.html>` unless tests are declined.
+For offline HTML, read [HTML essentials](references/html-report-essentials.md) and [Typography](references/typography.md) as needed. **Write `report.html` first**; add diagrams later. The runner may stage local assets with `node scripts/prepare-html-assets.mjs <output-dir>`; never retry denied copies. Validate using `node scripts/validate-html-report.mjs <report.html>` unless declined.
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Route by **requested output**, not topic: "report" alone means Markdown. Load HT
 | Host explicitly supports `gen-ui-demo/v1` | Validated UI data and complete Markdown fallback | [Renderer contract](references/renderer-contract.md) |
 | Directory of multiple HTML documents | Thin offline navigation shell | [HTML report contract](references/html-report-contract.md) and `scripts/build-html-portal.mjs` |
 
-Without a trusted renderer, use Markdown. For HTML deliverables, follow its contract; never upgrade ordinary answers to HTML without a request.
+Markdown fallback: without a trusted renderer use Markdown. For HTML deliverables, follow its contract; never upgrade ordinary answers to HTML without a request.
 
 ## Reader-first transformation procedure
 
@@ -42,7 +42,7 @@ Without a trusted renderer, use Markdown. For HTML deliverables, follow its cont
 5. **Progressive detail:** remove filler and repetition, not facts, evidence, constraints, or required steps; expand when needed.
 6. **Validate:** one summary only, if requested, required by another Skill, or useful in long docs.
 
-For ambiguous formats, read [Information design](references/information-design-decision.md). For dense content or iterative reviews, read [Reading layers](references/reading-layers.md) only when needed.
+For ambiguous formats use [Information design](references/information-design-decision.md). For repeat reviews or risk/closure decisions, read [Reading layers](references/reading-layers.md); preserve issue IDs and prior evidence. Missing proof is not proof of missing implementation; don't equate changed, tested, or risk-accepted.
 
 ## Default formatting
 
@@ -54,7 +54,7 @@ For ambiguous formats, read [Information design](references/information-design-d
 
 ## HTML and diagrams: on-demand, not core
 
-For simple static HTML, use [HTML essentials](references/html-report-essentials.md); for rich or single-file HTML, use the [HTML report contract](references/html-report-contract.md). Read the [diagram model](references/semantic-diagram-model.md) only when needed.
+For interactive or single-file HTML use the [HTML report contract](references/html-report-contract.md); [diagram model](references/semantic-diagram-model.md) only when needed.
 
 Never execute untrusted HTML/JS or fetch remote code; external side effects require permission.
 
@@ -66,4 +66,4 @@ For HTML, verify offline links, mobile layout, keyboard access and requested int
 
 
 
-Further reading: [English README](README.md) · [中文说明](README.zh-CN.md).
+Further reading: [README](README.md) · [中文](README.zh-CN.md).
