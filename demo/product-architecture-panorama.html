@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>产品架构全景图 · GEN-UI 离线示例</title>
+<style>
+:root{font-family:system-ui,"Microsoft YaHei","PingFang SC",sans-serif;color:#26394d;background:#f1f3fe;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;padding:24px}main{max-width:1540px;margin:auto}
+h1{font-size:clamp(25px,3vw,42px);line-height:1.25;margin:0 0 8px;letter-spacing:.02em}
+.intro{max-width:95ch;color:#4a5d75;line-height:1.7;margin:0 0 18px}
+.bp-viewport{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;border:1px solid #bbc9de;border-radius:12px;box-shadow:0 8px 30px #334c7814;background:#b8d9f9;scrollbar-width:thin}
+.bp-viewport:focus-visible{outline:3px solid #246cba;outline-offset:3px}
+.bp-poster{min-width:1130px;padding:14px;background:#aed3f7}
+.bp-channels{margin:0 105px 10px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;background:#e9f2fb;border:1px solid #8aadd0;padding:7px}
+.bp-channel{padding:11px 5px;text-align:center;border:1px solid #c2d5e8;background:white;font-weight:650;font-size:13px;min-height:43px}
+.bp-grid{display:grid;grid-template-columns:94px minmax(0,1fr) 94px;gap:10px;align-items:stretch}
+.bp-rail{padding:10px 7px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-around;gap:16px;border:1px solid #c88993;background:#ffe0e3;text-align:center}
+.bp-rail.right{border-color:#b6cf74;background:#e8f6c9}
+.bp-rail h2{font-size:15px;letter-spacing:.06em;line-height:1.35;margin:4px 0 10px;writing-mode:vertical-rl;text-orientation:mixed;align-self:center}
+.bp-rail .bp-rail-item{background:#fff7ef;border:1px solid #e6b0ad;border-radius:4px;padding:11px 4px;font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.bp-rail.right .bp-rail-item{background:#f9ffe8;border-color:#c6d79b}
+.bp-core{min-width:0;display:flex;flex-direction:column;gap:0}
+.bp-entry{display:block;text-align:center;background:#328ee7;color:#fff;font-size:18px;font-weight:750;padding:12px;border:7px solid #b9e6ff;letter-spacing:.08em;box-shadow:inset 0 0 0 1px #1263b4}
+.bp-link{height:23px;display:flex;align-items:center;justify-content:center;gap:5px;color:#1b5d97;font-size:12px;font-weight:700}
+.bp-link::before{content:"";display:block;width:1px;height:17px;background:#2c72a8}
+.bp-link span{background:#cae4fc;border:1px solid #91b9df;padding:0 6px}
+.bp-layer{display:grid;grid-template-columns:105px minmax(0,1fr);gap:8px;border-top:2px dashed #81b6dc;border-bottom:2px dashed #81b6dc;padding:8px 0}
+.bp-label{display:flex;align-items:center;justify-content:center;padding:10px 5px;background:#fbd3aa;border:1px solid #e5b280;color:#694724;font-weight:800;text-align:center;line-height:1.4;font-size:14px}
+.bp-region{background:#d9f6b4;border:1px solid #acd181;padding:9px;min-width:0}
+.bp-region-title{font-size:13px;font-weight:750;text-align:center;letter-spacing:.04em;margin-bottom:8px;color:#38632d}
+.bp-modules{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.bp-module{min-width:0;border:1px solid #bfd6a6;background:#fffef7;text-align:center;padding:10px 5px;font-size:12px;font-weight:600;line-height:1.4;overflow-wrap:anywhere;box-shadow:0 1px 0 #638f4420}
+.bp-region--medium{background:#d9efbc}.bp-region--light{background:#ebf9d1}
+.bp-region--mint{background:#c9f1c6}
+.bp-centers{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.bp-center{min-width:0;border:1px solid #85bd86;background:#eefad6;padding:8px}
+.bp-center h3{margin:0 0 7px;color:#315f3d;text-align:center;font-size:14px}
+.bp-center-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.bp-center-grid .bp-module{border-color:#a5d5c2;font-size:12px;padding:9px 3px}
+.bp-center-grid .bp-chip{font-size:11px;font-weight:600;text-align:center;background:#66cfca;color:#154f5b;padding:7px 2px;min-width:0;overflow-wrap:anywhere;border:1px solid #4db4b1}
+.bp-domain{font-size:12px;text-align:center;color:#3f7652;background:#d4efca;border:1px solid #b4d5aa;padding:5px;margin-top:7px}
+.bp-module-grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.bp-standard{grid-template-columns:repeat(5,minmax(0,1fr))}
+.bp-standard .bp-module{background:#c1ef91;border-color:#a4d379}
+.bp-data{display:grid;grid-template-columns:minmax(0,1.8fr) 70px minmax(0,1fr);gap:10px;align-items:center}
+.bp-data-origin{display:grid;gap:8px;min-width:0}
+.bp-data-subtitle{text-align:center;font-size:12px;font-weight:700;color:#415f78;background:#e3eef9;padding:7px}
+.bp-source-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.bp-source{border:1px solid #6ba2d9;background:#8cc2fc;border-radius:7px;text-align:center;padding:9px 0;font-weight:750;font-size:12px;color:#1d4d7a}
+.bp-external{display:flex;gap:5px;background:#ebffd5;padding:7px;align-items:center;font-size:12px}
+.bp-external span{background:#fff;border:1px solid #bad79e;padding:5px 4px;flex:1;text-align:center}
+.bp-extract{font-size:14px;text-align:center;font-weight:800;color:#b05227}
+.bp-extract strong{display:block;font-size:30px;color:#e0a92d;line-height:1}
+.bp-db{margin:12px 0 2px;position:relative;border-radius:46% 46% 18px 18px / 16px 16px 16px 16px;background:#2488df;color:#fff;text-align:center;padding:24px 7px 9px;min-height:122px;border:1px solid #1469af;box-shadow:0 5px 0 #1667ac}
+.bp-db::before{content:"";position:absolute;top:-12px;left:-1px;right:-1px;height:29px;border-radius:50%;background:#53adfa;border:1px solid #217bc8}
+.bp-db strong{display:block;font-size:14px;margin-bottom:2px}.bp-db small{display:block;font-size:12px;line-height:1.5}
+.bp-legend{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin:12px 5px 2px;font-size:12px;color:#2f5477}
+.bp-legend span::before{content:"";display:inline-block;width:12px;height:9px;margin-right:5px;border:1px solid #9aa;vertical-align:baseline;background:#d9f6b4}
+.bp-legend span:nth-child(2)::before{background:#fbd3aa}.bp-legend span:nth-child(3)::before{background:#328ee7}
+.bp-text{margin:18px 0;border:1px solid #dce4f1;background:#fff;border-radius:10px;padding:16px 22px}
+.bp-text summary{cursor:pointer;font-weight:720}.bp-text ol{line-height:1.75;padding-left:22px}
+.bp-note{font-size:13px;color:#4b5e77;line-height:1.65;padding:8px 4px}
+@media (max-width:600px){body{padding:12px}.bp-poster{min-width:1130px}.intro{font-size:14px}}
+@media print{@page{size:A3 landscape;margin:12mm}body{padding:0;background:white}main{max-width:none}.bp-viewport{overflow:visible;box-shadow:none;border:0}.bp-poster{min-width:0}.bp-text{break-inside:avoid}.bp-layer,.bp-region{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+<h1>产品架构全景图 <small style="font-size:.48em;color:#58748d">示例 · 非实际部署</small></h1>
+<p class="intro">以「全渠道经营平台」为虚构案例，展示参考图那样的<strong>渠道入口 → 统一入口 → 分层能力 → 数据整合</strong>，左右为贯穿式支撑体系。所有功能名称与交互方向仅用于说明版式，并非真实系统扫描或验收结论。</p>
+<div class="bp-viewport" role="region" tabindex="0" aria-label="产品架构全景图，窄屏可左右滚动">
+<div class="bp-poster" data-product-panorama>
+<div class="bp-channels" aria-label="用户渠道入口">
+<div class="bp-channel">客户门户（PC）</div><div class="bp-channel">供应商门户（PC）</div><div class="bp-channel">平台运营（PC）</div><div class="bp-channel">金融服务（PC）</div><div class="bp-channel">经营分析大屏</div><div class="bp-channel">移动端 APP</div>
+</div>
+<div class="bp-grid">
+<aside class="bp-rail left" aria-labelledby="foundation-title"><h2 id="foundation-title">基础支撑</h2>
+<div class="bp-rail-item">用户与权限</div><div class="bp-rail-item">API 网关</div><div class="bp-rail-item">消息中心</div><div class="bp-rail-item">日志监控</div><div class="bp-rail-item">配置中心</div><div class="bp-rail-item">运维保障</div></aside>
+<div class="bp-core">
+<div class="bp-entry" data-blueprint-entry>数据中心统一入口</div>
+<div class="bp-link" aria-label="入口接入应用展示层"><span>↓ 接入展示</span></div>
+<section class="bp-layer" data-blueprint-layer="应用展示层" aria-labelledby="layer-app">
+<h2 class="bp-label" id="layer-app">应用展示层</h2>
+<div class="bp-region"><div class="bp-region-title">业务数据分析与运营驾驶舱</div><div class="bp-modules">
+<div class="bp-module">销售看板</div><div class="bp-module">生产看板</div><div class="bp-module">采购看板</div><div class="bp-module">成本看板</div><div class="bp-module">仓储看板</div><div class="bp-module">风险看板</div>
+</div></div></section>
+<div class="bp-link" aria-label="展示层与中台能力的示意关系"><span>↕ 能力服务</span></div>
+<section class="bp-layer" data-blueprint-layer="中台能力层" aria-labelledby="layer-center">
+<h2 class="bp-label" id="layer-center">中台能力层</h2>
+<div class="bp-centers">
+<div class="bp-center"><h3>数据中台</h3><div class="bp-center-grid"><div class="bp-module">数据治理</div><div class="bp-module">客户分析</div><div class="bp-module">风控分析</div><div class="bp-module">指标分析</div><div class="bp-chip">元数据</div><div class="bp-chip">质量管理</div><div class="bp-chip">数据开发</div><div class="bp-chip">数据服务</div></div><div class="bp-domain">One Data · 统一指标语义</div></div>
+<div class="bp-center"><h3>业务中台</h3><div class="bp-center-grid"><div class="bp-module">客户中心</div><div class="bp-module">订单中心</div><div class="bp-module">商品中心</div><div class="bp-module">结算中心</div><div class="bp-chip">库存服务</div><div class="bp-chip">营销服务</div><div class="bp-chip">合同服务</div><div class="bp-chip">审批服务</div></div><div class="bp-domain">共享业务组件 · 标准接口</div></div>
+</div></section>
+<div class="bp-link" aria-label="中台能力与后台业务的示意关系"><span>↕ 业务协同</span></div>
+<section class="bp-layer" data-blueprint-layer="业务后台层" aria-labelledby="layer-operation">
+<h2 class="bp-label" id="layer-operation">业务后台层</h2><div class="bp-region bp-region--medium"><div class="bp-modules bp-module-grid-5">
+<div class="bp-module">采购管理</div><div class="bp-module">仓储管理</div><div class="bp-module">品质管理</div><div class="bp-module">客户管理</div><div class="bp-module">企业管理</div>
+<div class="bp-module">销售管理</div><div class="bp-module">财务管理</div><div class="bp-module">人事管理</div><div class="bp-module">审批管理</div><div class="bp-module">成本核算</div>
+</div></div></section>
+<div class="bp-link" aria-label="业务后台与分析建模的示意关系"><span>↓ 分析数据</span></div>
+<section class="bp-layer" data-blueprint-layer="分析建模层" aria-labelledby="layer-analytics">
+<h2 class="bp-label" id="layer-analytics">分析建模层</h2><div class="bp-region bp-region--light"><div class="bp-modules bp-module-grid-5">
+<div class="bp-module">成本分析</div><div class="bp-module">人事分析</div><div class="bp-module">仓储分析</div><div class="bp-module">生产环节分析</div><div class="bp-module">销售商品分析</div>
+<div class="bp-module">采购分析</div><div class="bp-module">物流分析</div><div class="bp-module">客户分析</div><div class="bp-module">供应商分析</div><div class="bp-module">系统使用分析</div>
+</div></div></section>
+<div class="bp-link" aria-label="指标分析与标准体系的示意关系"><span>↕ 指标口径</span></div>
+<section class="bp-layer" data-blueprint-layer="标准层" aria-labelledby="layer-standard">
+<h2 class="bp-label" id="layer-standard">标准层</h2><div class="bp-region bp-region--mint"><div class="bp-modules bp-standard"><div class="bp-module">数据使用手册</div><div class="bp-module">数据字典</div><div class="bp-module">数据仓库模型</div><div class="bp-module">指标逻辑模型</div><div class="bp-module">业务数据模型</div></div></div></section>
+<div class="bp-link" aria-label="数据整合进入标准层的示意关系"><span>↑ 数据供给</span></div>
+<section class="bp-layer" data-blueprint-layer="数据整合层" aria-labelledby="layer-integration">
+<h2 class="bp-label" id="layer-integration">数据整合层<br>（全域数据）</h2><div class="bp-region">
+<div class="bp-data">
+<div class="bp-data-origin"><div class="bp-data-subtitle">内部业务系统（示例）</div><div class="bp-source-grid"><div class="bp-source">CRM</div><div class="bp-source">ERP</div><div class="bp-source">WMS</div><div class="bp-source">TMS</div></div><div class="bp-external"><span>外部数据</span><span>客户数据</span><span>第三方数据</span></div></div>
+<div class="bp-extract">数据集成<strong aria-hidden="true">➜</strong>清洗加工</div>
+<div class="bp-db" aria-label="示例数据分层存储 ODS DWD DWS ADS"><strong>数据仓库</strong><small>ODS · 原始层</small><small>DWD · 明细层</small><small>DWS · 汇总层</small><small>ADS · 应用层</small></div>
+</div></div></section>
+</div>
+<aside class="bp-rail right" aria-labelledby="governance-title"><h2 id="governance-title">治理保障与其他系统</h2>
+<div class="bp-rail-item">风险控制</div><div class="bp-rail-item">审计追踪</div><div class="bp-rail-item">数据治理</div><div class="bp-rail-item">安全合规</div><div class="bp-rail-item">数据交换</div><div class="bp-rail-item">对外系统</div></aside>
+</div>
+<div class="bp-legend"><span>业务/能力模块</span><span>架构层标签</span><span>统一入口</span><span>全部模块和箭头仅为虚构示例</span></div>
+</div></div>
+<details class="bp-text"><summary>阅读文字版架构（无须依赖图片）</summary><ol>
+<li><strong>入口：</strong>客户、供应商、运营、金融 PC 入口、经营大屏、移动端 APP，经统一入口到达产品能力。</li>
+<li><strong>应用展示层：</strong>销售、生产、采购、成本、仓储及风险六类看板。</li>
+<li><strong>中台能力层：</strong>数据中台与业务中台分别管理数据能力及共享业务能力。</li>
+<li><strong>业务后台层：</strong>采购、仓储、品质、客户、企业、销售、财务、人事、审批与成本核算。</li>
+<li><strong>分析建模层：</strong>业务、经营、财务及系统使用等分析能力。</li>
+<li><strong>标准层：</strong>数据使用规范、字典、仓库模型、指标逻辑和业务模型。</li>
+<li><strong>数据整合层：</strong>汇集 CRM、ERP、WMS、TMS 及外部数据并进行数据加工，示例分层存储为 ODS、DWD、DWS、ADS。</li>
+<li><strong>贯穿支撑：</strong>基础支撑与治理保障覆盖多层能力，不等于每项系统均已经建设。</li>
+</ol></details>
+<p class="bp-note">⚠️ 图中产品名称、数据模块、跨层箭头均为版式演示。实际绘制时必须依据用户提供的架构资料替换、删减或增补模块；不能把设计示意当成已部署事实。无需脚本或网络，打印时建议 A3 横向。原始版式参考为用户提供的分层产品架构截图，不复制其品牌素材。</p>
+</main>
+</body>
+</html>
