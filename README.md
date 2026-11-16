@@ -173,4 +173,6 @@ Real-project examples: [Yopu / StoryOS / IM architecture gallery](demo/architect
 
 See also: [Eight architecture views — layered/container models](demo/architecture-patterns.html) and [Lightweight Skill principles](docs/skill-principles.md).
 
+**Title wrapping refinement (2026-11-16):** H1–H4 headings use the available section width and wrap naturally, rather than balancing or artificially limiting line length. The Chrome gate detects premature heading breaks; see the [before/after evidence](evals/heading-natural-wrap-2026-11-16.md).
+
 **2026-11-14 stable baseline:** A fresh native Codex session generated a StoryOS HTML report and passed 50/50 interactive/content checks plus 6/6 typography scenarios. See the [freeze record](docs/release-freeze-2026-11-14.md). This is one verified example, not a universal guarantee.

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — HTML 标题自然换行与验收漏检修复（2026-11-16）
+
+- GEN-UI 生成 HTML 的 H1–H4 标题改为优先利用所在章节的可用宽度，自然换行；禁止模型滥用均衡换行、狭窄 `max-width` 或人为 `<br>` 造成尚未到边界便断行。
+- 扩展 HTML 交付门禁和 Typography Chrome 检查，实测标题元素、父内容区、首行宽度与换行类型；新增零第三方依赖的正反例回归 `node tests/chrome-heading-wrap-regression.mjs`。
+- 1440px 长标题正例：首行 1045/1051px；负例：首行仅 680/1051px。旧门禁错误地两者均 46/46 PASS；新门禁正例 51/51 PASS、负例 375/768/1440px 及折叠态均按预期 FAIL。
+- 原生 Codex 已生成的 StoryOS 原件不修改；生成报告验收 55/55、Typography 66/66、技术文档 45/45、合约单测 4/4 通过。详情见 [2026-11-16 标题排版回归](evals/heading-natural-wrap-2026-11-16.md)。
+
+
 ## Stable baseline — 原生 Codex 独立生成验收与功能冻结（2026-11-14）
 
 - Windows 桌面用户原生 Codex 的全新会话首次实现真正独立生成 StoryOS HTML；不注入旧报告或 Skill 正文，HTML 静态 PASS、交互 46/46、Typography 6/6。

@@ -98,6 +98,26 @@ function measure(kind){
   const layout=kind==="report"?document.querySelector("[data-report-app]"):document.querySelector(".doc-layout");
   const main=kind==="report"?document.getElementById("main"):document.querySelector(".doc-main");
   const nav=kind==="report"?document.getElementById("report-sidebar"):document.querySelector(".doc-toc");
+  const headingRows=[...main.querySelectorAll("h1,h2,h3,h4")].filter(el=>{
+    const r=el.getBoundingClientRect(),s=getComputedStyle(el);
+    return r.width>0&&r.height>0&&s.visibility!=="hidden"&&!el.closest("[hidden]");
+  }).map(el=>{
+    const css=getComputedStyle(el),r=el.getBoundingClientRect(),p=el.parentElement,ps=getComputedStyle(p);
+    const available=p.clientWidth-(parseFloat(ps.paddingLeft)||0)-(parseFloat(ps.paddingRight)||0);
+    const range=document.createRange();range.selectNodeContents(el);
+    const lines=[];
+    for(const box of range.getClientRects()){
+      if(box.width<=.2||box.height<=.2)continue;
+      let line=lines.find(x=>Math.abs(x.top-box.top)<3);
+      if(!line){line={top:box.top,left:box.left,right:box.right};lines.push(line);}
+      else{line.left=Math.min(line.left,box.left);line.right=Math.max(line.right,box.right);}
+    }
+    return {text:el.textContent.trim().slice(0,70),width:Math.round(r.width),available:Math.round(available),
+      lines:lines.length,firstLine:Math.round(lines[0]?lines[0].right-lines[0].left:0),
+      textWrap:css.textWrap,hardBreak:!!el.querySelector("br"),
+      clipped:el.scrollWidth>el.clientWidth+3};
+  });
+
   const table=document.querySelector(kind==="report"?"#records .table-wrap":".doc-main :is(.table-wrap,.table-scroll)");
   const code=document.querySelector(kind==="report"?"#case-review pre":".doc-main pre");
   const rootStyle=getComputedStyle(main);
@@ -114,6 +134,7 @@ function measure(kind){
     navVisible:getComputedStyle(nav).display!=="none",
     docOverflow:document.documentElement.scrollWidth>innerWidth+2,
     prose:metrics,
+    headings:headingRows,
     typography:{enabled:main?.classList.contains("genui-typography")??false,
       widthToken:rootStyle.getPropertyValue("--genui-prose-width").trim(),
       leadingToken:rootStyle.getPropertyValue("--genui-prose-leading").trim(),
@@ -210,6 +231,10 @@ async function main(){
               data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"62ic":"72ch")
               &&parseFloat(data.typography.leadingToken)>=1.6
               &&parseFloat(data.typography.leadingToken)<=1.85);
+            check(reference+" visible headings occupy reading width and wrap naturally",data.headings,
+              data.headings.length>0&&data.headings.every(h=>h.textWrap==="wrap"&&!h.hardBreak&&!h.clipped
+                &&(h.lines<=1||h.width>=h.available*.87||h.available-h.width<=28)
+                &&(h.lines<=1||h.text.length<16||/[A-Za-z0-9_-]{11,}/.test(h.text)||h.firstLine>=h.width*.77)));
             if(/^zh(?:-|$)/i.test(data.language))
               check(reference+" Chinese body paragraphs use natural edge wrapping",data,
                 data.prose.filter(x=>x.bodyParagraph).every(x=>x.textWrap==="wrap"));
