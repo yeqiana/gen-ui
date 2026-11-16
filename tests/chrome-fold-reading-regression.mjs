@@ -26,7 +26,7 @@ const html=orig.replace(marker,injections+marker).replace(
 );
 assert.notEqual(html,orig);
 const base=fs.mkdtempSync(path.join(os.tmpdir(),"genui-fold-regression-"));
-function create(name,breakage){
+function create(name,breakage,initiallyFolded=false){
  const root=path.join(base,name);
  fs.mkdirSync(root,{recursive:true});
  fs.cpSync(path.join(model,"assets"),path.join(root,"assets"),{recursive:true});
@@ -38,7 +38,9 @@ function create(name,breakage){
  if(breakage==="mark"){
   fs.appendFileSync(path.join(root,"assets","heading-nav.css"),'\n/* Deliberately bad brand rule */\n.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{opacity:0!important}\n');
  }
- fs.writeFileSync(path.join(root,"report.html"),html);
+ const report=initiallyFolded?html.replace('<div class="doc-layout">','<div class="doc-layout" data-sidebar-collapsed="true">'):html;
+ if(initiallyFolded)assert.notEqual(report,html,"test fixture must start folded");
+ fs.writeFileSync(path.join(root,"report.html"),report);
  return root;
 }
 function run(name,folder){
@@ -59,6 +61,12 @@ try{
   const audit=positive.audit.checks.find(x=>x.stage==="viewport-1440"&&x.name==="narrative and quotation widths/indents near media use reading column");
   assert.ok(audit?.pass&&audit.details.cases.includes(name),name+" was not validated");
  }
+ const startsFolded=run("starts-folded",create("starts-folded",null,true));
+ assert.equal(startsFolded.exit,0,"initially folded document must still pass both-state acceptance");
+ assert.equal(startsFolded.audit.pass,true);
+ const initialChecks=startsFolded.audit.checks.filter(x=>x.name==="initially folded rail renders a visible single M");
+ assert.deepEqual(initialChecks.map(x=>x.stage),["viewport-768","viewport-1440"]);
+ assert.ok(initialChecks.every(x=>x.pass));
  const badWidth=run("bad-width",create("bad-width","width"));
  assert.equal(badWidth.exit,1,"narrow paragraphs and indentation must fail");
  const widthFailures=badWidth.audit.checks.filter(x=>!x.pass&&/narrative|quotation/.test(x.name));
@@ -69,6 +77,6 @@ try{
  const markFailures=badMark.audit.checks.filter(x=>!x.pass&&x.name==="folded M is visibly rendered before hover without duplicate logo");
  assert.deepEqual(markFailures.map(x=>x.stage),["viewport-768","viewport-1440"]);
  console.log(JSON.stringify({result:"PASS",positiveChecks:positive.audit.checks.length,
-  detectedWidthFailures:widthFailures.length,detectedInvisibleMark:markFailures.length,
+  initialFoldedChecks:initialChecks.length,detectedWidthFailures:widthFailures.length,detectedInvisibleMark:markFailures.length,
   cases:["after-figure","quote","after-quote","callout","after-callout","after-table"]}));
 }finally{fs.rmSync(base,{recursive:true,force:true,maxRetries:3,retryDelay:130})}

@@ -83,7 +83,7 @@ function auditLongNav(){
 }
 function foldState(){
  const host=document.querySelector(".doc-layout,[data-report-app]"),aside=host?.querySelector(".doc-toc,#report-sidebar"),toggle=aside?.querySelector(".genui-sidebar-toggle,#toggle-sidebar");
- toggle?.click();
+ if(host?.dataset.sidebarCollapsed!=="true")toggle?.click();
  const brand=aside?.querySelector(".toc-brand,.brand"),mark=brand?.querySelector(".genui-brand-expand-icon"),rect=brand?.getBoundingClientRect(),main=host?.querySelector("main"),b=main.getBoundingClientRect();
  const pseudo=getComputedStyle(brand,"::before"),img=brand.querySelector(":scope > img"),imgStyle=img?getComputedStyle(img):null;
  const visibleMark=brand.matches(".toc-brand")?pseudo.content!=="none"&&pseudo.display!=="none"&&pseudo.backgroundImage!=="none"&&Number(pseudo.opacity)>.8&&parseFloat(pseudo.width)>=24:
@@ -291,6 +291,15 @@ try{
   await command("Page.navigate",{url:pathToFileURL(file).href});
   for(let i=0;i<100;i++){try{if(await evaluate("document.readyState==='complete'&&!!document.querySelector('main')"))break}catch{}await delay(90)}
   await delay(180);
+  // Some generated documents deliberately start collapsed. Verify that state,
+  // then expand before the common expanded -> folded -> expanded interaction run.
+  if(width>700&&await evaluate("document.querySelector('.doc-layout,[data-report-app]')?.dataset.sidebarCollapsed==='true'")){
+   const initialFolded=await run(foldState);
+   check("initially folded rail renders a visible single M",initialFolded.collapsed
+    &&initialFolded.toggleHidden&&initialFolded.defaultMarkVisible
+    &&!initialFolded.unexpectedDuplicateM&&initialFolded.markCount===1,initialFolded);
+   await evaluate("document.querySelector('.doc-toc>.genui-sidebar-toggle,#toggle-sidebar')?.click()");
+  }
   const state=await run(pageState);
   check("headings, valid real navigation anchors",state.headings===1&&state.tocLinks>=2&&state.anchorsValid,state);
   check("no page horizontal overflow",!state.overflow,{width,state});
