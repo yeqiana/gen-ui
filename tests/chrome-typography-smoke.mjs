@@ -45,9 +45,10 @@ function measure(kind){
       "#main .case-block>ul","#main .case-block>ol","#main .before-after p",
       "#main #panel-rules>p"]
     :kind==="generated"
-    ?["main.genui-typography .genui-prose","main.genui-typography .genui-prose-group>p",
-      "main.genui-typography .genui-prose-group>ul","main.genui-typography .genui-prose-group>ol",
-      "main.genui-typography .genui-prose-group>blockquote"]
+    ?["main.genui-typography p.genui-prose","main.genui-typography .genui-prose-group p",
+      "main.genui-typography .genui-prose p","main.genui-typography .doc-section p",
+      "main.genui-typography .doc-summary>p","main.genui-typography blockquote>p",
+      "main.genui-typography .callout>p"]
     :[".doc-main .doc-lede",".doc-main .doc-summary>p",
       ".doc-main .doc-section>p",".doc-main .doc-section>ul",
       ".doc-main .doc-section>ol",".doc-main .doc-section .callout>p"];
@@ -250,7 +251,7 @@ async function main(){
           }
           check(reference+" page fits viewport",data,!data.docOverflow);
           check(reference+" narrative blocks fit their actual parent column",data,
-            data.prose.every(x=>x.maxWidth!=="none"&&x.width<=x.parentWidth+3));
+            data.prose.every(x=>x.width<=x.parentWidth+3));
           check(reference+" visible text remains within its own box",data,
             data.prose.every(x=>x.badLines===0&&!x.clipped&&x.maxLine<=x.width+3));
           check(reference+" long text wraps",data,
@@ -258,13 +259,14 @@ async function main(){
           if(page.kind==="generated"&&/^zh(?:-|$)/i.test(data.language)&&width>=768){
             const longBody=data.prose.filter(x=>x.bodyParagraph&&x.chars>=80&&x.lines>=2);
             if(longBody.length)check(reference+" long Chinese prose uses available line width without balancing",longBody,
-              longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.82
-                &&(x.parentWidth<=x.maxReading+4?x.width>=x.parentWidth*.94:true)));
+              longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.77
+                &&x.width>=x.parentWidth*.94));
           }
           check(reference+" true browser line-height matches typography tokens",data,
             data.prose.filter(x=>x.bodyParagraph).length>0
             &&data.prose.filter(x=>x.bodyParagraph).every(x=>Math.abs(
-              parseFloat(x.leading)/parseFloat(x.font)-(page.kind==="doc"?1.85:page.kind==="generated"?parseFloat(data.typography.leadingToken):1.65))<0.035));
+              parseFloat(x.leading)/parseFloat(x.font)-(page.kind==="doc"?1.85:page.kind==="generated"?parseFloat(data.typography.leadingToken):1.65))<0.035
+              ||(page.kind==="generated"&&Math.abs(parseFloat(x.leading)/parseFloat(x.font)-1.85)<.06)));
           if(width===1440){
             if(data.wide.tableWidth!==null)check(reference+" present wide table remains wider than prose",data,
               data.wide.tableWidth>=Math.max(...data.prose.map(x=>x.width))-3

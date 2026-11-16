@@ -1,6 +1,6 @@
 ---
 name: gen-ui
-description: Use when AI responses become hard to understand, too long, or difficult to navigate. Reorganize technical analysis, design proposals, implementation plans, reviews, and test evidence for clear reading. Markdown by default; offline HTML and diagrams only when genuinely needed.
+description: Improve dense AI responses, technical reviews and evidence, or produce a user-requested readable offline HTML report with navigation and diagrams. Use Markdown by default unless HTML is explicitly requested.
 ---
 
 # Gen UI — Information Design Skill for AI Responses
@@ -9,7 +9,7 @@ description: Use when AI responses become hard to understand, too long, or diffi
 
 **Lightweight entry, full capability, no regression.** Load assets and contracts only when needed; enhance Markdown progressively. See [Skill principles](docs/skill-principles.md).
 
-For HTML, use [HTML essentials](references/html-report-essentials.md) and [Typography](references/typography.md) only as needed; run `node scripts/validate-html-report.mjs <report.html>` unless tests are declined.
+For static offline HTML (even with a diagram/image viewer), read [HTML essentials](references/html-report-essentials.md) and [Typography](references/typography.md) as needed; use the full HTML contract only for custom interactions. **Write `report.html` first**, then optional diagrams. A permitted runner can stage public CSS/JS once with `node scripts/prepare-html-assets.mjs <output-dir>`; do not repeatedly retry blocked file-copy commands. Run `node scripts/validate-html-report.mjs <report.html>` unless tests are declined.
 
 ## Purpose
 
