@@ -45,7 +45,7 @@ test("架构按需路由，不强制增加全局 HTML 或画无依据连线",()=
   assert.match(arch,/product-architecture-panorama\.md/);
   assert.match(spec,/普通回答默认 Markdown/);
   assert.match(spec,/箭头是关系，不是装饰/);
-  assert.match(spec,/不可凭审美添加/);
-  assert.match(spec,/实际绘制时应/);
+  assert.match(spec,/不得凭审美添加/);
+  assert.match(spec,/实际生成时应/);
   assert.match(spec,/纯 HTML \+ CSS/);
 });
