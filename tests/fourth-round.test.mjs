@@ -54,7 +54,7 @@ test("HTML 默认双层章节导航，标题装饰图标隐藏但折叠导航图
   const navCss=read("assets/heading-nav.css");
   assert.match(navCss,/\.doc-toc>\.genui-sidebar-toggle/);
   assert.doesNotMatch(navCss,/\.genui-sidebar-toggle\s*\{[^}]*display:\s*none/);
-  assert.match(navCss,/\.sidebar>\.brand>img\{display:none!important\}/);
+  assert.match(navCss,/\.sidebar>\.brand>img\{display:block!important;/,"导航品牌图标默认展示，展开与折叠状态均保留");
  assert.match(nav,/main\.querySelectorAll\("h2,h3"\)/);
  assert.doesNotMatch(nav,/\^\\d\+\\\.\\d\+\\\.\\d\+/);
  for(const file of ["demo/report.html","demo/documents/architecture-design.html","demo/documents/project-analysis.html","demo/documents/implementation-plan.html","demo/documents/test-acceptance.html"]){

@@ -30,7 +30,7 @@ test("精简表达不丢失事实与技术载荷",()=>{
   assert.match(skill,/remove filler and repetition, not facts, evidence, constraints, or required steps/i);
   assert.match(skill,/code, commands, paths, numbers, errors, and technical terms exact/i);
   assert.match(guide,/用户要求深入/);
-  assert.match(guide,/不删除事实、证据、限制、风险或必要步骤/);
+  assert.match(guide,/保留事实、证据、限制、风险和必要步骤/);
 });
 
 test("信息设计评测集覆盖六种任务，且不把图表或 HTML 设为默认",()=>{
