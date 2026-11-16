@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 0 1200 740">
+<title>StoryOS 异步编排与持久化裁决</title><desc>设计示意：五阶段流程、MySQL 事实层、Outbox 异步投递与 Redis 心跳租约；Worker 所有提交必须经持久化令牌校验。</desc>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#3A83F7"/></marker></defs>
+<rect width="1200" height="740" fill="white"/>
+<g font-family="Segoe UI,Microsoft YaHei,sans-serif" fill="#1A1C1F">
+<text x="40" y="48" font-size="26" font-weight="bold">StoryOS · 异步编排设计</text><text x="40" y="78" font-size="16">建议架构 / 非运行证据　　实线箭头表示建议的数据流</text>
+<rect x="30" y="105" width="1140" height="125" rx="12" fill="#eff6ff" stroke="#b8d1f8"/>
+<text x="50" y="135" font-size="18" font-weight="bold">业务依赖：按已确认版本推进</text>
+<g font-size="17" text-anchor="middle"><text x="110" y="185">STORY</text><text x="315" y="185">STORYBOARD</text><text x="545" y="185">PRODUCTION</text><text x="800" y="185">QUALITY REVIEW</text><text x="1070" y="185">RELEASE</text></g>
+<g fill="none" stroke="#3A83F7" stroke-width="2" marker-end="url(#a)"><path d="M155 179H218"/><path d="M405 179H450"/><path d="M640 179H690"/><path d="M910 179H1000"/></g>
+<rect x="30" y="275" width="1140" height="170" rx="12" fill="#f7f9fc" stroke="#ccd4df"/>
+<text x="50" y="310" font-size="21" font-weight="bold">MySQL · 权威事实与原子裁决</text>
+<text x="50" y="350" font-size="18">任务 / 节点 / attempt　│　依赖版本 / 产物引用　│　单调递增 Fencing Token</text>
+<text x="50" y="385" font-size="18">同一事务：条件状态迁移 + 产物版本 + Outbox 事件</text>
+<text x="50" y="419" font-size="17">认领、续租、接管、提交均校验当前 attempt / token / 状态；过期提交拒绝</text>
+<path d="M600 230V270" stroke="#3A83F7" stroke-width="2" marker-end="url(#a)"/>
+<rect x="30" y="515" width="320" height="160" rx="12" fill="#eff6ff" stroke="#b8d1f8"/>
+<text x="50" y="550" font-size="21" font-weight="bold">Outbox Relay → 投递通道</text><text x="50" y="586" font-size="17">至少一次投递 / 重试 / 去重</text><text x="50" y="620" font-size="17">事件是唤醒信号，执行前重读状态</text><text x="50" y="650" font-size="16">通道选型待定，不能假设零丢失</text>
+<rect x="440" y="515" width="320" height="160" rx="12" fill="#fff8e8" stroke="#e6c780"/>
+<text x="460" y="550" font-size="21" font-weight="bold">Worker 池</text><text x="460" y="586" font-size="17">并行竞争 → MySQL 条件认领</text><text x="460" y="620" font-size="17">执行 / 幂等副作用 / 条件提交</text><text x="460" y="650" font-size="16">接管产生新 attempt 与更大 token</text>
+<rect x="850" y="515" width="320" height="160" rx="12" fill="#f5f7fa" stroke="#ccd4df"/>
+<text x="870" y="550" font-size="21" font-weight="bold">Redis · 活性信号</text><text x="870" y="586" font-size="17">Worker 心跳 / 快速租约</text><text x="870" y="620" font-size="17">丢失信号触发核查，不能独断接管</text><text x="870" y="650" font-size="16">故障或重启不重置 MySQL token</text>
+<g fill="none" stroke="#3A83F7" stroke-width="2" marker-end="url(#a)"><path d="M190 445V510"/><path d="M350 590H435"/><path d="M600 515V450"/><path d="M760 590H845"/></g>
+<text x="618" y="483" font-size="16">条件认领 / 提交</text>
+<text x="40" y="718" font-size="16">安全边界：租约解决何时重试；Fencing Token 决定谁仍有权写入；副作用需独立幂等协议。</text>
+</g></svg>

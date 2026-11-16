@@ -1,5 +1,13 @@
 # Changelog
 
+## Stable baseline — 原生 Codex 独立生成验收与功能冻结（2026-11-14）
+
+- Windows 桌面用户原生 Codex 的全新会话首次实现真正独立生成 StoryOS HTML；不注入旧报告或 Skill 正文，HTML 静态 PASS、交互 46/46、Typography 6/6。
+- 新增可选 `--require-text TERM` 内容相关性门禁；成功样本 50/50 PASS，之前跑题的 HTML 由 39 项页面 PASS 转为内容项 FAIL；不把关键词命中等同于完整语义审核。
+- 归档模型原样输出的离线 HTML 与本地静态资源及 SHA-256 清单，不公开桌面账户凭据、原始事件日志和私有路径。
+- 基线功能冻结，后续仅处理有明确证据的缺陷及安全修补。详情参阅 [冻结记录](docs/release-freeze-2026-11-14.md)。
+
+
 ## Unreleased — 修复中文正文过早断行（2026-11-14）
 
 - 根因：此前为中文正文统一启用 `text-wrap: balance`，它会主动缩短长段落各行；叠加 `46ic` 限宽，真实 StoryOS 报告 1440px 下章节宽 755px，但正文首行仅约 504px，空余约 251px。

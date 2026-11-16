@@ -25,4 +25,4 @@
 
 本模式面向**仓库内可引用本地资源**的静态页面；如果用户要求真正独立的单文件、自定义交互或复杂可视化，则切换完整合约，而不是把完整功能压缩成一个不可用的空壳。
 
-正常交付先执行 `node scripts/validate-html-report.mjs <report.html>`；需要真实交互验收时，对可信本地 HTML 执行 `node scripts/accept-html-delivery.mjs <report.html> <evidence-dir> --require-image`（无内容图片时省略最后一项并注明图片交互未覆盖）。该脚本检查实际阅读区居中、导航和图片弹层并保存截图及 JSON；不可用 Demo 代替生成文件。**用户明确要求跳过测试时不执行**，交付说明如实标注「未测试」。
+正常交付先执行 `node scripts/validate-html-report.mjs <report.html>`；需要真实交互验收时，对可信本地 HTML 执行 `node scripts/accept-html-delivery.mjs <report.html> <evidence-dir> --require-image`（无内容图片时省略最后一项并注明图片交互未覆盖）。该脚本检查实际阅读区居中、导航和图片弹层并保存截图及 JSON；可按任务添加多个 `--require-text 关键词`，防止跑题 HTML 因页面可用而误判通过（仍不能代替内容审阅）；不可用 Demo 代替生成文件。**用户明确要求跳过测试时不执行**，交付说明如实标注「未测试」。

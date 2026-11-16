@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // GEN-UI lightweight browser delivery gate. Built-in Node.js + installed Chrome only.
-// node scripts/accept-html-delivery.mjs <report.html> [output-dir] [--require-image]
+// node scripts/accept-html-delivery.mjs <report.html> [output-dir] [--require-image] [--require-text TERM ...]
 import fs from "node:fs";
 import os from "node:os";
 import net from "node:net";
@@ -11,13 +11,22 @@ import {fileURLToPath,pathToFileURL} from "node:url";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const file=path.resolve(process.argv[2]||"");
 if(!file.endsWith(".html")||!fs.existsSync(file)){
- console.error("Usage: node scripts/accept-html-delivery.mjs <report.html> [output-dir] [--require-image]");
+ console.error("Usage: node scripts/accept-html-delivery.mjs <report.html> [output-dir] [--require-image] [--require-text TERM ...]");
  process.exit(2);
 }
 const destination=process.argv[3]&&!process.argv[3].startsWith("--")?process.argv[3]:"evals/artifacts/html-acceptance-latest";
 const outDir=path.resolve(destination);
 fs.mkdirSync(outDir,{recursive:true});
 const requireImage=process.argv.includes("--require-image");
+const requiredTexts=[];
+for(let i=3;i<process.argv.length;i++){
+ if(process.argv[i]==="--require-text"){
+  const token=process.argv[++i];
+  if(!token||token.startsWith("--")){console.error("--require-text requires a nonempty literal term");process.exit(2)}
+  requiredTexts.push(token);
+ }
+}
+const normalizeText=s=>String(s).normalize("NFKC").toLocaleLowerCase();
 const results={schema:"gen-ui-html-gate/v1",source:path.relative(root,file).replaceAll("\\","/"),runTime:new Date().toISOString(),checks:[],screenshots:[],browserErrors:[],externalRequests:[],pass:false};
 let stage="static";
 function check(name,pass,details=null){results.checks.push({stage,name,pass:Boolean(pass),details});return Boolean(pass)}
@@ -203,6 +212,10 @@ try{
   check("headings, valid real navigation anchors",state.headings===1&&state.tocLinks>=2&&state.anchorsValid,state);
   check("no page horizontal overflow",!state.overflow,{width,state});
   check("content images load offline",state.imagesLoaded,{count:state.imageCount,loaded:state.imagesLoaded});
+  if(width===1440&&requiredTexts.length){
+   const narrative=normalizeText(await evaluate("document.querySelector('main')?.innerText || ''"));
+   for(const term of requiredTexts)check("required report content: "+term,narrative.includes(normalizeText(term)),{term});
+  }
   const prose=await run(auditProseWrap);
   if(!prose.skipped)check("Chinese prose wraps near reading column edge without balanced premature lines",prose.pass,prose);
   if(width===375)check("mobile contents visible",state.mobileVisible,state);
