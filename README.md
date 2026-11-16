@@ -112,7 +112,7 @@ Static documents reuse `div.doc-layout`, `aside.doc-toc`, `main.doc-main.genui-t
 ~~~powershell
 node scripts/validate-html-report.mjs path/to/report.html
 node tests/chrome-typography-smoke.mjs --generated path/to/report.html
-node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --require-image
+node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --require-image --require-text StoryOS --require-text Outbox
 ~~~
 
 After tightening the structure contract, three local native Codex representative tasks passed static delivery checks and **18/18 Chrome viewport/sidebar scenarios**; the repository also passed **144/144 Node.js tests**. This is evidence for those samples, not a guarantee for arbitrary model outputs or independent Skill discovery. Native Codex shell reads remained blocked by a local execution policy, so the runner supplied the original Skill text read-only. See the [Chinese blind evaluation and limitations](evals/gen-ui-typography-blind-2026-11-13.md).
@@ -172,3 +172,5 @@ Real-project examples: [Yopu / StoryOS / IM architecture gallery](demo/architect
 ![Yopu, StoryOS and IM layered architecture examples](demo/documents/assets/architecture-patterns-preview.png)
 
 See also: [Eight architecture views — layered/container models](demo/architecture-patterns.html) and [Lightweight Skill principles](docs/skill-principles.md).
+
+**2026-11-14 stable baseline:** A fresh native Codex session generated a StoryOS HTML report and passed 50/50 interactive/content checks plus 6/6 typography scenarios. See the [freeze record](docs/release-freeze-2026-11-14.md). This is one verified example, not a universal guarantee.

@@ -1,0 +1,122 @@
+/* Heading navigation: 3 levels, default left, collapsible children. */
+.genui-tree,.genui-nav-children{list-style:none;padding:0;margin:0}.genui-tree>li,.genui-nav-children>li{position:relative;min-width:0}
+.genui-nav-children{padding-left:11px;margin-left:11px;border-left:1px solid #e6eaf0}.genui-nav-children[hidden]{display:none!important}
+.genui-tree a{display:flex;align-items:center;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:24px}
+.genui-tree .genui-nav-level-2>a{font-size:12px!important;padding-left:12px!important}
+.genui-tree .genui-nav-level-3>a{font-size:11px!important;padding-left:15px!important}
+.genui-tree .genui-nav-fold{position:absolute;top:3px;right:0;width:23px;height:25px;padding:0!important;min-height:25px!important;display:grid;place-items:center;border:0;background:transparent;color:#667085;cursor:pointer;font-size:16px}
+.genui-tree .genui-nav-fold:focus-visible{outline:2px solid #3a83f7}
+.genui-tree a img{width:16px;height:16px;flex-shrink:0}
+.app[data-sidebar-collapsed=true] .genui-tree .genui-nav-fold,.app[data-sidebar-collapsed=true] .genui-nav-children{display:none!important}
+.app[data-sidebar-collapsed=true] .genui-tree .genui-nav-level-1>a{font-size:0;padding-right:0}
+.doc-toc .genui-tree a{padding:6px 24px 6px 8px;font-size:12px;line-height:1.4;text-decoration:none;color:#475467}
+.doc-toc .genui-tree a:hover{color:#3a83f7;background:#eff6ff}
+.doc-toc .genui-tree{max-height:none;overflow:visible}
+@media(max-width:700px){.mobile-toc .genui-tree{max-height:65vh;overflow:auto}.doc-toc .genui-tree{max-height:none}}
+
+.genui-tree a svg{width:16px;height:16px;flex:0 0 16px}
+.app[data-sidebar-collapsed=true] .genui-tree .genui-nav-level-1>a svg{width:19px;height:19px}
+
+/* Hide destination/title decoration in the expanded rail, but never hide its fold control. */
+.genui-tree a>svg,.genui-tree a>img{display:none!important}
+.genui-tree a{padding-right:9px!important}
+.genui-nav-children{padding-left:8px;margin-left:8px}
+.genui-tree .genui-nav-level-1>a[aria-expanded]{cursor:pointer}
+.sidebar>.brand>img{display:block!important;flex:0 0 auto;object-fit:contain}
+.doc-toc>.toc-brand{padding-right:40px}
+.doc-toc>.genui-sidebar-toggle{position:absolute;top:0;right:8px;z-index:5;display:grid;place-items:center;width:30px;height:30px;min-height:30px;padding:0;border:0;border-radius:6px;background:transparent;color:#475467;cursor:pointer}
+.genui-sidebar-toggle svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s ease}
+.genui-sidebar-toggle:hover{background:#eff6ff;border-color:#b7d2fa}
+.genui-sidebar-toggle:focus-visible{outline:2px solid #3a83f7;outline-offset:2px}
+.genui-nav-resize{position:absolute;right:0;top:0;bottom:0;width:7px;z-index:12;cursor:col-resize;touch-action:none;background:transparent;border-right:1px solid transparent}
+.genui-nav-resize:hover,.genui-nav-resize.is-dragging,.genui-nav-resize:focus-visible{background:rgba(58,131,247,.09);border-right-color:#9dc2ff;outline:none}
+.sidebar nav,.doc-toc nav{scrollbar-width:thin;scrollbar-color:#e2e8f0 transparent}
+.sidebar nav::-webkit-scrollbar,.doc-toc nav::-webkit-scrollbar{width:4px}
+.sidebar nav::-webkit-scrollbar-thumb,.doc-toc nav::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:8px}
+.sidebar nav::-webkit-scrollbar-track,.doc-toc nav::-webkit-scrollbar-track{background:transparent}
+@media(max-width:800px){.genui-nav-resize{display:none!important}}
+
+/* Icons are hidden by default; when only a narrow rail remains, show icon-only links. */
+.app[data-sidebar-collapsed="true"] .genui-tree .genui-nav-level-1>a>svg,.doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-level-1>a>svg{display:block!important;width:20px;height:20px;flex:0 0 20px}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav{display:block!important;flex:1;min-height:0;overflow-y:auto}
+.doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-level-1>a{font-size:0;padding:10px 3px!important;justify-content:center}
+.doc-layout[data-sidebar-collapsed="true"] .genui-tree .genui-nav-children{display:none!important}
+
+/* Unified navigation icon visibility: only a collapsed rail shows destination icons. */
+.sidebar nav a > svg,.sidebar nav a > img,
+.doc-toc nav a > svg,.doc-toc nav a > img,
+.mobile-toc nav a > svg,.mobile-toc nav a > img{display:none!important}
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1 > a > svg,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1 > a > img,
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1 > a > svg,
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1 > a > img{display:block!important;flex:0 0 20px;width:20px;height:20px}
+/* One scroll host for each left navigation rail. */
+.app:not([data-navigation="top"]) .sidebar,.doc-layout>.doc-toc{overflow-y:hidden}
+.app:not([data-navigation="top"]) .sidebar>nav,.doc-layout>.doc-toc>nav{min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+.app:not([data-navigation="top"]) .sidebar .genui-tree,.doc-layout .doc-toc .genui-tree{max-height:none;overflow:visible}
+/* The collapsed brand is the original M mark only, not extra letters. */
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{content:"";display:block;width:30px;height:30px;margin:0 auto;background:url("./icons/gen-ui-mark.svg") center / 25px 25px no-repeat}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.genui-sidebar-toggle{top:40px;right:6px;border:0;box-shadow:none;background:transparent}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>nav{padding-top:34px}
+.app[data-sidebar-collapsed="true"] .sidebar>.brand>img{display:block!important}
+.genui-sidebar-toggle{box-shadow:none}
+
+/* Folded identity doubles as the expand control: M normally, chevron on hover/focus. */
+.genui-brand-expand-icon{display:none}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.genui-sidebar-toggle,
+.app[data-sidebar-collapsed="true"] .sidebar .brand>.nav-toggle{display:none!important}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>nav{padding-top:0}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand{
+ position:relative;display:grid;place-items:center;flex:none;box-sizing:border-box;
+ width:40px;height:40px;min-height:40px;margin:0 auto 8px;padding:0!important;
+ border-radius:7px;cursor:pointer;user-select:none;gap:0;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{margin:0}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible),
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible){background:#eff6ff;color:#3a83f7}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible)::before,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible)>img{opacity:0}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible)>.genui-brand-expand-icon,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible)>.genui-brand-expand-icon{
+ display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:20px;height:20px;pointer-events:none;fill:none;stroke:currentColor;
+}
+
+/* Folded rail refinement: share one centerline for brand, chevron and destinations. */
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand{
+ width:36px;height:36px;min-height:36px;margin:0 auto 8px;padding:0!important;
+ border-radius:8px;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand::before{
+ width:27px;height:27px;background-size:24px 24px;
+}
+.app[data-sidebar-collapsed="true"] .sidebar>.brand>img{width:27px;height:27px;object-fit:contain}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible),
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible){
+ background:rgba(58,131,247,.04);color:#3a83f7;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc>.toc-brand:is(:hover,:focus-visible)>.genui-brand-expand-icon,
+.app[data-sidebar-collapsed="true"] .sidebar>.brand:is(:hover,:focus-visible)>.genui-brand-expand-icon{
+ width:18px;height:18px;
+}
+.genui-sidebar-toggle:hover{background:rgba(58,131,247,.04);border-color:transparent}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav :is(.genui-tree,.toc-list),
+.app[data-sidebar-collapsed="true"] .sidebar nav :is(.genui-tree,.nav-list){
+ margin-inline:0!important;padding-inline:0!important;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1>a,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1>a{
+ display:flex;align-items:center;justify-content:center;box-sizing:border-box;
+ min-width:0;width:100%;min-height:40px;height:40px;padding:10px 0!important;gap:0;
+ border-left:0;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1>a>svg,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1>a>svg{
+ width:18px!important;height:18px!important;flex:0 0 18px!important;
+}
+.doc-layout[data-sidebar-collapsed="true"] .doc-toc nav .genui-nav-level-1>a:hover,
+.app[data-sidebar-collapsed="true"] .sidebar nav .genui-nav-level-1>a:hover{
+ background:rgba(58,131,247,.04);
+}

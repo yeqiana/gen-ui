@@ -1,0 +1,55 @@
+{
+  "schema": "gen-ui-independent-storyos/v1",
+  "date": "2026-11-14",
+  "origin": "native Codex desktop interactive Session 1; new ephemeral session, initially empty workspace",
+  "skill": "Installed gen-ui via user-scope junction; model accessed SKILL.md and references",
+  "output": "Original model files, byte-for-byte copied without post-generation edits",
+  "scope": "Single successful StoryOS case; not a general adherence guarantee",
+  "files": [
+    {
+      "path": "report.html",
+      "bytes": 14490,
+      "sha256": "98ebab50fb0f6055426f0ab3b00402b8d8f57c910b127d0d34e827bb02f26cfd"
+    },
+    {
+      "path": "assets/document.css",
+      "bytes": 15015,
+      "sha256": "3d66e45c31549de0f4d4b14973cb0e0f6628b09a8647080d18a31b6bd6b97858"
+    },
+    {
+      "path": "assets/heading-nav.css",
+      "bytes": 9487,
+      "sha256": "b4f516cf24e0d738585f47ba02e2e2be860150200201303ab27fc8cf479c3db9"
+    },
+    {
+      "path": "assets/heading-nav.js",
+      "bytes": 11536,
+      "sha256": "2bca37aae25d81e3767c600ec672f75af29848bf711335702b57e60fedf0c900"
+    },
+    {
+      "path": "assets/media-viewer.css",
+      "bytes": 4816,
+      "sha256": "a6b003831cdf73a4628fb7e2c000a491b8bb170dbadb27cd6a62938ecc02d684"
+    },
+    {
+      "path": "assets/media-viewer.js",
+      "bytes": 20613,
+      "sha256": "bd702b4071c6396a22c0b34c0c6f140943428e805271d70474f3ba21e0b09488"
+    },
+    {
+      "path": "assets/storyos-architecture.svg",
+      "bytes": 3684,
+      "sha256": "c646c5e4fdffe1afc5e49a5562e097a9c2b49091b3f165f3b02d3ece0739cba2"
+    },
+    {
+      "path": "assets/typography.css",
+      "bytes": 1179,
+      "sha256": "5da7d01cb6e1a6df62c87ac2f2a56603a10c75e008a95678bd9dad7fc16b4024"
+    },
+    {
+      "path": "assets/icons/gen-ui-mark.svg",
+      "bytes": 286,
+      "sha256": "cde2454d98e842b37f0ad3a891256a2cce06f46a6ae6d2c184c45349f4db5adc"
+    }
+  ]
+}

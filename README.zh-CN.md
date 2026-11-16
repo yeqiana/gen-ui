@@ -118,12 +118,14 @@
 ~~~powershell
 node scripts/validate-html-report.mjs path/to/report.html
 node tests/chrome-typography-smoke.mjs --generated path/to/report.html
-node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --require-image
+node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --require-image --require-text StoryOS --require-text Outbox
 ~~~
 
 本地原生 Codex 在三类代表性 HTML 任务的无强化提示验证中，经规则收口后通过静态检查及 **18/18 个 Chrome 视口/目录状态场景**；仓库回归有 **144/144 项 Node.js 测试**通过。该结论限于已测样本，并非未来所有生成结果的合规保证。原生 Codex 的本地命令读取仍受执行策略阻挡，评测由 Runner 只读提供 Skill 文件正文。详见 [盲测与已知边界](evals/gen-ui-typography-blind-2026-11-13.md)。
 
 **真实 HTML 交互门禁：** 针对可信的本地 HTML，用 Chrome/Edge 实测导航、长目录滚动、折叠 M 悬停、实际正文居中、图片弹层与滚轮缩放，保存 JSON 和截图。无内容图片时可省略 `--require-image`，但不能将图片行为标为已验收。详见 [StoryOS 真实交付验收及边界](evals/storyos-real-html-acceptance-2026-11-14.md)。 折叠导航的实际尺寸和图标中心线也在门禁中逐像素检查；常规 Markdown/静态任务不启动 Chrome。
+
+**2026-11-14 稳定基线：** 已用桌面原生 Codex 的全新会话独立生成 StoryOS HTML，并完成 50/50（含任务关键词）及 Typography 6/6 验收。详见 [冻结记录](docs/release-freeze-2026-11-14.md)。单次成功不代表所有主题都稳定。
 
 ## 安装与使用
 
