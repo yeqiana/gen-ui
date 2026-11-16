@@ -11,6 +11,9 @@ const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 test('轻量 Typography 只作用于标注的 HTML 正文，不压缩宽内容',()=>{
  const css=read('assets/typography.css');
  assert.match(css,/main\.genui-typography/);
+ const docCss=read('demo/documents/assets/document.css');
+ assert.match(docCss,/\.doc-summary>strong\{display:block/);
+ assert.doesNotMatch(docCss,/\.doc-summary strong\{display:block/);
  assert.match(css,/\.genui-prose/);
  assert.match(css,/--genui-prose-width:72ch/);
  assert.match(css,/html:lang\(zh\) main\.genui-typography\{--genui-prose-width:62ic\}/);

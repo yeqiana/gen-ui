@@ -8,6 +8,8 @@
 
 **Gen UI is an information-design Skill for AI coding assistants.** It makes technical explanations, code reviews, architecture decisions, implementation plans, and test evidence easier to follow. Markdown is the default; trusted offline HTML and validated interactive data are used only when the task and host support them.
 
+**2026-11-16 stable baseline:** Three independently authored offline HTML reports passed browser and typography checks with local asset staging; see the [evidence and limitations](evals/independent-html-stability-2026-11-16.md).
+
 ## Why Gen UI?
 
 | Reading problem | Gen UI approach |

@@ -1,5 +1,13 @@
 # Changelog
 
+## Stable baseline — 三主题独立生成与离线资源交付（2026-11-16）
+
+- 增加零第三方依赖的 `scripts/prepare-html-assets.mjs`，一次性准备 7 个离线公共资源，幂等且拒绝覆盖不同内容；Skill 先交付 HTML，再补 SVG，避免模型耗尽回合但没有报告。
+- 修复完整 HTML 规范中残留的 72ch 正文硬限宽表述；修复 `.doc-summary strong` 误把正文加粗词变成块导致过早换行。
+- Typography 验收检查真实段落及父容器宽度，覆盖没有特定 class 的实际中文正文。三主题在本地 Runner 预置标准资源后独立生成 3/3，Chrome/内容 179/179、Typography 18/18，原有文档 45/45。
+- 单独验证 1 例未点名 Skill 的自动发现成功。明确区分模型生成与 Runner 资源交接，详情参阅 [阶段报告](evals/independent-html-stability-2026-11-16.md) 和 [稳定基线](docs/stable-baseline-2026-11-16.md)。
+
+
 ## Unreleased — 折叠侧栏 CSS 去重（2026-11-16）
 
 - 移除重复的 40px/36px 按钮定义、旧 M 图路径和已覆盖的 hover/目录间距规则；保留单一默认 M、悬停展开箭头及淡蓝背景。
