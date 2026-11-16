@@ -14,6 +14,10 @@ main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>u
 html:lang(zh) main.genui-typography :is(p.genui-prose,.genui-prose-group>p){
   word-break:normal;line-break:strict;text-wrap:wrap;
 }
+/* Headings use the full section width and never balance into premature lines. */
+main.genui-typography :is(h1,h2,h3,h4){
+  max-width:100%;text-wrap:wrap;white-space:normal;overflow-wrap:break-word;
+}
 main.genui-typography .genui-prose-group>p+p{margin-block-start:var(--genui-prose-gap)}
 main.genui-typography .genui-prose-group>:is(h2,h3,h4){margin-block-start:var(--genui-heading-gap)}
 /* Generated prose blocks may include a bare pre outside .doc-section. */

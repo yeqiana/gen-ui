@@ -172,6 +172,42 @@ function auditProseWrap(){
  });
  return {skipped:false,count:checks.length,failures:checks.filter(x=>!x.ok).slice(0,5),pass:checks.every(x=>x.ok),sample:checks.slice(0,3)};
 }
+function auditHeadingWrap(){
+ const main=document.querySelector("main");
+ if(!main)return{pass:false,count:0,failures:[{reason:"missing main"}]};
+ const targets=[...main.querySelectorAll("h1,h2,h3,h4")].filter(el=>{
+  const r=el.getBoundingClientRect(),s=getComputedStyle(el);
+  return r.width>0&&r.height>0&&s.display!=="none"&&s.visibility!=="hidden"&&!el.closest("[hidden]");
+ });
+ const checks=targets.map(el=>{
+  const css=getComputedStyle(el),r=el.getBoundingClientRect(),parent=el.parentElement,pStyle=getComputedStyle(parent);
+  const available=parent.clientWidth-(parseFloat(pStyle.paddingLeft)||0)-(parseFloat(pStyle.paddingRight)||0);
+  const nodes=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),range=document.createRange(),lines=[];
+  let n;
+  while((n=nodes.nextNode())){
+   for(let i=0;i<n.length;i++){
+    range.setStart(n,i);range.setEnd(n,i+1);
+    const part=range.getBoundingClientRect();
+    if(part.width<=.2||part.height<=.2)continue;
+    let line=lines.find(x=>Math.abs(x.top-part.top)<3);
+    if(!line){line={top:part.top,left:part.left,right:part.right};lines.push(line)}
+    else{line.left=Math.min(line.left,part.left);line.right=Math.max(line.right,part.right)}
+   }
+  }
+  const title=el.textContent.trim(),width=r.width,first=lines[0]?lines[0].right-lines[0].left:0;
+  const wrapping=lines.length>1,longPlainTitle=title.length>=16&&!/[A-Za-z0-9_-]{11,}/.test(title);
+  const reasons=[];
+  if(css.textWrap!=="wrap")reasons.push("not-natural-text-wrap");
+  if(el.querySelector("br"))reasons.push("hard-break-in-heading");
+  if(wrapping&&width<available*.87&&available-width>28)reasons.push("heading-narrower-than-parent");
+  if(wrapping&&longPlainTitle&&first<width*.77)reasons.push("first-line-ends-too-early");
+  if(el.scrollWidth>el.clientWidth+3)reasons.push("heading-overflow");
+  return {tag:el.tagName,text:title.slice(0,75),width:Math.round(width),parentContent:Math.round(available),
+   lines:lines.length,firstLine:Math.round(first),textWrap:css.textWrap,maxWidth:css.maxWidth,reasons};
+ });
+ return{pass:checks.length>0&&checks.every(x=>x.reasons.length===0),count:checks.length,
+  failures:checks.filter(x=>x.reasons.length).slice(0,7),sample:checks.slice(0,3)};
+}
 function mobileToggle(){
  const toc=document.querySelector("main details.mobile-toc");if(!toc)return{present:false};
  toc.querySelector("summary")?.click();const opened=toc.open;toc.querySelector("summary")?.click();
@@ -218,6 +254,8 @@ try{
   }
   const prose=await run(auditProseWrap);
   if(!prose.skipped)check("Chinese prose wraps near reading column edge without balanced premature lines",prose.pass,prose);
+  const headingAudit=await run(auditHeadingWrap);
+  check("headings use full available width and natural wrapping",headingAudit.pass,headingAudit);
   if(width===375)check("mobile contents visible",state.mobileVisible,state);
   await capture(width+"-expanded.png");
   if(!state.asideVisible){
@@ -234,6 +272,8 @@ try{
     &&folded.destinationCenter!==null&&Math.abs(folded.brandCenter-folded.railCenter)<=2
     &&Math.abs(folded.destinationCenter-folded.brandCenter)<=2&&folded.destinationSize<=18,folded);
   check("folded main stays centered",Math.abs(folded.center-width/2)<=Math.max(80,width*.08)&&folded.mainWidth>=300,folded);
+  const foldedHeadingAudit=await run(auditHeadingWrap);
+  check("folded headings still wrap naturally without premature lines",foldedHeadingAudit.pass,foldedHeadingAudit);
   if(folded.reading&&width>=768){
    check("actual narrative block stays centered after folding",Math.abs(folded.reading.center-width/2)<=Math.max(72,width*.055),{reading:folded.reading,viewport:width,mainCenter:folded.center});
   }
