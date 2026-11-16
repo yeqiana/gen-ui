@@ -6,3 +6,6 @@ node_modules/
 /evals/artifacts/blind-reading-2026-11-16/
 /evals/artifacts/reading-experiment-2026-11-16/
 /evals/artifacts/real-reading-pilot-2026-11-16/
+
+# Local-only Codex gpt-6-luna high evaluation and sealed reviewer outputs
+/evals/artifacts/cross-domain-luna-high-2026-11-16/
