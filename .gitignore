@@ -2,3 +2,7 @@
 .vscode/
 node_modules/
 *.log
+# GEN-UI blind study: local-only answers, grading keys and raw model events
+/evals/artifacts/blind-reading-2026-11-16/
+/evals/artifacts/reading-experiment-2026-11-16/
+/evals/artifacts/real-reading-pilot-2026-11-16/
