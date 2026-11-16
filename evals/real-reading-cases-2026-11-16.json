@@ -1,0 +1,112 @@
+{
+  "schema": "genui-real-reading-cases/v1",
+  "created": "2026-11-16",
+  "context": "真实仓库报告，不是合成业务事实；同一仓库三类报告，外推范围有限",
+  "items": [
+    {
+      "id": "semantic-evaluation",
+      "source": "evals/fresh-semantic-2026-11-16.md",
+      "questions": [
+        {
+          "id": "q1",
+          "dimension": "conclusion",
+          "question": "这轮结果是否证明 GEN-UI 语义质量稳定优于禁用 Skill？",
+          "answer": "没有。30/30 会话完成，但小样本且控制条件不完全相同，尚无独立盲审。",
+          "evidence": "尚不足以证明语义质量具有普遍、显著优势"
+        },
+        {
+          "id": "q2",
+          "dimension": "omission",
+          "question": "显式组 Skill 工具调用记录为 0，是否表示 Skill 没执行？",
+          "answer": "不能这样判断，显式 slash 命令可能在客户端展开，不产生独立事件。",
+          "evidence": "0 次工具调用并非“未执行 Skill”的证明"
+        },
+        {
+          "id": "q3",
+          "dimension": "decision",
+          "question": "发现 45/60 = 75% 被写成未测全过后的上限，应当如何纠正？",
+          "answer": "75% 是当前执行覆盖率；若 15 份未测最终全部通过，则可达到 60/60=100%，当前不能提前认定结果。",
+          "evidence": "该上限实际上是 60/60 = 100%"
+        },
+        {
+          "id": "q4",
+          "dimension": "evidence",
+          "question": "自动初筛 9/10、10/10、8/10 应当解读为什么？",
+          "answer": "仅是词项和边界诊断，不代表语义准确率；其中 3 份初筛标红经人工复核为表达漏检。",
+          "evidence": "不能算真实的 3 次回答失败"
+        }
+      ],
+      "sourceSha256": "b9d387246b0ec1bc5fc4b4f92d081b09d9f21fa4181385275f012788238002b8"
+    },
+    {
+      "id": "review-continuity",
+      "source": "evals/reading-continuity-2026-11-16.md",
+      "questions": [
+        {
+          "id": "q1",
+          "dimension": "conclusion",
+          "question": "该专项是否已经在完全相同的最后版本对四案重新独立完整验证？",
+          "answer": "没有。最后一轮小范围修改后并未全量从头重跑，因此不能声称最终版 4/4 通过。",
+          "evidence": "不能宣称「末版 4/4 独立模型基准通过」"
+        },
+        {
+          "id": "q2",
+          "dimension": "omission",
+          "question": "R2 缺测试日志和用例，可否断言其代码尚未实现？",
+          "answer": "不能。只能认定缺验收证据，实施状态未知。",
+          "evidence": "R2 不再断言未实现"
+        },
+        {
+          "id": "q3",
+          "dimension": "decision",
+          "question": "N1 仅获内部试用风险接受，能否自动放行生产？",
+          "answer": "不能。该授权不外推生产，N1 仍是生产前置项。",
+          "evidence": "N1 仍列生产前置项"
+        },
+        {
+          "id": "q4",
+          "dimension": "evidence",
+          "question": "QR01 和 MCP/Skill 简答的通过结论在什么版本边界上？",
+          "answer": "中间版本通过，未用最终版本重新验证，不能等同末版通过。",
+          "evidence": "中间版本通过，未以末版重跑"
+        }
+      ],
+      "sourceSha256": "f9c594082fa30caaab8435f12f9816a8696682609e6f2e1023a7c7f2a3414761"
+    },
+    {
+      "id": "html-stability",
+      "source": "evals/independent-html-stability-2026-11-16.md",
+      "questions": [
+        {
+          "id": "q1",
+          "dimension": "conclusion",
+          "question": "三主题 3/3 通过可以推广为未知宿主自动生成总能成功吗？",
+          "answer": "不能。3/3 仅在显式 Skill + 本地 Runner 预置公共资源的受控环境下成立。",
+          "evidence": "不是未指定 Skill、未知宿主"
+        },
+        {
+          "id": "q2",
+          "dimension": "evidence",
+          "question": "Chrome 交互和 Typography 的累计通过记录分别是多少？",
+          "answer": "Chrome 179/179，Typography 18/18。",
+          "evidence": "179/179"
+        },
+        {
+          "id": "q3",
+          "dimension": "omission",
+          "question": "三份 HTML 的业务方案风险是否经过真实生产验收？",
+          "answer": "没有。HTML 通过不代表业务方案/风险经真实生产系统测试。",
+          "evidence": "不能将 HTML 验收误认为业务通过"
+        },
+        {
+          "id": "q4",
+          "dimension": "decision",
+          "question": "独立生成曾因大量资源复制拖住，本轮采取的关键措施是什么？",
+          "answer": "本地 Runner 预置 7 个标准静态文件，优先生成 report.html 再补 SVG，减少模型重复复制和消耗。",
+          "evidence": "预置 7 个公共文件"
+        }
+      ],
+      "sourceSha256": "cf3be97b44d08b0c1639e48eb1d9c77d4d436f1264ff15fd37b57a8694773fe2"
+    }
+  ]
+}

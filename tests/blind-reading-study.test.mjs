@@ -11,3 +11,14 @@ test('blind preparation is repeatable across clean output directories',t=>{const
 test('no reviewers means no semantic success',()=>{const empty={schema:'genui-blind-review-sheet/v1',rows:[{blindId:'one-01',reviewer:'',scores:{conclusion:null,evidenceBoundary:null,omissionDetection:null,decisionSafety:null}}]};assert.deepEqual(scoreReviews(empty),{reviewedAnswers:0,multiReviewed:0,disagreementCount:0,pendingAdjudication:[],medianReviewSeconds:null,note:'Blind scores cannot be attributed to groups until adjudication is frozen and the key is unsealed.'});});
 test('disagreement is flagged and no auto-adjudication occurs',()=>{const a={blindId:'one-01',reviewer:'r1',scores:{conclusion:2,evidenceBoundary:1,omissionDetection:2,decisionSafety:2},durationSec:30};const b={...a,reviewer:'r2',scores:{...a.scores,conclusion:0},durationSec:42};const r=scoreReviews({schema:'genui-blind-review-sheet/v1',rows:[a,b]});assert.equal(r.multiReviewed,1);assert.deepEqual(r.pendingAdjudication,['one-01']);assert.equal(r.medianReviewSeconds,36)});
 test('reading score requires externally adjudicated binary grades and valid durations',()=>{const trials=[{participantId:'p1',taskId:'task1',variant:'a',durationSec:60,answers:['a','b'],grades:[1,0]},{participantId:'p2',taskId:'task2',variant:'a',durationSec:100,answers:['a'],grades:[1]}];assert.equal(scoreReadingTrials(trials).a.medianSeconds,80);assert.equal(scoreReadingTrials(trials).a.accuracy,2/3);assert.throws(()=>scoreReadingTrials([{...trials[0],grades:[1]}]),/Each answer/);});
+
+test('同一读者不能重复看同一来源的 A/B 两个版本，阅读与答题时间分别统计',()=>{
+ const a={participantId:'p1',taskId:'doc1',variant:'a',readingSec:45,answerSec:32,answers:['结论'],grades:[1]};
+ const b={...a,variant:'b'};
+ assert.throws(()=>scoreReadingTrials([a,b]),/Repeated source/);
+ const r=scoreReadingTrials([a,{...a,participantId:'p2',readingSec:75,answerSec:40}]);
+ assert.equal(r.a.medianReadingSeconds,60);
+ assert.equal(r.a.medianAnswerSeconds,36);
+ assert.equal(r.a.answerTimeSamples,2);
+ assert.throws(()=>scoreReadingTrials([{...a,readingSec:-1}]),/Invalid reading duration/);
+});

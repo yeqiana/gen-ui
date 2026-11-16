@@ -47,8 +47,26 @@ export function scoreReviews(sheet,{minReviewers=2}={}){
  return {reviewedAnswers:by.size,multiReviewed:complete.length,disagreementCount:disputes.length,pendingAdjudication:disputes.map(([id])=>id),medianReviewSeconds:median([...by.values()].flat().map(r=>r.durationSec).filter(Number.isFinite)),note:'Blind scores cannot be attributed to groups until adjudication is frozen and the key is unsealed.'}
 }
 export function scoreReadingTrials(trials){
- if(!Array.isArray(trials))fail('Trials must be an array');const keys=new Set();const grouped={};for(const t of trials){if(!safeId(t.taskId)||!safeId(t.variant)||!safeId(t.participantId))fail('Invalid trial identifiers');const key=[t.participantId,t.taskId,t.variant].join(':');if(keys.has(key))fail('Duplicate trial');keys.add(key);if(!Number.isFinite(t.durationSec)||t.durationSec<0)fail('Invalid duration');if(!Array.isArray(t.answers)||!Array.isArray(t.grades)||t.answers.length!==t.grades.length||!t.grades.length)fail('Each answer requires a grade');if(t.grades.some(x=>![0,1].includes(x)))fail('Grades are 0 or 1, adjudicated externally');(grouped[t.variant]??=[]).push(t)}
- return Object.fromEntries(Object.entries(grouped).map(([variant,rows])=>[variant,{trials:rows.length,medianSeconds:median(rows.map(r=>r.durationSec)),correct:rows.reduce((a,r)=>a+r.grades.reduce((x,y)=>x+y,0),0),questions:rows.reduce((a,r)=>a+r.grades.length,0),accuracy:rows.reduce((a,r)=>a+r.grades.reduce((x,y)=>x+y,0),0)/rows.reduce((a,r)=>a+r.grades.length,0)}]));
+ if(!Array.isArray(trials))fail('Trials must be an array');
+ const seen=new Set(),grouped={};
+ for(const t of trials){
+  if(!safeId(t.taskId)||!safeId(t.variant)||!safeId(t.participantId))fail('Invalid trial identifiers');
+  const key=[t.participantId,t.taskId].join(':');
+  if(seen.has(key))fail('Repeated source for one reader (potential learning bias)');
+  seen.add(key);
+  const read=t.readingSec??t.durationSec, answer=t.answerSec??null;
+  if(!Number.isFinite(read)||read<0)fail('Invalid reading duration');
+  if(answer!==null&&(!Number.isFinite(answer)||answer<0))fail('Invalid answer duration');
+  if(!Array.isArray(t.answers)||!Array.isArray(t.grades)||t.answers.length!==t.grades.length||!t.grades.length)fail('Each answer requires a grade');
+  if(t.grades.some(x=>![0,1].includes(x)))fail('Grades are 0 or 1, adjudicated externally');
+  (grouped[t.variant]??=[]).push({...t,readingSec:read,answerSec:answer});
+ }
+ return Object.fromEntries(Object.entries(grouped).map(([variant,rows])=>{
+  const correct=rows.reduce((sum,row)=>sum+row.grades.reduce((a,b)=>a+b,0),0);
+  const questions=rows.reduce((sum,row)=>sum+row.grades.length,0);
+  const answerTimes=rows.map(x=>x.answerSec).filter(Number.isFinite);
+  return [variant,{trials:rows.length,medianSeconds:median(rows.map(x=>x.readingSec)),medianReadingSeconds:median(rows.map(x=>x.readingSec)),medianAnswerSeconds:median(answerTimes),answerTimeSamples:answerTimes.length,correct,questions,accuracy:correct/questions}];
+ }));
 }
 const self=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url);
 if(self){try{const [cmd,...args]=process.argv.slice(2);if(cmd==='prepare'){const [root,output,seed]=args;console.log(JSON.stringify(prepareBlind({root:path.resolve(root),output:path.resolve(output),seed}),null,2))}else if(cmd==='reviews'){const data=JSON.parse(fs.readFileSync(args[0],'utf8'));console.log(JSON.stringify(scoreReviews(data),null,2))}else if(cmd==='reading'){const data=JSON.parse(fs.readFileSync(args[0],'utf8'));console.log(JSON.stringify(scoreReadingTrials(data.trials),null,2))}else fail('Usage: prepare ROOT OUT [SEED] | reviews SHEET | reading TRIALS')}catch(e){console.error(e.message);process.exitCode=1}}
