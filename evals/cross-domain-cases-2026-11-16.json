@@ -1,0 +1,126 @@
+{
+  "schema": "genui-real-reading-cases/v1",
+  "created": "2026-11-16",
+  "context": "跨三个独立实际工程仓库，不含 GEN-UI；真实文档的设计/审计规范只证明文档内容，不证明实现或执行。源文件本地冻结，不提交原件或模型日志。",
+  "items": [
+    {
+      "id": "storyos-workflow",
+      "source": "evals/artifacts/cross-domain-codex-2026-11-16/sources/storyos-workflow.md",
+      "originRepository": "storyOS",
+      "originPath": "docs/architecture/Story_OS_V3_Phase2_Workflow中心化设计_V1.0.md",
+      "sourceSha256": "312f91af84b728d0de5af29acc0d50a3ce09799a9334bad622ed10e5b0df3db5",
+      "questions": [
+        {
+          "id": "q1",
+          "dimension": "conclusion",
+          "question": "是否立即替换旧 Runtime？",
+          "answer": "不立即替换 V2.7 Runtime，采用旁路演进。",
+          "evidence": "Phase 2不是立即替换V2.7 Runtime。"
+        },
+        {
+          "id": "q2",
+          "dimension": "decision",
+          "question": "Workflow Engine 能否直接调用生产 Worker？",
+          "answer": "明确禁止，先观察、影子执行、双写再评估主切换。",
+          "evidence": "Workflow Engine直接调用生产Worker"
+        },
+        {
+          "id": "q3",
+          "dimension": "omission",
+          "question": "凭设计稿可否认定 Phase 2 已完成？",
+          "answer": "不能，文档列的是完成标准和计划，无实际实施验收证据。",
+          "evidence": "Phase 2完成标准"
+        },
+        {
+          "id": "q4",
+          "dimension": "evidence",
+          "question": "P2.3 和 P2.4 的状态处理有何不同？",
+          "answer": "P2.3 只计算下一步不执行，P2.4 双写 state.json 和 workflow projection。",
+          "evidence": "只计算："
+        }
+      ],
+      "originSourceStatus": "committed",
+      "originBaseCommit": "47cd0abe728dd78ee08336c866fa7734f2f6b90e"
+    },
+    {
+      "id": "qr-metrics",
+      "source": "evals/artifacts/cross-domain-codex-2026-11-16/sources/qr-metrics.md",
+      "originRepository": "qr-audit",
+      "originPath": "docs/metrics.md",
+      "sourceSha256": "0a46914171c617b3f1fd4cab83bc86045f085f41c68af6b67da12cc3fe2764d6",
+      "questions": [
+        {
+          "id": "q1",
+          "dimension": "conclusion",
+          "question": "策略 A 移除损失 2 文件，等于损失 2 对吗？",
+          "answer": "不是。示例损失 2 文件但配对损失 0。",
+          "evidence": "Removing A loses two successful files, but zero successful pairs."
+        },
+        {
+          "id": "q2",
+          "dimension": "evidence",
+          "question": "哪些 pair 计入配对分母？",
+          "answer": "仅无歧义 PAIRED，单目录/缺侧/模糊配对不强制计入。",
+          "evidence": "Only unambiguous `PAIRED` entries are included"
+        },
+        {
+          "id": "q3",
+          "dimension": "omission",
+          "question": "结构 PASS 即可宣布贡献审计完成吗？",
+          "answer": "不可，缺溯源则未完成；不完整贡献指标写 NA_INCOMPLETE，而不是零。",
+          "evidence": "A structural PASS with unverified provenance is not a complete contribution audit."
+        },
+        {
+          "id": "q4",
+          "dimension": "decision",
+          "question": "某策略排他贡献为零可以删除整个家族吗？",
+          "answer": "不能，须考虑家族移除损失与完整门禁。",
+          "evidence": "A zero individual exclusive count does not justify removing an entire family."
+        }
+      ],
+      "originSourceStatus": "committed",
+      "originBaseCommit": "b9d83fb7aa0aecd99d779625eb6237aa0bbab0c7"
+    },
+    {
+      "id": "mcp-permissions",
+      "source": "evals/artifacts/cross-domain-codex-2026-11-16/sources/mcp-permissions.md",
+      "originRepository": "mcp-dock",
+      "originPath": "docs/architecture.md",
+      "sourceSha256": "a2387a3bea4551536d59a188135fda8d09719de92a0687435f9a5f8c4a0234b4",
+      "questions": [
+        {
+          "id": "q1",
+          "dimension": "conclusion",
+          "question": "MCP Dock 当前有实际文件删除执行器吗？",
+          "answer": "没有，本阶段只有估算/审批元数据、独立审批 Core。",
+          "evidence": "本阶段没有实际文件删除执行器"
+        },
+        {
+          "id": "q2",
+          "dimension": "evidence",
+          "question": "三类 MCP Server 工具数分别多少？",
+          "answer": "Local Dev 7、System 13、Project Context 7。",
+          "evidence": "| Local Dev MCP | 项目、Git、WebCodex Runner | 7 |"
+        },
+        {
+          "id": "q3",
+          "dimension": "omission",
+          "question": "审批票据核销意味着删除已经执行了吗？",
+          "answer": "不意味着，票据核销与执行分离，目前无真实执行器。",
+          "evidence": "Approval Core 票据消费不等于已执行目标操作"
+        },
+        {
+          "id": "q4",
+          "dimension": "decision",
+          "question": "模型可随意指定绝对路径要求删除吗？",
+          "answer": "不能，只接受项目 ID、rootId 和相对路径且不提供目标文件删除工具。",
+          "evidence": "不允许模型指定任意绝对路径"
+        }
+      ],
+      "originSourceStatus": "uncommitted-working-tree-snapshot",
+      "originBaseCommit": "0091443fd2ae703617743a016926c0cba073403c"
+    }
+  ],
+  "frozenCaseAtRunSHA256": "fe1b607d070f02c34419104599d8deed4bb6c9c2bc3922c21dec7212606d913e",
+  "provenanceNote": "仅更新来源标记；模型本轮读取的原文、四个问题和原文 SHA-256 均未改变。mcp-dock 来源为本地未提交版本，不能以 originBaseCommit 指代已发布文档。"
+}
