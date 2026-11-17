@@ -191,6 +191,15 @@ MIT License · [LICENSE](LICENSE)。
 
 ![本地 Chrome 实测的产品架构全景板预览：六层能力、双中台和两侧支撑体系](demo/assets/product-architecture-panorama-preview.png)
 
+**四个技术案例的专属产品架构图：** [项目分析](demo/documents/project-analysis.html#overview) · [架构设计](demo/documents/architecture-design.html#architecture) · [实施计划](demo/documents/implementation-plan.html#roadmap) · [测试验收](demo/documents/test-acceptance.html#matrix)。每张均基于其案例正文整理，保留六层能力、两侧支撑和设计/验收证据界限。
+
+| 项目分析 | 架构设计 |
+| --- | --- |
+| [![项目分析：业务能力架构全景](demo/documents/assets/product-panorama-project-analysis-preview.png)](demo/documents/project-analysis.html#overview) | [![架构设计：目标能力蓝图](demo/documents/assets/product-panorama-architecture-design-preview.png)](demo/documents/architecture-design.html#architecture) |
+| 实施计划 | 测试验收 |
+| [![实施计划：分阶段产品蓝图](demo/documents/assets/product-panorama-implementation-plan-preview.png)](demo/documents/implementation-plan.html#roadmap) | [![测试验收：能力覆盖全景](demo/documents/assets/product-panorama-test-acceptance-preview.png)](demo/documents/test-acceptance.html#matrix) |
+
+
 真实项目案例：[Yopu / StoryOS / IM 八类架构视图](demo/architecture-patterns.html)。按实际模块分层，并展示 24 条带方向的关键协作链路；图中是结构与设计资料的示意，不代表生产环境部署验收。
 
 ![Yopu、StoryOS 与 IM 架构分层及容器链路示例](demo/documents/assets/architecture-patterns-preview.png)
