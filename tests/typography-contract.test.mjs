@@ -15,15 +15,16 @@ test('轻量 Typography 只作用于标注的 HTML 正文，不压缩宽内容',
  assert.match(docCss,/\.doc-summary>strong\{display:block/);
  assert.doesNotMatch(docCss,/\.doc-summary strong\{display:block/);
  assert.match(css,/\.genui-prose/);
- assert.match(css,/--genui-prose-width:72ch/);
- assert.match(css,/html:lang\(zh\) main\.genui-typography\{--genui-prose-width:48ic\}/);
+ assert.match(css,/--genui-article-width:72ch/);
+ assert.match(css,/html:lang\(zh\) main\.genui-typography\{--genui-article-width:62ic\}/);
  assert.match(css,/text-wrap:wrap/);
  assert.match(css,/main\.genui-typography :is\(h1,h2,h3,h4\)/);
- assert.match(css,/max-width:100%;text-wrap:balance;white-space:normal/);
+ assert.match(css,/max-width:100%;text-wrap:wrap;white-space:normal/);
  assert.doesNotMatch(css,/main\.genui-typography\s+p\{[^}]*text-wrap:balance/s);
- assert.match(css,/line-break:strict/);
+ assert.doesNotMatch(css,/text-wrap:balance|text-wrap:pretty/);
  assert.match(css,/--genui-prose-leading:1\.65/);
- assert.match(css,/main\.genui-typography :is\(\.genui-prose[^}]*max-width:min\(100%,var\(--genui-prose-width\)\)/s);
+ assert.match(css,/\.genui-article-column\{[^}]*max-width:min\(100%,var\(--genui-article-width\)\)/s);
+ assert.doesNotMatch(css,/max-width:min\(100%,var\(--genui-prose-width\)\)/);
  assert.doesNotMatch(css,/\b(?:table|figure|svg|canvas)\s*\{/i);
  assert.match(css,/main\.genui-typography pre\{[^}]*max-width:100%;overflow-x:auto/);
  assert.doesNotMatch(css,/@import|https?:\/\//i);
@@ -37,6 +38,11 @@ test('SKILL 和两类 HTML 合约提供条件加载入口',()=>{
  const instructions=read('references/typography.md');
  assert.match(instructions,/chrome-typography-smoke\.mjs --generated/);
  assert.match(instructions,/72ch/);
+ assert.match(instructions,/默认宽幅报告和技术文档/);
+ assert.match(instructions,/显式纯文章模式/);
+ for(const file of ['references/html-report-essentials.md','references/html-report-contract.md'])assert.match(read(file),/text-wrap:wrap/);
+ assert.doesNotMatch(read('demo/documents/assets/document.css'),/text-wrap:balance|max-width:min\(100%,var\(--genui-prose-width\)\)/);
+ assert.doesNotMatch(read('demo/ui-refresh.css'),/max-width:min\(100%,var\(--genui-prose-width\)\)/);
  assert.match(instructions,/不.*单文件|单文件/);
 });
 

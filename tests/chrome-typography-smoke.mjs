@@ -25,7 +25,7 @@ const defaultPages=[
 const cli=process.argv.slice(2);
 if(cli.length&&(cli[0]!=="--generated"||cli.length<2))throw Error("Usage: node tests/chrome-typography-smoke.mjs [--generated <report.html> ...]");
 const pages=cli.length?cli.slice(1).map((file,i)=>({id:"generated-"+(i+1),kind:"generated",file})):defaultPages;
-const widths=[375,768,1440];
+const widths=[375,768,1024,1440];
 const chrome=[
   process.env.GEN_UI_CHROME,
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -59,13 +59,6 @@ function measure(kind){
       &&!el.closest("[hidden]"));
   const metrics=targets.map((el,index)=>{
     const box=el.getBoundingClientRect(),style=getComputedStyle(el);
-    const cap=document.createElement("span");
-    cap.style.cssText="position:absolute;display:block;visibility:hidden;padding:0;border:0;max-width:none;box-sizing:content-box";
-    cap.style.font=style.font;
-    cap.style.width=getComputedStyle(el.closest("main")||el).getPropertyValue("--genui-prose-width").trim()||"72ch";
-    document.body.appendChild(cap);
-    const maxReading=cap.getBoundingClientRect().width;
-    cap.remove();
     const range=document.createRange();
     range.selectNodeContents(el);
     const fragments=[...range.getClientRects()].filter(r=>r.width>.2&&r.height>.2);
@@ -82,12 +75,14 @@ function measure(kind){
       id:el.tagName.toLowerCase()+"."+el.className+"-"+index,
       chars:rawText.length,
       width:Math.round(box.width),
-      maxReading:Math.round(maxReading),
       maxWidth:style.maxWidth,
       lines:lines.length,
       maxLine:Math.round(Math.max(0,...lineWidths)),
       firstLine:Math.round(lineWidths[0]||0),
       parentWidth:(()=>{const parent=el.parentElement,s=getComputedStyle(parent);return Math.round(parent.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight));})(),
+      leftOffset:(()=>{const parent=el.parentElement,s=getComputedStyle(parent);return Math.round(box.left-parent.getBoundingClientRect().left-(parseFloat(s.borderLeftWidth)||0)-(parseFloat(s.paddingLeft)||0));})(),
+      textIndent:Math.round(parseFloat(style.textIndent)||0),
+      readingMode:!!el.closest(".genui-article-column"),
       badLines:badLines.length,
       clipped:el.scrollWidth>el.clientWidth+2,
       leading:style.lineHeight,
@@ -137,7 +132,7 @@ function measure(kind){
     prose:metrics,
     headings:headingRows,
     typography:{enabled:main?.classList.contains("genui-typography")??false,
-      widthToken:rootStyle.getPropertyValue("--genui-prose-width").trim(),
+      articleToken:rootStyle.getPropertyValue("--genui-article-width").trim(),
       leadingToken:rootStyle.getPropertyValue("--genui-prose-leading").trim(),
       headingMargin:headingStyle?parseFloat(headingStyle.marginTop):null,
       headingFont:headingStyle?parseFloat(headingStyle.fontSize):null},
@@ -233,12 +228,12 @@ async function main(){
           check(reference+" has narrative samples",data,data.prose.length>=(page.kind==="generated"?1:3));
           if(page.kind==="generated"){
             check(reference+" typography layer is loaded",data.typography,
-              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"48ic":"72ch")
+              data.typography.enabled&&data.typography.articleToken===(/^zh(?:-|$)/i.test(data.language)?"62ic":"72ch")
               &&parseFloat(data.typography.leadingToken)>=1.6
               &&parseFloat(data.typography.leadingToken)<=1.85);
             // Whole-word wrapping may shorten an English first line; verify actual width, wrapping and clipping instead of a fixed fill ratio.
             check(reference+" visible headings occupy reading width and wrap naturally",data.headings,
-              data.headings.length>0&&data.headings.every(h=>["wrap","balance"].includes(h.textWrap)&&!h.hardBreak&&!h.clipped
+              data.headings.length>0&&data.headings.every(h=>h.textWrap==="wrap"&&!h.hardBreak&&!h.clipped
                 &&(h.lines<=1||h.width>=h.available*.87||h.available-h.width<=28)
                 &&(h.lines<=1||h.firstLine>0)));
             if(/^zh(?:-|$)/i.test(data.language))
@@ -254,14 +249,19 @@ async function main(){
             check(reference+" tablet uses wide main content and hides the cramped desktop rail",data,
               !data.navVisible&&data.mainWidth>=width*.78);
           }
-          if(page.kind!=="report"&&width===1440){
+          if(width===1440){
             const narrative=data.prose.filter(x=>x.bodyParagraph);
-            check(reference+" narrative width actually respects the centered reading cap",narrative,
-              narrative.length>0&&narrative.every(x=>x.width<=Math.min(x.maxReading+4,820)));
+            check(reference+" ordinary body paragraphs use section width, not article cap",narrative,
+              narrative.length>0&&narrative.every(x=>x.width>=x.parentWidth-4&&!x.readingMode));
           }
           check(reference+" page fits viewport",data,!data.docOverflow);
-          check(reference+" narrative blocks fit their actual parent column",data,
-            data.prose.every(x=>x.width<=x.parentWidth+3));
+          check(reference+" narrative blocks use parent width and share left edge",data,
+            data.prose.every(x=>x.width<=x.parentWidth+3
+             &&(x.readingMode||(x.width>=x.parentWidth-4&&Math.abs(x.leftOffset)<=4))
+             &&Math.abs(x.textIndent)<=2));
+          check(reference+" visible headings do not force balanced or hard line breaks",
+            data.headings.filter(h=>h.textWrap!=="wrap"||h.hardBreak||h.clipped),
+            data.headings.every(h=>h.textWrap==="wrap"&&!h.hardBreak&&!h.clipped));
           check(reference+" visible text remains within its own box",data,
             data.prose.every(x=>x.badLines===0&&!x.clipped&&x.maxLine<=x.width+3));
           check(reference+" long text wraps",data,
@@ -269,8 +269,8 @@ async function main(){
           if(page.kind==="generated"&&/^zh(?:-|$)/i.test(data.language)&&width>=768){
             const longBody=data.prose.filter(x=>x.bodyParagraph&&x.chars>=80&&x.lines>=2);
             if(longBody.length)check(reference+" long Chinese prose uses available line width without balancing",longBody,
-              longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.77
-                &&x.width<=x.maxReading+3));
+              longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.70
+                &&(x.readingMode||x.width>=x.parentWidth-4)));
           }
           check(reference+" true browser line-height matches typography tokens",data,
             data.prose.filter(x=>x.bodyParagraph).length>0

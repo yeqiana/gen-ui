@@ -154,25 +154,30 @@ function auditEveryImageLink(){
 function auditProseWrap(){
  const main=document.querySelector("main.genui-typography");
  if(!main||!/^zh(?:-|$)/i.test(document.documentElement.lang))return {skipped:true};
- const token=getComputedStyle(main).getPropertyValue("--genui-prose-width").trim();
+ const articleToken=getComputedStyle(main).getPropertyValue("--genui-article-width").trim();
  const paragraphs=[...main.querySelectorAll("p.genui-prose,.genui-prose-group>p")].filter(x=>x.getBoundingClientRect().width>0);
  const checks=paragraphs.map(el=>{
   const css=getComputedStyle(el),box=el.getBoundingClientRect(),parentStyle=getComputedStyle(el.parentElement);
   const parentContentWidth=el.parentElement.clientWidth-parseFloat(parentStyle.paddingLeft)-parseFloat(parentStyle.paddingRight);
   const tester=document.createElement("span");
   tester.style.cssText="position:absolute;visibility:hidden;display:block;max-width:none;box-sizing:content-box";
-  tester.style.font=css.font;tester.style.width=token||"62ic";document.body.appendChild(tester);
+  tester.style.font=css.font;tester.style.width=articleToken||"62ic";document.body.appendChild(tester);
   const cap=tester.getBoundingClientRect().width;tester.remove();
   const range=document.createRange();range.selectNodeContents(el);
   const fragments=[...range.getClientRects()].filter(r=>r.width>.2&&r.height>.2);
   const lines=[];
   for(const r of fragments){let line=lines.find(l=>Math.abs(l.top-r.top)<3);if(!line){line={top:r.top,left:r.left,right:r.right};lines.push(line)}else{line.left=Math.min(line.left,r.left);line.right=Math.max(line.right,r.right)}}
   const firstLine=lines.length?lines[0].right-lines[0].left:0;
-  const expected=Math.min(parentContentWidth,cap);
+  const articleMode=!!el.closest(".genui-article-column");
+  const expected=parentContentWidth;
   const isLong=el.textContent.trim().length>=80&&lines.length>=2&&!el.querySelector("br");
-  return {chars:el.textContent.trim().length,width:Math.round(box.width),parent:Math.round(parentContentWidth),cap:Math.round(cap),
-   firstLine:Math.round(firstLine),lineCount:lines.length,textWrap:css.textWrap,
-   ok:css.textWrap!=="balance"&&box.width+6>=expected*.94&&(!isLong||firstLine>=box.width*.82)};
+  const parentRect=el.parentElement.getBoundingClientRect();
+  const expectedLeft=parentRect.left+(parseFloat(parentStyle.borderLeftWidth)||0)+(parseFloat(parentStyle.paddingLeft)||0);
+  return {chars:el.textContent.trim().length,width:Math.round(box.width),parent:Math.round(parentContentWidth),articleCap:Math.round(cap),articleMode,
+   firstLine:Math.round(firstLine),lineCount:lines.length,textWrap:css.textWrap,leftOffset:Math.round(box.left-expectedLeft),
+   ok:css.textWrap==="wrap"&&Math.abs(parseFloat(css.textIndent)||0)<=2
+    &&(articleMode||box.width+4>=expected*.98)&&Math.abs(box.left-expectedLeft)<=4
+    &&(!isLong||firstLine>=box.width*.70)};
  });
  return {skipped:false,count:checks.length,failures:checks.filter(x=>!x.ok).slice(0,5),pass:checks.every(x=>x.ok),sample:checks.slice(0,3)};
 }
@@ -187,16 +192,9 @@ function auditReadingFlow(){
  const findings=targets.map(el=>{
   const css=getComputedStyle(el),parent=el.parentElement,parentCSS=getComputedStyle(parent);
   const box=el.getBoundingClientRect(),pbox=parent.getBoundingClientRect(),parentInner=parent.clientWidth-(parseFloat(parentCSS.paddingLeft)||0)-(parseFloat(parentCSS.paddingRight)||0);
-  const widthToken=getComputedStyle(main).getPropertyValue("--genui-prose-width").trim();
-  let widthCap=parentInner;
-  if(widthToken&&css.maxWidth.includes("min(")){
-    const probe=document.createElement("span");
-    probe.style.cssText="position:absolute;visibility:hidden;display:block;box-sizing:content-box;max-width:none";
-    probe.style.font=css.font;probe.style.width=widthToken;document.body.appendChild(probe);
-    widthCap=probe.getBoundingClientRect().width||parentInner;probe.remove();
-  }
-  const expectedWidth=Math.min(parentInner,widthCap);
-  const expectedLeft=pbox.left+(parseFloat(parentCSS.borderLeftWidth)||0)+(parseFloat(parentCSS.paddingLeft)||0)+(parentInner-expectedWidth)/2;
+  const articleMode=!!el.closest(".genui-article-column");
+  const expectedWidth=parentInner;
+  const expectedLeft=pbox.left+(parseFloat(parentCSS.borderLeftWidth)||0)+(parseFloat(parentCSS.paddingLeft)||0);
   const isParagraph=el.tagName==="P",str=el.textContent.trim(),lines=[],range=document.createRange();
   if(isParagraph){
     const walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let textNode;
@@ -218,7 +216,7 @@ function auditReadingFlow(){
   if(css.textWrap==="balance"||css.textWrap==="pretty")reasons.push("balanced-or-pretty-text");
   if(isParagraph&&Math.abs(parseFloat(css.textIndent)||0)>4)reasons.push("unexpected-first-line-indent");
   if(isParagraph&&Math.abs(box.left-expectedLeft)>8)reasons.push("unexpected-paragraph-left-offset");
-  if(box.width<expectedWidth*.92&&expectedWidth-box.width>26)reasons.push("narrower-than-reading-column");
+  if(!articleMode&&box.width<expectedWidth*.97&&expectedWidth-box.width>6)reasons.push("narrower-than-section");
   if(longText&&firstWidth<box.width*.72)reasons.push("premature-first-line-wrap");
   return{type:el.tagName,case:el.dataset.proseCase||null,chars:str.length,width:Math.round(box.width),available:Math.round(parentInner),readingCap:Math.round(expectedWidth),left:Math.round(box.left),expectedLeft:Math.round(expectedLeft),
    firstLine:Math.round(firstWidth),lines:lines.length,textWrap:css.textWrap,textIndent:css.textIndent,marginLeft:css.marginLeft,reasons};
@@ -254,11 +252,11 @@ function auditHeadingWrap(){
   const title=el.textContent.trim(),width=r.width,first=lines[0]?lines[0].right-lines[0].left:0;
   const wrapping=lines.length>1,longPlainTitle=title.length>=16&&!/[A-Za-z0-9_-]{11,}/.test(title);
   const reasons=[];
-  if(!["wrap","balance"].includes(css.textWrap))reasons.push("unsupported-heading-text-wrap");
+  if(css.textWrap!=="wrap")reasons.push("heading-must-wrap-naturally");
   if(el.querySelector("br"))reasons.push("hard-break-in-heading");
   if(wrapping&&width<available*.87&&available-width>28)reasons.push("heading-narrower-than-parent");
   if(wrapping&&longPlainTitle&&first<width*.35)reasons.push("first-line-ends-too-early");
-  if(wrapping&&longPlainTitle&&/^zh/i.test(document.documentElement.lang)&&lines.at(-1)?.chars<=4)reasons.push("orphan-last-line");
+  // Record natural short tails; do not force balancing to suppress them.
   if(el.scrollWidth>el.clientWidth+3)reasons.push("heading-overflow");
   return {tag:el.tagName,text:title.slice(0,75),width:Math.round(width),parentContent:Math.round(available),
    lines:lines.length,firstLine:Math.round(first),lastLineChars:lines.at(-1)?.chars??0,textWrap:css.textWrap,maxWidth:css.maxWidth,reasons};
@@ -320,7 +318,7 @@ try{
    for(const term of requiredTexts)check("required report content: "+term,narrative.includes(normalizeText(term)),{term});
   }
   const prose=await run(auditProseWrap);
-  if(!prose.skipped)check("Chinese prose wraps near reading column edge without balanced premature lines",prose.pass,prose);
+  if(!prose.skipped)check("Chinese prose uses the full section edge without premature wrapping",prose.pass,prose);
   const narrative=await run(auditReadingFlow);
   if(!narrative.skipped)check("narrative and quotation widths/indents near media use reading column",narrative.pass,narrative);
   const headingAudit=await run(auditHeadingWrap);

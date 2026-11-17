@@ -1,31 +1,28 @@
-/* Opt-in prose layer for offline HTML. Tables/figures/code stay full width. */
+/* GEN-UI default: natural section-wide prose and headings; no artificial reading cap.
+ * Long-form article mode is an explicit, container-level opt-in.
+ */
 main.genui-typography{
-  --genui-prose-width:72ch;--genui-prose-leading:1.65;
-  --genui-prose-gap:.85em;--genui-heading-gap:1.25em;
+  --genui-prose-leading:1.65;
+  --genui-prose-gap:.85em;
+  --genui-heading-gap:1.25em;
+  --genui-article-width:72ch;
 }
-/* Retain language tokens as guidance; the section owns the visible text width. */
-html:lang(zh) main.genui-typography{--genui-prose-width:48ic}
+html:lang(zh) main.genui-typography{--genui-article-width:62ic}
 main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
-  max-width:100%;
-  overflow-wrap:break-word;
+  max-width:100%;margin-inline:0;overflow-wrap:break-word;word-break:normal;
   line-height:var(--genui-prose-leading);
 }
-/* Body paragraphs should wrap at the actual edge, not balance all lines prematurely. */
-html:lang(zh) main.genui-typography :is(p.genui-prose,.genui-prose-group>p){
-  word-break:normal;line-break:strict;text-wrap:wrap;
+main.genui-typography p,
+main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>li){
+  text-indent:0;text-wrap:wrap;
 }
-/* Headings keep the full section width and balance only heading lines to avoid orphan tails. Do not constrain their max-width. */
+/* Headings follow the full section width. Balancing produces premature breaks. */
 main.genui-typography :is(h1,h2,h3,h4){
-  max-width:100%;text-wrap:balance;white-space:normal;overflow-wrap:break-word;
+  max-width:100%;text-wrap:wrap;white-space:normal;overflow-wrap:break-word;
 }
 main.genui-typography .genui-prose-group>p+p{margin-block-start:var(--genui-prose-gap)}
 main.genui-typography .genui-prose-group>:is(h2,h3,h4){margin-block-start:var(--genui-heading-gap)}
-/* Generated prose blocks may include a bare pre outside .doc-section. */
 main.genui-typography pre{max-width:100%;overflow-x:auto;font-size:12px}
-
-
-/* Narrative and nested callouts use the actual section width. */
-main.genui-typography p{text-indent:0}
 main.genui-typography :is(blockquote,.callout){max-width:100%;margin-inline:0}
 main.genui-typography blockquote:not(.callout){padding:10px 14px;border-left:3px solid #dce7f5}
 main.genui-typography :is(blockquote,.callout)>p{
@@ -34,20 +31,16 @@ main.genui-typography :is(blockquote,.callout)>p{
 main.genui-typography :is(figure,.table-wrap,.table-scroll,table,blockquote,.callout)+p{
   max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap;
 }
-
-/* Real narrative reading column; titles retain the main branch's balanced heading rule. */
-main.genui-typography :is(.genui-prose,.genui-prose-group>p,
- .genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
- max-width:min(100%,var(--genui-prose-width));
- margin-inline:auto;overflow-wrap:break-word;
+/* Explicit article-only column: titles and body share the same aligned parent. */
+main.genui-typography .genui-article-column{
+  max-width:min(100%,var(--genui-article-width));margin-inline:auto;min-width:0;
 }
-/* Generated-doc HTML uses the same accessible tablet disclosure rail. */
 @media(min-width:701px) and (max-width:900px){
- .doc-layout:has(> main.genui-typography){display:block;max-width:980px;padding:24px}
- .doc-layout:has(> main.genui-typography)>.doc-toc{display:none}
- .doc-layout:has(> main.genui-typography) .mobile-toc{
-  display:block;border:1px solid #dce4ee;border-radius:6px;
-  padding:9px 12px;margin:13px 0 22px;
- }
- .doc-layout:has(> main.genui-typography) .mobile-toc .toc-list{margin-top:8px}
+  .doc-layout:has(> main.genui-typography){display:block;max-width:980px;padding:24px}
+  .doc-layout:has(> main.genui-typography)>.doc-toc{display:none}
+  .doc-layout:has(> main.genui-typography) .mobile-toc{
+    display:block;border:1px solid #dce4ee;border-radius:6px;
+    padding:9px 12px;margin:13px 0 22px;
+  }
+  .doc-layout:has(> main.genui-typography) .mobile-toc .toc-list{margin-top:8px}
 }
