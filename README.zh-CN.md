@@ -205,3 +205,5 @@ MIT License · [LICENSE](LICENSE)。
 ![Yopu、StoryOS 与 IM 架构分层及容器链路示例](demo/documents/assets/architecture-patterns-preview.png)
 
 延伸阅读：[八类架构图的分层/容器示例](demo/architecture-patterns.html) · [轻量化 Skill 设计原则](docs/skill-principles.md)。
+
+**陌生真实项目泛化评测（P1）：** [查看离线来源冻结、配对提示、证据校验与 Chrome 渲染流程](evals/unseen-panorama-workflow-2026-11-17.md)。目前仅完成离线链路与演示候选验证；**独立模型生成和 Skill 加载 A/B 尚未执行**，不能据此声称泛化效果已达标。
