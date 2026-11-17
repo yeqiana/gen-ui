@@ -175,7 +175,7 @@ These checks validate fixed, trusted repository examples; they do not establish 
 MIT License · [LICENSE](LICENSE).
 
 
-**Product architecture panorama:** [Open the offline layered architecture example](demo/product-architecture-panorama.html), with top-level access channels, a shared entry point, six horizontal capability bands, dual middle platforms, and supporting rails on both sides. All modules are fictional layout examples, not a verified deployment.
+**Product architecture panorama:** [Open the offline layered architecture example](demo/product-architecture-panorama.html), with top-level access channels, a shared entry point, six horizontal capability bands, dual middle platforms, and supporting rails on both sides. It follows the existing GEN-UI SVG visual language (quiet white surfaces, fine outlines, blue accents). Modules are fictional layout examples, not a verified deployment.
 
 ![Chrome preview of the product architecture panorama](demo/assets/product-architecture-panorama-preview.png)
 
