@@ -50,7 +50,7 @@
 }
 /* API entry: SVG node treatment with a narrow blue accent, never a solid banner. */
 .bp-entry,.genui-product-panorama .panorama-gateway{
- border:1px solid #b7d2fa;border-left:4px solid #3a83f7;border-radius:7px;
+ border:1px solid #b7d2fa;border-radius:7px;
  background:#eff6ff;color:#185abc;box-shadow:0 1px 3px rgba(27,52,83,.035);
  letter-spacing:0;font-size:15px;padding:12px 9px;
 }
@@ -66,7 +66,7 @@
  gap:9px;
 }
 .bp-label,.genui-product-panorama .panorama-band-label{
- background:#f2f6fc;border:1px solid #d7e3f2;border-left:3px solid #8ba8cc;
+ background:#f2f6fc;border:1px solid #d7e3f2;
  border-radius:6px;color:#344054;font-weight:730;
  font-size:13px;line-height:1.45;
 }
@@ -81,11 +81,11 @@
  text-align:left;margin:0 0 8px;
 }
 .bp-module,.genui-product-panorama .panorama-chip{
- background:#fff;border:1px solid #dce4ee;border-left:3px solid #b3cdea;
+ background:#fff;border:1px solid #dce4ee;
  border-radius:6px;color:#344054;box-shadow:0 1px 2px rgba(27,52,83,.025);
  font-weight:600;line-height:1.45;
 }
-.bp-standard .bp-module{background:#fff;border-color:#dce4ee;border-left-color:#b3cdea}
+.bp-standard .bp-module{background:#fff;border-color:#dce4ee}
 .bp-center,.genui-product-panorama .panorama-center-block{
  background:#f5f9ff;border:1px solid #cad9ed;border-radius:7px;
  padding:9px;
@@ -97,7 +97,7 @@
  color:#344054;font-size:13px;font-weight:700;
 }
 .bp-center-grid .bp-module,.genui-product-panorama .panorama-center-modules .panorama-chip{
- background:#fff;border:1px solid #dce4ee;border-left:3px solid #9dbce3;
+ background:#fff;border:1px solid #dce4ee;
  border-radius:5px;color:#344054;
 }
 .bp-center-grid .bp-chip{
@@ -114,10 +114,10 @@
  background:#fffaf2;border-color:#efdfc4;
 }
 .bp-layer[data-blueprint-layer="分析建模层"] .bp-label{
- background:#fff7eb;border-color:#ebd9bc;border-left-color:#d8a65b;
+ background:#fff7eb;border-color:#ebd9bc;
 }
 .bp-layer[data-blueprint-layer="中台能力层"] .bp-label{
- background:#f4f0ff;border-color:#ded5f5;border-left-color:#b4a0e3;
+ background:#f4f0ff;border-color:#ded5f5;
 }
 /* Source and storage should read like SVG data nodes, not glossy cartoons. */
 .bp-data-subtitle{background:#f2f6fc;color:#475467;border-radius:5px}
@@ -154,3 +154,47 @@
 /* The standalone product example previously used a purple document backdrop. */
 body:has(.bp-viewport){background:#fff;color:#344054}
 body:has(.bp-viewport) h1{color:#1a1c1f}
+
+/* Distinguishable, low-saturation color families across architecture layers.
+   Color fills the node surface; NO vertical accent stripe on module/label/entry. */
+.bp-layer,.genui-product-panorama .panorama-band{
+ --pan-layer-fill:#e7f1ff;--pan-layer-line:#b7d1f5;--pan-node-fill:#f7fbff;--pan-layer-ink:#234f80;
+}
+.bp-layer:nth-of-type(5n+2),.genui-product-panorama .panorama-band:nth-of-type(5n+2){
+ --pan-layer-fill:#e5f6ee;--pan-layer-line:#acd9bf;--pan-node-fill:#f5fcf8;--pan-layer-ink:#216248;
+}
+.bp-layer:nth-of-type(5n+3),.genui-product-panorama .panorama-band:nth-of-type(5n+3){
+ --pan-layer-fill:#eeeaff;--pan-layer-line:#d0c4ef;--pan-node-fill:#faf8ff;--pan-layer-ink:#584b91;
+}
+.bp-layer:nth-of-type(5n+4),.genui-product-panorama .panorama-band:nth-of-type(5n+4){
+ --pan-layer-fill:#fff2d9;--pan-layer-line:#ead0a0;--pan-node-fill:#fffbf0;--pan-layer-ink:#79581d;
+}
+.bp-layer:nth-of-type(5n),.genui-product-panorama .panorama-band:nth-of-type(5n){
+ --pan-layer-fill:#e4f5f8;--pan-layer-line:#b2dce6;--pan-node-fill:#f5fcfd;--pan-layer-ink:#245a65;
+}
+.bp-layer .bp-label,
+.bp-layer[data-blueprint-layer] .bp-label,
+.genui-product-panorama .panorama-band .panorama-band-label{
+ background:var(--pan-layer-fill);
+ border:1px solid var(--pan-layer-line);
+ color:var(--pan-layer-ink);
+}
+.bp-layer .bp-region,
+.bp-layer[data-blueprint-layer] .bp-region,
+.bp-layer .bp-center,
+.genui-product-panorama .panorama-band:nth-of-type(n) .panorama-band-content{
+ background:var(--pan-layer-fill);
+ border:1px solid var(--pan-layer-line);
+}
+.bp-layer .bp-module,
+.bp-layer .bp-standard .bp-module,
+.bp-layer .bp-center-grid .bp-module,
+.genui-product-panorama .panorama-band .panorama-chip{
+ background:var(--pan-node-fill);
+ border:1px solid var(--pan-layer-line);
+ color:var(--pan-layer-ink);
+}
+.bp-entry,.genui-product-panorama .panorama-gateway{
+ border:1px solid #b7d2fa;
+ background:#e8f2ff;
+}
