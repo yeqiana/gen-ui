@@ -9,6 +9,7 @@ const read=p=>fs.readFileSync(path.join(root,p),"utf8");
 const html=read("demo/product-architecture-panorama.html");
 const spec=read("references/product-architecture-panorama.md");
 const arch=read("references/architecture-patterns.md");
+const svgTheme=read("assets/product-panorama-svg-theme.css");
 
 const panoramaPreview=fs.readFileSync(path.join(root,"demo/assets/product-architecture-panorama-preview.png"));
 test("产品全景图截图来自真实 Chrome PNG 并包含完整画布",()=>{
@@ -36,7 +37,9 @@ test("产品架构全景板保留渠道、统一入口、完整横向层次和�
 });
 
 test("离线无脚本，并有窄屏图内滚动、打印和文字替代路径",()=>{
-  assert.doesNotMatch(html,/<script\b|<iframe\b|<link\b/i);
+  assert.doesNotMatch(html,/<script\b|<iframe\b/i);
+  assert.deepEqual([...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]),["../assets/product-panorama-svg-theme.css"]);
+  assert.doesNotMatch(html,/<link[^>]+(?:https?:\/\/|\/\/)/i);
   assert.doesNotMatch(html,/<(?:img|source|video)\b/i);
   assert.match(html,/\.bp-viewport\{overflow-x:auto/);
   assert.match(html,/@media print/);
@@ -56,4 +59,13 @@ test("架构按需路由，不强制增加全局 HTML 或画无依据连线",()=
   assert.match(spec,/不得凭审美添加/);
   assert.match(spec,/实际生成时应/);
   assert.match(spec,/纯 HTML \+ CSS/);
+});
+
+
+test("通用产品全景沿用 SVG 系列的蓝色强调及白底细边框，且无外部依赖",()=>{
+ assert.match(svgTheme,/#3a83f7/i);
+ assert.match(svgTheme,/#dfe5ed/i);
+ assert.match(svgTheme,/\.bp-entry/);
+ assert.match(svgTheme,/\.genui-product-panorama/);
+ assert.doesNotMatch(svgTheme,/@import\b|url\s*\(/i);
 });

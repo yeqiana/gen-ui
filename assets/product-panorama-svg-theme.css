@@ -1,0 +1,156 @@
+/* GEN-UI SVG-series visual language for product panoramas.
+   Shared by the general example and the four technical cases. Layout and content remain unchanged.
+   Palette follows semantic-diagrams.css / architecture-views.css: quiet surfaces, fine strokes,
+   blue focus, and restrained semantic green/amber/lilac accents. */
+:where(.bp-poster,.genui-product-panorama){
+ --pan-ink:#344054;--pan-muted:#667085;--pan-line:#dfe5ed;
+ --pan-blue:#3a83f7;--pan-blue-dark:#2468c9;--pan-blue-soft:#eff6ff;
+ --pan-surface:#fff;--pan-alt:#f8fafc;--pan-green:#eef9f1;
+ --pan-green-stroke:#bddcca;--pan-amber:#fff7eb;--pan-purple:#f4f0ff;
+ color:var(--pan-ink);
+}
+/* The canvas uses the same quiet dotted grid as semantic SVG diagrams. */
+.bp-viewport,.genui-product-panorama .panorama-scroll{
+ border:1px solid var(--pan-line,#dfe5ed);border-radius:9px;background:#fff;
+ box-shadow:none;scrollbar-color:#dbe5f1 transparent;
+}
+.bp-poster,.genui-product-panorama .panorama-board{
+ background-color:#fff;
+ background-image:radial-gradient(#edf1f5 .7px,transparent .7px);
+ background-size:16px 16px;
+ color:#344054;
+}
+/* Top-row channels are simple SVG-style outlined nodes, not colored tiles. */
+.bp-channels,.genui-product-panorama .panorama-channels{
+ background:#f8fafc;border:1px solid #dfe5ed;border-radius:8px;
+ padding:8px;gap:8px;
+}
+.bp-channel,.genui-product-panorama .panorama-channel{
+ background:#fff;border:1px solid #dce4ee;border-radius:6px;
+ color:#344054;box-shadow:0 1px 2px rgba(24,44,70,.03);
+}
+.bp-grid,.genui-product-panorama .panorama-grid{gap:9px}
+/* Cross-cutting support zones use the SVG family blue/green semantics. */
+.bp-rail,.genui-product-panorama .panorama-rail{
+ background:#f8fbff;border:1px solid #d7e3f2;border-radius:8px;
+ padding:10px 7px;gap:10px;color:#475467;
+}
+.bp-rail.right,.genui-product-panorama .panorama-rail--right{
+ background:#f5faf7;border-color:#d4e5da;
+}
+.bp-rail h2,.genui-product-panorama .panorama-rail-title{
+ color:#475467;font-weight:700;
+}
+.bp-rail .bp-rail-item,.genui-product-panorama .panorama-rail-item{
+ background:#fff;border:1px solid #dce4ee;border-radius:5px;
+ color:#344054;padding:10px 4px;
+}
+.bp-rail.right .bp-rail-item,.genui-product-panorama .panorama-rail--right .panorama-rail-item{
+ background:#fff;border-color:#d6e7dc;
+}
+/* API entry: SVG node treatment with a narrow blue accent, never a solid banner. */
+.bp-entry,.genui-product-panorama .panorama-gateway{
+ border:1px solid #b7d2fa;border-left:4px solid #3a83f7;border-radius:7px;
+ background:#eff6ff;color:#185abc;box-shadow:0 1px 3px rgba(27,52,83,.035);
+ letter-spacing:0;font-size:15px;padding:12px 9px;
+}
+.bp-link,.genui-product-panorama .panorama-flow{color:#667085;font-weight:650}
+.bp-link::before{background:#9dbce3}
+.bp-link span,.genui-product-panorama .panorama-flow span{
+ background:#fff;border:1px solid #d9e4f2;border-radius:5px;
+ color:#475467;padding:2px 9px;
+}
+/* Layer ribbons are outlines, with semantic-label pills rather than big orange blocks. */
+.bp-layer,.genui-product-panorama .panorama-band{
+ border-top:1px solid #d9e0ea;border-bottom:0;padding:10px 0;
+ gap:9px;
+}
+.bp-label,.genui-product-panorama .panorama-band-label{
+ background:#f2f6fc;border:1px solid #d7e3f2;border-left:3px solid #8ba8cc;
+ border-radius:6px;color:#344054;font-weight:730;
+ font-size:13px;line-height:1.45;
+}
+.bp-region,.bp-region--medium,.bp-region--light,.bp-region--mint,
+.genui-product-panorama .panorama-band-content,
+.genui-product-panorama .panorama-band:nth-of-type(4n) .panorama-band-content{
+ background:#f8fbff;border:1px solid #dce7f5;border-radius:7px;
+ padding:10px;
+}
+.bp-region-title,.genui-product-panorama .panorama-band-title{
+ color:#475467;font-size:12px;font-weight:700;
+ text-align:left;margin:0 0 8px;
+}
+.bp-module,.genui-product-panorama .panorama-chip{
+ background:#fff;border:1px solid #dce4ee;border-left:3px solid #b3cdea;
+ border-radius:6px;color:#344054;box-shadow:0 1px 2px rgba(27,52,83,.025);
+ font-weight:600;line-height:1.45;
+}
+.bp-standard .bp-module{background:#fff;border-color:#dce4ee;border-left-color:#b3cdea}
+.bp-center,.genui-product-panorama .panorama-center-block{
+ background:#f5f9ff;border:1px solid #cad9ed;border-radius:7px;
+ padding:9px;
+}
+.bp-center:nth-child(2),.genui-product-panorama .panorama-center-block:nth-child(2){
+ background:#f4faf6;border-color:#c9dfcf;
+}
+.bp-center h3,.genui-product-panorama .panorama-center-block>strong{
+ color:#344054;font-size:13px;font-weight:700;
+}
+.bp-center-grid .bp-module,.genui-product-panorama .panorama-center-modules .panorama-chip{
+ background:#fff;border:1px solid #dce4ee;border-left:3px solid #9dbce3;
+ border-radius:5px;color:#344054;
+}
+.bp-center-grid .bp-chip{
+ background:#eef6ff;border:1px solid #d6e7f7;border-radius:5px;
+ color:#315276;font-weight:650;
+}
+.bp-domain{background:#fff;border:1px solid #dfe8f3;border-radius:5px;color:#667085}
+/* Domain hints on later layers use semantic colors sparingly. */
+.bp-layer[data-blueprint-layer="标准层"] .bp-region,
+.genui-product-panorama .panorama-band:last-of-type .panorama-band-content{
+ background:#f4faf6;border-color:#d6e7dc;
+}
+.bp-layer[data-blueprint-layer="分析建模层"] .bp-region{
+ background:#fffaf2;border-color:#efdfc4;
+}
+.bp-layer[data-blueprint-layer="分析建模层"] .bp-label{
+ background:#fff7eb;border-color:#ebd9bc;border-left-color:#d8a65b;
+}
+.bp-layer[data-blueprint-layer="中台能力层"] .bp-label{
+ background:#f4f0ff;border-color:#ded5f5;border-left-color:#b4a0e3;
+}
+/* Source and storage should read like SVG data nodes, not glossy cartoons. */
+.bp-data-subtitle{background:#f2f6fc;color:#475467;border-radius:5px}
+.bp-source{background:#eef6ff;border:1px solid #b7d2fa;border-radius:6px;color:#344054}
+.bp-external{background:#f4faf6;border:1px solid #d6e7dc;border-radius:6px}
+.bp-external span{background:#fff;border-color:#d6e7dc;border-radius:4px}
+.bp-extract{color:#667085;font-weight:650;font-size:12px}
+.bp-extract strong{color:#8ba8cc;font-size:26px}
+.bp-db{background:#eef6ff;border:1px solid #9dbce3;color:#315276;
+ border-radius:45% 45% 9px 9px / 12% 12% 9px 9px;
+ box-shadow:0 3px 0 #cad9ed;min-height:122px;
+}
+.bp-db::before{background:#dceafe;border:1px solid #9dbce3}
+.bp-db small{color:#475467}
+.bp-legend{color:#667085}
+.bp-legend span::before{background:#f8fbff;border-color:#dce4ee;border-radius:2px}
+.bp-legend span:nth-child(2)::before{background:#f2f6fc}
+.bp-legend span:nth-child(3)::before{background:#eff6ff}
+.bp-text,.genui-product-panorama .panorama-text{
+ background:#fff;border:1px solid #e4e7ec;color:#344054;box-shadow:none;
+}
+.genui-product-panorama .panorama-legend{
+ background:#f8fafc;border:1px solid #e4e7ec;border-radius:5px;
+ color:#667085;padding:9px;
+}
+.genui-product-panorama .panorama-heading{color:#1a1c1f}
+.genui-product-panorama .panorama-lede{color:#667085}
+.genui-product-panorama .panorama-grid{grid-template-columns:75px minmax(0,1fr) 75px}
+@media print{
+ .bp-poster,.genui-product-panorama .panorama-board{background:#fff}
+ .bp-viewport,.genui-product-panorama .panorama-scroll{box-shadow:none}
+}
+
+/* The standalone product example previously used a purple document backdrop. */
+body:has(.bp-viewport){background:#fff;color:#344054}
+body:has(.bp-viewport) h1{color:#1a1c1f}

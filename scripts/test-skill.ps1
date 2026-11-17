@@ -56,6 +56,7 @@ $required = @(
   "demo/architecture-patterns.html",
   "references/product-architecture-panorama.md",
   "demo/product-architecture-panorama.html",
+  "assets/product-panorama-svg-theme.css",
   "tests/product-architecture-panorama.test.mjs",
   "tests/product-panorama-cases.test.mjs",
   "demo/documents/assets/product-panorama-case.css",

@@ -35,6 +35,7 @@ test("分层海报复用纯 CSS、只在图内滚动、包含文字替代且不�
  assert.doesNotMatch(css,/@import|url\(/);
  for(const p of pages){
   assert.match(p.html,/href="assets\/product-panorama-case\.css"/);
+  assert.match(p.html,/href="\.\.\/\.\.\/assets\/product-panorama-svg-theme\.css"/);
   assert.match(p.html,/class="panorama-scroll" role="region" tabindex="0"/);
   assert.match(p.html,/class="panorama-text"><summary>展开六层产品架构文字版/);
   assert.match(p.html,/不表示生产系统已验证/);
@@ -63,4 +64,14 @@ test("四张架构全景预览源于 Chrome 截图，可从中文 README 打开"
   assert.ok(b.length>18000,id+" size");
   assert.ok(readme.includes(file),id+" readme link");
  }
+});
+
+
+test("四个案例共用 SVG 系列主题但保留独立业务模块",()=>{
+ const theme=fs.readFileSync(path.join(root,"assets/product-panorama-svg-theme.css"),"utf8");
+ assert.match(theme,/\.genui-product-panorama \.panorama-band-content/);
+ assert.match(theme,/#eff6ff/i);
+ assert.match(theme,/#dce4ee/i);
+ assert.doesNotMatch(theme,/@import\b|url\s*\(/i);
+ for(const p of pages)assert.equal((p.html.match(/product-panorama-svg-theme\.css/g)||[]).length,1,p.id);
 });
