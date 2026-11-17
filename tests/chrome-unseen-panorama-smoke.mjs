@@ -23,7 +23,7 @@ if(!chrome)throw Error("Chrome or Edge not installed");
 const pause=ms=>new Promise(ok=>setTimeout(ok,ms));
 const errors=[];
 function ensure(condition,message,details){if(!condition)errors.push({message,details})}
-const inspector="(()=>{const outer=document.querySelector('.panorama-scroll'),board=document.querySelector('.panorama-board'),gate=document.querySelector('.panorama-gateway'),node=document.querySelector('.panorama-chip'),region=document.querySelector('[role=region]'),evidence=document.querySelector('.evidence');const style=x=>getComputedStyle(x);return{ready:document.readyState,viewport:innerWidth,htmlScroll:document.documentElement.scrollWidth,bodyScroll:document.body.scrollWidth,regionClient:outer?.clientWidth,regionScroll:outer?.scrollWidth,regionOverflow:outer?style(outer).overflowX:null,boardWidth:board?.getBoundingClientRect().width,boardBackground:board?style(board).backgroundColor:null,boardGrid:board?style(board).backgroundImage:null,gatewayStroke:gate?style(gate).borderLeftColor:null,moduleBackground:node?style(node).backgroundColor:null,regionFocusable:region?.tabIndex===0,modules:document.querySelectorAll('.panorama-chip').length,provenance:evidence?.querySelectorAll('li>strong').length||0,scripts:document.querySelectorAll('script,iframe,object').length}})()";
+const inspector="(()=>{const outer=document.querySelector('.panorama-scroll'),board=document.querySelector('.panorama-board'),gate=document.querySelector('.panorama-gateway'),node=document.querySelector('.panorama-chip'),region=document.querySelector('[role=region]'),evidence=document.querySelector('.evidence');const style=x=>getComputedStyle(x);return{ready:document.readyState,viewport:innerWidth,htmlScroll:document.documentElement.scrollWidth,bodyScroll:document.body.scrollWidth,regionClient:outer?.clientWidth,regionScroll:outer?.scrollWidth,regionOverflow:outer?style(outer).overflowX:null,boardWidth:board?.getBoundingClientRect().width,boardBackground:board?style(board).backgroundColor:null,boardGrid:board?style(board).backgroundImage:null,gatewayStroke:gate?style(gate).borderLeftColor:null,gateLeft:gate?style(gate).borderLeftWidth:null,gateRight:gate?style(gate).borderRightWidth:null,moduleBackground:node?style(node).backgroundColor:null,nodeLeft:node?style(node).borderLeftWidth:null,nodeRight:node?style(node).borderRightWidth:null,layerColors:[...document.querySelectorAll('.panorama-band-label')].map(x=>style(x).backgroundColor),regionFocusable:region?.tabIndex===0,modules:document.querySelectorAll('.panorama-chip').length,provenance:evidence?.querySelectorAll('li>strong').length||0,scripts:document.querySelectorAll('script,iframe,object').length}})()";
 async function run(){
  const profile=fs.mkdtempSync(path.join(os.tmpdir(),"genui-unseen-chrome-"));
  const portProbe=net.createServer();await new Promise(ok=>portProbe.listen(0,"127.0.0.1",ok));
@@ -73,7 +73,7 @@ async function run(){
   for(const file of files){
    const abs=path.resolve(file);
    if(!fs.existsSync(abs))throw Error("Preview missing: "+abs);
-   const tag=path.basename(path.dirname(abs)).replace(/[^a-z0-9-]/gi,"-");
+   const tag=path.basename(abs).replace(/\.html?$/i,"").replace(/[^a-z0-9-]/gi,"-");
    for(const width of [375,768,1440]){
     await call("Emulation.setDeviceMetricsOverride",{width,height:980,deviceScaleFactor:1,mobile:width===375});
     await call("Page.navigate",{url:pathToFileURL(abs).href});
@@ -84,7 +84,7 @@ async function run(){
     ensure(state.modules>=2&&state.provenance>=2,"modules or source evidence missing",{file,width,state});
     ensure(state.regionFocusable&&["auto","scroll"].includes(state.regionOverflow),"diagram not keyboard-scrollable",{file,width,state});
     ensure(state.boardBackground==="rgb(255, 255, 255)"&&state.boardGrid?.includes("radial-gradient"),"SVG family board theme missing",{file,width,state});
-    ensure(state.gatewayStroke==="rgb(58, 131, 247)"&&state.moduleBackground==="rgb(255, 255, 255)","SVG family node palette missing",{file,width,state});
+    ensure(state.gatewayStroke==="rgb(183, 210, 250)"&&state.gateLeft===state.gateRight&&state.nodeLeft===state.nodeRight&&state.nodeLeft==="1px"&&state.layerColors.length>=2&&new Set(state.layerColors).size>=2,"SVG palette should be distinguishable without left accent strips",{file,width,state});
     ensure(state.scripts===0,"offline HTML contains executable or embedded content",{file,width,state});
     if(width<=768)ensure(state.regionScroll>state.regionClient+50,"narrow diagram does not scroll internally",{file,width,state});
     if(captureDir){
