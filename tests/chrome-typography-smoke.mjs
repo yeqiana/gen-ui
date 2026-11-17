@@ -48,7 +48,10 @@ function measure(kind){
     ?["main.genui-typography p.genui-prose","main.genui-typography .genui-prose-group p",
       "main.genui-typography .genui-prose p","main.genui-typography .doc-section p",
       "main.genui-typography .doc-summary>p","main.genui-typography blockquote>p",
-      "main.genui-typography .callout>p"]
+      "main.genui-typography .callout>p","main.genui-typography .doc-section>ul",
+      "main.genui-typography .doc-section>ol","main.genui-typography ul.genui-prose",
+      "main.genui-typography ol.genui-prose","main.genui-typography .genui-prose-group>ul",
+      "main.genui-typography .genui-prose-group>ol"]
     :[".doc-main .doc-lede",".doc-main .doc-summary>p",
       ".doc-main .doc-section>p",".doc-main .doc-section>ul",
       ".doc-main .doc-section>ol",".doc-main .doc-section .callout>p"];
