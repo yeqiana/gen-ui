@@ -62,6 +62,7 @@ jobs:
             "tests/chrome-portal-directory-smoke.mjs",
             "tests/chrome-documents-smoke.mjs",
             "tests/chrome-typography-smoke.mjs",
+            "tests/chrome-heading-break-smoke.mjs",
             "tests/chrome-layout-edge-cases.mjs",
             "tests/chrome-semantic-stress.mjs"
           )

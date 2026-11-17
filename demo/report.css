@@ -309,3 +309,6 @@ blockquote.callout{margin-inline:0}
 .app:not([data-navigation="top"]) main blockquote:not(.callout){
   margin-inline:0;padding:10px 14px;border-left:3px solid #dce7f5;
 }
+
+/* Heading line-break protection: balance headings only; leave narrative paragraphs naturally wrapped. */
+#main :is(h1,h2,h3,h4){text-wrap:balance;overflow-wrap:break-word}
