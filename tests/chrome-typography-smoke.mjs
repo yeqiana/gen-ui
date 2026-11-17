@@ -208,18 +208,18 @@ async function main(){
             structure.layout&&structure.main&&structure.sidebar&&structure.mobile&&structure.script);
         }
 
-        if(page.kind!=="report"&&width>700){
+        if(page.kind!=="report"&&width>900){
           await until(()=>evaluate("!!document.querySelector('.doc-toc>.genui-sidebar-toggle')"),page.id+" nav toggle");
         }
         // Generated HTML may start folded; first normalize to expanded for both-state testing.
-        if((page.kind==="report"||width>700)&&await evaluate("document.querySelector('.doc-layout,.app')?.dataset.sidebarCollapsed==='true'")){
+        if((page.kind==="report"||width>900)&&await evaluate("document.querySelector('.doc-layout,.app')?.dataset.sidebarCollapsed==='true'")){
           await evaluate("document.querySelector('.doc-toc>.genui-sidebar-toggle,#toggle-sidebar')?.click()");
         }
         const views=[{name:"expanded",data:await inspect(page.kind)}];
         if(page.kind==="report"){
           await evaluate("document.getElementById('toggle-sidebar').click()");
           views.push({name:"collapsed",data:await inspect(page.kind)});
-        }else if(width>700){
+        }else if(width>900){
           await evaluate("document.querySelector('.doc-toc>.genui-sidebar-toggle').click()");
           views.push({name:"collapsed",data:await inspect(page.kind)});
         }else{
@@ -233,7 +233,7 @@ async function main(){
           check(reference+" has narrative samples",data,data.prose.length>=(page.kind==="generated"?1:3));
           if(page.kind==="generated"){
             check(reference+" typography layer is loaded",data.typography,
-              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"62ic":"72ch")
+              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"48ic":"72ch")
               &&parseFloat(data.typography.leadingToken)>=1.6
               &&parseFloat(data.typography.leadingToken)<=1.85);
             // Whole-word wrapping may shorten an English first line; verify actual width, wrapping and clipping instead of a fixed fill ratio.
@@ -250,6 +250,15 @@ async function main(){
               check(reference+" heading rhythm uses token",data.typography,
                 Math.abs(data.typography.headingMargin/data.typography.headingFont-1.25)<.08);
           }
+          if(page.kind!=="report"&&width===768){
+            check(reference+" tablet uses wide main content and hides the cramped desktop rail",data,
+              !data.navVisible&&data.mainWidth>=width*.78);
+          }
+          if(page.kind!=="report"&&width===1440){
+            const narrative=data.prose.filter(x=>x.bodyParagraph);
+            check(reference+" narrative width actually respects the centered reading cap",narrative,
+              narrative.length>0&&narrative.every(x=>x.width<=Math.min(x.maxReading+4,820)));
+          }
           check(reference+" page fits viewport",data,!data.docOverflow);
           check(reference+" narrative blocks fit their actual parent column",data,
             data.prose.every(x=>x.width<=x.parentWidth+3));
@@ -261,7 +270,7 @@ async function main(){
             const longBody=data.prose.filter(x=>x.bodyParagraph&&x.chars>=80&&x.lines>=2);
             if(longBody.length)check(reference+" long Chinese prose uses available line width without balancing",longBody,
               longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.77
-                &&x.width>=x.parentWidth*.94));
+                &&x.width<=x.maxReading+3));
           }
           check(reference+" true browser line-height matches typography tokens",data,
             data.prose.filter(x=>x.bodyParagraph).length>0
@@ -285,7 +294,7 @@ async function main(){
             mainPx:data.mainWidth,tablePx:data.wide.tableWidth,overflow:data.docOverflow
           });
         }
-        if(views.length>1&&width>700){
+        if(views.length>1&&(page.kind==="report"||width>900)){
           check(page.id+"/"+width+" fold changes navigation state",views,
             !views[0].data.collapsed&&views[1].data.collapsed
             &&views[1].data.navWidth<views[0].data.navWidth);
