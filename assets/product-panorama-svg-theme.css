@@ -50,7 +50,7 @@
 }
 /* API entry: SVG node treatment with a narrow blue accent, never a solid banner. */
 .bp-entry,.genui-product-panorama .panorama-gateway{
- border:1px solid #b7d2fa;border-left:4px solid #3a83f7;border-radius:7px;
+ border:1px solid #b7d2fa;border-left:1px solid #b7d2fa;border-radius:7px;
  background:#eff6ff;color:#185abc;box-shadow:0 1px 3px rgba(27,52,83,.035);
  letter-spacing:0;font-size:15px;padding:12px 9px;
 }
@@ -66,7 +66,7 @@
  gap:9px;
 }
 .bp-label,.genui-product-panorama .panorama-band-label{
- background:#f2f6fc;border:1px solid #d7e3f2;border-left:3px solid #8ba8cc;
+ background:#f2f6fc;border:1px solid #d7e3f2;border-left:1px solid #d7e3f2;
  border-radius:6px;color:#344054;font-weight:730;
  font-size:13px;line-height:1.45;
 }
@@ -81,11 +81,11 @@
  text-align:left;margin:0 0 8px;
 }
 .bp-module,.genui-product-panorama .panorama-chip{
- background:#fff;border:1px solid #dce4ee;border-left:3px solid #b3cdea;
+ background:#fff;border:1px solid #dce4ee;border-left:1px solid #dce4ee;
  border-radius:6px;color:#344054;box-shadow:0 1px 2px rgba(27,52,83,.025);
  font-weight:600;line-height:1.45;
 }
-.bp-standard .bp-module{background:#fff;border-color:#dce4ee;border-left-color:#b3cdea}
+.bp-standard .bp-module{background:#fff;border-color:#dce4ee;border-left-color:#dce4ee}
 .bp-center,.genui-product-panorama .panorama-center-block{
  background:#f5f9ff;border:1px solid #cad9ed;border-radius:7px;
  padding:9px;
@@ -97,7 +97,7 @@
  color:#344054;font-size:13px;font-weight:700;
 }
 .bp-center-grid .bp-module,.genui-product-panorama .panorama-center-modules .panorama-chip{
- background:#fff;border:1px solid #dce4ee;border-left:3px solid #9dbce3;
+ background:#fff;border:1px solid #dce4ee;border-left:1px solid #dce4ee;
  border-radius:5px;color:#344054;
 }
 .bp-center-grid .bp-chip{
@@ -114,10 +114,10 @@
  background:#fffaf2;border-color:#efdfc4;
 }
 .bp-layer[data-blueprint-layer="分析建模层"] .bp-label{
- background:#fff7eb;border-color:#ebd9bc;border-left-color:#d8a65b;
+ background:#fff7eb;border-color:#ebd9bc;border-left-color:#ebd9bc;
 }
 .bp-layer[data-blueprint-layer="中台能力层"] .bp-label{
- background:#f4f0ff;border-color:#ded5f5;border-left-color:#b4a0e3;
+ background:#f4f0ff;border-color:#ded5f5;border-left-color:#ded5f5;
 }
 /* Source and storage should read like SVG data nodes, not glossy cartoons. */
 .bp-data-subtitle{background:#f2f6fc;color:#475467;border-radius:5px}
@@ -154,3 +154,66 @@
 /* The standalone product example previously used a purple document backdrop. */
 body:has(.bp-viewport){background:#fff;color:#344054}
 body:has(.bp-viewport) h1{color:#1a1c1f}
+
+
+/* Semantic layers: visually distinct, restrained fills; no asymmetric accent stripe. */
+.bp-layer[data-blueprint-layer="应用展示层"],
+.genui-product-panorama .panorama-band:nth-child(1 of .panorama-band){
+ --tier-fill:#eaf3ff;--tier-label:#d6e8ff;--tier-line:#a9c9f1;--tier-ink:#245e9f;--tier-chip:#fafcff;
+}
+.bp-layer[data-blueprint-layer="中台能力层"],
+.genui-product-panorama .panorama-band:nth-child(2 of .panorama-band){
+ --tier-fill:#f2ecff;--tier-label:#e5d9fc;--tier-line:#c9b7eb;--tier-ink:#65478e;--tier-chip:#fcfaff;
+}
+.bp-layer[data-blueprint-layer="业务后台层"],
+.genui-product-panorama .panorama-band:nth-child(3 of .panorama-band){
+ --tier-fill:#e7f7f5;--tier-label:#cdefeb;--tier-line:#a9dad2;--tier-ink:#276b63;--tier-chip:#fafffe;
+}
+.bp-layer[data-blueprint-layer="分析建模层"],
+.genui-product-panorama .panorama-band:nth-child(4 of .panorama-band){
+ --tier-fill:#fff2e4;--tier-label:#ffe3c3;--tier-line:#e8c49b;--tier-ink:#895d31;--tier-chip:#fffdfa;
+}
+.bp-layer[data-blueprint-layer="标准层"],
+.genui-product-panorama .panorama-band:nth-child(5 of .panorama-band){
+ --tier-fill:#eaf7ec;--tier-label:#d3eed7;--tier-line:#add7b5;--tier-ink:#347347;--tier-chip:#fcfffc;
+}
+.bp-layer[data-blueprint-layer="数据整合层"],
+.genui-product-panorama .panorama-band:nth-child(6 of .panorama-band){
+ --tier-fill:#edf3f9;--tier-label:#dae5f0;--tier-line:#b9cbdc;--tier-ink:#3f5e77;--tier-chip:#fbfcff;
+}
+.bp-poster .bp-layer .bp-label,
+.genui-product-panorama .panorama-band .panorama-band-label{
+ border:1px solid var(--tier-line,#d7e3f2);
+ background:var(--tier-label,#eaf3ff);color:var(--tier-ink,#245e9f);
+}
+.bp-poster .bp-layer .bp-region,
+.bp-poster .bp-layer .bp-region--medium,
+.bp-poster .bp-layer .bp-region--light,
+.bp-poster .bp-layer .bp-region--mint,
+.genui-product-panorama .panorama-band:nth-child(n of .panorama-band) .panorama-band-content{
+ border:1px solid var(--tier-line,#d7e3f2);
+ background:var(--tier-fill,#eaf3ff);
+}
+.bp-poster .bp-layer .bp-module,
+.genui-product-panorama .panorama-band .panorama-chip{
+ border:1px solid var(--tier-line,#d7e3f2);
+ background:var(--tier-chip,#fff);
+ color:#344054;box-shadow:0 1px 2px rgba(24,44,70,.03);
+}
+.bp-poster .bp-layer .bp-center{
+ border:1px solid var(--tier-line,#c9b7eb);
+ background:var(--tier-fill,#f2ecff);
+}
+.bp-poster .bp-center .bp-chip,
+.genui-product-panorama .panorama-center-block{
+ border:1px solid var(--tier-line,#c9b7eb);
+}
+/* Entrance is a unified outline, not a banner with a colored left bar. */
+.bp-entry,.genui-product-panorama .panorama-gateway{
+ border:1px solid #9dbff0;background:#e9f3ff;color:#185abc;
+}
+/* No vertical bar on nested components either. */
+.bp-poster .bp-center-grid .bp-module,
+.genui-product-panorama .panorama-center-modules .panorama-chip{
+ border:1px solid var(--tier-line,#c9b7eb);
+}

@@ -206,4 +206,6 @@ MIT License · [LICENSE](LICENSE)。
 
 延伸阅读：[八类架构图的分层/容器示例](demo/architecture-patterns.html) · [轻量化 Skill 设计原则](docs/skill-principles.md)。
 
+**三个真实项目的独立离线全景图：** [打开三项目预览](demo/unseen-panorama/index.html) · [Agent Lead](demo/unseen-panorama/agent-lead.html) · [PlanShip](demo/unseen-panorama/plan-ship.html) · [Distributed Systems Audit](demo/unseen-panorama/distributed-system-audit.html)。新版以六组浅色层带区分语义，不使用左侧粗色条；这些是基于冻结公开文档的演示候选，不等于真实模型泛化通过。
+
 **陌生真实项目泛化评测（P1）：** [查看离线来源冻结、配对提示、证据校验与 Chrome 渲染流程](evals/unseen-panorama-workflow-2026-11-17.md)。目前仅完成离线链路与演示候选验证；**独立模型生成和 Skill 加载 A/B 尚未执行**，不能据此声称泛化效果已达标。

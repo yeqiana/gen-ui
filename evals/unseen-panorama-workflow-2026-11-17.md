@@ -53,4 +53,4 @@ node --test tests/unseen-panorama-workflow.test.mjs
 
 此流程的 `prepare` 仅创建提示。正式模型运行必须能独立证明实际调用、所用模型及 `$gen-ui` Skill 加载；纯文件名或 prompt 前缀不是加载证据。`check` 验证引文**存在**不等于引文真正支持模块语义；`render` 只生成候选页面。正式 P1 通过还需要真实的两组模型输出、独立语义盲审、视觉与读者任务验证。
 
-本轮环境没有可用的 Ollama、LM Studio、llama.cpp 或正在运行的本地推理服务，Docker 引擎也未运行。为避免下载大型模型、擅用付费 API 或消耗 Codex 额度，本轮没有自动安装模型或创建收费调用。演示产物与截图只存在本地临时目录，不随公共仓库提交。
+本轮环境没有可用的 Ollama、LM Studio、llama.cpp 或正在运行的本地推理服务，Docker 引擎也未运行。为避免下载大型模型、擅用付费 API 或消耗 Codex 额度，本轮没有自动安装模型或创建收费调用。**脱敏的三份静态演示 HTML 与三张实机预览截图**已按用户要求发布到 [`demo/unseen-panorama/`](../demo/unseen-panorama/index.html)，仍标明“本会话依据冻结原文整理的演示候选”。原始模型提示、原文快照、候选 JSON 和本机路径仍只留在本地临时目录，不随公共仓库提交；发布演示不改变正式 A/B 生成 0 次、Skill 激活验证 0 次、独立语义评审 0 次的结论。

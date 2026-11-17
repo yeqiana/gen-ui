@@ -57,10 +57,12 @@ jobs:
           $ErrorActionPreference = "Stop"
           $scripts = @(
             "tests/chrome-report-smoke.mjs",
+            "tests/chrome-report-prose-wrap.mjs",
             "tests/chrome-portal-smoke.mjs",
             "tests/chrome-portal-http-smoke.mjs",
             "tests/chrome-portal-directory-smoke.mjs",
             "tests/chrome-documents-smoke.mjs",
+            "tests/chrome-unseen-panorama-smoke.mjs",
             "tests/chrome-typography-smoke.mjs",
             "tests/chrome-heading-break-smoke.mjs",
             "tests/chrome-heading-wrap-regression.mjs",
@@ -71,6 +73,8 @@ jobs:
             & node $script
             if ($LASTEXITCODE -ne 0) { throw "Browser smoke failed: $script" }
           }
+          & node tests/chrome-unseen-panorama-smoke.mjs --files demo/unseen-panorama/agent-lead.html demo/unseen-panorama/plan-ship.html demo/unseen-panorama/distributed-system-audit.html
+          if ($LASTEXITCODE -ne 0) { throw "Three standalone P1 demo panorama browser checks failed" }
           & node tests/chrome-semantic-stress.mjs --mobile
           if ($LASTEXITCODE -ne 0) { throw "Mobile semantic stress failed" }
           foreach ($case_id in @("HTML02","HTML03","HTML04")) {

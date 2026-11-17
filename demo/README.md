@@ -49,6 +49,10 @@ English readers get **English prose, headings, tables, browser previews, and ins
 
 [Browse English document examples](documents/en/index.html)
 
+## 三个公开项目的独立离线产品全景图
+
+[Agent Lead、PlanShip 与 Distributed Systems Audit 三项目预览](unseen-panorama/index.html)：每张图均独立 HTML，带冻结 Git 来源说明与逐模块证据，采用新版六组淡色层带与完整四边描边。**这是按来源整理的演示候选，不是独立模型生成、真实部署或 Skill A/B 通过证明。**
+
 ## 其他演示与固定测试夹具
 
 - [demo/index.html](index.html)：`gen-ui-demo/v1` 受控声明式协议教学（滑块演示，不是通用运行时）。
