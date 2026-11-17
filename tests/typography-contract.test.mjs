@@ -8,6 +8,18 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
 
+const articleColumnRule=/\.genui-article-column\s*\{[^}]*\bmax-width:\s*min\(100%,\s*var\(--genui-article-width\)\)/s;
+const forbiddenProseCap=/max-width:\s*min\(100%,\s*var\(--genui-prose-width\)\)/;
+const forbiddenWideSelector=/\b(?:table|figure|svg|canvas)\s*\{/i;
+
+test('排版契约的转义正则能够匹配真实 CSS 并拒绝反例',()=>{
+ assert.match('.genui-article-column{ max-width: min(100%, var(--genui-article-width)); }',articleColumnRule);
+ assert.doesNotMatch('.genui-article-column{ max-width: min(100%, var(--genui-prose-width)); }',articleColumnRule);
+ assert.match('max-width: min(100%, var(--genui-prose-width))',forbiddenProseCap);
+ assert.match('table { width:100% }',forbiddenWideSelector);
+ assert.doesNotMatch('.table-wrap { width:100% }',forbiddenWideSelector);
+});
+
 test('轻量 Typography 只作用于标注的 HTML 正文，不压缩宽内容',()=>{
  const css=read('assets/typography.css');
  assert.match(css,/main\.genui-typography/);
@@ -23,9 +35,9 @@ test('轻量 Typography 只作用于标注的 HTML 正文，不压缩宽内容',
  assert.doesNotMatch(css,/main\.genui-typography\s+p\{[^}]*text-wrap:balance/s);
  assert.doesNotMatch(css,/text-wrap:balance|text-wrap:pretty/);
  assert.match(css,/--genui-prose-leading:1\.65/);
- assert.match(css,/\.genui-article-column\{[^}]*max-width:min\(100%,var\(--genui-article-width\)\)/s);
- assert.doesNotMatch(css,/max-width:min\(100%,var\(--genui-prose-width\)\)/);
- assert.doesNotMatch(css,/\b(?:table|figure|svg|canvas)\s*\{/i);
+ assert.match(css,articleColumnRule);
+ assert.doesNotMatch(css,forbiddenProseCap);
+ assert.doesNotMatch(css,forbiddenWideSelector);
  assert.match(css,/main\.genui-typography pre\{[^}]*max-width:100%;overflow-x:auto/);
  assert.doesNotMatch(css,/@import|https?:\/\//i);
  assert.match(read('tests/chrome-typography-smoke.mjs'),/table-wrap,\.table-scroll/);
@@ -43,7 +55,7 @@ test('SKILL 和两类 HTML 合约提供条件加载入口',()=>{
  for(const file of ['references/html-report-essentials.md','references/html-report-contract.md'])assert.match(read(file),/text-wrap:wrap/);
  assert.doesNotMatch(read('demo/documents/assets/document.css'),/text-wrap:balance|max-width:min\(100%,var\(--genui-prose-width\)\)/);
  assert.doesNotMatch(read('demo/ui-refresh.css'),/max-width:min\(100%,var\(--genui-prose-width\)\)/);
- assert.match(instructions,/不.*单文件|单文件/);
+ assert.match(instructions,/用户要求真正独立单文件时/);
 });
 
 for(const [lang,filename] of [['zh-CN','generated-typography-zh.html'],['en','generated-typography-en.html']]){
