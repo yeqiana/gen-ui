@@ -25,7 +25,7 @@ const defaultPages=[
 const cli=process.argv.slice(2);
 if(cli.length&&(cli[0]!=="--generated"||cli.length<2))throw Error("Usage: node tests/chrome-typography-smoke.mjs [--generated <report.html> ...]");
 const pages=cli.length?cli.slice(1).map((file,i)=>({id:"generated-"+(i+1),kind:"generated",file})):defaultPages;
-const widths=[375,768,1440];
+const widths=[375,768,1024,1440];
 const chrome=[
   process.env.GEN_UI_CHROME,
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -88,6 +88,9 @@ function measure(kind){
       maxLine:Math.round(Math.max(0,...lineWidths)),
       firstLine:Math.round(lineWidths[0]||0),
       parentWidth:(()=>{const parent=el.parentElement,s=getComputedStyle(parent);return Math.round(parent.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight));})(),
+      leftOffset:(()=>{const parent=el.parentElement,s=getComputedStyle(parent);return Math.round(box.left-parent.getBoundingClientRect().left-(parseFloat(s.borderLeftWidth)||0)-(parseFloat(s.paddingLeft)||0));})(),
+      textIndent:parseFloat(style.textIndent)||0,
+      articleMode:!!el.closest('.genui-article-reading'),
       badLines:badLines.length,
       clipped:el.scrollWidth>el.clientWidth+2,
       leading:style.lineHeight,
@@ -233,12 +236,12 @@ async function main(){
           check(reference+" has narrative samples",data,data.prose.length>=(page.kind==="generated"?1:3));
           if(page.kind==="generated"){
             check(reference+" typography layer is loaded",data.typography,
-              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"48ic":"72ch")
+              data.typography.enabled&&data.typography.widthToken===(/^zh(?:-|$)/i.test(data.language)?"62ic":"72ch")
               &&parseFloat(data.typography.leadingToken)>=1.6
               &&parseFloat(data.typography.leadingToken)<=1.85);
             // Whole-word wrapping may shorten an English first line; verify actual width, wrapping and clipping instead of a fixed fill ratio.
             check(reference+" visible headings occupy reading width and wrap naturally",data.headings,
-              data.headings.length>0&&data.headings.every(h=>["wrap","balance"].includes(h.textWrap)&&!h.hardBreak&&!h.clipped
+              data.headings.length>0&&data.headings.every(h=>h.textWrap==="wrap"&&!h.hardBreak&&!h.clipped
                 &&(h.lines<=1||h.width>=h.available*.87||h.available-h.width<=28)
                 &&(h.lines<=1||h.firstLine>0)));
             if(/^zh(?:-|$)/i.test(data.language))
@@ -254,11 +257,11 @@ async function main(){
             check(reference+" tablet uses wide main content and hides the cramped desktop rail",data,
               !data.navVisible&&data.mainWidth>=width*.78);
           }
-          if(page.kind!=="report"&&width===1440){
-            const narrative=data.prose.filter(x=>x.bodyParagraph);
-            check(reference+" narrative width actually respects the centered reading cap",narrative,
-              narrative.length>0&&narrative.every(x=>x.width<=Math.min(x.maxReading+4,820)));
-          }
+          check(reference+" narrative blocks share the real chapter width and baseline",data.prose,
+            data.prose.length>0&&data.prose.every(x=>x.articleMode||
+              (x.width>=x.parentWidth-5&&Math.abs(x.leftOffset)<=5&&Math.abs(x.textIndent)<=2)));
+          check(reference+" body prose uses natural wrapping",data.prose,
+            data.prose.filter(x=>x.bodyParagraph).every(x=>x.textWrap==="wrap"));
           check(reference+" page fits viewport",data,!data.docOverflow);
           check(reference+" narrative blocks fit their actual parent column",data,
             data.prose.every(x=>x.width<=x.parentWidth+3));
@@ -269,8 +272,8 @@ async function main(){
           if(page.kind==="generated"&&/^zh(?:-|$)/i.test(data.language)&&width>=768){
             const longBody=data.prose.filter(x=>x.bodyParagraph&&x.chars>=80&&x.lines>=2);
             if(longBody.length)check(reference+" long Chinese prose uses available line width without balancing",longBody,
-              longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.77
-                &&x.width<=x.maxReading+3));
+              longBody.every(x=>x.textWrap==="wrap"&&x.firstLine>=x.width*.72
+                &&(x.articleMode||x.width>=x.parentWidth-5)));
           }
           check(reference+" true browser line-height matches typography tokens",data,
             data.prose.filter(x=>x.bodyParagraph).length>0
@@ -278,7 +281,7 @@ async function main(){
               parseFloat(x.leading)/parseFloat(x.font)-(page.kind==="doc"?1.85:page.kind==="generated"?parseFloat(data.typography.leadingToken):1.65))<0.035
               ||(page.kind==="generated"&&Math.abs(parseFloat(x.leading)/parseFloat(x.font)-1.85)<.06)));
           if(width===1440){
-            if(data.wide.tableWidth!==null)check(reference+" present wide table remains wider than prose",data,
+            if(data.wide.tableWidth!==null)check(reference+" wide table is not shrunk below the section width",data,
               data.wide.tableWidth>=Math.max(...data.prose.map(x=>x.width))-3
               &&!data.wide.tableMaxWidth.includes("72ch"));
             check(reference+" code region is not constrained as prose",data,
@@ -299,8 +302,8 @@ async function main(){
             !views[0].data.collapsed&&views[1].data.collapsed
             &&views[1].data.navWidth<views[0].data.navWidth);
           if(page.kind==="doc"||(page.kind==="report"&&width>800)){
-            // A collapsed rail may enlarge the available column while the reading
-            // canvas itself is capped and centered for comfortable line lengths.
+            // Sidebar folding may widen the chapter; it must not shift individual
+            // paragraphs independently from that chapter's headings.
             check(page.id+"/"+width+" collapsed content remains usable and centered",views,
               views[1].data.mainWidth>=Math.min(views[0].data.mainWidth,960)-2
               &&Math.abs(views[1].data.mainCenter-width/2)<=Math.max(80,width*.08));

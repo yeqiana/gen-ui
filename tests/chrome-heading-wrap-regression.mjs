@@ -46,13 +46,13 @@ try{
  const negative=run("negative",fixture("negative",broken));
  assert.equal(positive.exit,0,"natural headings must pass");
  assert.equal(positive.data.pass,true);
- assert.equal(negative.exit,1,"premature balancing must be rejected");
+ assert.equal(negative.exit,1,"artificial heading narrowing and balancing must be rejected");
  assert.equal(negative.data.pass,false);
  const negativeHeading=negative.data.checks.filter(x=>!x.pass&&/headings/.test(x.name));
  assert.ok(negativeHeading.some(x=>x.stage==="viewport-375"));
  assert.ok(negativeHeading.some(x=>x.stage==="viewport-768"));
  assert.ok(negativeHeading.some(x=>x.stage==="viewport-1440"));
- const correct=positive.data.checks.find(x=>x.stage==="viewport-1440"&&x.name==="headings use full width without orphan tails or premature wrapping");
+ const correct=positive.data.checks.find(x=>x.stage==="viewport-1440"&&x.name==="headings use natural wrapping at the full section width");
  const incorrect=negative.data.checks.find(x=>x.stage==="viewport-1440"&&x.name===correct.name);
  assert.ok(correct?.pass&&!incorrect?.pass);
  const right=correct.details.sample[0],wrong=incorrect.details.sample[0];

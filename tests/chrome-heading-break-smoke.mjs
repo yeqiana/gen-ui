@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Chrome real glyph-line audit for headings: orphan tails, forced breaks, clipping, sidebar fold.
+// Chrome real glyph-line audit for headings: natural wrapping, forced breaks, clipping, sidebar fold.
 import fs from "node:fs";
 import os from "node:os";
 import net from "node:net";
@@ -61,7 +61,7 @@ try{
     return result.result.value;
   };
   await cmd("Page.enable");await cmd("Runtime.enable");
-  let total=0,wrapped=0,folds=0;
+  let total=0,wrapped=0,folds=0,naturalShortTails=0;
   const faults=[];
   for(const width of widths){
     await cmd("Emulation.setDeviceMetricsOverride",{width,height:950,deviceScaleFactor:1,mobile:width===375});
@@ -83,19 +83,18 @@ try{
           if(h.lines.length>1)wrapped++;
           const line=h.lines.at(-1);
           const chars=h.text.replace(/\s/g,"").length;
-          const orphan=page.zh&&chars>=12&&h.lines.length>=2&&line.qty<=4;
+          const shortTail=page.zh&&chars>=12&&h.lines.length>=2&&line.qty<=4;
+          if(shortTail)naturalShortTails++;
           const clipped=h.clipped;
           const premature=h.lines.length>=2&&h.width<h.available*.87&&h.available-h.width>28;
-          if(orphan||clipped||h.hardBreak||premature)faults.push({page:page.id,width,mode,tag:h.tag,text:h.text,lines:h.lines.map(x=>x.text),orphan,clipped,premature,hardBreak:h.hardBreak,wrap:h.wrap});
-          if(page.zh&&h.lines.length>=2&&h.tag==="H1"&&h.wrap!=="balance")
-            faults.push({page:page.id,width,mode,text:h.text,issue:"main headings not balanced",wrap:h.wrap});
+          if(clipped||h.hardBreak||premature||h.wrap!=="wrap")faults.push({page:page.id,width,mode,tag:h.tag,text:h.text,lines:h.lines.map(x=>x.text),shortTail,clipped,premature,hardBreak:h.hardBreak,wrap:h.wrap});
         }
       }
     }
   }
-  console.log(JSON.stringify({checkedHeadings:total,wrappedHeadings:wrapped,foldedViews:folds,viewports:widths,pages:pages.length,faults:faults.slice(0,35),faultCount:faults.length},null,2));
+  console.log(JSON.stringify({checkedHeadings:total,wrappedHeadings:wrapped,naturalShortTails,foldedViews:folds,viewports:widths,pages:pages.length,faults:faults.slice(0,35),faultCount:faults.length},null,2));
   check(total>=450,"Missing expected heading coverage");
-  check(faults.length===0,"Heading orphan / clipping / hard break regression: "+faults.length);
+  check(faults.length===0,"Heading natural wrap / clipping / hard break regression: "+faults.length);
 }finally{
   ws?.close();proc.kill();await sleep(100);
   try{fs.rmSync(profile,{recursive:true,force:true,maxRetries:3,retryDelay:200})}catch{}

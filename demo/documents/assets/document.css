@@ -47,8 +47,8 @@
 /* Typography tokens apply to narrative content, not tables, diagrams or code. */
 :root{--genui-prose-width:72ch;--genui-prose-leading:1.85;--genui-prose-gap:.85em;--genui-heading-gap:1.6em}
 /* Chinese documents fill their reading column before reaching the wide-screen cap. */
-html:lang(zh):root{--genui-prose-width:48ic}
-.doc-main :is(.doc-lede,.doc-summary>p,.doc-section>p,.doc-section>ul,.doc-section>ol,.doc-section>blockquote,.doc-section>.callout,.doc-section .callout>p,.doc-section blockquote>p){max-width:100%;overflow-wrap:break-word}
+html:lang(zh):root{--genui-prose-width:62ic}
+.doc-main :is(.doc-lede,.doc-summary,.doc-summary>p,.doc-section>p,.doc-section>ul,.doc-section>ol,.doc-section>blockquote,.doc-section>.callout,.doc-section .callout>p,.doc-section blockquote>p){max-width:100%;margin-inline:0;overflow-wrap:break-word;word-break:normal}
 .doc-main .doc-section>p{line-height:var(--genui-prose-leading)}
 .doc-main .doc-section>p+p{margin-block-start:var(--genui-prose-gap)}
 .doc-main .doc-section> :is(h3,h4){margin-block-start:var(--genui-heading-gap)}
@@ -83,11 +83,11 @@ html:lang(zh):root{--genui-prose-width:48ic}
 }
 .doc-main .doc-section>p{text-indent:0}
 
-/* Heading line-break protection: balance headings only; leave narrative paragraphs naturally wrapped. */
-.doc-main :is(h1,h2,h3,h4){text-wrap:balance;overflow-wrap:break-word}
+/* Natural heading wrapping: the full chapter width remains available. */
+.doc-main :is(h1,h2,h3,h4){text-wrap:wrap;word-break:normal;overflow-wrap:break-word}
 
 /* Tablet: replace the fixed 205px TOC with an accessible disclosure menu.
-   The existing balanced heading is kept; this restores the usable content column. */
+   Natural headings use the expanded content column. */
 @media (min-width:701px) and (max-width:900px){
  .doc-layout{display:block;max-width:980px;padding:25px 24px 70px}
  .doc-layout>.doc-toc{display:none!important}
@@ -99,9 +99,5 @@ html:lang(zh):root{--genui-prose-width:48ic}
  .doc-index-sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 24px}
  .doc-index-layout .doc-index{margin:auto}
 }
-/* Center only the narrative reading column; keep tables, code and diagrams wide. */
-.doc-layout .doc-main :is(.doc-lede,.doc-section>p,.doc-section>ul,.doc-section>ol,
- .doc-section>blockquote,.doc-section>.callout,.doc-summary){
- max-width:min(100%,var(--genui-prose-width));
- margin-inline:auto;overflow-wrap:break-word;word-break:normal;
-}
+/* Optional pure-article wrapper: headings and paragraphs are narrowed together. */
+.doc-layout .doc-main .genui-article-reading{max-width:min(100%,var(--genui-prose-width));margin-inline:auto}

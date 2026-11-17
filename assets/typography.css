@@ -4,9 +4,9 @@ main.genui-typography{
   --genui-prose-gap:.85em;--genui-heading-gap:1.25em;
 }
 /* Retain language tokens as guidance; the section owns the visible text width. */
-html:lang(zh) main.genui-typography{--genui-prose-width:48ic}
+html:lang(zh) main.genui-typography{--genui-prose-width:62ic}
 main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
-  max-width:100%;
+  max-width:100%;margin-inline:0;
   overflow-wrap:break-word;
   line-height:var(--genui-prose-leading);
 }
@@ -14,9 +14,9 @@ main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>u
 html:lang(zh) main.genui-typography :is(p.genui-prose,.genui-prose-group>p){
   word-break:normal;line-break:strict;text-wrap:wrap;
 }
-/* Headings keep the full section width and balance only heading lines to avoid orphan tails. Do not constrain their max-width. */
+/* Headings use natural wrapping and the same section baseline as prose. */
 main.genui-typography :is(h1,h2,h3,h4){
-  max-width:100%;text-wrap:balance;white-space:normal;overflow-wrap:break-word;
+  max-width:100%;text-wrap:wrap;white-space:normal;word-break:normal;overflow-wrap:break-word;
 }
 main.genui-typography .genui-prose-group>p+p{margin-block-start:var(--genui-prose-gap)}
 main.genui-typography .genui-prose-group>:is(h2,h3,h4){margin-block-start:var(--genui-heading-gap)}
@@ -35,11 +35,9 @@ main.genui-typography :is(figure,.table-wrap,.table-scroll,table,blockquote,.cal
   max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap;
 }
 
-/* Real narrative reading column; titles retain the main branch's balanced heading rule. */
-main.genui-typography :is(.genui-prose,.genui-prose-group>p,
- .genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
- max-width:min(100%,var(--genui-prose-width));
- margin-inline:auto;overflow-wrap:break-word;
+/* Only explicit pure-article containers (including headings) receive a reading cap. */
+main.genui-typography .genui-article-reading{
+  max-width:min(100%,var(--genui-prose-width));margin-inline:auto;
 }
 /* Generated-doc HTML uses the same accessible tablet disclosure rail. */
 @media(min-width:701px) and (max-width:900px){

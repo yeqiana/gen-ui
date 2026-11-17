@@ -208,4 +208,6 @@ MIT License · [LICENSE](LICENSE)。
 
 **陌生真实项目架构全景图（P1）：** [在线浏览 GitHub 仓库里的三份独立离线 HTML 演示](demo/unseen-panorama/index.html) · [来源冻结、配对提示、证据核验与 Chrome 复现流程](evals/unseen-panorama-workflow-2026-11-17.md)。Agent Lead、PlanShip、Distributed Systems Audit 的图仅是本会话基于公开冻结来源整理并通过结构校验的演示；**独立模型生成和 Skill 加载 A/B 尚未执行**，不能称为模型泛化验收通过。
 
+**默认换行与缩进规范已收口：** 报告、技术文档默认采用章节真实行宽和统一左基线，中文标题自然换行；只有显式整篇文章模式才收窄阅读栏。参见 [规范冲突、Chrome 几何证据与反例验收](evals/typography-policy-2026-11-17.md)。
+
 **报告文字换行修复：** `demo/report.html` 中三处提前断行是案例段落被错误套用 `72ch` 限宽导致；修复后以实际章节宽度排版，详见 [三处原句的 Chrome 行宽复核](evals/report-line-wrap-root-cause-2026-11-17.md)。

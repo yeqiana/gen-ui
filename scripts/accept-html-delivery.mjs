@@ -168,11 +168,16 @@ function auditProseWrap(){
   const lines=[];
   for(const r of fragments){let line=lines.find(l=>Math.abs(l.top-r.top)<3);if(!line){line={top:r.top,left:r.left,right:r.right};lines.push(line)}else{line.left=Math.min(line.left,r.left);line.right=Math.max(line.right,r.right)}}
   const firstLine=lines.length?lines[0].right-lines[0].left:0;
-  const expected=Math.min(parentContentWidth,cap);
+  const expected=parentContentWidth; // Whole-article wrappers own their cap; individual paragraphs must fill their parent.
+  const parentBox=el.parentElement.getBoundingClientRect();
+  const leftOffset=box.left-parentBox.left-(parseFloat(parentStyle.borderLeftWidth)||0)-(parseFloat(parentStyle.paddingLeft)||0);
+  const textIndent=parseFloat(css.textIndent)||0;
   const isLong=el.textContent.trim().length>=80&&lines.length>=2&&!el.querySelector("br");
   return {chars:el.textContent.trim().length,width:Math.round(box.width),parent:Math.round(parentContentWidth),cap:Math.round(cap),
+   leftOffset:Math.round(leftOffset),textIndent:Math.round(textIndent),
    firstLine:Math.round(firstLine),lineCount:lines.length,textWrap:css.textWrap,
-   ok:css.textWrap!=="balance"&&box.width+6>=expected*.94&&(!isLong||firstLine>=box.width*.82)};
+   ok:css.textWrap==="wrap"&&box.width+4>=expected-4&&Math.abs(leftOffset)<=5&&Math.abs(textIndent)<=2
+    &&(!isLong||firstLine>=box.width*.72)};
  });
  return {skipped:false,count:checks.length,failures:checks.filter(x=>!x.ok).slice(0,5),pass:checks.every(x=>x.ok),sample:checks.slice(0,3)};
 }
@@ -187,16 +192,8 @@ function auditReadingFlow(){
  const findings=targets.map(el=>{
   const css=getComputedStyle(el),parent=el.parentElement,parentCSS=getComputedStyle(parent);
   const box=el.getBoundingClientRect(),pbox=parent.getBoundingClientRect(),parentInner=parent.clientWidth-(parseFloat(parentCSS.paddingLeft)||0)-(parseFloat(parentCSS.paddingRight)||0);
-  const widthToken=getComputedStyle(main).getPropertyValue("--genui-prose-width").trim();
-  let widthCap=parentInner;
-  if(widthToken&&css.maxWidth.includes("min(")){
-    const probe=document.createElement("span");
-    probe.style.cssText="position:absolute;visibility:hidden;display:block;box-sizing:content-box;max-width:none";
-    probe.style.font=css.font;probe.style.width=widthToken;document.body.appendChild(probe);
-    widthCap=probe.getBoundingClientRect().width||parentInner;probe.remove();
-  }
-  const expectedWidth=Math.min(parentInner,widthCap);
-  const expectedLeft=pbox.left+(parseFloat(parentCSS.borderLeftWidth)||0)+(parseFloat(parentCSS.paddingLeft)||0)+(parentInner-expectedWidth)/2;
+  const expectedWidth=parentInner;
+  const expectedLeft=pbox.left+(parseFloat(parentCSS.borderLeftWidth)||0)+(parseFloat(parentCSS.paddingLeft)||0);
   const isParagraph=el.tagName==="P",str=el.textContent.trim(),lines=[],range=document.createRange();
   if(isParagraph){
     const walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let textNode;
@@ -215,7 +212,7 @@ function auditReadingFlow(){
   const firstWidth=lines[0]?lines[0].right-lines[0].left:0;
   const longText=str.length>=70&&lines.length>=2&&!el.querySelector("br");
   const reasons=[];
-  if(css.textWrap==="balance"||css.textWrap==="pretty")reasons.push("balanced-or-pretty-text");
+  if(css.textWrap!=="wrap")reasons.push("unnatural-wrap-mode");
   if(isParagraph&&Math.abs(parseFloat(css.textIndent)||0)>4)reasons.push("unexpected-first-line-indent");
   if(isParagraph&&Math.abs(box.left-expectedLeft)>8)reasons.push("unexpected-paragraph-left-offset");
   if(box.width<expectedWidth*.92&&expectedWidth-box.width>26)reasons.push("narrower-than-reading-column");
@@ -254,11 +251,11 @@ function auditHeadingWrap(){
   const title=el.textContent.trim(),width=r.width,first=lines[0]?lines[0].right-lines[0].left:0;
   const wrapping=lines.length>1,longPlainTitle=title.length>=16&&!/[A-Za-z0-9_-]{11,}/.test(title);
   const reasons=[];
-  if(!["wrap","balance"].includes(css.textWrap))reasons.push("unsupported-heading-text-wrap");
+  if(css.textWrap!=="wrap")reasons.push("unnatural-heading-text-wrap");
   if(el.querySelector("br"))reasons.push("hard-break-in-heading");
   if(wrapping&&width<available*.87&&available-width>28)reasons.push("heading-narrower-than-parent");
   if(wrapping&&longPlainTitle&&first<width*.35)reasons.push("first-line-ends-too-early");
-  if(wrapping&&longPlainTitle&&/^zh/i.test(document.documentElement.lang)&&lines.at(-1)?.chars<=4)reasons.push("orphan-last-line");
+  // Natural mobile breaks can leave a short last line; do not narrow/redistribute the title to hide it.
   if(el.scrollWidth>el.clientWidth+3)reasons.push("heading-overflow");
   return {tag:el.tagName,text:title.slice(0,75),width:Math.round(width),parentContent:Math.round(available),
    lines:lines.length,firstLine:Math.round(first),lastLineChars:lines.at(-1)?.chars??0,textWrap:css.textWrap,maxWidth:css.maxWidth,reasons};
@@ -320,11 +317,11 @@ try{
    for(const term of requiredTexts)check("required report content: "+term,narrative.includes(normalizeText(term)),{term});
   }
   const prose=await run(auditProseWrap);
-  if(!prose.skipped)check("Chinese prose wraps near reading column edge without balanced premature lines",prose.pass,prose);
+  if(!prose.skipped)check("Chinese prose uses the actual section width and natural breaks",prose.pass,prose);
   const narrative=await run(auditReadingFlow);
-  if(!narrative.skipped)check("narrative and quotation widths/indents near media use reading column",narrative.pass,narrative);
+  if(!narrative.skipped)check("narrative, quotes and media-adjacent text share the section's left edge",narrative.pass,narrative);
   const headingAudit=await run(auditHeadingWrap);
-  check("headings use full width without orphan tails or premature wrapping",headingAudit.pass,headingAudit);
+  check("headings use natural wrapping at the full section width",headingAudit.pass,headingAudit);
   if(width===375)check("mobile contents visible",state.mobileVisible,state);
   await capture(width+"-expanded.png");
   if(!state.asideVisible){
@@ -344,7 +341,7 @@ try{
     &&Math.abs(folded.destinationCenter-folded.brandCenter)<=2&&folded.destinationSize<=18,folded);
   check("folded main stays centered",Math.abs(folded.center-width/2)<=Math.max(80,width*.08)&&folded.mainWidth>=300,folded);
   const foldedNarrative=await run(auditReadingFlow);
-  if(!foldedNarrative.skipped)check("folded narrative/quotation and media-adjacent text have no premature wraps or offsets",foldedNarrative.pass,foldedNarrative);
+  if(!foldedNarrative.skipped)check("folded narrative, quotes and media text retain the section baseline",foldedNarrative.pass,foldedNarrative);
   const foldedHeadingAudit=await run(auditHeadingWrap);
   check("folded headings still wrap naturally without premature lines",foldedHeadingAudit.pass,foldedHeadingAudit);
   if(folded.reading&&width>=768){
