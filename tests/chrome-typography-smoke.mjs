@@ -238,7 +238,7 @@ async function main(){
               &&parseFloat(data.typography.leadingToken)<=1.85);
             // Whole-word wrapping may shorten an English first line; verify actual width, wrapping and clipping instead of a fixed fill ratio.
             check(reference+" visible headings occupy reading width and wrap naturally",data.headings,
-              data.headings.length>0&&data.headings.every(h=>h.textWrap==="wrap"&&!h.hardBreak&&!h.clipped
+              data.headings.length>0&&data.headings.every(h=>["wrap","balance"].includes(h.textWrap)&&!h.hardBreak&&!h.clipped
                 &&(h.lines<=1||h.width>=h.available*.87||h.available-h.width<=28)
                 &&(h.lines<=1||h.firstLine>0)));
             if(/^zh(?:-|$)/i.test(data.language))

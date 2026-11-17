@@ -31,22 +31,23 @@ try{
   const p=pending.get(m.id);if(!p)return;pending.delete(m.id);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result)});
  const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}))});
  const evalJS=async expression=>{const x=await send("Runtime.evaluate",{expression,returnByValue:true,awaitPromise:true});if(x.exceptionDetails)throw Error("JS eval: "+x.exceptionDetails.text);return x.result.value};
+ const waitForTable=async()=>{for(let i=0;i<90;i++){try{if(await evalJS("(()=>document.readyState==='complete'&&!!document.querySelector('th')&&!!document.querySelector('tbody tr td:first-child'))()"))return}catch{}await sleep(100)}throw Error("Agent report table not ready within 9 seconds")};
  await send("Page.enable");await send("Runtime.enable");
  for(const width of [375,768,1440]){
   await send("Emulation.setDeviceMetricsOverride",{width,height:820,deviceScaleFactor:1,mobile:width===375});
-  await send("Page.navigate",{url:pathToFileURL(file).href});await sleep(280);
+  await send("Page.navigate",{url:pathToFileURL(file).href});await waitForTable();
   const m=await evalJS("(()=>({width:innerWidth,rows:document.querySelectorAll('tbody tr').length,outerOverflow:document.documentElement.scrollWidth>innerWidth,h1:document.querySelectorAll('h1').length,nowrap:getComputedStyle(document.querySelector('th')).whiteSpace,sticky:getComputedStyle(document.querySelector('td:first-child')).position,innerScroll:[...document.querySelectorAll('.table-scroll,.scroll')].some(e=>e.scrollWidth>e.clientWidth)}))()");
   if(m.rows!==20||m.outerOverflow||m.h1!==1||m.nowrap!=="nowrap"||m.sticky!=="sticky")throw Error("Viewport "+width+" invalid: "+JSON.stringify(m));
   evidence.viewports[width]=m;
  }
  if(id==="HTML02"){
   await send("Emulation.setDeviceMetricsOverride",{width:375,height:820,deviceScaleFactor:1,mobile:true});
-  await send("Page.navigate",{url:pathToFileURL(file).href});await sleep(280);
+  await send("Page.navigate",{url:pathToFileURL(file).href});await waitForTable();
   const small=await evalJS("(()=>{const e=[...document.querySelectorAll('#tbody .clip')].find(x=>x.scrollWidth>x.clientWidth+1);if(!e)return{found:false};e.dispatchEvent(new MouseEvent('mouseenter'));const t=document.querySelector('#tooltip'),b=t.getBoundingClientRect();const visible=getComputedStyle(t).display!=='none';window.dispatchEvent(new Event('scroll'));return{found:true,visible,withinViewport:b.left>=0&&b.right<=innerWidth+1&&b.top>=0&&b.bottom<=innerHeight+1,hiddenOnScroll:getComputedStyle(t).display==='none'}})()");
   check("mobile-tooltip-no-overflow",small,small.found&&small.visible&&small.withinViewport&&small.hiddenOnScroll);
  }
  await send("Emulation.setDeviceMetricsOverride",{width:1440,height:820,deviceScaleFactor:1,mobile:false});
- await send("Page.navigate",{url:pathToFileURL(file).href});await sleep(270);
+ await send("Page.navigate",{url:pathToFileURL(file).href});await waitForTable();
  if(id==="HTML02"){
   const paging=await evalJS("(()=>{const first=document.querySelectorAll('#tbody tr').length;document.querySelector('#next').click();return{first,second:document.querySelectorAll('#tbody tr').length,info:document.querySelector('#page-info').textContent}})()");
   check("pagination",paging,paging.first===20&&paging.second===16);

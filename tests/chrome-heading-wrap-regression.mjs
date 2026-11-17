@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// On-demand Chrome regression: normal heading layout must pass; early balancing must fail.
+// On-demand Chrome regression: full-width headings pass; artificially narrowed headings fail.
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
@@ -52,12 +52,12 @@ try{
  assert.ok(negativeHeading.some(x=>x.stage==="viewport-375"));
  assert.ok(negativeHeading.some(x=>x.stage==="viewport-768"));
  assert.ok(negativeHeading.some(x=>x.stage==="viewport-1440"));
- const correct=positive.data.checks.find(x=>x.stage==="viewport-1440"&&x.name==="headings use full available width and natural wrapping");
+ const correct=positive.data.checks.find(x=>x.stage==="viewport-1440"&&x.name==="headings use full width without orphan tails or premature wrapping");
  const incorrect=negative.data.checks.find(x=>x.stage==="viewport-1440"&&x.name===correct.name);
  assert.ok(correct?.pass&&!incorrect?.pass);
  const right=correct.details.sample[0],wrong=incorrect.details.sample[0];
- assert.ok(right.firstLine>=right.width*.85,"positive heading must fill line");
- assert.ok(wrong.firstLine<right.firstLine*.85,"negative heading must demonstrate early line break");
+ assert.ok(right.width>=right.parentContent*.9,"positive heading must occupy its full parent content width");
+ assert.ok(wrong.width<right.width*.85,"negative fixture must demonstrate an artificially narrowed heading");
  console.log(JSON.stringify({result:"PASS",positive:positive.data.checks.length,
    negativeDetected:negativeHeading.length,viewportChecks:[375,768,1440],
    at1440:{available:right.parentContent,positiveFirstLine:right.firstLine,negativeFirstLine:wrong.firstLine}}));

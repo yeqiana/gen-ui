@@ -41,3 +41,13 @@ for(const [id,dir,file,isHtml] of entries){
   }
  });
 }
+
+test("Chrome Agent output checks wait for the loaded table instead of a fixed navigation delay",()=>{
+ const src=fs.readFileSync(path.join(root,"tests/chrome-agent-output-smoke.mjs"),"utf8");
+ assert.match(src,/const waitForTable=async/);
+ assert.match(src,/document\.readyState==='complete'/);
+ assert.match(src,/tbody tr td:first-child/);
+ assert.match(src,/did not load its first data row|table not ready within 9 seconds/);
+ assert.equal((src.match(/await waitForTable\(\)/g)||[]).length,3);
+ assert.doesNotMatch(src,/Page\.navigate[^;\n]+;\s*await sleep\((?:270|280)\)/);
+});

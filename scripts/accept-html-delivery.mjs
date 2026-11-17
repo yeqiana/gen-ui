@@ -237,20 +237,22 @@ function auditHeadingWrap(){
     const part=range.getBoundingClientRect();
     if(part.width<=.2||part.height<=.2)continue;
     let line=lines.find(x=>Math.abs(x.top-part.top)<3);
-    if(!line){line={top:part.top,left:part.left,right:part.right};lines.push(line)}
+    if(!line){line={top:part.top,left:part.left,right:part.right,chars:0};lines.push(line)}
     else{line.left=Math.min(line.left,part.left);line.right=Math.max(line.right,part.right)}
+    if(n.textContent[i].trim())line.chars++
    }
   }
   const title=el.textContent.trim(),width=r.width,first=lines[0]?lines[0].right-lines[0].left:0;
   const wrapping=lines.length>1,longPlainTitle=title.length>=16&&!/[A-Za-z0-9_-]{11,}/.test(title);
   const reasons=[];
-  if(css.textWrap!=="wrap")reasons.push("not-natural-text-wrap");
+  if(!["wrap","balance"].includes(css.textWrap))reasons.push("unsupported-heading-text-wrap");
   if(el.querySelector("br"))reasons.push("hard-break-in-heading");
   if(wrapping&&width<available*.87&&available-width>28)reasons.push("heading-narrower-than-parent");
-  if(wrapping&&longPlainTitle&&first<width*.77)reasons.push("first-line-ends-too-early");
+  if(wrapping&&longPlainTitle&&first<width*.35)reasons.push("first-line-ends-too-early");
+  if(wrapping&&longPlainTitle&&/^zh/i.test(document.documentElement.lang)&&lines.at(-1)?.chars<=4)reasons.push("orphan-last-line");
   if(el.scrollWidth>el.clientWidth+3)reasons.push("heading-overflow");
   return {tag:el.tagName,text:title.slice(0,75),width:Math.round(width),parentContent:Math.round(available),
-   lines:lines.length,firstLine:Math.round(first),textWrap:css.textWrap,maxWidth:css.maxWidth,reasons};
+   lines:lines.length,firstLine:Math.round(first),lastLineChars:lines.at(-1)?.chars??0,textWrap:css.textWrap,maxWidth:css.maxWidth,reasons};
  });
  return{pass:checks.length>0&&checks.every(x=>x.reasons.length===0),count:checks.length,
   failures:checks.filter(x=>x.reasons.length).slice(0,7),sample:checks.slice(0,3)};
@@ -313,7 +315,7 @@ try{
   const narrative=await run(auditReadingFlow);
   if(!narrative.skipped)check("narrative and quotation widths/indents near media use reading column",narrative.pass,narrative);
   const headingAudit=await run(auditHeadingWrap);
-  check("headings use full available width and natural wrapping",headingAudit.pass,headingAudit);
+  check("headings use full width without orphan tails or premature wrapping",headingAudit.pass,headingAudit);
   if(width===375)check("mobile contents visible",state.mobileVisible,state);
   await capture(width+"-expanded.png");
   if(!state.asideVisible){

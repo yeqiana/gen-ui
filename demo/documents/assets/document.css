@@ -82,3 +82,6 @@ html:lang(zh):root{--genui-prose-width:62ic}
   max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap;
 }
 .doc-main .doc-section>p{text-indent:0}
+
+/* Heading line-break protection: balance headings only; leave narrative paragraphs naturally wrapped. */
+.doc-main :is(h1,h2,h3,h4){text-wrap:balance;overflow-wrap:break-word}
