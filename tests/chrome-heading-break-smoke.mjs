@@ -86,9 +86,8 @@ try{
           const orphan=page.zh&&chars>=12&&h.lines.length>=2&&line.qty<=4;
           const clipped=h.clipped;
           const premature=h.lines.length>=2&&h.width<h.available*.87&&h.available-h.width>28;
-          if(orphan||clipped||h.hardBreak||premature)faults.push({page:page.id,width,mode,tag:h.tag,text:h.text,lines:h.lines.map(x=>x.text),orphan,clipped,premature,hardBreak:h.hardBreak,wrap:h.wrap});
-          if(page.zh&&h.lines.length>=2&&h.tag==="H1"&&h.wrap!=="balance")
-            faults.push({page:page.id,width,mode,text:h.text,issue:"main headings not balanced",wrap:h.wrap});
+          if(clipped||h.hardBreak||premature)faults.push({page:page.id,width,mode,tag:h.tag,text:h.text,lines:h.lines.map(x=>x.text),naturalShortTail:orphan,clipped,premature,hardBreak:h.hardBreak,wrap:h.wrap});
+          if(h.wrap!=="wrap")faults.push({page:page.id,width,mode,text:h.text,issue:"unexpected heading balancing/nowrap",wrap:h.wrap});
         }
       }
     }
