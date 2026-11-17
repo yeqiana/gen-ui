@@ -10,6 +10,14 @@ const html=read("demo/product-architecture-panorama.html");
 const spec=read("references/product-architecture-panorama.md");
 const arch=read("references/architecture-patterns.md");
 
+const panoramaPreview=fs.readFileSync(path.join(root,"demo/assets/product-architecture-panorama-preview.png"));
+test("产品全景图截图来自真实 Chrome PNG 并包含完整画布",()=>{
+  assert.equal(panoramaPreview.subarray(0,8).toString("hex"),"89504e470d0a1a0a");
+  assert.ok(panoramaPreview.length>16000);
+  assert.ok(panoramaPreview.readUInt32BE(16)>=1000);
+  assert.ok(panoramaPreview.readUInt32BE(20)>=1100);
+});
+
 test("产品架构全景板保留渠道、统一入口、完整横向层次和左右支撑",()=>{
   assert.match(html,/<html lang="zh-CN">/);
   assert.match(html,/data-product-panorama/);
