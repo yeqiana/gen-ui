@@ -7,6 +7,7 @@ import crypto from "node:crypto";
 import {fileURLToPath} from "node:url";
 import {gitSource,scoreUnseen} from "./score-unseen-panorama.mjs";
 import {renderPanorama} from "./render-unseen-panorama.mjs";
+import {evidenceCatalogue,evidencePrompt,resolveEvidenceIds} from "./evidence-id-map.mjs";
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
@@ -80,18 +81,50 @@ export function prepare({manifest,projectsRoot,outDir}){
  fs.writeFileSync(path.join(dir,"plan.json"),JSON.stringify(plan,null,2)+"\n");
  return plan;
 }
+// Optional third trial: original baseline/explicit prompts and A/B counts stay frozen.
+export function prepareEvidenceIds({manifest,projectsRoot,outDir}){
+ const sources=frozenInputs(manifest,projectsRoot),dir=outsideRepoOutput(outDir);
+ const planFile=path.join(dir,"plan.json");
+ if(!fs.existsSync(planFile))throw Error("Run prepare before prepare-ids");
+ const plan=JSON.parse(fs.readFileSync(planFile,"utf8"));
+ if(plan.schema!=="genui-unseen-panorama-trials/v1"||plan.cases?.length!==sources.length)
+  throw Error("Frozen trial plan does not match evidence-ID sources");
+ for(const entry of sources){
+  const planned=plan.cases.find(c=>c.id===entry.case.id);
+  if(!planned||planned.commit!==entry.case.commit||
+    entry.files.some(f=>!planned.sources?.some(s=>s.file===f.file&&s.sha256===f.sha256)))
+   throw Error("Frozen trial plan source mismatch: "+entry.case.id);
+  const dirCase=path.join(dir,entry.case.id);
+  for(const name of ["evidence-ids.prompt.md","evidence-ids.catalogue.json"])
+   if(fs.existsSync(path.join(dirCase,name)))throw Error("Refusing evidence-ID overwrite: "+entry.case.id+"/"+name);
+ }
+ for(const entry of sources){
+  const dirCase=path.join(dir,entry.case.id);
+  fs.writeFileSync(path.join(dirCase,"evidence-ids.prompt.md"),evidencePrompt(entry),"utf8");
+  fs.writeFileSync(path.join(dirCase,"evidence-ids.catalogue.json"),JSON.stringify(evidenceCatalogue(entry),null,2)+"\n");
+ }
+ return {schema:"genui-evidence-id-preparation/v1",state:"prepared-not-executed",
+  cases:sources.map(e=>({id:e.case.id,entries:evidenceCatalogue(e).entries.length})),
+  modelRunsVerified:0,skillActivationsVerified:0,warning:"IDs are source references, not proof of model execution or semantic correctness."};
+}
 export function status(manifest,outDir){
  validate(manifest);const rows=[];
  for(const c of manifest.cases)for(const variant of ["baseline","explicit"]){
   const f=path.join(path.resolve(outDir),c.id,variant+".candidate.json"),exists=fs.existsSync(f);
   rows.push({id:c.id,variant,state:exists?"candidate-present-unreviewed":"not_run",bytes:exists?fs.statSync(f).size:0});
  }
- return {schema:"genui-unseen-panorama-trial-status/v1",rows,
+ const evidenceIdTrials=manifest.cases.map(c=>{
+  const dir=path.join(path.resolve(outDir),c.id),file=path.join(dir,"evidence-ids.candidate.json");
+  const exists=fs.existsSync(file);
+  return {id:c.id,prepared:fs.existsSync(path.join(dir,"evidence-ids.prompt.md")),
+   state:exists?"candidate-present-unreviewed":"not_run",bytes:exists?fs.statSync(file).size:0};
+ });
+ return {schema:"genui-unseen-panorama-trial-status/v1",rows,evidenceIdTrials,
    modelRunsVerified:0,skillActivationsVerified:0,semanticReviews:0,
    warning:"Candidate file presence is not evidence of actual model execution or semantic correctness."};
 }
 export function loadCandidates(manifest,outDir,variant){
- validate(manifest);if(!["baseline","explicit","demo"].includes(variant))throw Error("Choose baseline, explicit or demo");
+ validate(manifest);if(!["baseline","explicit","demo","evidence-ids"].includes(variant))throw Error("Choose baseline, explicit, demo or evidence-ids");
  const cases=[];
  for(const c of manifest.cases){
   const f=path.join(path.resolve(outDir),c.id,variant+".candidate.json");
@@ -104,7 +137,10 @@ export function loadCandidates(manifest,outDir,variant){
  return {schema:"genui-panorama-candidate/v1",cases};
 }
 export function check({manifest,projectsRoot,outDir,variant}){
- const candidate=loadCandidates(manifest,outDir,variant);
+ const supplied=loadCandidates(manifest,outDir,variant);
+ // Rebuild IDs from checked Git blobs; the locally saved catalogue is NEVER an authority.
+ const candidate=variant==="evidence-ids"
+  ?resolveEvidenceIds(supplied,frozenInputs(manifest,projectsRoot)):supplied;
  const result=scoreUnseen(manifest,candidate,(repo,commit,file)=>gitSource(projectsRoot,repo,commit,file));
  return {candidate,result};
 }
@@ -125,9 +161,10 @@ const isMain=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(impo
 if(isMain){
  try{
   const [verb,manifestFile,projectsRoot,outputDir,variant]=process.argv.slice(2);
-  if(!["prepare","status","check","render"].includes(verb)||!manifestFile||!projectsRoot||!outputDir)throw Error("Usage: node evals/unseen-panorama-workflow.mjs prepare|status|check|render <manifest.json> <local-repos-dir> <outside-repo-output-dir> [baseline|explicit|demo]");
+  if(!["prepare","prepare-ids","status","check","render"].includes(verb)||!manifestFile||!projectsRoot||!outputDir)throw Error("Usage: node evals/unseen-panorama-workflow.mjs prepare|prepare-ids|status|check|render <manifest.json> <local-repos-dir> <outside-repo-output-dir> [baseline|explicit|demo|evidence-ids]");
   const manifest=JSON.parse(fs.readFileSync(path.resolve(manifestFile),"utf8"));
   if(verb==="prepare")console.log(JSON.stringify(prepare({manifest,projectsRoot,outDir:outputDir}),null,2));
+  if(verb==="prepare-ids")console.log(JSON.stringify(prepareEvidenceIds({manifest,projectsRoot,outDir:outputDir}),null,2));
   if(verb==="status")console.log(JSON.stringify(status(manifest,outputDir),null,2));
   if(verb==="check"){const r=check({manifest,projectsRoot,outDir:outputDir,variant});console.log(JSON.stringify(r.result,null,2));if(r.result.status!=="STRUCTURAL_PASS_SEMANTIC_UNVERIFIED")process.exitCode=1;}
   if(verb==="render"){const r=renderChecked({manifest,projectsRoot,outDir:outputDir,variant});console.log(JSON.stringify(r,null,2));if(r.result.status!=="STRUCTURAL_PASS_SEMANTIC_UNVERIFIED")process.exitCode=1;}

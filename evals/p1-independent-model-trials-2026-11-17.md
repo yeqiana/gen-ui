@@ -2,6 +2,8 @@
 
 日期：2026-11-17。状态：**模型执行与 Skill 激活已留痕；正式来源结构门禁 0/6 通过；不满足跨领域泛化验收。**
 
+> 后续可选的证据 ID 映射与两次 PlanShip 真实模型小样本验证见 [P1 证据 ID 试验报告](p1-evidence-id-pilot-2026-11-17.md)。本文件只覆盖原始六组评测，不把新模式结果与旧对照混算。
+
 ## 冻结范围与执行边界
 
 - 三个真实项目：Agent Lead、PlanShip、Distributed Systems Audit。沿用 unseen-panorama-2026-11-17.json 中指定的 Git 提交，5/5 原文文件 SHA-256 核对通过，12 条来源边界保持冻结。
