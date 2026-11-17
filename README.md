@@ -175,6 +175,10 @@ These checks validate fixed, trusted repository examples; they do not establish 
 MIT License · [LICENSE](LICENSE).
 
 
+**Product architecture panorama:** [Open the offline layered architecture example](demo/product-architecture-panorama.html), with top-level access channels, a shared entry point, six horizontal capability bands, dual middle platforms, and supporting rails on both sides. All modules are fictional layout examples, not a verified deployment.
+
+![Chrome preview of the product architecture panorama](demo/assets/product-architecture-panorama-preview.png)
+
 Real-project examples: [Yopu / StoryOS / IM architecture gallery](demo/architecture-patterns.html), covering eight viewpoints and 24 explicit directional relationships. The diagrams are based on local module structures and design documents, not proof of deployed production topology.
 
 ![Yopu, StoryOS and IM layered architecture examples](demo/documents/assets/architecture-patterns-preview.png)
