@@ -179,6 +179,9 @@ MIT License · [LICENSE](LICENSE).
 
 ![Chrome preview of the product architecture panorama](demo/assets/product-architecture-panorama-preview.png)
 
+**Four case-specific architecture panoramas:** [Project analysis](demo/documents/project-analysis.html#overview), [Architecture design](demo/documents/architecture-design.html#architecture), [Implementation plan](demo/documents/implementation-plan.html#roadmap), and [Test acceptance](demo/documents/test-acceptance.html#matrix). Each uses its own document content and labels design plans versus verified evidence; these are illustrative cases, not deployment records.
+
+
 Real-project examples: [Yopu / StoryOS / IM architecture gallery](demo/architecture-patterns.html), covering eight viewpoints and 24 explicit directional relationships. The diagrams are based on local module structures and design documents, not proof of deployed production topology.
 
 ![Yopu, StoryOS and IM layered architecture examples](demo/documents/assets/architecture-patterns-preview.png)
