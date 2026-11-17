@@ -51,10 +51,18 @@ export function promptForSource(c,files,variant){
  ].join("\n\n");
  return (variant==="explicit"?"$gen-ui\n":"")+instructions;
 }
+function outsideRepoOutput(dest){
+ const resolved=path.resolve(dest);let ancestor=resolved;const parts=[];
+ while(!fs.existsSync(ancestor)){parts.unshift(path.basename(ancestor));ancestor=path.dirname(ancestor);}
+ const physical=path.resolve(fs.realpathSync(ancestor),...parts);
+ const relative=path.relative(fs.realpathSync(root),physical);
+ if(!relative||(!path.isAbsolute(relative)&&relative!==".."&&!relative.startsWith(".."+path.sep)))
+  throw Error("Refusing trial outputs inside public GEN-UI repository");
+ return resolved;
+}
 export function prepare({manifest,projectsRoot,outDir}){
  const sources=frozenInputs(manifest,projectsRoot);
- const dir=path.resolve(outDir),relative=path.relative(root,dir);
- if(!relative.startsWith("..")&&!path.isAbsolute(relative))throw Error("Refusing trial outputs inside public GEN-UI repository");
+ const dir=outsideRepoOutput(outDir);
  if(fs.existsSync(dir)&&fs.readdirSync(dir).length)throw Error("Output is not empty; refusing overwrite");
  fs.mkdirSync(dir,{recursive:true});
  const cases=[];
@@ -99,6 +107,7 @@ export function check({manifest,projectsRoot,outDir,variant}){
  return {candidate,result};
 }
 export function renderChecked({manifest,projectsRoot,outDir,variant}){
+ outsideRepoOutput(outDir);
  const {candidate,result}=check({manifest,projectsRoot,outDir,variant});
  if(result.status!=="STRUCTURAL_PASS_SEMANTIC_UNVERIFIED")return {result,outputs:[]};
  const output=[];

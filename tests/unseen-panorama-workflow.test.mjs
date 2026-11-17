@@ -5,6 +5,7 @@ import path from "node:path";
 import os from "node:os";
 import crypto from "node:crypto";
 import {spawnSync} from "node:child_process";
+import {fileURLToPath} from "node:url";
 import {frozenInputs,promptForSource,prepare,status,check,renderChecked} from "../evals/unseen-panorama-workflow.mjs";
 
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
@@ -90,4 +91,12 @@ test("造假关系和上线状态被现有门禁挡住，禁止渲染错误数�
  wrong.cases[0].relations[0].evidence[0].quote="审批后生成可复查证据";
  wrong.cases[0].status="deployed";fs.writeFileSync(f,JSON.stringify(wrong));
  assert.equal(check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"explicit"}).result.status,"BLOCKED");
+});
+
+test("输出路径即使以 .. 开头也必须拒绝写入公开仓库",t=>{
+ const x=fixture(t);
+ const repoPath=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+ const forbidden=path.join(repoPath,"..genui-unseen-test-target");
+ assert.throws(()=>prepare({manifest:x.manifest,projectsRoot:x.root,outDir:forbidden}),/Refusing trial outputs/);
+ assert.equal(fs.existsSync(forbidden),false);
 });
