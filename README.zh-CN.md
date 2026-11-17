@@ -187,7 +187,7 @@ node tests/chrome-semantic-stress.mjs --mobile
 MIT License · [LICENSE](LICENSE)。
 
 
-**产品架构全景图新版式：** [查看六层能力、双中台与两侧支撑体系的离线全景板](demo/product-architecture-panorama.html)。参考分层/模块矩阵的表达方式，模块均为虚构示例；具体项目应按来源替换，不把示意当成部署事实。
+**产品架构全景图新版式：** [查看六层能力、双中台与两侧支撑体系的离线全景板](demo/product-architecture-panorama.html)。采用与现有 SVG 图表一致的白底、细描边与 GEN-UI 蓝色强调；模块均为虚构示例；具体项目应按来源替换，不把示意当成部署事实。
 
 ![本地 Chrome 实测的产品架构全景板预览：六层能力、双中台和两侧支撑体系](demo/assets/product-architecture-panorama-preview.png)
 
