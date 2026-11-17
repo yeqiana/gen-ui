@@ -9,6 +9,7 @@ import {fileURLToPath} from "node:url";
 import {frozenInputs,promptForSource,prepare,status,check,renderChecked} from "../evals/unseen-panorama-workflow.mjs";
 import {prepareEvidenceIds} from "../evals/unseen-panorama-workflow.mjs";
 import {evidenceCatalogue,resolveEvidenceIds} from "../evals/evidence-id-map.mjs";
+import {buildSemanticPacket,reviewDraft,evaluateReview,semanticReviewFiles,semanticRiskFlags} from "../evals/semantic-review.mjs";
 
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const git=(dir,...args)=>{
@@ -211,6 +212,102 @@ test("引用 ID 真实仍须覆盖全部边界，非法上线声明不能被 ID 
  fs.writeFileSync(f,JSON.stringify(result));
  assert.equal(check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"}).result.status,"BLOCKED");
  assert.equal(fs.existsSync(path.join(x.out,x.entry.id,"evidence-ids.preview.html")),false);
+});
+
+test("风险标记只负责提示标题证据和有条件分支，不自动判定语义",()=>{
+ const heading=[{valid:true,quote:"# 技术工作流说明"}];
+ const branch=[{valid:true,quote:"    G -- Yes --> D[Publish technical + reader MD]"}];
+ assert.deepEqual(semanticRiskFlags("module",heading),["HEADING_CITED_AS_MODULE_EVIDENCE"]);
+ assert.deepEqual(semanticRiskFlags("relation",branch,"depends"),["CONDITIONAL_FLOW_LABELED_DEPENDS"]);
+ assert.deepEqual(semanticRiskFlags("relation",branch,"controls"),[]);
+ assert.deepEqual(semanticRiskFlags("relation",[{valid:false,quote:"G -- No --> T"}],"depends"),[]);
+});
+
+test("语义审查包绑定冻结来源与模型候选，未审事项不能冒充语义通过",t=>{
+ const x=fixture(t),{result}=idCandidate(x),file=path.join(x.root,"review-candidate.json");
+ result.cases[0].layers[0].modules[0].title="记录输入来源";
+ fs.writeFileSync(file,JSON.stringify(result));
+ const out=path.join(x.root,"semantic-review");
+ const initial=semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,caseId:x.entry.id,
+  candidateFile:file,outDir:out,command:"prepare"});
+ assert.equal(initial.status,"REVIEW_PREPARED_NOT_VERIFIED");
+ assert.equal(initial.sourceGate,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
+ assert.equal(initial.items,3);
+ const packet=JSON.parse(fs.readFileSync(path.join(out,"semantic-packet.json"),"utf8"));
+ const review=JSON.parse(fs.readFileSync(path.join(out,"semantic-review.json"),"utf8"));
+ assert.equal(packet.items.length,3);
+ assert.ok(packet.items.every(item=>item.evidence.every(e=>e.valid&&e.file==="README.md"&&e.line>0)));
+ assert.equal(evaluateReview(packet,review).status,"PENDING_SEMANTIC_REVIEW");
+ assert.throws(()=>semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:out,command:"prepare"}),/Refusing overwrite/);
+ // A signed-off checklist remains an unauthenticated self-attestation, never independent acceptance.
+ review.reviewer="测试审查员";
+ for(const item of review.decisions){
+  item.decision="supported";item.reason="该试验行仅用于说明人工逐项审查工作流，不作独立验收结论";
+ }
+ fs.writeFileSync(path.join(out,"semantic-review.json"),JSON.stringify(review));
+ assert.equal(semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:out,command:"check"}).status,
+  "ATTESTED_NOT_INDEPENDENTLY_VERIFIED");
+ assert.equal(check({manifest:x.manifest,projectsRoot:x.root,outDir:(()=>{
+  const prepared=path.join(x.root,"model-files");
+  prepare({manifest:x.manifest,projectsRoot:x.root,outDir:prepared});
+  fs.writeFileSync(path.join(prepared,x.entry.id,"evidence-ids.candidate.json"),JSON.stringify(result));
+  return prepared;
+ })(),variant:"evidence-ids"}).result.humanSemanticReviews,0);
+});
+
+test("有效 ID 不能洗白无关模块，审查结论必须逐条记录且不能虚构缺项",t=>{
+ const x=fixture(t),{result}=idCandidate(x);
+ result.cases[0].layers[0].modules[0].title="分布式生产集群已经完成容灾";
+ const raw=JSON.stringify(result),packet=buildSemanticPacket({
+  entry:frozenInputs(x.manifest,x.root)[0],candidateRaw:raw});
+ assert.equal(packet.sourceGate,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
+ const review=reviewDraft(packet);
+ review.reviewer="审查测试";
+ assert.equal(evaluateReview(packet,review).status,"PENDING_SEMANTIC_REVIEW");
+ for(const d of review.decisions){d.decision="supported";d.reason="逐字阅读原文后需要核对模块含义与关系方向";}
+ review.decisions[0].decision="unsupported";
+ review.decisions[0].reason="来源仅写输入记录，没有生产集群或容灾实现证据";
+ assert.equal(evaluateReview(packet,review).status,"BLOCKED_SEMANTIC_DISAGREEMENT");
+ review.decisions.pop();
+ assert.throws(()=>evaluateReview(packet,review),/Incomplete/);
+ const bad=reviewDraft(packet);
+ bad.decisions[0].decision="supported";
+ assert.throws(()=>evaluateReview(packet,bad),/missing rationale/);
+});
+
+test("语义审查拒绝无效证据 ID、过期候选、被篡改审查包及篡改冻结 SHA",t=>{
+ const x=fixture(t),{result}=idCandidate(x),file=path.join(x.root,"review-candidate.json"),out=path.join(x.root,"semantic-review");
+ result.cases[0].relations[0].evidence=[{id:"E000000000000"}];
+ fs.writeFileSync(file,JSON.stringify(result));
+ const prepared=semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:out,command:"prepare"});
+ assert.equal(prepared.sourceGate,"BLOCKED");
+ const packet=JSON.parse(fs.readFileSync(path.join(out,"semantic-packet.json"),"utf8"));
+ assert.ok(packet.issues.some(x=>x.includes("unknown/mixed evidence ID")));
+ const review=reviewDraft(packet);
+ review.reviewer="模拟审查";
+ for(const d of review.decisions){d.decision="supported";d.reason="不得因人工标签跳过来源校验的失败";}
+ assert.equal(evaluateReview(packet,review).status,"BLOCKED_SOURCE");
+ fs.writeFileSync(path.join(out,"semantic-review.json"),JSON.stringify(review));
+ assert.equal(semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:out,command:"check"}).status,"BLOCKED_SOURCE");
+ const tampered=structuredClone(packet);tampered.items[0].claim="内容被篡改";
+ fs.writeFileSync(path.join(out,"semantic-packet.json"),JSON.stringify(tampered));
+ assert.throws(()=>semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:out,command:"check"}),/packet stale/);
+ fs.writeFileSync(path.join(out,"semantic-packet.json"),JSON.stringify(packet));
+ result.cases[0].layers[0].modules[0].title="候选内容已发生变更";
+ fs.writeFileSync(file,JSON.stringify(result));
+ assert.throws(()=>semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:out,command:"check"}),/packet stale/);
+ const mutated=structuredClone(x.manifest);
+ mutated.cases[0].sources[0].sha256="0".repeat(64);
+ assert.throws(()=>semanticReviewFiles({manifest:mutated,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:out,command:"check"}),/fingerprint mismatch/);
+ assert.throws(()=>semanticReviewFiles({manifest:x.manifest,projectsRoot:x.root,
+  caseId:x.entry.id,candidateFile:file,outDir:path.join(path.dirname(fileURLToPath(import.meta.url)),".."),command:"prepare"}),/outside public GEN-UI/);
 });
 
 test("输出路径即使以 .. 开头也必须拒绝写入公开仓库",t=>{
