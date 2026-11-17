@@ -12,6 +12,3 @@ node_modules/
 
 # Cross-domain original source snapshots and sealed review keys
 /evals/artifacts/cross-domain-codex-2026-11-16/
-
-# Local-only Chrome panorama review captures
-/evals/artifacts/four-panorama-2026-11-17/
