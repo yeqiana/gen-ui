@@ -43,6 +43,8 @@ export function promptForSource(c,files,variant){
  "任务：根据下面冻结的真实项目资料，制作有来源依据的产品能力/工作流架构候选结构，不是部署拓扑。",
  "仅展示原文明确支持的事实。2-8 层由内容决定，不照抄通用商贸案例，也不强凑六层、数据中台、Redis、数据库、队列、服务器或模型跨厂商路由。",
  "模块和关系均须逐条列明文件与原文引文，引用不少于 8 字符。无关系依据时 relations 必须为空。必须区分说明文档、规划与真实验收。",
+ "证据 quote 必须从对应 file 的 FROZEN SOURCE 中逐字复制连续原文，保留空格、标点及 Markdown 符号；不得改写、拼接或自行总结成引文。无法逐字核实的模块和关系必须删除，输出前逐条核对。",
+ "每个必须保留的来源边界（文件与引文）都须包含于至少一条模块或关系的 evidence.quote 中；只写在 notes 里无效。",
  "只输出严格 JSON，不要代码围栏、HTML 或其他说明。禁止外部搜索。目标 schema：",
  JSON.stringify({schema:"genui-panorama-candidate/v1",cases:[{id:c.id,status:"documented",notes:"注明事实与未验证边界",layers:[{title:"源文档证实的能力层",modules:[{id:"module-a",title:"有依据的模块",evidence:[{file:"SOURCE_PATH",quote:"SOURCE_EXACT_QUOTE"}]}]}],relations:[]}]}),
  "status 仅为 documented/planned/unknown；不要凭空自称 deployed/verified。关系 type 仅用 depends/data/controls/composes。",
