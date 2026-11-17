@@ -59,6 +59,10 @@ $required = @(
   "assets/product-panorama-svg-theme.css",
   "tests/product-architecture-panorama.test.mjs",
   "tests/product-panorama-cases.test.mjs",
+  "evals/unseen-panorama-2026-11-17.json",
+  "evals/score-unseen-panorama.mjs",
+  "tests/unseen-panorama.test.mjs",
+  "tests/chrome-heading-break-smoke.mjs",
   "demo/documents/assets/product-panorama-case.css",
   "evals/skill-ab-runner.mjs",
   "tests/skill-ab-runner.test.mjs",
@@ -199,6 +203,10 @@ if ($LASTEXITCODE -ne 0) { throw "Chrome edge cases syntax failed" }
 & node --check (Join-Path $root "tests/product-architecture-panorama.test.mjs")
 & node --check (Join-Path $root "tests/product-panorama-cases.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Architecture model boundary tests syntax failed" }
+& node --check (Join-Path $root "evals/score-unseen-panorama.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama source evidence scorer syntax failed" }
+& node --check (Join-Path $root "tests/chrome-heading-break-smoke.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Heading wrap browser audit syntax failed" }
 & node --check (Join-Path $root "tests/chrome-documents-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Technical document Chrome smoke syntax failed" }
 Write-Output "[PASS] Technical document test syntax"
@@ -222,6 +230,6 @@ Write-Output "[PASS] Standalone HTML delivery gate"
 if ($LASTEXITCODE -ne 0) { throw "Real HTML interaction delivery gate syntax failed" }
 Write-Output "[PASS] Optional Chrome HTML interaction gate syntax (browser checks are on demand)"
 
-& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs") (Join-Path $root "tests/product-panorama-cases.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/typography-contract.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs")
+& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs") (Join-Path $root "tests/product-panorama-cases.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/typography-contract.test.mjs") (Join-Path $root "tests/unseen-panorama.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
