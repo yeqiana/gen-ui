@@ -62,6 +62,7 @@ $required = @(
   "evals/unseen-panorama-2026-11-17.json",
   "evals/score-unseen-panorama.mjs",
   "evals/unseen-panorama-workflow.mjs",
+  "evals/evidence-id-map.mjs",
   "evals/render-unseen-panorama.mjs",
   "evals/unseen-panorama-workflow-2026-11-17.md",
   "tests/unseen-panorama-workflow.test.mjs",
@@ -214,6 +215,8 @@ if ($LASTEXITCODE -ne 0) { throw "Architecture model boundary tests syntax faile
 if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama source evidence scorer syntax failed" }
 & node --check (Join-Path $root "evals/unseen-panorama-workflow.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama workflow syntax failed" }
+& node --check (Join-Path $root "evals/evidence-id-map.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Frozen evidence-ID mapping syntax failed" }
 & node --check (Join-Path $root "evals/render-unseen-panorama.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama renderer syntax failed" }
 & node --check (Join-Path $root "tests/chrome-unseen-panorama-smoke.mjs")

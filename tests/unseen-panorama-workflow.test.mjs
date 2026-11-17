@@ -7,6 +7,8 @@ import crypto from "node:crypto";
 import {spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {frozenInputs,promptForSource,prepare,status,check,renderChecked} from "../evals/unseen-panorama-workflow.mjs";
+import {prepareEvidenceIds} from "../evals/unseen-panorama-workflow.mjs";
+import {evidenceCatalogue,resolveEvidenceIds} from "../evals/evidence-id-map.mjs";
 
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const git=(dir,...args)=>{
@@ -104,6 +106,111 @@ test("造假关系和上线状态被现有门禁挡住，禁止渲染错误数�
  wrong.cases[0].relations[0].evidence[0].quote="审批后生成可复查证据";
  wrong.cases[0].status="deployed";fs.writeFileSync(f,JSON.stringify(wrong));
  assert.equal(check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"explicit"}).result.status,"BLOCKED");
+});
+
+function idCandidate(x){
+ const catalogue=evidenceCatalogue({case:x.entry,files:frozenInputs(x.manifest,x.root)[0].files});
+ const result=structuredClone(x.response);
+ const convert=list=>list.map(e=>{
+  const match=catalogue.entries.find(row=>row.file===e.file&&row.quote.includes(e.quote));
+  assert.ok(match,"Source quote must be represented by one catalogue entry: "+e.quote);
+  return {id:match.id};
+ });
+ for(const layer of result.cases[0].layers)for(const mod of layer.modules)mod.evidence=convert(mod.evidence);
+ for(const rel of result.cases[0].relations)rel.evidence=convert(rel.evidence);
+ return {catalogue,result};
+}
+
+test("证据 ID 只从冻结原文产生，保留旧对照提示，不覆盖旧实验",t=>{
+ const x=fixture(t);
+ prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
+ const file=path.join(x.out,x.entry.id,"explicit.prompt.md");
+ const original=fs.readFileSync(file,"utf8");
+ const p=prepareEvidenceIds({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
+ assert.equal(p.state,"prepared-not-executed");
+ assert.equal(p.modelRunsVerified,0);
+ assert.equal(p.skillActivationsVerified,0);
+ assert.deepEqual(status(x.manifest,x.out).evidenceIdTrials.map(r=>[r.id,r.prepared,r.state]),[[x.entry.id,true,"not_run"]]);
+ assert.equal(fs.readFileSync(file,"utf8"),original);
+ const f=path.join(x.out,x.entry.id,"evidence-ids.prompt.md");
+ const prompt=fs.readFileSync(f,"utf8"),catalogue=JSON.parse(fs.readFileSync(path.join(x.out,x.entry.id,"evidence-ids.catalogue.json"),"utf8"));
+ assert.match(prompt,/\$gen-ui/);
+ assert.match(prompt,/禁止返回 file、quote/);
+ assert.match(prompt,/type 必须是 depends、data、controls、composes/);
+ assert.match(prompt,/不允许省略/);
+ assert.ok(catalogue.entries.every(e=>new RegExp("^E[A-F0-9]{12}$").test(e.id)));
+ for(const a of x.entry.anchors)assert.ok(catalogue.entries.some(e=>e.file===a.file&&e.quote.includes(a.quote)));
+ assert.deepEqual(catalogue,evidenceCatalogue(frozenInputs(x.manifest,x.root)[0]));
+ assert.throws(()=>prepareEvidenceIds({manifest:x.manifest,projectsRoot:x.root,outDir:x.out}),/Refusing evidence-ID overwrite/);
+});
+
+test("ID 还原只信任冻结 Git，保留语义未验证声明，并可渲染独立 HTML",t=>{
+ const x=fixture(t);
+ prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
+ prepareEvidenceIds({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
+ const {result,catalogue}=idCandidate(x);
+ const candidateFile=path.join(x.out,x.entry.id,"evidence-ids.candidate.json");
+ fs.writeFileSync(candidateFile,JSON.stringify(result));
+ assert.equal(status(x.manifest,x.out).evidenceIdTrials[0].state,"candidate-present-unreviewed");
+ const scored=check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"});
+ assert.equal(scored.result.status,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
+ assert.equal(scored.result.modelRunsVerified,0);
+ assert.equal(scored.result.humanSemanticReviews,0);
+ assert.ok(scored.candidate.cases[0].layers[0].modules[0].evidence[0].quote.includes("输入来源必须记录"));
+ assert.deepEqual(result.cases[0].layers[0].modules[0].evidence[0],
+  {id:catalogue.entries.find(e=>e.quote.includes("输入来源必须记录")).id});
+ // Local catalogue is a convenience for the prompt, NEVER trusted by check().
+ fs.writeFileSync(path.join(x.out,x.entry.id,"evidence-ids.catalogue.json"),JSON.stringify({entries:[{id:"EFAKE",quote:"已上线生产服务"}]}));
+ assert.equal(check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"}).result.status,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
+ const rendered=renderChecked({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"});
+ assert.equal(rendered.outputs.length,1);
+ const html=fs.readFileSync(rendered.outputs[0].file,"utf8");
+ assert.match(html,/输入来源必须记录/);
+ assert.doesNotMatch(html,/<script\b|已上线生产服务/);
+ assert.match(html,/结构校验不代表真实模型执行/);
+});
+
+test("证据 ID 拒绝伪造、错项目、混入手写引文及源指纹变化",t=>{
+ const x=fixture(t);
+ prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
+ const {result}=idCandidate(x),sources=frozenInputs(x.manifest,x.root);
+ const target=result.cases[0].layers[0].modules[0];
+ target.evidence=[{id:"E000000000000"}];
+ fs.writeFileSync(path.join(x.out,x.entry.id,"evidence-ids.candidate.json"),JSON.stringify(result));
+ assert.throws(()=>renderChecked({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"}),/Unknown or foreign evidence ID/);
+ assert.equal(fs.existsSync(path.join(x.out,x.entry.id,"evidence-ids.preview.html")),false);
+ assert.throws(()=>resolveEvidenceIds(result,sources),/Unknown or foreign evidence ID/);
+ const foreign=evidenceCatalogue({case:{...x.entry,id:"other-project"},files:sources[0].files}).entries[0].id;
+ target.evidence=[{id:foreign}];
+ assert.throws(()=>resolveEvidenceIds(result,sources),/Unknown or foreign evidence ID/);
+ target.evidence=[{id:idCandidate(x).result.cases[0].layers[0].modules[0].evidence[0].id,quote:"自编假证据"}];
+ assert.throws(()=>resolveEvidenceIds(result,sources),/Raw or mixed evidence is prohibited/);
+ target.evidence=[{file:"README.md",quote:"输入来源必须记录"}];
+ assert.throws(()=>resolveEvidenceIds(result,sources),/Raw or mixed evidence is prohibited/);
+ target.evidence=idCandidate(x).result.cases[0].layers[0].modules[0].evidence;
+ fs.writeFileSync(path.join(x.out,x.entry.id,"evidence-ids.candidate.json"),JSON.stringify(result));
+ const altered=structuredClone(x.manifest);
+ altered.cases[0].sources[0].sha256="0".repeat(64);
+ assert.throws(()=>check({manifest:altered,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"}),/fingerprint mismatch/);
+});
+
+test("引用 ID 真实仍须覆盖全部边界，非法上线声明不能被 ID 白名单洗白",t=>{
+ const x=fixture(t);
+ prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
+ const {result}=idCandidate(x);
+ const missing=structuredClone(result);
+ missing.cases[0].layers[1].modules[0].evidence=missing.cases[0].layers[0].modules[0].evidence;
+ missing.cases[0].relations[0].evidence=missing.cases[0].layers[0].modules[0].evidence;
+ const f=path.join(x.out,x.entry.id,"evidence-ids.candidate.json");
+ fs.writeFileSync(f,JSON.stringify(missing));
+ const blocked=renderChecked({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"});
+ assert.equal(blocked.result.status,"BLOCKED");
+ assert.equal(blocked.outputs.length,0);
+ assert.match(blocked.result.issues.join("; "),/mandatory source boundary absent/);
+ result.cases[0].status="deployed";
+ fs.writeFileSync(f,JSON.stringify(result));
+ assert.equal(check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"evidence-ids"}).result.status,"BLOCKED");
+ assert.equal(fs.existsSync(path.join(x.out,x.entry.id,"evidence-ids.preview.html")),false);
 });
 
 test("输出路径即使以 .. 开头也必须拒绝写入公开仓库",t=>{
