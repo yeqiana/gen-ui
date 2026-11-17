@@ -19,6 +19,10 @@ const broken=natural.replace("</style></head>",
   "\n/* isolated negative fixture: deliberately premature heading lines */\n"+
   "main.genui-typography h1{text-wrap:balance;max-width:75%}\n</style></head>");
 assert.notEqual(natural,broken);
+const cssInject=rules=>natural.replace("</style></head>", "\n/* isolated typography-negative fixture */\n"+rules+"\n</style></head>");
+const narrow=cssInject("main.genui-typography p.genui-prose{max-width:55%!important;margin-inline:auto!important}");
+const indented=cssInject("main.genui-typography p.genui-prose{text-indent:24px!important}");
+const balancedOnly=cssInject("main.genui-typography h1{text-wrap:balance!important}");
 
 function fixture(name,html){
  const dir=path.join(base,name);
@@ -44,6 +48,16 @@ function run(name,dir){
 try{
  const positive=run("positive",fixture("positive",natural));
  const negative=run("negative",fixture("negative",broken));
+ const tooNarrow=run("narrow-prose",fixture("narrow-prose",narrow));
+ const badIndent=run("indented-prose",fixture("indented-prose",indented));
+ const wrongBalance=run("balanced-only",fixture("balanced-only",balancedOnly));
+ assert.equal(tooNarrow.exit,1,"unexpected capped prose must fail");
+ assert.equal(badIndent.exit,1,"first-line indent must fail");
+ assert.equal(wrongBalance.exit,1,"balanced H1 without artificial width must fail");
+ assert.ok(wrongBalance.data.checks.some(x=>!x.pass&&/headings/.test(x.name)),"balance-only heading not detected");
+ for(const [kind,out] of [["narrow",tooNarrow],["indent",badIndent]]){
+   assert.ok(out.data.checks.some(x=>!x.pass&&/(prose|narrative)/i.test(x.name)),kind+" was not detected by paragraph checks");
+ }
  assert.equal(positive.exit,0,"natural headings must pass");
  assert.equal(positive.data.pass,true);
  assert.equal(negative.exit,1,"premature balancing must be rejected");

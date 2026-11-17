@@ -226,9 +226,9 @@ blockquote.callout{margin-inline:0}
 /* GEN-UI visual baseline: quiet surfaces, grouped content and a persistent icon rail. */
 .overview-story{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,1fr);gap:24px;align-items:center;padding:12px 0 4px}
 .overview-story img{display:block;width:100%;height:auto}
-.overview-copy{max-width:48rem}
+.overview-copy{max-width:100%}
 .overview-copy h3{font-size:1rem;font-weight:620;margin:0 0 7px}
-.overview-copy p{max-width:56ch}
+.overview-copy p{max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap}
 .section-emoji{margin-right:7px;font-size:1em}
 .brand{min-width:0}
 .brand strong{white-space:nowrap}
@@ -310,5 +310,5 @@ blockquote.callout{margin-inline:0}
   margin-inline:0;padding:10px 14px;border-left:3px solid #dce7f5;
 }
 
-/* Heading line-break protection: balance headings only; leave narrative paragraphs naturally wrapped. */
-#main :is(h1,h2,h3,h4){text-wrap:balance;overflow-wrap:break-word}
+/* Report headings use their actual section width without balancing earlier lines. */
+#main :is(h1,h2,h3,h4){text-wrap:wrap;white-space:normal;overflow-wrap:break-word}

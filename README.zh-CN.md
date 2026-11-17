@@ -115,7 +115,7 @@
 
 **标题排版补充（2026-11-16）：** H1–H4 也必须自然利用章节行宽，不使用均衡换行造成提前断行；交付 Chrome 门禁现在会检测标题首行的实际排布。对照证据见 [标题过早换行回归](evals/heading-natural-wrap-2026-11-16.md)。
 
-仅在明确要求离线 HTML 时，GEN-UI 才按需加载 [轻量排版规则](references/typography.md) 和本地 [`assets/typography.css`](assets/typography.css)。正文建议使用 `main.genui-typography` 与 `.genui-prose`；宽屏叙述性文字采用居中的实际阅读栏（英文约 72ch、中文约 48ic），**不对普通段落启用均衡换行**；**72ch 不代表 72 个汉字**。标题保持整个章节的可用宽度，由 `text-wrap:balance` 仅均衡需要换行的标题，避免尾字孤行。768px 平板宽度使用可展开目录，不再由固定侧栏挤压标题；表格、代码和架构图保留独立宽容器。
+仅在明确要求离线 HTML 时，GEN-UI 才按需加载 [轻量排版规则](references/typography.md) 和本地 [`assets/typography.css`](assets/typography.css)。正文建议使用 `main.genui-typography` 与 `.genui-prose`。**默认正文、标题、列表和引用外框共用章节真实宽度并左侧对齐**，统一使用 `text-wrap:wrap`，不通过 `balance` 或单段窄栏强行截断句子。只有显式纯文章模式才用 `.genui-article-column` 将标题与正文作为整体限宽（英文约 72ch、中文约 62ic，仅作参考）。768px 平板宽度使用可展开目录，表格、代码和架构图保留独立宽容器。
 
 静态技术文档复用 `div.doc-layout`、`aside.doc-toc`、`main.doc-main.genui-typography`、移动端 `details.mobile-toc` 及仓库已有的本地文档 CSS/导航脚本，不添加新的框架或远程字体。确需单文件 HTML 时内联小型排版规则，普通问答仍默认 Markdown。
 
@@ -129,7 +129,7 @@ node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --req
 
 本地原生 Codex 在三类代表性 HTML 任务的无强化提示验证中，经规则收口后通过静态检查及 **18/18 个 Chrome 视口/目录状态场景**；仓库回归有 **144/144 项 Node.js 测试**通过。该结论限于已测样本，并非未来所有生成结果的合规保证。原生 Codex 的本地命令读取仍受执行策略阻挡，评测由 Runner 只读提供 Skill 文件正文。详见 [盲测与已知边界](evals/gen-ui-typography-blind-2026-11-13.md)。
 
-**真实 HTML 交互门禁：** 针对可信的本地 HTML，用 Chrome/Edge 实测导航、长目录滚动、折叠 M 悬停、实际正文居中、图片弹层与滚轮缩放，保存 JSON 和截图。无内容图片时可省略 `--require-image`，但不能将图片行为标为已验收。详见 [StoryOS 真实交付验收及边界](evals/storyos-real-html-acceptance-2026-11-14.md)。 折叠导航的实际尺寸和图标中心线也在门禁中逐像素检查；常规 Markdown/静态任务不启动 Chrome。
+**真实 HTML 交互门禁：** 针对可信的本地 HTML，用 Chrome/Edge 实测导航、长目录滚动、折叠 M 悬停、正文与标题起点对齐及实际自然断行、图片弹层与滚轮缩放，保存 JSON 和截图。无内容图片时可省略 `--require-image`，但不能将图片行为标为已验收。详见 [StoryOS 真实交付验收及边界](evals/storyos-real-html-acceptance-2026-11-14.md)。 折叠导航的实际尺寸和图标中心线也在门禁中逐像素检查；常规 Markdown/静态任务不启动 Chrome。
 
 **2026-11-14 稳定基线：** 已用桌面原生 Codex 的全新会话独立生成 StoryOS HTML，并完成 50/50（含任务关键词）及 Typography 6/6 验收。详见 [冻结记录](docs/release-freeze-2026-11-14.md)。单次成功不代表所有主题都稳定。
 
