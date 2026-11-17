@@ -187,7 +187,7 @@ node tests/chrome-semantic-stress.mjs --mobile
 MIT License · [LICENSE](LICENSE)。
 
 
-**产品架构全景图新版式：** [查看六层能力、双中台与两侧支撑体系的离线全景板](demo/product-architecture-panorama.html)。采用与现有 SVG 图表一致的白底、细描边与 GEN-UI 蓝色强调；模块均为虚构示例；具体项目应按来源替换，不把示意当成部署事实。
+**产品架构全景图新版式：** [查看六层能力、双中台与两侧支撑体系的离线全景板](demo/product-architecture-panorama.html)。采用 SVG 系列白底点阵、蓝/绿/紫/琥珀/青浅色分层及四边等粗细描边（**无左侧高亮竖线**）；商贸模块均为虚构示例，具体项目应按来源替换，不把示意当成部署事实。
 
 ![本地 Chrome 实测的产品架构全景板预览：六层能力、双中台和两侧支撑体系](demo/assets/product-architecture-panorama-preview.png)
 
@@ -206,4 +206,6 @@ MIT License · [LICENSE](LICENSE)。
 
 延伸阅读：[八类架构图的分层/容器示例](demo/architecture-patterns.html) · [轻量化 Skill 设计原则](docs/skill-principles.md)。
 
-**陌生真实项目泛化评测（P1）：** [查看离线来源冻结、配对提示、证据校验与 Chrome 渲染流程](evals/unseen-panorama-workflow-2026-11-17.md)。目前仅完成离线链路与演示候选验证；**独立模型生成和 Skill 加载 A/B 尚未执行**，不能据此声称泛化效果已达标。
+**陌生真实项目架构全景图（P1）：** [在线浏览 GitHub 仓库里的三份独立离线 HTML 演示](demo/unseen-panorama/index.html) · [来源冻结、配对提示、证据核验与 Chrome 复现流程](evals/unseen-panorama-workflow-2026-11-17.md)。Agent Lead、PlanShip、Distributed Systems Audit 的图仅是本会话基于公开冻结来源整理并通过结构校验的演示；**独立模型生成和 Skill 加载 A/B 尚未执行**，不能称为模型泛化验收通过。
+
+**报告文字换行修复：** `demo/report.html` 中三处提前断行是案例段落被错误套用 `72ch` 限宽导致；修复后以实际章节宽度排版，详见 [三处原句的 Chrome 行宽复核](evals/report-line-wrap-root-cause-2026-11-17.md)。

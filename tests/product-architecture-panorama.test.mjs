@@ -69,3 +69,10 @@ test("通用产品全景沿用 SVG 系列的蓝色强调及白底细边框，且
  assert.match(svgTheme,/\.genui-product-panorama/);
  assert.doesNotMatch(svgTheme,/@import\b|url\s*\(/i);
 });
+
+test("全景图五类浅色能力层可区分，禁止每张色块左侧单独加粗竖线",()=>{
+ for(const tone of ["#e7f1ff","#e5f6ee","#eeeaff","#fff2d9","#e4f5f8"])
+  assert.ok(svgTheme.includes(tone),"缺少语义浅色层："+tone);
+ assert.doesNotMatch(svgTheme,/border-left(?:-color|-width)?\s*:/i);
+ assert.match(svgTheme,/\.bp-layer :?\.?bp-label|\.bp-layer \.bp-label/);
+});

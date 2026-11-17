@@ -100,3 +100,21 @@ test("输出路径即使以 .. 开头也必须拒绝写入公开仓库",t=>{
  assert.throws(()=>prepare({manifest:x.manifest,projectsRoot:x.root,outDir:forbidden}),/Refusing trial outputs/);
  assert.equal(fs.existsSync(forbidden),false);
 });
+
+test("已发布三份陌生项目独立 HTML 与九张 Chrome 截图且不携带本机凭据",()=>{
+ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),".."),dir=path.join(root,"demo/unseen-panorama"),idx=fs.readFileSync(path.join(dir,"index.html"),"utf8");
+ for(const name of ["agent-lead","plan-ship","distributed-system-audit"]){
+  assert.ok(idx.includes(name+".html"));
+  const page=fs.readFileSync(path.join(dir,name+".html"),"utf8");
+  assert.match(page,/radial-gradient/);
+  assert.match(page,/--pan-layer-fill/);
+  assert.match(page,/结构校验不代表真实模型执行|来源引文结构检查不等于独立语义审查/);
+  assert.doesNotMatch(page,/<script\b|<iframe\b|github_pat_|Bearer\s+/i);
+  assert.ok(!page.includes("C:\\Users\\")&&!page.includes("D:\\workspace\\"));
+  for(const width of [375,768,1440]){
+   const png=fs.readFileSync(path.join(dir,"assets",name+"-"+width+".png"));
+   assert.equal(png.subarray(0,8).toString("hex"),"89504e470d0a1a0a");
+   assert.ok(png.length>20000);
+  }
+ }
+});
