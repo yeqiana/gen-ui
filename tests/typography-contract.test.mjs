@@ -19,8 +19,8 @@ test('轻量 Typography 只作用于标注的 HTML 正文，不压缩宽内容',
  assert.match(css,/html:lang\(zh\) main\.genui-typography\{--genui-prose-width:62ic\}/);
  assert.match(css,/text-wrap:wrap/);
  assert.match(css,/main\.genui-typography :is\(h1,h2,h3,h4\)/);
- assert.match(css,/max-width:100%;text-wrap:wrap;white-space:normal/);
- assert.doesNotMatch(css,/text-wrap:balance/);
+ assert.match(css,/max-width:100%;text-wrap:balance;white-space:normal/);
+ assert.doesNotMatch(css,/main\.genui-typography\s+p\{[^}]*text-wrap:balance/s);
  assert.match(css,/line-break:strict/);
  assert.match(css,/--genui-prose-leading:1\.65/);
  assert.match(css,/main\.genui-typography :is\(\.genui-prose[^}]*max-width:100%;/s);
