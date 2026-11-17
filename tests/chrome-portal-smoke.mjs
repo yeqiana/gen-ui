@@ -49,15 +49,28 @@ async function run(){
   });
   const evaluate=async(expression)=>{
     const r=await send("Runtime.evaluate",{expression,returnByValue:true,awaitPromise:true});
-    if(r.exceptionDetails)throw Error(r.exceptionDetails.text);
+    if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text);
     return r.result.value;
+  };
+  // Page.navigate may return before Chrome commits the document and runs its shell.
+  // Check the actual portal DOM instead of sleeping a fixed number of milliseconds.
+  const waitPortalReady=async()=>{
+    let last;
+    for(let i=0;i<100;i++){
+      try{
+        last=await evaluate("(()=>({ready:document.readyState,url:location.href,rail:!!document.getElementById('rail'),frame:!!document.getElementById('page-frame'),pages:document.querySelectorAll('.page-link').length}))()");
+        if(last?.ready==="complete"&&last.url===pathToFileURL(report).href&&last.rail&&last.frame&&last.pages===4)return;
+      }catch(error){last={error:error.message};}
+      await sleep(100);
+    }
+    throw Error("门户页面导航后未就绪: "+JSON.stringify(last));
   };
   await send("Page.enable");await send("Runtime.enable");
   const results={page:"demo/portal-pages/index.html",source:"trusted-repository-fixture",browser:"Chrome CDP",at:new Date().toISOString(),viewports:{}};
   for(const width of [375,768,1440]){
     await send("Emulation.setDeviceMetricsOverride",{width,height:820,deviceScaleFactor:1,mobile:width===375});
     await send("Page.navigate",{url:pathToFileURL(report).href});
-    await sleep(350);
+    await waitPortalReady();
     const state=await evaluate("(()=>({width:innerWidth,pages:document.querySelectorAll('.page-link').length,subheadings:document.querySelectorAll('.section-link').length,iframe:!!document.querySelector('iframe#page-frame'),src:document.querySelector('iframe#page-frame')?.getAttribute('src'),sandbox:document.querySelector('iframe#page-frame')?.getAttribute('sandbox'),hasOverflow:document.documentElement.scrollWidth>innerWidth,railColor:getComputedStyle(document.getElementById('rail')).backgroundColor}))()");
     check("视口 "+width,state,state.pages===4&&state.subheadings>=6&&state.iframe&&state.src&&!state.src.startsWith("about:")&&state.sandbox==="allow-same-origin"&&!state.hasOverflow&&state.railColor==="rgb(255, 255, 255)");
     results.viewports[width]=state;
@@ -78,7 +91,7 @@ async function run(){
     results.viewports[width].offlineStyle=offlineStyle;
   }
   await send("Emulation.setDeviceMetricsOverride",{width:1440,height:820,deviceScaleFactor:1,mobile:false});
-  await send("Page.navigate",{url:pathToFileURL(report).href});await sleep(300);
+  await send("Page.navigate",{url:pathToFileURL(report).href});await waitPortalReady();
   const swap=await evaluate("(()=>{const frame=document.querySelector('#page-frame');const start=frame.getAttribute('src');const page=document.querySelectorAll('.page-link')[2];page.click();const next=frame.getAttribute('src');const title=document.getElementById('active-title').textContent;const selected=document.querySelectorAll('[aria-current=\"page\"]').length;const noExtra=!document.getElementById('open-external');return {start,next,title,selected,noExtra}})()");
   check("iframe 页面切换",swap,swap.start!==swap.next&&swap.selected===1&&swap.noExtra);
   results.pageSwap=swap;
@@ -98,7 +111,7 @@ async function run(){
   check("门户导航真实鼠标拖拽、正文联动、顶部固定与浅滚动条",{dragBefore,dragAfter},dragBefore.visible&&dragBefore.iconsHidden&&dragAfter.width>dragBefore.width+30&&dragAfter.main>dragBefore.main+30&&dragAfter.scroll>0&&dragAfter.headerFixed&&dragAfter.scrollbar==='thin');
   results.desktopResize={dragBefore,dragAfter};
   await send("Emulation.setDeviceMetricsOverride",{width:375,height:820,deviceScaleFactor:1,mobile:true});
-  await send("Page.navigate",{url:pathToFileURL(report).href});await sleep(300);
+  await send("Page.navigate",{url:pathToFileURL(report).href});await waitPortalReady();
   const mobile=await evaluate("(()=>{const b=document.getElementById('open-nav'),p=document.getElementById('portal');b.click();const opened=p.classList.contains('mobile-open');document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));return{opened,closed:!p.classList.contains('mobile-open'),expanded:b.getAttribute('aria-expanded')}})()");
   check("移动目录",mobile,mobile.opened&&mobile.closed&&mobile.expanded==="false");
   results.mobile=mobile;
