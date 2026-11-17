@@ -2,6 +2,8 @@
 
 日期：2026-11-17。**状态：离线证据/渲染/Chrome 管道通过；独立模型泛化尚未验证。**
 
+> 本文保留最初**仅准备离线提示、尚未调用模型**时的历史快照；同日后续真实 Claude Skill 激活和六组独立模型验收结果，见 [P1 独立模型实测报告](p1-independent-model-trials-2026-11-17.md)。早期表格的 0 次模型调用不代表后续未执行。
+
 ## 本轮实际完成
 
 三份此前未用于全景图设计的真实开源项目：Agent Lead、PlanShip、Distributed Systems Audit。使用 `evals/unseen-panorama-2026-11-17.json` 冻结的 5 份 Git 文件及 SHA-256 与 12 条必须保持的事实边界。

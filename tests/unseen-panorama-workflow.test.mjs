@@ -47,6 +47,8 @@ test("冻结 Git 来源校验后只准备配对提示，绝不调用模型",t=>{
  const explicit=fs.readFileSync(path.join(x.out,x.entry.id,"explicit.prompt.md"),"utf8");
  assert.equal(explicit,"$gen-ui\n"+normal);
  assert.match(normal,/输入来源必须记录/);
+ assert.match(normal,/逐字复制连续原文/);
+ assert.match(normal,/只写在 notes 里无效/);
  assert.equal(status(x.manifest,x.out).rows.filter(a=>a.state==="not_run").length,2);
  assert.throws(()=>prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out}),/refusing overwrite/);
 });
@@ -58,6 +60,17 @@ test("冻结 SHA/必需来源片段错误一律阻断，不把仓库工作区改
  miss.cases[0].anchors[0].quote="并不存在的事实依据";
  assert.throws(()=>frozenInputs(miss,x.root),/boundary missing/);
 });
+test("引用本身合法但未覆盖全部必需边界也必须阻断",t=>{
+ const x=fixture(t);prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
+ const wrong=structuredClone(x.response),replacement={file:"README.md",quote:"没有常驻数据库或后台服务"};
+ wrong.cases[0].layers[1].modules[0].evidence=[replacement];
+ wrong.cases[0].relations[0].evidence=[replacement];
+ fs.writeFileSync(path.join(x.out,x.entry.id,"explicit.candidate.json"),JSON.stringify(wrong));
+ const result=check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"explicit"}).result;
+ assert.equal(result.status,"BLOCKED");
+ assert.match(result.issues.join("; "),/mandatory source boundary absent: 审批后生成可复查证据/);
+});
+
 test("候选文件不存在、身份错误时仍是未运行/阻断，不能假绿",t=>{
  const x=fixture(t);prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
  assert.throws(()=>check({manifest:x.manifest,projectsRoot:x.root,outDir:x.out,variant:"explicit"}),/NOT_RUN/);
