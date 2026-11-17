@@ -68,6 +68,7 @@ $required = @(
   "tests/chrome-unseen-panorama-smoke.mjs",
   "tests/unseen-panorama.test.mjs",
   "tests/chrome-heading-break-smoke.mjs",
+  "tests/chrome-prose-alignment-regression.mjs",
   "demo/documents/assets/product-panorama-case.css",
   "evals/skill-ab-runner.mjs",
   "tests/skill-ab-runner.test.mjs",
@@ -218,6 +219,8 @@ if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama renderer syntax failed" }
 if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama Chrome smoke syntax failed" }
 & node --check (Join-Path $root "tests/chrome-heading-break-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Heading wrap browser audit syntax failed" }
+& node --check (Join-Path $root "tests/chrome-prose-alignment-regression.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Prose alignment negative regression syntax failed" }
 & node --check (Join-Path $root "tests/chrome-documents-smoke.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Technical document Chrome smoke syntax failed" }
 Write-Output "[PASS] Technical document test syntax"

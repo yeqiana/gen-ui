@@ -187,7 +187,7 @@ function auditReadingFlow(){
  const parents=[...main.querySelectorAll(".doc-section")];
  if(!parents.length)return{skipped:true};
  const targets=parents.flatMap(section=>[
-  ...section.querySelectorAll(":scope > p,:scope > blockquote,:scope > .callout,:scope > blockquote > p,:scope > .callout > p")
+  ...section.querySelectorAll(":scope > p,:scope > ul,:scope > ol,:scope > blockquote,:scope > .callout,:scope > blockquote > p,:scope > .callout > p")
  ]).filter(x=>{const b=x.getBoundingClientRect(),s=getComputedStyle(x);return b.width>0&&b.height>0&&s.display!=="none"&&!x.closest("[hidden]");});
  const findings=targets.map(el=>{
   const css=getComputedStyle(el),parent=el.parentElement,parentCSS=getComputedStyle(parent);
