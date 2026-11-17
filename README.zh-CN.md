@@ -115,7 +115,7 @@
 
 **标题排版补充（2026-11-16）：** H1–H4 也必须自然利用章节行宽，不使用均衡换行造成提前断行；交付 Chrome 门禁现在会检测标题首行的实际排布。对照证据见 [标题过早换行回归](evals/heading-natural-wrap-2026-11-16.md)。
 
-仅在明确要求离线 HTML 时，GEN-UI 才按需加载 [轻量排版规则](references/typography.md) 和本地 [`assets/typography.css`](assets/typography.css)。正文建议使用 `main.genui-typography` 与 `.genui-prose`，英文 72ch、中文 62ic 仅作为参考 Token，正文、引用及图表前后段落都应自然占满所属章节宽度，**不再对普通段落启用均衡换行**；**72ch 不代表 72 个汉字**。导航展开/折叠后正文优先充分利用可用阅读宽度，表格、代码和图表继续使用独立的横向空间。
+仅在明确要求离线 HTML 时，GEN-UI 才按需加载 [轻量排版规则](references/typography.md) 和本地 [`assets/typography.css`](assets/typography.css)。正文建议使用 `main.genui-typography` 与 `.genui-prose`，英文约 72ch、中文约 48ic 作为**真实的宽屏正文上限**，居中阅读且不使用均衡换行；**72ch 不代表 72 个汉字**。H1–H4 仍占满可用章节宽度、自然换行，不套用正文限宽；768px 平板宽度改用折叠式目录，避免固定侧栏造成标题孤行。表格、代码和图表继续使用独立的宽容器。
 
 静态技术文档复用 `div.doc-layout`、`aside.doc-toc`、`main.doc-main.genui-typography`、移动端 `details.mobile-toc` 及仓库已有的本地文档 CSS/导航脚本，不添加新的框架或远程字体。确需单文件 HTML 时内联小型排版规则，普通问答仍默认 Markdown。
 

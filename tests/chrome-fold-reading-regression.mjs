@@ -65,7 +65,9 @@ try{
  assert.equal(startsFolded.exit,0,"initially folded document must still pass both-state acceptance");
  assert.equal(startsFolded.audit.pass,true);
  const initialChecks=startsFolded.audit.checks.filter(x=>x.name==="initially folded rail renders a visible single M");
- assert.deepEqual(initialChecks.map(x=>x.stage),["viewport-768","viewport-1440"]);
+ assert.deepEqual(initialChecks.map(x=>x.stage),["viewport-1440"]);
+ const tabletMenu=startsFolded.audit.checks.find(x=>x.stage==="viewport-768"&&x.name==="mobile TOC toggles");
+ assert.ok(tabletMenu?.pass,"tablet width must use a working disclosure TOC instead of an invisible collapsed rail");
  assert.ok(initialChecks.every(x=>x.pass));
  const badWidth=run("bad-width",create("bad-width","width"));
  assert.equal(badWidth.exit,1,"narrow paragraphs and indentation must fail");
@@ -75,7 +77,7 @@ try{
  const badMark=run("bad-mark",create("bad-mark","mark"));
  assert.equal(badMark.exit,1,"hidden folded M must fail");
  const markFailures=badMark.audit.checks.filter(x=>!x.pass&&x.name==="folded M is visibly rendered before hover without duplicate logo");
- assert.deepEqual(markFailures.map(x=>x.stage),["viewport-768","viewport-1440"]);
+ assert.deepEqual(markFailures.map(x=>x.stage),["viewport-1440"]);
  console.log(JSON.stringify({result:"PASS",positiveChecks:positive.audit.checks.length,
   initialFoldedChecks:initialChecks.length,detectedWidthFailures:widthFailures.length,detectedInvisibleMark:markFailures.length,
   cases:["after-figure","quote","after-quote","callout","after-callout","after-table"]}));

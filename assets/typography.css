@@ -4,7 +4,7 @@ main.genui-typography{
   --genui-prose-gap:.85em;--genui-heading-gap:1.25em;
 }
 /* Retain language tokens as guidance; the section owns the visible text width. */
-html:lang(zh) main.genui-typography{--genui-prose-width:62ic}
+html:lang(zh) main.genui-typography{--genui-prose-width:48ic}
 main.genui-typography :is(.genui-prose,.genui-prose-group>p,.genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
   max-width:100%;
   overflow-wrap:break-word;
@@ -33,4 +33,23 @@ main.genui-typography :is(blockquote,.callout)>p{
 }
 main.genui-typography :is(figure,.table-wrap,.table-scroll,table,blockquote,.callout)+p{
   max-width:100%;margin-inline:0;text-indent:0;text-wrap:wrap;
+}
+
+
+/* Generated HTML shares the real narrative column; wide media stays full-width. */
+main.genui-typography :is(.genui-prose,.genui-prose-group>p,
+ .genui-prose-group>ul,.genui-prose-group>ol,.genui-prose-group>blockquote){
+ max-width:min(100%,var(--genui-prose-width));
+ margin-inline:auto;overflow-wrap:break-word;
+}
+/* Generated documents using the standard shell should not squeeze their
+   heading into the remaining 429px at tablet widths. */
+@media(min-width:701px) and (max-width:900px){
+ .doc-layout:has(> main.genui-typography){display:block;max-width:980px;padding:24px}
+ .doc-layout:has(> main.genui-typography)>.doc-toc{display:none}
+ .doc-layout:has(> main.genui-typography) .mobile-toc{
+  display:block;border:1px solid #dce4ee;border-radius:6px;
+  padding:9px 12px;margin:13px 0 22px;
+ }
+ .doc-layout:has(> main.genui-typography) .mobile-toc .toc-list{margin-top:8px}
 }

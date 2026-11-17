@@ -1,0 +1,84 @@
+{
+  "schema": "genui-panorama-fresh-evaluation/v1",
+  "created": "2026-11-17",
+  "purpose": "冻结三份此前未用于 GEN-UI 产品架构全景开发的项目文档，测试有无虚构系统、遗漏边界和将设计冒充实现。本文仅准备评测，非模型运行结果。",
+  "cases": [
+    {
+      "id": "agent-lead",
+      "repo": "agent-lead",
+      "repo_ref": "yeqiana/agent-lead",
+      "commit": "9857d08e7c726e72070876fc08c9403a84d16f9a",
+      "path": "README.md",
+      "sha256": "eb221035d1528cc7af01ebe371d7f03a246be806b32dde3f06bb821206093958",
+      "evidence": [
+        "不新增平台、不依赖 MCP",
+        "单 Agent 优先",
+        "动态参考当前",
+        "不要把连续执行叫做并行",
+        "静态校验通过"
+      ],
+      "mustDistinguish": [
+        "单 Agent 与多 Agent 的选择条件",
+        "原生子 Agent 与 Worktree 会话并非同一模式",
+        "可用模型能力探测不等于跨厂商自动路由",
+        "静态 Skill 校验不等于真实执行验证"
+      ],
+      "mustNotClaim": [
+        "自动调度所有模型供应商",
+        "已在任意项目实际启动多个 Agent",
+        "额外 MCP 或数据库是必要运行依赖"
+      ]
+    },
+    {
+      "id": "plan-ship",
+      "repo": "plan-ship",
+      "repo_ref": "yeqiana/plan-ship",
+      "commit": "a7a974c2fa6f2b49f0ca7f3fb3e28b3ae39c2520",
+      "path": "docs/architecture.md",
+      "sha256": "0c6d9470719f3e103f4d60e2aab81279c8239911dfc913ba3b3e32a3034673af",
+      "evidence": [
+        "portable, standalone Markdown Skill",
+        "no server, database, scheduler or model API",
+        "A plan-only request never modifies business code",
+        "Real tests on final integrated source",
+        "Evidence and acceptance pass"
+      ],
+      "mustDistinguish": [
+        "计划审查和实施验收是不同阶段",
+        "只规划时不修改业务代码",
+        "Python 是可选验证工具，非运行时必需",
+        "验收事实必须来自实际测试证据"
+      ],
+      "mustNotClaim": [
+        "自带调度服务或数据库",
+        "计划已通过就等于代码验收完成",
+        "所有测试和发布在现实项目已经执行"
+      ]
+    },
+    {
+      "id": "distributed-system-audit",
+      "repo": "distributed-system-audit",
+      "repo_ref": "yeqiana/distributed-system-audit",
+      "commit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+      "path": "README.md",
+      "sha256": "bd7686e0db11d6e4f3a46b832552f876b12d42ddc64b4f9398816e5f4535cb3d",
+      "evidence": [
+        "correctness across component boundaries and recovery after failure",
+        "A suspected code smell is not a confirmed defect",
+        "The default is audit first",
+        "The skill supplies instructions, not a scanner or infrastructure"
+      ],
+      "mustDistinguish": [
+        "证据与推测分开",
+        "跨组件链路/不变量/恢复负责人与验收步骤",
+        "源码级风险不同于确认缺陷",
+        "只读审计默认不允许真实故障注入或修改"
+      ],
+      "mustNotClaim": [
+        "已确认生产缺陷或故障已复现",
+        "Skill 内置自动扫描器、服务器或数据库",
+        "绿色测试即证明恢复链路端到端成立"
+      ]
+    }
+  ]
+}

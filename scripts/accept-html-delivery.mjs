@@ -187,7 +187,17 @@ function auditReadingFlow(){
  const findings=targets.map(el=>{
   const css=getComputedStyle(el),parent=el.parentElement,parentCSS=getComputedStyle(parent);
   const box=el.getBoundingClientRect(),pbox=parent.getBoundingClientRect(),parentInner=parent.clientWidth-(parseFloat(parentCSS.paddingLeft)||0)-(parseFloat(parentCSS.paddingRight)||0);
-  const expectedLeft=pbox.left+(parseFloat(parentCSS.borderLeftWidth)||0)+(parseFloat(parentCSS.paddingLeft)||0);
+  // Centered prose may be intentionally narrower than the wide-media parent.
+  const widthToken=getComputedStyle(main).getPropertyValue("--genui-prose-width").trim();
+  let widthCap=parentInner;
+  if(widthToken&&css.maxWidth.includes("min(")){
+    const probe=document.createElement("span");
+    probe.style.cssText="position:absolute;visibility:hidden;display:block;box-sizing:content-box;max-width:none";
+    probe.style.font=css.font;probe.style.width=widthToken;document.body.appendChild(probe);
+    widthCap=probe.getBoundingClientRect().width||parentInner;probe.remove();
+  }
+  const expectedWidth=Math.min(parentInner,widthCap);
+  const expectedLeft=pbox.left+(parseFloat(parentCSS.borderLeftWidth)||0)+(parseFloat(parentCSS.paddingLeft)||0)+(parentInner-expectedWidth)/2;
   const isParagraph=el.tagName==="P",str=el.textContent.trim(),lines=[],range=document.createRange();
   if(isParagraph){
     const walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let textNode;
@@ -209,9 +219,9 @@ function auditReadingFlow(){
   if(css.textWrap==="balance"||css.textWrap==="pretty")reasons.push("balanced-or-pretty-text");
   if(isParagraph&&Math.abs(parseFloat(css.textIndent)||0)>4)reasons.push("unexpected-first-line-indent");
   if(isParagraph&&Math.abs(box.left-expectedLeft)>8)reasons.push("unexpected-paragraph-left-offset");
-  if(box.width<parentInner*.92&&parentInner-box.width>26)reasons.push("narrower-than-parent-content");
+  if(box.width<expectedWidth*.92&&expectedWidth-box.width>26)reasons.push("narrower-than-reading-column");
   if(longText&&firstWidth<box.width*.72)reasons.push("premature-first-line-wrap");
-  return{type:el.tagName,case:el.dataset.proseCase||null,chars:str.length,width:Math.round(box.width),available:Math.round(parentInner),left:Math.round(box.left),expectedLeft:Math.round(expectedLeft),
+  return{type:el.tagName,case:el.dataset.proseCase||null,chars:str.length,width:Math.round(box.width),available:Math.round(parentInner),readingCap:Math.round(expectedWidth),left:Math.round(box.left),expectedLeft:Math.round(expectedLeft),
    firstLine:Math.round(firstWidth),lines:lines.length,textWrap:css.textWrap,textIndent:css.textIndent,marginLeft:css.marginLeft,reasons};
  });
  return{skipped:false,count:findings.length,pass:findings.length>0&&findings.every(x=>x.reasons.length===0),
@@ -293,7 +303,7 @@ try{
   await delay(180);
   // Some generated documents deliberately start collapsed. Verify that state,
   // then expand before the common expanded -> folded -> expanded interaction run.
-  if(width>700&&await evaluate("document.querySelector('.doc-layout,[data-report-app]')?.dataset.sidebarCollapsed==='true'")){
+  if(width>700&&await evaluate("(()=>{const host=document.querySelector('.doc-layout,[data-report-app]'),nav=host?.querySelector('.doc-toc,#report-sidebar');return host?.dataset.sidebarCollapsed==='true'&&!!nav&&getComputedStyle(nav).display!=='none'})()")){
    const initialFolded=await run(foldState);
    check("initially folded rail renders a visible single M",initialFolded.collapsed
     &&initialFolded.toggleHidden&&initialFolded.defaultMarkVisible
