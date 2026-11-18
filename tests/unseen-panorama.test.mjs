@@ -107,9 +107,22 @@ test("普通 Mermaid 流转可使用 flow，但不能凭空为其添加条件",(
  const score=scoreUnseen(a.manifest,x,a.resolve);
  assert.equal(score.status,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+ for(const badType of ["depends","controls","data","composes"]){
+  const wrong=structuredClone(x);wrong.cases[0].relations[0].type=badType;
+  assert.match(scoreUnseen(a.manifest,wrong,a.resolve).issues.join("; "),/plain Mermaid transition requires flow/);
+ }
+ const labelled=structuredClone(x);
+ labelled.cases[0].relations[0].evidence=[{file:"docs/flow.md",quote:a.plain},{file:"docs/flow.md",quote:a.yes}];
+ assert.equal(scoreUnseen(a.manifest,labelled,a.resolve).status,"BLOCKED");
+ assert.match(scoreUnseen(a.manifest,labelled,a.resolve).issues.join("; "),/conditional flow requires controls/);
  assert.match(renderPanorama(x.cases[0],a.c,root),/>flow</);
  r.condition="Yes";
  assert.match(scoreUnseen(a.manifest,x,a.resolve).issues.join("; "),/condition without explicit source branch/);
+});
+
+test("普通文字中的明确依赖关系保持 depends，不能被 Mermaid 规则误杀",()=>{
+ const x=fixture();
+ assert.equal(scoreUnseen(x.manifest,x.candidate,x.resolve).status,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
 });
 
 test("三个真实陌生来源只冻结 Git SHA 与证据短句，不提交源文件或本地绝对路径",()=>{
