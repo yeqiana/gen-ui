@@ -47,6 +47,42 @@ export function evidencePrompt(entry){
  return rules.join("\n\n");
 }
 
+// Generation-time enum of IDs from verified Git. This is optional CLI guidance;
+// the existing resolver remains the final fail-closed check.
+export function evidenceIdOutputSchema(entry){
+ const ids=evidenceCatalogue(entry).entries.map(e=>e.id);
+ const evidence={type:"array",minItems:1,maxItems:24,items:{
+  type:"object",additionalProperties:false,required:["id"],
+  properties:{id:{type:"string",enum:ids}}
+ }};
+ const module={type:"object",additionalProperties:false,
+  required:["id","title","evidence"],
+  properties:{id:{type:"string",minLength:1},title:{type:"string",minLength:1},evidence}};
+ const relation={type:"object",additionalProperties:false,
+  required:["from","to","type","evidence"],
+  properties:{from:{type:"string",minLength:1},to:{type:"string",minLength:1},
+   type:{type:"string",enum:["depends","data","controls","composes","flow"]},
+   condition:{type:"string",minLength:1},evidence}};
+ return {type:"object",additionalProperties:false,required:["schema","cases"],properties:{
+  schema:{type:"string",const:"genui-panorama-candidate/v1"},
+  cases:{type:"array",minItems:1,maxItems:1,items:{
+   type:"object",additionalProperties:false,
+   required:["id","status","notes","layers","relations"],
+   properties:{
+    id:{type:"string",const:entry.case.id},
+    status:{type:"string",enum:["documented","planned","unknown"]},
+    notes:{type:"string"},
+    layers:{type:"array",minItems:2,maxItems:8,items:{
+     type:"object",additionalProperties:false,required:["title","modules"],
+     properties:{title:{type:"string",minLength:1},
+      modules:{type:"array",minItems:1,maxItems:150,items:module}}
+    }},
+    relations:{type:"array",maxItems:200,items:relation}
+   }
+  }}
+ }};
+}
+
 export function resolveEvidenceIds(candidate,sourceEntries){
  if(candidate?.schema!=="genui-panorama-candidate/v1"||!Array.isArray(candidate.cases))
   throw Error("Invalid evidence-ID candidate");
