@@ -137,8 +137,11 @@ test("证据 ID 只从冻结原文产生，保留旧对照提示，不覆盖旧�
  const prompt=fs.readFileSync(f,"utf8"),catalogue=JSON.parse(fs.readFileSync(path.join(x.out,x.entry.id,"evidence-ids.catalogue.json"),"utf8"));
  assert.match(prompt,/\$gen-ui/);
  assert.match(prompt,/禁止返回 file、quote/);
- assert.match(prompt,/type 必须是 depends、data、controls、composes/);
+ assert.match(prompt,/type 必须是 depends、data、controls、composes、flow/);
  assert.match(prompt,/不允许省略/);
+ assert.match(prompt,/不能用 depends 表示无条件依赖/);
+ assert.match(prompt,/condition 为该箭头的原样标签/);
+ assert.match(prompt,/不能仅因为步骤先后就写 depends/);
  assert.ok(catalogue.entries.every(e=>new RegExp("^E[A-F0-9]{12}$").test(e.id)));
  for(const a of x.entry.anchors)assert.ok(catalogue.entries.some(e=>e.file===a.file&&e.quote.includes(a.quote)));
  assert.deepEqual(catalogue,evidenceCatalogue(frozenInputs(x.manifest,x.root)[0]));
@@ -217,9 +220,14 @@ test("引用 ID 真实仍须覆盖全部边界，非法上线声明不能被 ID 
 test("风险标记只负责提示标题证据和有条件分支，不自动判定语义",()=>{
  const heading=[{valid:true,quote:"# 技术工作流说明"}];
  const branch=[{valid:true,quote:"    G -- Yes --> D[Publish technical + reader MD]"}];
- assert.deepEqual(semanticRiskFlags("module",heading),["HEADING_CITED_AS_MODULE_EVIDENCE"]);
+ assert.deepEqual(semanticRiskFlags("module",heading),["HEADING_ONLY_MODULE_EVIDENCE"]);
+ assert.deepEqual(semanticRiskFlags("module",[...heading,{valid:true,quote:"PlanShip is a portable, standalone Markdown Skill."}]),[]);
+ assert.deepEqual(semanticRiskFlags("module",[...heading,{valid:false,quote:"引用 ID 无效"}]),["HEADING_ONLY_MODULE_EVIDENCE"]);
  assert.deepEqual(semanticRiskFlags("relation",branch,"depends"),["CONDITIONAL_FLOW_LABELED_DEPENDS"]);
  assert.deepEqual(semanticRiskFlags("relation",branch,"controls"),[]);
+ const flow=[{valid:true,quote:"    I --> P[Draft v0 plan]"}];
+ assert.deepEqual(semanticRiskFlags("relation",flow,"depends"),["MERMAID_FLOW_LABELED_DEPENDS"]);
+ assert.deepEqual(semanticRiskFlags("relation",flow,"flow"),[]);
  assert.deepEqual(semanticRiskFlags("relation",[{valid:false,quote:"G -- No --> T"}],"depends"),[]);
 });
 

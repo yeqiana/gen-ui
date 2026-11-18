@@ -57,15 +57,29 @@ export function scoreUnseen(manifest,candidate,getBlob){
   if(!Array.isArray(response.relations))push(c.id+": missing relations array");
   for(const r of response.relations||[]){
    relations++;
-   if(!ids.has(r.from)||!ids.has(r.to)||r.from===r.to||!["depends","data","controls","composes"].includes(r.type))
+   if(!ids.has(r.from)||!ids.has(r.to)||r.from===r.to||!["depends","data","controls","composes","flow"].includes(r.type))
     push(c.id+": unsupported relation endpoints/type");
    if(!Array.isArray(r.evidence)||!r.evidence.length)push(c.id+": relation missing source evidence");
+   const branchLabels=[];
    for(const e of r.evidence||[]){
     evidenceRefs++;
     if(!blobs.has(e.file)||!validText(e.quote)||e.quote.length<8||!blobs.get(e.file).includes(e.quote))
      push(c.id+": unsupported relationship quote");
-    else allQuotes.push({file:e.file,quote:e.quote});
+    else {
+     allQuotes.push({file:e.file,quote:e.quote});
+     for(const match of e.quote.matchAll(/--\s*(Yes|No|True|False|是|否)\s*-->/gi))
+      branchLabels.push(match[1]);
+    }
    }
+   // An explicit Mermaid conditional arrow is not an unconditional dependency.
+   // Keep exact branch semantics, never infer a condition from unrelated text.
+   if(branchLabels.length){
+    const unique=new Set(branchLabels);
+    if(unique.size!==1||r.type!=="controls"||
+       typeof r.condition!=="string"||!unique.has(r.condition))
+     push(c.id+": conditional flow requires controls and matching condition label");
+   }else if(r.condition!==undefined)
+    push(c.id+": condition without explicit source branch");
   }
   const corpus=JSON.stringify({layers:response.layers,relations:response.relations,notes:response.notes||""});
   for(const forbidden of c.forbiddenAssumptions||[])if(corpus.includes(forbidden))push(c.id+": unsupported assumption: "+forbidden);

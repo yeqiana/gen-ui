@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {scoreUnseen} from "../evals/score-unseen-panorama.mjs";
+import {renderPanorama} from "../evals/render-unseen-panorama.mjs";
 
 const original=Buffer.from("# Example\ninput accepted by UI; review only after input accepted. No bundled database or background server.\n");
 const sha256=b=>crypto.createHash("sha256").update(b).digest("hex");
@@ -45,6 +46,60 @@ test("输入必须是实际候选；没有真实模型输出时不能自动宣�
  const x=fixture();x.candidate.cases=[];assert.equal(scoreUnseen(x.manifest,x.candidate,x.resolve).status,"BLOCKED");
 });
 
+
+// A source-quoted Mermaid branch must not silently lose its Yes/No semantics.
+function conditionalFixture(){
+ const yes="    G -- Yes --> D[Publish technical + reader MD]";
+ const no="    G -- No --> T{Missing test cases?}";
+ const src=Buffer.from("# PlanShip flow\n"+yes+"\n"+no+"\n");
+ const c={id:"branch-example",repo:"branch-example",commit:"0".repeat(40),
+  sources:[{file:"docs/flow.md",sha256:sha256(src),bytes:src.length}],
+  anchors:[{file:"docs/flow.md",quote:"G -- Yes -->"}],forbiddenAssumptions:[]};
+ const ev=quote=>[{file:"docs/flow.md",quote}];
+ const candidate={schema:"genui-panorama-candidate/v1",cases:[{
+  id:c.id,status:"documented",notes:"source-only branch",
+  layers:[{title:"decision",modules:[{id:"g",title:"Plan-only decision",evidence:ev(yes)}]},
+          {title:"outcomes",modules:[{id:"d",title:"Publish documents",evidence:ev(yes)}]}],
+  relations:[{from:"g",to:"d",type:"controls",condition:"Yes",evidence:ev(yes)}]
+ }]};
+ return {c,candidate,yes,no,manifest:{schema:"genui-unseen-panorama/v1",cases:[c]},resolve:()=>src};
+}
+test("条件分支保留 controls 与 Yes 标签，不将 Yes/No 降格为 depends",()=>{
+ const a=conditionalFixture();
+ const score=x=>scoreUnseen(a.manifest,x,a.resolve);
+ assert.equal(score(a.candidate).status,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
+ for(const mutate of [
+  r=>r.type="depends",
+  r=>delete r.condition,
+  r=>r.condition="No",
+  r=>r.condition="yes",
+  r=>r.condition="Yes<script>",
+  r=>r.type="data"
+ ]){
+  const x=structuredClone(a.candidate);mutate(x.cases[0].relations[0]);
+  const scored=score(x);
+  assert.equal(scored.status,"BLOCKED");
+  assert.match(scored.issues.join("; "),/conditional flow requires controls/);
+ }
+ const different=structuredClone(a.candidate);
+ different.cases[0].relations[0].evidence=[{file:"docs/flow.md",quote:a.yes},{file:"docs/flow.md",quote:a.no}];
+ assert.match(score(different).issues.join("; "),/conditional flow requires controls/);
+});
+test("没有条件箭头时禁止自编 condition，合法条件应在 HTML 中安全显示",()=>{
+ const a=conditionalFixture();
+ const x=structuredClone(a.candidate),r=x.cases[0].relations[0];
+ r.evidence=[{file:"docs/flow.md",quote:"# PlanShip flow"}];
+ assert.match(scoreUnseen(a.manifest,x,a.resolve).issues.join("; "),/condition without explicit source branch/);
+ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+ const html=renderPanorama(a.candidate.cases[0],a.c,root);
+ assert.match(html,/controls（Yes）/);
+ assert.match(html,/来源引文结构检查不等于独立语义审查/);
+ const evil=structuredClone(a.candidate.cases[0]);
+ evil.relations[0].condition="<img src=x onerror=alert(1)>";
+ const escaped=renderPanorama(evil,a.c,root);
+ assert.ok(escaped.includes("&lt;img src=x onerror=alert(1)&gt;"));
+ assert.doesNotMatch(escaped,/<img src=x onerror/);
+});
 test("三个真实陌生来源只冻结 Git SHA 与证据短句，不提交源文件或本地绝对路径",()=>{
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
  const s=fs.readFileSync(path.join(root,"evals/unseen-panorama-2026-11-17.json"),"utf8");
