@@ -50,9 +50,9 @@ export function evidencePrompt(entry){
 
 // Generation-time enum of IDs from verified Git. This is optional CLI guidance;
 // the existing resolver remains the final fail-closed check.
-export function evidenceIdOutputSchema(entry){
+export function evidenceIdOutputSchema(entry,{compact=false}={}){
  const ids=evidenceCatalogue(entry).entries.map(e=>e.id);
- const evidence={type:"array",minItems:1,maxItems:24,items:{
+ const evidence={type:"array",minItems:1,maxItems:compact?2:24,items:{
   type:"object",additionalProperties:false,required:["id"],
   properties:{id:{type:"string",enum:ids}}
  }};
@@ -73,12 +73,12 @@ export function evidenceIdOutputSchema(entry){
     id:{type:"string",const:entry.case.id},
     status:{type:"string",enum:["documented","planned","unknown"]},
     notes:{type:"string"},
-    layers:{type:"array",minItems:2,maxItems:8,items:{
+    layers:{type:"array",minItems:2,maxItems:compact?4:8,items:{
      type:"object",additionalProperties:false,required:["title","modules"],
      properties:{title:{type:"string",minLength:1},
-      modules:{type:"array",minItems:1,maxItems:150,items:module}}
+      modules:{type:"array",minItems:1,maxItems:compact?4:150,items:module}}
     }},
-    relations:{type:"array",maxItems:200,items:relation}
+    relations:{type:"array",maxItems:compact?16:200,items:relation}
    }
   }}
  }};
