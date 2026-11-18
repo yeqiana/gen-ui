@@ -27,8 +27,11 @@ export function auditFrozenMermaidEdges(entry,candidate,golden){
   if(matching.length!==1){fail("Expected one relation for edge "+key+", got "+matching.length);continue}
   const r=matching[0],type=edge.condition?"controls":"flow";
   if(!ids.has(edge.from)||!ids.has(edge.to)||r.from!==edge.from||r.to!==edge.to||
-     r.type!==type||(r.condition||null)!==(edge.condition||null))
+     r.type!==type||(edge.condition===null?r.condition!==undefined:r.condition!==edge.condition))
    fail("Endpoint/type/condition mismatch: "+key);
+  // A pinned one-line Mermaid edge must not launder unrelated citations.
+  if(r.evidence.length!==1||r.evidence[0]?.id!==wanted.id)
+   fail("Pinned edge must cite exactly its own frozen line: "+key);
  }
  if(selected.relations.length!==golden.edges.length)
   fail("Relation count differs from frozen diagram edge count");

@@ -4,7 +4,7 @@ import crypto from "node:crypto";
 import {auditFrozenMermaidEdges} from "../evals/mermaid-edge-audit.mjs";
 import {evidenceCatalogue,resolveEvidenceIds} from "../evals/evidence-id-map.mjs";
 import {scoreUnseen} from "../evals/score-unseen-panorama.mjs";
-const text="# Plan\n A[Call] --> I[Inspect]\n I --> V{Ready?}\n V -- No --> X[FAIL]\n V -- Yes --> M[Manual]\n";
+const text="# Plan\n A[Call] --> I[Inspect]\n I --> V{Ready?}\n V -- No --> X[FAIL]\n V -- Yes --> M[Manual]\nCheck unrelated notes.\n";
 const hash=crypto.createHash("sha256").update(text).digest("hex");
 const c={id:"graph",repo:"graph",commit:"a".repeat(40),sources:[{file:"flow.md",sha256:hash}],
  anchors:[{file:"flow.md",quote:"V -- No --> X"}],forbiddenAssumptions:[]};
@@ -32,6 +32,12 @@ test("missing failure exit, wrong condition, wrong RT-like endpoint and extra re
  m=>{m.cases[0].relations[1].from="call"},
  m=>m.cases[0].relations.push(structuredClone(m.cases[0].relations[0]))
  ]){const x=candidate();mutate(x);assert.equal(auditFrozenMermaidEdges(entry,x,golden).status,"BLOCKED");}
+});
+test("pinned citation cannot be padded with unrelated frozen source or blank conditions",()=>{
+ const a=candidate();a.cases[0].relations[0].evidence.push({id:eid(6)});
+ assert.equal(auditFrozenMermaidEdges(entry,a,golden).status,"BLOCKED");
+ const b=candidate();b.cases[0].relations[0].condition="";
+ assert.equal(auditFrozenMermaidEdges(entry,b,golden).status,"BLOCKED");
 });
 test("golden source labels, lines and commit must match frozen source",()=>{
  for(const mutate of [x=>x.commit="b".repeat(40),x=>x.edges[0].sourceTo="X",x=>x.edges[0].line=40]){
