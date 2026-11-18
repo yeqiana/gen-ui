@@ -10,6 +10,11 @@ import {fileURLToPath} from "node:url";
 const sha256=b=>crypto.createHash("sha256").update(b).digest("hex");
 const safe=s=>typeof s==="string"&&s.length>0&&!s.includes("..")&&!path.isAbsolute(s)&&!s.includes("\\")&&!/^[A-Za-z]:/.test(s);
 function validText(value){return typeof value==="string"&&value.trim().length>0}
+// Only a standalone Mermaid arrow is automatically known to mean sequence flow.
+// Do not infer architectural dependency from a diagram transition.
+export function isPlainMermaidTransition(line){
+ return /^\s*[A-Za-z][A-Za-z0-9_]*(?:\[[^\]\r\n]*\]|\{[^}\r\n]*\}|\([^\)\r\n]*\))?\s*-->\s*[A-Za-z][A-Za-z0-9_]*/.test(line);
+}
 export function scoreUnseen(manifest,candidate,getBlob){
  const problems=[],push=x=>problems.push(x),sourceCache=new Map();
  if(manifest?.schema!=="genui-unseen-panorama/v1"||!Array.isArray(manifest.cases)||!manifest.cases.length)
@@ -61,6 +66,7 @@ export function scoreUnseen(manifest,candidate,getBlob){
     push(c.id+": unsupported relation endpoints/type");
    if(!Array.isArray(r.evidence)||!r.evidence.length)push(c.id+": relation missing source evidence");
    const branchLabels=[];
+   let plainMermaidFlow=false;
    for(const e of r.evidence||[]){
     evidenceRefs++;
     if(!blobs.has(e.file)||!validText(e.quote)||e.quote.length<8||!blobs.get(e.file).includes(e.quote))
@@ -69,6 +75,7 @@ export function scoreUnseen(manifest,candidate,getBlob){
      allQuotes.push({file:e.file,quote:e.quote});
      for(const match of e.quote.matchAll(/--\s*(Yes|No|True|False|是|否)\s*-->/gi))
       branchLabels.push(match[1]);
+     if(e.quote.split(/\r?\n/).some(isPlainMermaidTransition))plainMermaidFlow=true;
     }
    }
    // An explicit Mermaid conditional arrow is not an unconditional dependency.
@@ -80,6 +87,8 @@ export function scoreUnseen(manifest,candidate,getBlob){
      push(c.id+": conditional flow requires controls and matching condition label");
    }else if(r.condition!==undefined)
     push(c.id+": condition without explicit source branch");
+   if(plainMermaidFlow&&r.type!=="flow")
+    push(c.id+": plain Mermaid transition requires flow relation (not depends)");
   }
   const corpus=JSON.stringify({layers:response.layers,relations:response.relations,notes:response.notes||""});
   for(const forbidden of c.forbiddenAssumptions||[])if(corpus.includes(forbidden))push(c.id+": unsupported assumption: "+forbidden);
