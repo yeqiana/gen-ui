@@ -70,6 +70,8 @@ $required = @(
   "tests/semantic-temporal-risk.test.mjs",
   "tests/mermaid-edge-audit.test.mjs",
   "evals/mermaid-edge-audit.mjs",
+  "evals/frozen-section-coverage.mjs",
+  "tests/frozen-section-coverage.test.mjs",
   "evals/p1-plan-ship-golden-edges-2026-11-18.json",
   "tests/chrome-unseen-panorama-smoke.mjs",
   "tests/unseen-panorama.test.mjs",
@@ -222,6 +224,8 @@ if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama source evidence scorer syntax 
 if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama workflow syntax failed" }
 & node --check (Join-Path $root "evals/evidence-id-map.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Frozen evidence-ID mapping syntax failed" }
+& node --check (Join-Path $root "evals/frozen-section-coverage.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Frozen SOP section coverage syntax failed" }
 & node --check (Join-Path $root "evals/mermaid-edge-audit.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Pinned Mermaid edge audit syntax failed" }
 & node --check (Join-Path $root "evals/semantic-review.mjs")
@@ -259,6 +263,6 @@ Write-Output "[PASS] Standalone HTML delivery gate"
 if ($LASTEXITCODE -ne 0) { throw "Real HTML interaction delivery gate syntax failed" }
 Write-Output "[PASS] Optional Chrome HTML interaction gate syntax (browser checks are on demand)"
 
-& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs") (Join-Path $root "tests/product-panorama-cases.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/typography-contract.test.mjs") (Join-Path $root "tests/unseen-panorama.test.mjs") (Join-Path $root "tests/unseen-panorama-workflow.test.mjs") (Join-Path $root "tests/semantic-temporal-risk.test.mjs") (Join-Path $root "tests/mermaid-edge-audit.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs")
+& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs") (Join-Path $root "tests/product-panorama-cases.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/typography-contract.test.mjs") (Join-Path $root "tests/unseen-panorama.test.mjs") (Join-Path $root "tests/unseen-panorama-workflow.test.mjs") (Join-Path $root "tests/semantic-temporal-risk.test.mjs") (Join-Path $root "tests/mermaid-edge-audit.test.mjs") (Join-Path $root "tests/frozen-section-coverage.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"
