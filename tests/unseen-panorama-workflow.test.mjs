@@ -8,7 +8,7 @@ import {spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {frozenInputs,promptForSource,prepare,status,check,renderChecked} from "../evals/unseen-panorama-workflow.mjs";
 import {prepareEvidenceIds} from "../evals/unseen-panorama-workflow.mjs";
-import {evidenceCatalogue,resolveEvidenceIds} from "../evals/evidence-id-map.mjs";
+import {evidenceCatalogue,evidenceIdOutputSchema,resolveEvidenceIds} from "../evals/evidence-id-map.mjs";
 import {buildSemanticPacket,reviewDraft,evaluateReview,semanticReviewFiles,semanticRiskFlags} from "../evals/semantic-review.mjs";
 
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
@@ -122,6 +122,27 @@ function idCandidate(x){
  return {catalogue,result};
 }
 
+test("结构化输出证据 ID 必须来自冻结白名单，原有离线阻断不能绕过",t=>{
+ const x=fixture(t),entry=frozenInputs(x.manifest,x.root)[0];
+ const catalogue=evidenceCatalogue(entry),schema=evidenceIdOutputSchema(entry);
+ const body=schema.properties.cases.items.properties;
+ const modIds=body.layers.items.properties.modules.items.properties.evidence.items.properties.id.enum;
+ const relIds=body.relations.items.properties.evidence.items.properties.id.enum;
+ assert.deepEqual(modIds,catalogue.entries.map(z=>z.id));
+ assert.deepEqual(relIds,modIds);
+ assert.equal(body.id.const,x.entry.id);
+ assert.equal(schema.properties.schema.const,"genui-panorama-candidate/v1");
+ assert.equal(body.status.enum.includes("deployed"),false);
+ assert.equal(body.relations.items.properties.type.enum.includes("flow"),true);
+ assert.equal(body.relations.items.required.includes("condition"),false);
+ assert.equal(body.relations.items.additionalProperties,false);
+ const {result}=idCandidate(x);
+ assert.ok(result.cases[0].layers.flatMap(l=>l.modules).flatMap(m=>m.evidence).every(z=>modIds.includes(z.id)));
+ assert.equal(modIds.includes("E000000000000"),false);
+ result.cases[0].layers[0].modules[0].evidence=[{id:"E000000000000"}];
+ assert.throws(()=>resolveEvidenceIds(result,[entry]),/Unknown or foreign evidence ID/);
+});
+
 test("证据 ID 只从冻结原文产生，保留旧对照提示，不覆盖旧实验",t=>{
  const x=fixture(t);
  prepare({manifest:x.manifest,projectsRoot:x.root,outDir:x.out});
@@ -145,6 +166,10 @@ test("证据 ID 只从冻结原文产生，保留旧对照提示，不覆盖旧�
  assert.ok(catalogue.entries.every(e=>new RegExp("^E[A-F0-9]{12}$").test(e.id)));
  for(const a of x.entry.anchors)assert.ok(catalogue.entries.some(e=>e.file===a.file&&e.quote.includes(a.quote)));
  assert.deepEqual(catalogue,evidenceCatalogue(frozenInputs(x.manifest,x.root)[0]));
+ const schemaFile=path.join(x.out,x.entry.id,"evidence-ids.output-schema.json");
+ const outputSchema=JSON.parse(fs.readFileSync(schemaFile,"utf8"));
+ assert.deepEqual(outputSchema,evidenceIdOutputSchema(frozenInputs(x.manifest,x.root)[0]));
+ assert.ok(outputSchema.properties.cases.items.properties.layers.items.properties.modules.items.properties.evidence.items.properties.id.enum.length>0);
  assert.throws(()=>prepareEvidenceIds({manifest:x.manifest,projectsRoot:x.root,outDir:x.out}),/Refusing evidence-ID overwrite/);
 });
 
