@@ -52,11 +52,16 @@ html:lang(zh):root{--genui-article-width:62ic}
 .doc-main .doc-section>p+p{margin-block-start:var(--genui-prose-gap)}
 .doc-main .doc-section> :is(h3,h4){margin-block-start:var(--genui-heading-gap)}
 
-/* Restore centered reading composition after collapsing the document rail. */
-@media(min-width:701px){.doc-layout[data-sidebar-collapsed="true"]>.doc-main{width:100%;max-width:1100px;justify-self:center;margin-inline:auto}}
+/* The document reading canvas stays the same width before and after rail collapse.
+ * At narrow desktop widths, both states reserve enough room for an expanded rail. */
+@media(min-width:901px){
+ .doc-layout{gap:26px;padding-inline:24px}
+ .doc-layout>.doc-main{width:100%;max-width:min(1100px,calc(100vw - var(--genui-sidebar-width,248px) - 26px - 48px - 15px));justify-self:center;margin-inline:auto}
+}
+@media(min-width:701px) and (max-width:900px){.doc-layout[data-sidebar-collapsed="true"]>.doc-main{width:100%;max-width:1100px;justify-self:center;margin-inline:auto}}
 
-/* Keep actual reading blocks centered when the rail folds, not just the outer main box. */
-@media (min-width:701px){.doc-layout[data-sidebar-collapsed="true"]>.doc-main>:is(header,section,footer){margin-inline:auto}}
+/* Headings and body remain aligned within the shared reading canvas. */
+@media (min-width:701px){.doc-layout>.doc-main>:is(header,section,footer){margin-inline:auto}}
 
 /* Tighter visible left gutter and compact, symmetric folded document rail. */
 @media(min-width:701px){

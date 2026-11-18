@@ -301,6 +301,28 @@ async function main(){
           check(page.id+"/"+width+" fold changes navigation state",views,
             !views[0].data.collapsed&&views[1].data.collapsed
             &&views[1].data.navWidth<views[0].data.navWidth);
+          if(width>900||page.kind==="report"){
+            // A folded rail must not stretch the right-hand reading canvas.
+            // The cap matches the previously folded desktop view (report 1180px, document 1100px).
+            const expanded=views[0].data,collapsed=views[1].data;
+            check(page.id+"/"+width+" reading width stays invariant across sidebar states",views,
+              Math.abs(expanded.mainWidth-collapsed.mainWidth)<=2
+              &&Math.abs(Math.max(...expanded.prose.map(x=>x.width))-Math.max(...collapsed.prose.map(x=>x.width)))<=2
+              &&collapsed.mainWidth<=(page.kind==="report"?1180:1100));
+          }
+          if(width===1024){
+            // Adjustable navigation width must not break the width invariant.
+            await evaluate("document.querySelector(\'.doc-layout,.app\').style.setProperty(\'--genui-sidebar-width\',\'320px\')");
+            const adjustedFolded=await inspect(page.kind);
+            await evaluate("document.querySelector(\'.doc-toc>.genui-sidebar-toggle,#toggle-sidebar\').click()");
+            const adjustedExpanded=await inspect(page.kind);
+            check(page.id+"/1024 resized-rail keeps exactly the same reading width",
+              {folded:adjustedFolded.mainWidth,expanded:adjustedExpanded.mainWidth,nav:adjustedExpanded.navWidth},
+              Math.abs(adjustedFolded.mainWidth-adjustedExpanded.mainWidth)<=2
+              &&Math.abs(Math.max(...adjustedFolded.prose.map(x=>x.width))-Math.max(...adjustedExpanded.prose.map(x=>x.width)))<=2
+              &&adjustedExpanded.navWidth>=300
+              &&!adjustedFolded.docOverflow&&!adjustedExpanded.docOverflow);
+          }
           if(page.kind==="doc"||(page.kind==="report"&&width>800)){
             // A collapsed rail may enlarge the available column while the reading
             // canvas itself is capped and centered for comfortable line lengths.
