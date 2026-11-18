@@ -51,7 +51,8 @@ test("输入必须是实际候选；没有真实模型输出时不能自动宣�
 function conditionalFixture(){
  const yes="    G -- Yes --> D[Publish technical + reader MD]";
  const no="    G -- No --> T{Missing test cases?}";
- const src=Buffer.from("# PlanShip flow\n"+yes+"\n"+no+"\n");
+ const plain="    I --> P[Draft v0 plan]";
+ const src=Buffer.from("# PlanShip flow\n"+yes+"\n"+no+"\n"+plain+"\n");
  const c={id:"branch-example",repo:"branch-example",commit:"0".repeat(40),
   sources:[{file:"docs/flow.md",sha256:sha256(src),bytes:src.length}],
   anchors:[{file:"docs/flow.md",quote:"G -- Yes -->"}],forbiddenAssumptions:[]};
@@ -62,7 +63,7 @@ function conditionalFixture(){
           {title:"outcomes",modules:[{id:"d",title:"Publish documents",evidence:ev(yes)}]}],
   relations:[{from:"g",to:"d",type:"controls",condition:"Yes",evidence:ev(yes)}]
  }]};
- return {c,candidate,yes,no,manifest:{schema:"genui-unseen-panorama/v1",cases:[c]},resolve:()=>src};
+ return {c,candidate,yes,no,plain,manifest:{schema:"genui-unseen-panorama/v1",cases:[c]},resolve:()=>src};
 }
 test("条件分支保留 controls 与 Yes 标签，不将 Yes/No 降格为 depends",()=>{
  const a=conditionalFixture();
@@ -100,6 +101,17 @@ test("没有条件箭头时禁止自编 condition，合法条件应在 HTML 中�
  assert.ok(escaped.includes("&lt;img src=x onerror=alert(1)&gt;"));
  assert.doesNotMatch(escaped,/<img src=x onerror/);
 });
+test("普通 Mermaid 流转可使用 flow，但不能凭空为其添加条件",()=>{
+ const a=conditionalFixture(),x=structuredClone(a.candidate),r=x.cases[0].relations[0];
+ r.type="flow";delete r.condition;r.evidence=[{file:"docs/flow.md",quote:a.plain}];
+ const score=scoreUnseen(a.manifest,x,a.resolve);
+ assert.equal(score.status,"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED");
+ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+ assert.match(renderPanorama(x.cases[0],a.c,root),/>flow</);
+ r.condition="Yes";
+ assert.match(scoreUnseen(a.manifest,x,a.resolve).issues.join("; "),/condition without explicit source branch/);
+});
+
 test("三个真实陌生来源只冻结 Git SHA 与证据短句，不提交源文件或本地绝对路径",()=>{
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
  const s=fs.readFileSync(path.join(root,"evals/unseen-panorama-2026-11-17.json"),"utf8");
