@@ -1,0 +1,56 @@
+{
+  "schema": "genui-unseen-panorama/v1",
+  "created": "2026-11-18",
+  "scope": "Forward-only PlanShip source-repair follow-up to 2026-11-17. Original frozen three-project manifest and historical model outputs are never altered.",
+  "scorePolicy": "Offline frozen Git evidence/anchor verification; structural source identity is not semantic correctness, reader validation or real test acceptance.",
+  "cases": [
+    {
+      "id": "plan-ship",
+      "repo": "plan-ship",
+      "anchors": [
+        {
+          "file": "docs/architecture.md",
+          "quote": "no server, database, scheduler or model API"
+        },
+        {
+          "file": "docs/architecture.md",
+          "quote": "A plan-only request never modifies business code"
+        },
+        {
+          "file": "docs/quality-gates.md",
+          "quote": "不得用分支测试冒充集成测试"
+        },
+        {
+          "file": "docs/quality-gates.md",
+          "quote": "自动结构检查通过不等于业务验收通过"
+        },
+        {
+          "file": "docs/architecture.md",
+          "quote": "RT[Real tests on final integrated source]"
+        },
+        {
+          "file": "docs/architecture.md",
+          "quote": "V -- No --> X[FAIL or BLOCKED: record evidence; never claim pass]"
+        }
+      ],
+      "forbiddenAssumptions": [
+        "存在常驻服务或内置数据库",
+        "静态校验等于生产验收",
+        "验收失败自动重试或进入通过后的手动验收"
+      ],
+      "commit": "c2368e5fcbc4a75b2bf0da1def2246e9be06e480",
+      "sources": [
+        {
+          "file": "docs/architecture.md",
+          "sha256": "516c8dac5d9b6c30690ebee01d9548d0cc6470b4758ada4ede808576152eab0f",
+          "bytes": 2925
+        },
+        {
+          "file": "docs/quality-gates.md",
+          "sha256": "02b526c91fc39e535a8ae9cbbf4f954f786d3eafd67b8cdb9365645aca632e5b",
+          "bytes": 6112
+        }
+      ]
+    }
+  ]
+}
