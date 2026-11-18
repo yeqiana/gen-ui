@@ -163,6 +163,9 @@ test("证据 ID 只从冻结原文产生，保留旧对照提示，不覆盖旧�
  assert.match(prompt,/不能用 depends 表示无条件依赖/);
  assert.match(prompt,/condition 为该箭头的原样标签/);
  assert.match(prompt,/不能仅因为步骤先后就写 depends/);
+ assert.match(prompt,/信息压缩/);
+ assert.match(prompt,/8–12 个有代表性的模块/);
+ assert.match(prompt,/保留必需边界优先/);
  assert.ok(catalogue.entries.every(e=>new RegExp("^E[A-F0-9]{12}$").test(e.id)));
  for(const a of x.entry.anchors)assert.ok(catalogue.entries.some(e=>e.file===a.file&&e.quote.includes(a.quote)));
  assert.deepEqual(catalogue,evidenceCatalogue(frozenInputs(x.manifest,x.root)[0]));
