@@ -24,7 +24,7 @@ export function renderPanorama(c,metadata,root){
  ).join("")).join("");
  const relations=c.relations.length
   ? '<table><caption>有来源依据的关系（不自动推断更多连线）</caption><thead><tr><th>模块</th><th>关系</th><th>目标</th><th>证据</th></tr></thead><tbody>'
-   +c.relations.map(r=>'<tr><td>'+escape(r.from)+'</td><td>'+escape(r.type)+'</td><td>'+escape(r.to)+'</td><td><ul>'+quoteList(r.evidence)+'</ul></td></tr>').join("")
+   +c.relations.map(r=>'<tr><td>'+escape(r.from)+'</td><td>'+escape(r.type)+(r.condition!==undefined?'（'+escape(r.condition)+'）':'')+'</td><td>'+escape(r.to)+'</td><td><ul>'+quoteList(r.evidence)+'</ul></td></tr>').join("")
    +'</tbody></table>'
   :'<p class="notice">缺少足够的已核实关系证据：不绘制跨模块箭头。</p>';
  const localStyles=[

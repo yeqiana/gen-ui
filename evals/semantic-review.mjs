@@ -26,11 +26,14 @@ const safeOut=dest=>{
 export function semanticRiskFlags(kind,evidence,type){
  const quotes=(evidence||[]).filter(e=>e.valid).map(e=>e.quote||"");
  const flags=[];
- if(kind==="module"&&quotes.some(x=>/^\s*#{1,6}\s+/.test(x)))
-  flags.push("HEADING_CITED_AS_MODULE_EVIDENCE");
+ if(kind==="module"&&quotes.length>0&&quotes.every(x=>/^\s*#{1,6}\s+/.test(x)))
+  flags.push("HEADING_ONLY_MODULE_EVIDENCE");
  if(kind==="relation"&&type==="depends"&&
     quotes.some(x=>/--\s*(?:Yes|No|True|False|是|否)\s*-->/i.test(x)))
   flags.push("CONDITIONAL_FLOW_LABELED_DEPENDS");
+ if(kind==="relation"&&type==="depends"&&
+    quotes.some(x=>/-->/.test(x)&&!/--\s*(?:Yes|No|True|False|是|否)\s*-->/i.test(x)))
+  flags.push("MERMAID_FLOW_LABELED_DEPENDS");
  return flags;
 }
 export function buildSemanticPacket({entry,candidateRaw}){
