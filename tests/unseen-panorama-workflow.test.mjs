@@ -231,6 +231,19 @@ test("风险标记只负责提示标题证据和有条件分支，不自动判�
  assert.deepEqual(semanticRiskFlags("relation",[{valid:false,quote:"G -- No --> T"}],"depends"),[]);
 });
 
+test("语义审查包须展示条件分支标签，条件无原文依据仍保持阻断",t=>{
+ const x=fixture(t),{result}=idCandidate(x);
+ result.cases[0].relations[0].type="controls";
+ result.cases[0].relations[0].condition="Yes";
+ const packet=buildSemanticPacket({entry:frozenInputs(x.manifest,x.root)[0],
+  candidateRaw:JSON.stringify(result)});
+ const rel=packet.items.find(row=>row.kind==="relation");
+ assert.equal(rel.condition,"Yes");
+ assert.match(rel.claim,/controls \[Yes\]/);
+ assert.equal(packet.sourceGate,"BLOCKED");
+ assert.match(packet.issues.join("; "),/condition without explicit source branch/);
+});
+
 test("语义审查包绑定冻结来源与模型候选，未审事项不能冒充语义通过",t=>{
  const x=fixture(t),{result}=idCandidate(x),file=path.join(x.root,"review-candidate.json");
  result.cases[0].layers[0].modules[0].title="记录输入来源";

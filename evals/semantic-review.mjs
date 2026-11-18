@@ -66,8 +66,9 @@ export function buildSemanticPacket({entry,candidateRaw}){
  for(const [i,r] of (c.relations||[]).entries()){
   const key="relation:"+i;
   const refs=evidence(r.evidence,key);
-  items.push({key,kind:"relation",claim:String(titles.get(r.from)||r.from)+" --"+String(r.type)+"--> "+String(titles.get(r.to)||r.to),
-   from:r.from,to:r.to,type:r.type,evidence:refs,riskFlags:semanticRiskFlags("relation",refs,r.type)});
+  const condition=r.condition===undefined?"":" ["+String(r.condition)+"]";
+  items.push({key,kind:"relation",claim:String(titles.get(r.from)||r.from)+" --"+String(r.type)+condition+"--> "+String(titles.get(r.to)||r.to),
+   from:r.from,to:r.to,type:r.type,condition:r.condition??null,evidence:refs,riskFlags:semanticRiskFlags("relation",refs,r.type)});
  }
  let sourceGate="BLOCKED";
  if(!invalid.length){
