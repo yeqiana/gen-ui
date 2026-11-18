@@ -35,6 +35,17 @@ main.genui-typography :is(figure,.table-wrap,.table-scroll,table,blockquote,.cal
 main.genui-typography .genui-article-column{
   max-width:min(100%,var(--genui-article-width));margin-inline:auto;min-width:0;
 }
+/* Generated standalone documents may not load demo/document.css. Both rail states
+ * reserve the expanded rail on desktops so collapsing never stretches prose. */
+@media(min-width:901px){
+ .doc-layout:has(>main.genui-typography):not([data-sidebar-collapsed="true"]){
+  grid-template-columns:var(--genui-sidebar-width,248px) minmax(0,1fr);
+ }
+ .doc-layout:has(>main.genui-typography)>main.genui-typography{
+  width:100%;max-width:min(1100px,calc(100vw - var(--genui-sidebar-width,248px) - 91px));
+  justify-self:center;margin-inline:auto;
+ }
+}
 @media(min-width:701px) and (max-width:900px){
   .doc-layout:has(> main.genui-typography){display:block;max-width:980px;padding:24px}
   .doc-layout:has(> main.genui-typography)>.doc-toc{display:none}

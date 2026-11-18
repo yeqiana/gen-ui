@@ -280,7 +280,16 @@ blockquote.callout{margin-inline:0}
 /* Keep one sidebar scroller; center the report when its rail is collapsed. */
 .app:not([data-navigation="top"])[data-sidebar-collapsed="true"] .sidebar{overflow-y:hidden}
 .app:not([data-navigation="top"])[data-sidebar-collapsed="true"] .sidebar>nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
-.app:not([data-navigation="top"])[data-sidebar-collapsed="true"] main{width:100%;max-width:1180px;margin-inline:auto}
+/* Use the same collapsed-state reading cap with either rail width; reserve the expanded rail on narrower desktops. */
+@media(min-width:801px){
+ .app:not([data-navigation="top"]) main{width:100%;max-width:min(1180px,calc(100vw - var(--genui-sidebar-width,222px) - 15px));margin-inline:auto}
+}
+/* The mobile report still has a collapsible icon rail. Reserve its 56px before
+ * folding so the reading area does not change width when the rail appears. */
+@media(max-width:800px){
+ .app:not([data-navigation="top"]) main{padding-inline:12px}
+ .app:not([data-navigation="top"]):not([data-sidebar-collapsed="true"]) main{max-width:calc(100% - 56px);margin-inline:auto}
+}
 
 /* Keep the report's folded rail proportional to the document rail. */
 .app:not([data-navigation="top"])[data-sidebar-collapsed="true"]{
