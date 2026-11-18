@@ -231,6 +231,45 @@ test("风险标记只负责提示标题证据和有条件分支，不自动判�
  assert.deepEqual(semanticRiskFlags("relation",[{valid:false,quote:"G -- No --> T"}],"depends"),[]);
 });
 
+test("跨项目关系风险提示：异常回退、并行操作、条件文字不可当作静态依赖或简单线性流程",()=>{
+ const evidence=quote=>[{valid:true,file:"references/example.md",line:7,quote}];
+ assert.deepEqual(semanticRiskFlags("relation",evidence("显式指定推理强度不支持时必须报告，不能假装生效"),"depends"),
+  ["FALLBACK_POLICY_LABELED_DEPENDS"]);
+ assert.deepEqual(semanticRiskFlags("relation",evidence("- `provider_isolation`：不同 Provider 不能路由，改为独立会话或单 Agent。"),"depends"),
+  ["FALLBACK_POLICY_LABELED_DEPENDS"]);
+ assert.deepEqual(semanticRiskFlags("relation",evidence("对每组脏数据同时运行："),"flow"),
+  ["PARALLEL_OPERATION_LABELED_FLOW"]);
+ assert.deepEqual(semanticRiskFlags("relation",evidence("- Reader invalid ⇒ Reconcile 不得 healthy；"),"controls"),
+  ["CONDITIONAL_PROSE_NEEDS_REVIEW"]);
+ // Only advisory: no false inference when source is ordinary sequential flow,
+ // an actual explicit dependency, or a conditional Mermaid branch.
+ assert.deepEqual(semanticRiskFlags("relation",evidence("任务 B 必须依赖任务 A 的成功结果"),"depends"),[]);
+ assert.deepEqual(semanticRiskFlags("relation",evidence("A --> B[下一步]"),"flow"),[]);
+ assert.deepEqual(semanticRiskFlags("relation",evidence("允许并行检查，但这里没有顺序声明"),"flow"),[]);
+ assert.deepEqual(semanticRiskFlags("relation",evidence("Reader invalid ⇒ Reconcile 不得 healthy"),"controls","invalid"),[]);
+ assert.deepEqual(semanticRiskFlags("relation",[{valid:false,quote:"对每组脏数据同时运行："}],"flow"),[]);
+});
+
+test("带风险条目须显式确认，不能无痕标记 supported 或冒充独立验收",()=>{
+ const packet={schema:"genui-semantic-packet/v1",sourceGate:"STRUCTURAL_PASS_SEMANTIC_UNVERIFIED",issues:[],
+  items:[{key:"module:0",riskFlags:["HEADING_ONLY_MODULE_EVIDENCE"]},
+         {key:"relation:0",riskFlags:["PARALLEL_OPERATION_LABELED_FLOW","CONDITIONAL_PROSE_NEEDS_REVIEW"]}]};
+ const review=reviewDraft(packet);
+ review.reviewer="测试审查员";
+ for(const d of review.decisions){d.decision="supported";d.reason="已核查冻结来源，但不是独立人工验收";}
+ assert.deepEqual(review.decisions[0].acknowledgedRisks,[]);
+ const blocked=evaluateReview(packet,review);
+ assert.equal(blocked.status,"BLOCKED_RISK_UNACKNOWLEDGED");
+ assert.equal(blocked.issues.length,3);
+ for(const [i,d] of review.decisions.entries())d.acknowledgedRisks=[...packet.items[i].riskFlags];
+ assert.equal(evaluateReview(packet,review).status,"ATTESTED_NOT_INDEPENDENTLY_VERIFIED");
+ review.decisions[0].acknowledgedRisks.push("FAKE_FLAG");
+ assert.throws(()=>evaluateReview(packet,review),/Invalid risk acknowledgments/);
+ review.decisions[0].acknowledgedRisks=[];
+ review.decisions[0].decision="unclear";
+ assert.equal(evaluateReview(packet,review).status,"BLOCKED_SEMANTIC_DISAGREEMENT");
+});
+
 test("语义审查包须展示条件分支标签，条件无原文依据仍保持阻断",t=>{
  const x=fixture(t),{result}=idCandidate(x);
  result.cases[0].relations[0].type="controls";

@@ -23,7 +23,7 @@ const safeOut=dest=>{
  return out;
 };
 // Advisory only: flags prioritize human review, never auto-approve or auto-reject.
-export function semanticRiskFlags(kind,evidence,type){
+export function semanticRiskFlags(kind,evidence,type,condition=null){
  const quotes=(evidence||[]).filter(e=>e.valid).map(e=>e.quote||"");
  const flags=[];
  if(kind==="module"&&quotes.length>0&&quotes.every(x=>/^\s*#{1,6}\s+/.test(x)))
@@ -34,6 +34,20 @@ export function semanticRiskFlags(kind,evidence,type){
  if(kind==="relation"&&type==="depends"&&
     quotes.some(x=>/-->/.test(x)&&!/--\s*(?:Yes|No|True|False|是|否)\s*-->/i.test(x)))
   flags.push("MERMAID_FLOW_LABELED_DEPENDS");
+ // Advisory, not a verdict: fallback policies do not automatically prove dependency.
+ if(kind==="relation"&&type==="depends"&&quotes.some(x=>
+   /(?:unsupported_[a-z_]+|provider_isolation|不支持|不可用|未通过|失败|权限不足)/i.test(x)&&
+   /(?:改为|改用|降级|保留|报告|回退|fallback|禁止|不得|不能)/i.test(x)))
+  flags.push("FALLBACK_POLICY_LABELED_DEPENDS");
+ // Parallel checks are not evidence of a sequential transition.
+ if(kind==="relation"&&type==="flow"&&quotes.some(x=>
+   /(?:同时运行|并行执行|同时检查|concurrently|in parallel)/i.test(x)))
+  flags.push("PARALLEL_OPERATION_LABELED_FLOW");
+ // A conditional prose rule needs human interpretation; this is not a Mermaid
+ // branch label and the source gate must not silently fabricate condition.
+ if(kind==="relation"&&type==="controls"&&(condition===null||condition===undefined||condition==="")&&
+    quotes.some(x=>/(?:\binvalid\b|\bfailed\b|若|如果|当|未通过|无效).{0,120}(?:⇒|=>|则|不得|禁止|must not)/i.test(x)))
+  flags.push("CONDITIONAL_PROSE_NEEDS_REVIEW");
  return flags;
 }
 export function buildSemanticPacket({entry,candidateRaw}){
@@ -68,7 +82,7 @@ export function buildSemanticPacket({entry,candidateRaw}){
   const refs=evidence(r.evidence,key);
   const condition=r.condition===undefined?"":" ["+String(r.condition)+"]";
   items.push({key,kind:"relation",claim:String(titles.get(r.from)||r.from)+" --"+String(r.type)+condition+"--> "+String(titles.get(r.to)||r.to),
-   from:r.from,to:r.to,type:r.type,condition:r.condition??null,evidence:refs,riskFlags:semanticRiskFlags("relation",refs,r.type)});
+   from:r.from,to:r.to,type:r.type,condition:r.condition??null,evidence:refs,riskFlags:semanticRiskFlags("relation",refs,r.type,r.condition)});
  }
  let sourceGate="BLOCKED";
  if(!invalid.length){
@@ -90,7 +104,8 @@ export function buildSemanticPacket({entry,candidateRaw}){
 }
 export function reviewDraft(packet){
  return {schema:"genui-semantic-review/v1",packetSha256:digest(packet),reviewer:"",
-  decisions:packet.items.map(x=>({key:x.key,decision:"pending",reason:""}))};
+  decisions:packet.items.map(x=>({key:x.key,decision:"pending",reason:"",
+   ...(x.riskFlags?.length?{acknowledgedRisks:[]}: {})}))};
 }
 export function evaluateReview(packet,review){
  if(review?.schema!=="genui-semantic-review/v1"||review.packetSha256!==digest(packet))
@@ -104,10 +119,23 @@ export function evaluateReview(packet,review){
     (x.decision!=="pending"&&(typeof x.reason!=="string"||x.reason.trim().length<8))))
   throw Error("Invalid review verdict or missing rationale");
  const counts=Object.fromEntries([...valid].map(v=>[v,review.decisions.filter(x=>x.decision===v).length]));
+ // Advisory risks are not independent semantic verdicts. A supported decision
+ // must explicitly acknowledge each risk; this is still self-attestation.
+ const unacknowledged=[];
+ for(const item of packet.items){
+  const d=review.decisions.find(x=>x.key===item.key),allowed=item.riskFlags||[];
+  if(d.acknowledgedRisks!==undefined&&(!Array.isArray(d.acknowledgedRisks)||
+     new Set(d.acknowledgedRisks).size!==d.acknowledgedRisks.length||
+     d.acknowledgedRisks.some(r=>!allowed.includes(r))))
+   throw Error("Invalid risk acknowledgments: "+item.key);
+  if(d.decision==="supported")for(const risk of allowed)
+   if(!d.acknowledgedRisks?.includes(risk))unacknowledged.push(item.key+": "+risk);
+ }
  if(packet.sourceGate!=="STRUCTURAL_PASS_SEMANTIC_UNVERIFIED"||packet.issues.length)
   return {status:"BLOCKED_SOURCE",counts,issues:packet.issues};
  if(counts.unsupported||counts.unclear)return {status:"BLOCKED_SEMANTIC_DISAGREEMENT",counts,issues:[]};
  if(counts.pending)return {status:"PENDING_SEMANTIC_REVIEW",counts,issues:[]};
+ if(unacknowledged.length)return {status:"BLOCKED_RISK_UNACKNOWLEDGED",counts,issues:unacknowledged};
  if(typeof review.reviewer!=="string"||review.reviewer.trim().length<3)
   throw Error("Self-attested reviewer label is required");
  return {status:"ATTESTED_NOT_INDEPENDENTLY_VERIFIED",counts,issues:[],
