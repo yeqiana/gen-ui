@@ -27,3 +27,11 @@ test("explicit semantic disagreement remains blocked",()=>{
  const r=fresh();r.edges[11].humanDecision="unsupported";r.edges[11].reason="The error edge does not match the candidate business behavior";
  assert.equal(assessPlanShipReview(frozen,r).status,"BLOCKED_SEMANTIC_DISAGREEMENT");
 });
+
+const editorialV2=JSON.parse(fs.readFileSync(new URL("../evals/p1-plan-ship-editorial-v2-human-handoff-2026-11-19.json",import.meta.url)));
+test("versioned HTML+index reviewer requirement is sixth pending decision",()=>{
+ const r=assessPlanShipReview(editorialV2,structuredClone(editorialV2));
+ assert.equal(r.status,"BLOCKED_REVIEW_INCOMPLETE");assert.equal(r.pending,19);
+ const changed=structuredClone(editorialV2);changed.globalReviewQuestions[5].line=11;
+ assert.equal(assessPlanShipReview(editorialV2,changed).status,"BLOCKED_TAMPER_OR_INVALID");
+});

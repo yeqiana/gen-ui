@@ -6,9 +6,13 @@ import {fileURLToPath} from "node:url";
 export function assessPlanShipReview(frozen,review){
  const issues=[];
  if(frozen?.schema!=="genui-p1-plan-ship-independent-review-handoff/v1"||frozen.caseId!=="plan-ship"||
-   !Array.isArray(frozen.edges)||frozen.edges.length!==13||!Array.isArray(frozen.globalReviewQuestions)||frozen.globalReviewQuestions.length!==5)
+   !Array.isArray(frozen.edges)||frozen.edges.length!==13||!Array.isArray(frozen.globalReviewQuestions)||![5,6].includes(frozen.globalReviewQuestions.length)||
+   (frozen.globalReviewQuestions.length===6&&
+    (frozen.globalReviewQuestions[5]?.sourceFile!=="docs/quality-gates.md"||frozen.globalReviewQuestions[5]?.line!==58||
+     frozen.editorialOrigin!=="MANUAL_EDITORIAL_V2_FROM_REAL_MODEL_NOT_NEW_MODEL"||!frozen.originalModelCandidateSha256)))
   return {status:"BLOCKED_INVALID_BASELINE",issues:["Frozen plan-ship review specification invalid"]};
- for(const field of ["caseId","sourceCommit","modelCandidateSha256","goldenSha256","technicalSourceGate","technicalEdgeCount"]){
+ for(const field of ["caseId","sourceCommit","modelCandidateSha256","goldenSha256","technicalSourceGate","technicalEdgeCount",
+  ...(frozen.globalReviewQuestions.length===6?["originalModelCandidateSha256","editorialOrigin"]:[])]){
   if(frozen[field]!==review?.[field])issues.push("Frozen identity mismatch: "+field);
  }
  const inspect=(label,expected,received,mutable)=>{
