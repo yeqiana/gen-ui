@@ -1,0 +1,29 @@
+{
+  "schema": "genui-p1-local-third-party-packet-metadata/v1",
+  "zipBasename": "genui-p1-auditor-offline-packet-20261119-r1.zip",
+  "zipSha256": "f3bd025986e85952d0bc52699ae17b4993f70ecfe6cc6d3a3c6599ac5fd512a1",
+  "zipBytes": 32222,
+  "caseCount": 3,
+  "sourceCommits": [
+    {
+      "caseId": "distributed-system-audit",
+      "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+      "candidateSHA256": "da2bd16ccfb5d4ae84b1f4daff10a6dbbec0b86172d2f4d1f2fef22d68a8283b"
+    },
+    {
+      "caseId": "agent-lead",
+      "sourceCommit": "9857d08e7c726e72070876fc08c9403a84d16f9a",
+      "candidateSHA256": "ac3b878fc1771ecdf584b1ac3cc0e4fb2c1b1e7c78873bc3b59c31da4888a87f"
+    },
+    {
+      "caseId": "plan-ship",
+      "sourceCommit": "c2368e5fcbc4a75b2bf0da1def2246e9be06e480",
+      "candidateSHA256": "96175fb72b200a95f43724d0b8d8945bb8e007a38849182a4cd514f312d6e051"
+    }
+  ],
+  "publiclyUploaded": false,
+  "modelRawEventsIncluded": false,
+  "confidentiality": "local, NOT encrypted; share only through approved channel",
+  "humanReviewerAssigned": false,
+  "independentHumanSignoff": "NOT_PERFORMED"
+}
