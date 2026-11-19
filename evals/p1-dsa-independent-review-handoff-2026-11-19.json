@@ -1,0 +1,637 @@
+{
+  "schema": "genui-p1-dsa-human-review-handoff/v1",
+  "caseId": "distributed-system-audit",
+  "frozenCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "modelCandidateSHA256": "da2bd16ccfb5d4ae84b1f4daff10a6dbbec0b86172d2f4d1f2fef22d68a8283b",
+  "selectionSHA256": "fd5a8fcf32eb7416ace475487f3329ce7dd69e278091f94c862280486f9af924",
+  "sourceChapters": 17,
+  "directlyCitedChapters": 17,
+  "modelOrigin": "ONE_REAL_CLAUDE_MODEL_CALL_HEAVILY_SCAFFOLDED",
+  "modules": [
+    {
+      "key": "module:0",
+      "moduleId": "module-01",
+      "claim": "现象卡与证据未验证：按需选用的检查模板，缺失证据标为未验证",
+      "chapters": [
+        1
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 3,
+          "id": "EC48152680324"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 19,
+          "id": "E12807091525A"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:1",
+      "moduleId": "module-02",
+      "claim": "实际调用链与事务边界：按项目实际依赖重画",
+      "chapters": [
+        2
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 23,
+          "id": "EBCECB8C4AF2A"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 61,
+          "id": "EA7BC00DB0C72"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:2",
+      "moduleId": "module-03",
+      "claim": "状态机缺失租约的契约条件：无租约执行器不得误报",
+      "chapters": [
+        3
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 88,
+          "id": "E64F305111F79"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 90,
+          "id": "E5F21E03545D8"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:3",
+      "moduleId": "module-04",
+      "claim": "半提交故障矩阵：目标不存在不可恢复半提交",
+      "chapters": [
+        4
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 99,
+          "id": "E156A1D31FB13"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 103,
+          "id": "E6D4B61AD8B56"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:4",
+      "moduleId": "module-05",
+      "claim": "Lease 过期写入阻断：过期写入被拒绝、新结果不被覆盖",
+      "chapters": [
+        5
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 104,
+          "id": "E8302FEEF15F3"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 113,
+          "id": "E8FC8B4F5E179"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:5",
+      "moduleId": "module-06",
+      "claim": "MQ 交付意图与去重：durable intent，去重不吞合法对象",
+      "chapters": [
+        6
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 127,
+          "id": "EE187758FBA04"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 129,
+          "id": "E70702879A19F"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:6",
+      "moduleId": "module-07",
+      "claim": "缓存快照与权限隔离：错配按契约回源，降级不得放开访问",
+      "chapters": [
+        7
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 140,
+          "id": "E88CE10217F50"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 150,
+          "id": "E686E729DE533"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:7",
+      "moduleId": "module-08",
+      "claim": "Reader/Reconcile 同一正确性契约：Reader invalid ⇒ Reconcile 不得 healthy",
+      "chapters": [
+        8
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 154,
+          "id": "E3221CD5380B5"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 160,
+          "id": "E11382D093F5F"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:8",
+      "moduleId": "module-09",
+      "claim": "兼容矩阵与发布顺序：正确性前提需实际门禁或可验证流程",
+      "chapters": [
+        9
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 165,
+          "id": "ED18401673A8F"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 174,
+          "id": "ECD6D4BD733D9"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:9",
+      "moduleId": "module-10",
+      "claim": "Job 假绿与真正完成：按状态契约区分完成、跳过、无任务、降级与失败",
+      "chapters": [
+        10
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 184,
+          "id": "E37C6685FB561"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 185,
+          "id": "E5F11BC69D5E2"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:10",
+      "moduleId": "module-11",
+      "claim": "Recovery 四问：Failure 怎么坏、RTO 多久必须收敛等",
+      "chapters": [
+        11
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 189,
+          "id": "EF6C65FD7C96F"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 192,
+          "id": "E1873FB79C8F9"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:11",
+      "moduleId": "module-12",
+      "claim": "Finding 根因与证据：Root Cause 与 Source Evidence",
+      "chapters": [
+        12
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 210,
+          "id": "EC85F5FA4BB3F"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 212,
+          "id": "E7A5F2FED47C0"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:12",
+      "moduleId": "module-13",
+      "claim": "二次评审表与处置：真实性、Impact、Likelihood、级别与治理包",
+      "chapters": [
+        13
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 223,
+          "id": "E32F4891110CC"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 225,
+          "id": "E51B4BF7FDAD0"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:13",
+      "moduleId": "module-14",
+      "claim": "治理包模板及上线 Gate",
+      "chapters": [
+        14
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 226,
+          "id": "E6B7493FD23A2"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 241,
+          "id": "E43ACA498593D"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:14",
+      "moduleId": "module-15",
+      "claim": "验收关闭不得仅凭旧测试：代码改了或原有测试全绿不能关闭",
+      "chapters": [
+        15
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 245,
+          "id": "E4708E4B17382"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 246,
+          "id": "E2A1CB46C7C13"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "module:15",
+      "moduleId": "module-16",
+      "claim": "扫描停止判据与最终交付：约定范围无新高优先级发现即停，报告含上线 Gate",
+      "chapters": [
+        16,
+        17
+      ],
+      "sources": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 261,
+          "id": "E3BB7177AC212"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 278,
+          "id": "EA60EF216A80D"
+        }
+      ],
+      "questions": [
+        "标题含义是否真正由对应来源行支持，而非只复述章节名称？",
+        "是否将可选审计模板误说成目标项目已部署或已测试？",
+        "是否同时正确解释第16章扫描停止与第17章上线 Gate？扫描停止并不代表验收通过。"
+      ],
+      "decision": "PENDING",
+      "reason": null
+    }
+  ],
+  "chapters": [
+    {
+      "key": "chapter:1",
+      "number": 1,
+      "title": "现象卡",
+      "sourceLines": [
+        19
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:2",
+      "number": 2,
+      "title": "全链路模板",
+      "sourceLines": [
+        23,
+        61
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:3",
+      "number": 3,
+      "title": "状态机检查模板",
+      "sourceLines": [
+        88,
+        90
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:4",
+      "number": 4,
+      "title": "事务故障矩阵",
+      "sourceLines": [
+        99,
+        103
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:5",
+      "number": 5,
+      "title": "Lease / stale worker 矩阵",
+      "sourceLines": [
+        104,
+        113
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:6",
+      "number": 6,
+      "title": "MQ / Delivery 矩阵",
+      "sourceLines": [
+        127,
+        129
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:7",
+      "number": 7,
+      "title": "Snapshot / Cache 脏数据矩阵",
+      "sourceLines": [
+        140,
+        150
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:8",
+      "number": 8,
+      "title": "Reader / Reconcile 一致性检查",
+      "sourceLines": [
+        154,
+        160
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:9",
+      "number": 9,
+      "title": "Compatibility 矩阵",
+      "sourceLines": [
+        165,
+        174
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:10",
+      "number": 10,
+      "title": "Job / Reconcile 假绿矩阵",
+      "sourceLines": [
+        184,
+        185
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:11",
+      "number": 11,
+      "title": "Recovery 四问",
+      "sourceLines": [
+        189,
+        192
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:12",
+      "number": 12,
+      "title": "Finding 模板",
+      "sourceLines": [
+        210,
+        212
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:13",
+      "number": 13,
+      "title": "二次评审表",
+      "sourceLines": [
+        223,
+        225
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:14",
+      "number": 14,
+      "title": "治理包模板",
+      "sourceLines": [
+        226,
+        241
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:15",
+      "number": 15,
+      "title": "验收关闭标准",
+      "sourceLines": [
+        245,
+        246
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:16",
+      "number": 16,
+      "title": "扫描停止判据",
+      "sourceLines": [
+        261
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    },
+    {
+      "key": "chapter:17",
+      "number": 17,
+      "title": "最终交付格式",
+      "sourceLines": [
+        278
+      ],
+      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "decision": "PENDING",
+      "reason": null
+    }
+  ],
+  "independentHumanReview": "NOT_STARTED",
+  "reviewerIdentity": null,
+  "signoffEvidence": null,
+  "warning": "All decisions pending. A direct frozen citation and AI self-review are not independent human semantic verification."
+}
