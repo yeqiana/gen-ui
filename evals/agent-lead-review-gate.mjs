@@ -6,9 +6,11 @@ import {fileURLToPath} from "node:url";
 
 export function assessAgentLeadReview(frozen,review){
  const issues=[];
- if(frozen?.schema!=="genui-p1-independent-semantic-review-handoff/v1"||frozen.caseId!=="agent-lead"||!Array.isArray(frozen.items)||frozen.items.length!==29)
+ if(frozen?.schema!=="genui-p1-independent-semantic-review-handoff/v1"||frozen.caseId!=="agent-lead"||!Array.isArray(frozen.items)||![28,29].includes(frozen.items.length)||
+    (frozen.items.length===28&&(!frozen.editorialParentCandidateSHA256||frozen.items.some(x=>x.key==="relation:1")||frozen.items[27]?.key!=="relation:0")))
   return {status:"BLOCKED_INVALID_BASELINE",issues:["Unexpected frozen Agent Lead review handoff"]};
  const fixed=["caseId","sourceCommit","originalClaudeCandidateSHA256","editorialCandidateSHA256"];
+ if(frozen.items.length===28)fixed.push("editorialParentCandidateSHA256");
  for(const name of fixed)if(typeof frozen[name]!=="string"||!frozen[name]||review?.[name]!==frozen[name])issues.push("Frozen identity mismatch: "+name);
  if(!Array.isArray(review?.items)||review.items.length!==frozen.items.length)
   issues.push("Review item count mismatch");
@@ -36,7 +38,7 @@ export function assessAgentLeadReview(frozen,review){
  if(unsupported||unclear)return {status:"BLOCKED_SEMANTIC_DISAGREEMENT",pending,unsupported,unclear,issues:[]};
  if(pending)return {status:"BLOCKED_REVIEW_INCOMPLETE",pending,unsupported,unclear,issues:[]};
  return {status:"REVIEW_FILLED_IDENTITY_UNVERIFIED",pending:0,unsupported:0,unclear:0,
-  issues:[],warning:"All 29 decisions have rationales, but this offline tool cannot authenticate reviewer independence, identities or signatures. Never infer release approval."};
+  issues:[],warning:"All frozen decisions have rationales, but this offline tool cannot authenticate reviewer independence, identities or signatures. Never infer release approval."};
 }
 const main=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url);
 if(main){

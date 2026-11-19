@@ -26,3 +26,12 @@ test("unsupported or unclear and unsupported decisions without rationales block"
  const bad=make();bad.items[0].reviewerDecision="supported";
  assert.equal(assessAgentLeadReview(baseline,bad).status,"BLOCKED_TAMPER_OR_INVALID");
 });
+
+const v3=JSON.parse(fs.readFileSync(new URL("../evals/p1-agent-lead-editorial-v3-human-handoff-2026-11-19.json",import.meta.url)));
+test("editorial v3 28-item source review remains pending and parent hash bound",()=>{
+ assert.equal(v3.items.length,28);
+ const r=assessAgentLeadReview(v3,structuredClone(v3));
+ assert.equal(r.status,"BLOCKED_REVIEW_INCOMPLETE");assert.equal(r.pending,28);
+ const changed=structuredClone(v3);changed.editorialParentCandidateSHA256="f".repeat(64);
+ assert.equal(assessAgentLeadReview(v3,changed).status,"BLOCKED_TAMPER_OR_INVALID");
+});
