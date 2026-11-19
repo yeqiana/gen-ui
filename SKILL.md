@@ -38,7 +38,7 @@ Markdown fallback: without a trusted renderer use Markdown. For HTML deliverable
 1. **Identify the reader's decision:** what must be understood, compared, chosen, verified, or done?
 2. **Lead with the answer:** then give the minimum evidence, limits, risks, and next action.
 3. **Choose the smallest effective structure:** prose, tables, steps, evidence matrices or diagrams only when needed.
-4. **Preserve factual boundaries:** distinguish facts, proposals, unrun tests and unknown state-transition gates; state conditions, not assumed rules.
+4. **Preserve factual boundaries:** separate facts, proposals, unrun tests and unknown gates; keep all stop criteria/exceptions and stricter final-delivery gates.
 5. **Progressive detail:** remove filler and repetition, not facts, evidence, constraints, or required steps; expand when needed.
 6. **Validate:** one summary only, if requested, required by another Skill, or useful in long docs.
 

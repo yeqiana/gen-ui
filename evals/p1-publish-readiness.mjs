@@ -17,7 +17,9 @@ export function assessP1PublishReadiness({dsa,agentLead,planShip,previous}){
   fail("DSA 33 independent semantic decisions not authenticated");
  }
  if(agentLead?.schema!=="genui-p1-independent-semantic-review-handoff/v1"||
-    !Array.isArray(agentLead.items)||agentLead.items.length!==29)fail("Agent Lead 29-item handoff missing/mismatched");
+    !Array.isArray(agentLead.items)||![28,29].includes(agentLead.items.length)||
+    (agentLead.items.length===28&&(!agentLead.editorialParentCandidateSHA256||agentLead.items.at(-1)?.key!=="relation:0")))
+   fail("Agent Lead versioned 28/29-item handoff missing/mismatched");
  else{
   if(agentLead.items.some(x=>x.reviewerDecision!=="PENDING"))
    fail("Agent Lead review decision edited; provenance unauthenticated");
@@ -25,7 +27,10 @@ export function assessP1PublishReadiness({dsa,agentLead,planShip,previous}){
  }
  if(planShip?.schema!=="genui-p1-plan-ship-independent-review-handoff/v1"||
     !Array.isArray(planShip.edges)||planShip.edges.length!==13||
-    !Array.isArray(planShip.globalReviewQuestions)||planShip.globalReviewQuestions.length!==5)
+    !Array.isArray(planShip.globalReviewQuestions)||![5,6].includes(planShip.globalReviewQuestions.length)||
+    (planShip.globalReviewQuestions.length===6&&
+     (planShip.globalReviewQuestions[5]?.sourceFile!=="docs/quality-gates.md"||planShip.globalReviewQuestions[5]?.line!==58||
+      planShip.editorialOrigin!=="MANUAL_EDITORIAL_V2_FROM_REAL_MODEL_NOT_NEW_MODEL")))
   fail("PlanShip 13 edges/5 boundaries handoff missing/mismatched");
  else{
   if([...planShip.edges,...planShip.globalReviewQuestions].some(x=>x.humanDecision!=="PENDING"))

@@ -32,3 +32,20 @@ test("missing or changed evidence fails close",()=>{
  const r=assessP1PublishReadiness(x);
  assert.equal(r.status,"NO_GO");assert.ok(r.blockers.length>=4);
 });
+
+test("three versioned editorial handoffs remain pending without false invalid baseline",()=>{
+ const load=name=>JSON.parse(fs.readFileSync(new URL("../evals/"+name,import.meta.url)));
+ const updated={
+  dsa:load("p1-dsa-editorial-v2-human-handoff-2026-11-19.json"),
+  agentLead:load("p1-agent-lead-editorial-v3-human-handoff-2026-11-19.json"),
+  planShip:load("p1-plan-ship-editorial-v2-human-handoff-2026-11-19.json"),
+  previous:load("p1-four-slot-final-gate-2026-11-19.json")
+ };
+ assert.equal(updated.dsa.modules.length+updated.dsa.chapters.length,33);
+ assert.equal(updated.agentLead.items.length,28);
+ assert.equal(updated.planShip.edges.length+updated.planShip.globalReviewQuestions.length,19);
+ const r=assessP1PublishReadiness(updated);
+ assert.equal(r.status,"NO_GO");
+ assert.equal(r.blockers.length,4);
+ assert.ok(r.blockers.every(x=>!x.includes("missing/mismatched")));
+});
