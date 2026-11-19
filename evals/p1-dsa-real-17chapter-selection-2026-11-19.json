@@ -1,0 +1,238 @@
+{
+  "schema": "genui-p1-real-17chapters-selection/v1",
+  "caseId": "distributed-system-audit",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "sourceIdCount": 167,
+  "trialIdWhitelistSize": 32,
+  "groups": [
+    {
+      "moduleNumber": 1,
+      "chapterNumbers": [
+        1
+      ],
+      "sourceLineNumbers": [
+        3,
+        19
+      ],
+      "evidenceIds": [
+        "EC48152680324",
+        "E12807091525A"
+      ]
+    },
+    {
+      "moduleNumber": 2,
+      "chapterNumbers": [
+        2
+      ],
+      "sourceLineNumbers": [
+        23,
+        61
+      ],
+      "evidenceIds": [
+        "EBCECB8C4AF2A",
+        "EA7BC00DB0C72"
+      ]
+    },
+    {
+      "moduleNumber": 3,
+      "chapterNumbers": [
+        3
+      ],
+      "sourceLineNumbers": [
+        88,
+        90
+      ],
+      "evidenceIds": [
+        "E64F305111F79",
+        "E5F21E03545D8"
+      ]
+    },
+    {
+      "moduleNumber": 4,
+      "chapterNumbers": [
+        4
+      ],
+      "sourceLineNumbers": [
+        99,
+        103
+      ],
+      "evidenceIds": [
+        "E156A1D31FB13",
+        "E6D4B61AD8B56"
+      ]
+    },
+    {
+      "moduleNumber": 5,
+      "chapterNumbers": [
+        5
+      ],
+      "sourceLineNumbers": [
+        104,
+        113
+      ],
+      "evidenceIds": [
+        "E8302FEEF15F3",
+        "E8FC8B4F5E179"
+      ]
+    },
+    {
+      "moduleNumber": 6,
+      "chapterNumbers": [
+        6
+      ],
+      "sourceLineNumbers": [
+        127,
+        129
+      ],
+      "evidenceIds": [
+        "EE187758FBA04",
+        "E70702879A19F"
+      ]
+    },
+    {
+      "moduleNumber": 7,
+      "chapterNumbers": [
+        7
+      ],
+      "sourceLineNumbers": [
+        140,
+        150
+      ],
+      "evidenceIds": [
+        "E88CE10217F50",
+        "E686E729DE533"
+      ]
+    },
+    {
+      "moduleNumber": 8,
+      "chapterNumbers": [
+        8
+      ],
+      "sourceLineNumbers": [
+        154,
+        160
+      ],
+      "evidenceIds": [
+        "E3221CD5380B5",
+        "E11382D093F5F"
+      ]
+    },
+    {
+      "moduleNumber": 9,
+      "chapterNumbers": [
+        9
+      ],
+      "sourceLineNumbers": [
+        165,
+        174
+      ],
+      "evidenceIds": [
+        "ED18401673A8F",
+        "ECD6D4BD733D9"
+      ]
+    },
+    {
+      "moduleNumber": 10,
+      "chapterNumbers": [
+        10
+      ],
+      "sourceLineNumbers": [
+        184,
+        185
+      ],
+      "evidenceIds": [
+        "E37C6685FB561",
+        "E5F11BC69D5E2"
+      ]
+    },
+    {
+      "moduleNumber": 11,
+      "chapterNumbers": [
+        11
+      ],
+      "sourceLineNumbers": [
+        189,
+        192
+      ],
+      "evidenceIds": [
+        "EF6C65FD7C96F",
+        "E1873FB79C8F9"
+      ]
+    },
+    {
+      "moduleNumber": 12,
+      "chapterNumbers": [
+        12
+      ],
+      "sourceLineNumbers": [
+        210,
+        212
+      ],
+      "evidenceIds": [
+        "EC85F5FA4BB3F",
+        "E7A5F2FED47C0"
+      ]
+    },
+    {
+      "moduleNumber": 13,
+      "chapterNumbers": [
+        13
+      ],
+      "sourceLineNumbers": [
+        223,
+        225
+      ],
+      "evidenceIds": [
+        "E32F4891110CC",
+        "E51B4BF7FDAD0"
+      ]
+    },
+    {
+      "moduleNumber": 14,
+      "chapterNumbers": [
+        14
+      ],
+      "sourceLineNumbers": [
+        226,
+        241
+      ],
+      "evidenceIds": [
+        "E6B7493FD23A2",
+        "E43ACA498593D"
+      ]
+    },
+    {
+      "moduleNumber": 15,
+      "chapterNumbers": [
+        15
+      ],
+      "sourceLineNumbers": [
+        245,
+        246
+      ],
+      "evidenceIds": [
+        "E4708E4B17382",
+        "E2A1CB46C7C13"
+      ]
+    },
+    {
+      "moduleNumber": 16,
+      "chapterNumbers": [
+        16,
+        17
+      ],
+      "sourceLineNumbers": [
+        261,
+        278
+      ],
+      "evidenceIds": [
+        "E3BB7177AC212",
+        "EA60EF216A80D"
+      ]
+    }
+  ],
+  "promptSHA256": "78f1034b4bc29935d03ee0460937c7aa86eae2d2324e0417e07500abd2415503",
+  "outputSchemaSHA256": "e8913d20947b46679e340df96ea7afb46cfb477ca30ae76748fa2628950064a6",
+  "modelCandidateSHA256": "da2bd16ccfb5d4ae84b1f4daff10a6dbbec0b86172d2f4d1f2fef22d68a8283b",
+  "warning": "Source mapping only; raw prompt, model output and Claude events stay outside public repository."
+}
