@@ -1,0 +1,43 @@
+{
+  "schema": "genui-p1-release-readiness/v1",
+  "sourceBranchHead": "4a5c51c9f8a07819ae140adbba285a89b16106b6",
+  "frozenTag": "gen-ui-baseline-2026-11-18",
+  "frozenTagResolved": "762a137c97f3880565a49e8e51f176198490032a",
+  "coreSkillSha256": "ca978309b388b62c68e0bd54e2e04f9ec1dd7d0c1ed2a57522c24b7e4e11ee48",
+  "coreSkillBytes": 5099,
+  "tests": [
+    {
+      "name": "full-node",
+      "exit": 0,
+      "ms": 14361
+    },
+    {
+      "name": "official-skill",
+      "exit": 0,
+      "ms": 17915
+    },
+    {
+      "name": "fold-chrome",
+      "exit": 0,
+      "ms": 11483
+    },
+    {
+      "name": "doc-chrome",
+      "exit": 0,
+      "ms": 12895
+    },
+    {
+      "name": "panorama-chrome",
+      "exit": 0,
+      "ms": 947
+    }
+  ],
+  "technicalBaseline": "PASS",
+  "newRealModelDASEvaluation": "PENDING_INTEGRATED_EVIDENCE",
+  "humanIndependentAgentLead": "PENDING",
+  "humanIndependentPlanShip": "PENDING",
+  "humanIndependentDSA": "PENDING",
+  "remoteCI": "NOT_RUN",
+  "releaseDecision": "NO_GO",
+  "releaseReason": "Human independent semantic signoffs and final remote CI not completed; do not tag/merge/release."
+}
