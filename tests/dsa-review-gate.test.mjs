@@ -25,3 +25,13 @@ test("one unsupported item blocks even when others pending",()=>{
  const x=fresh();x.modules[0].decision="unsupported";x.modules[0].reason="The SOP has no such deployed feature in this source";
  assert.equal(assessDsaReview(frozen,x).status,"BLOCKED_SEMANTIC_DISAGREEMENT");
 });
+
+const editorialV2=JSON.parse(fs.readFileSync(new URL("../evals/p1-dsa-editorial-v2-human-handoff-2026-11-19.json",import.meta.url)));
+test("DSA edited v2 33 pending entries are bound to corrected frozen source",()=>{
+ assert.equal(editorialV2.modules[15].sources[0].line,266);
+ assert.equal(editorialV2.chapters[15].sourceLines[0],266);
+ const r=assessDsaReview(editorialV2,structuredClone(editorialV2));
+ assert.equal(r.status,"BLOCKED_REVIEW_INCOMPLETE");assert.equal(r.pending,33);
+ const altered=structuredClone(editorialV2);altered.modelCandidateSHA256="f".repeat(64);
+ assert.equal(assessDsaReview(editorialV2,altered).status,"BLOCKED_TAMPER_OR_INVALID");
+});
