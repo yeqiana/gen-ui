@@ -71,6 +71,15 @@ export function verifyP1HumanHandoff(root=path.join(os.tmpdir(),"genui-p1-v6-hum
   const line=m&&sources.get(item.caseId+"/"+m[1])?.[Number(m[2])-1];
   if(line===undefined||normalized(line)!==cite.text)fail("Citation text/line mismatch: "+item.caseId+"/"+item.key);
  }
+ const csvFile=path.join(root,"review-decisions-template.csv");
+ if(fs.existsSync(csvFile)&&Array.isArray(items)){
+  const csvCell=value=>{const str=String(value??"");return '"'+(/^[=+\-@]/.test(str)?"'"+str:str).replaceAll('"','""')+'"';};
+  const fields=[["case_id","item_key","claim","source_refs","decision","reason","reviewer","reviewed_at"],...items.map(item=>[
+   item.caseId,item.key,normalized(item.claim),item.cites.map(c=>c.ref).join(";"),"PENDING","","",""
+  ])];
+  const exact="\uFEFF"+fields.map(row=>row.map(csvCell).join(",")).join("\r\n")+"\r\n";
+  if(!fs.readFileSync(csvFile).equals(Buffer.from(exact)))fail("Sealed CSV template differs from pending review items");
+ }
  const html=fs.readFileSync(path.join(root,"index.html"),"utf8");
  if((html.match(/<details>/g)||[]).length!==80||/<script\b|<iframe\b/i.test(html))fail("Offline HTML safety or item count invalid");
  return {schema:"genui-p1-human-handoff-verify/v1",status:errors.length?"FAIL":"PASS",itemCount:items.length,sourceFileCount:sources.size,filesChecked:actual.length,checksums:declared.size,release:"NO_GO",errors,warning:"Internal checksums are not authenticated signatures; compare the outer ZIP SHA256 through a trusted channel."};

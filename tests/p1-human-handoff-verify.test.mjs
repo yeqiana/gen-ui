@@ -17,3 +17,15 @@ test("extra unindexed file is detected",()=>withCopy(dir=>{fs.writeFileSync(path
 test("edited human verdict stays blocked even after attacker regenerates checksum entry",()=>withCopy(dir=>{const f=path.join(dir,"review-items.json"),x=JSON.parse(fs.readFileSync(f));x[0].verdict="supported";fs.writeFileSync(f,JSON.stringify(x));const sums=path.join(dir,"SHA256SUMS.txt");let text=fs.readFileSync(sums,"utf8");const newHash=awaitHash(fs.readFileSync(f));text=text.replace(/^([a-f0-9]{64})(  review-items\.json)$/m,newHash+"$2");fs.writeFileSync(sums,text);const r=verifyP1HumanHandoff(dir);assert.equal(r.status,"FAIL");assert.ok(r.errors.some(x=>x.includes("Review item identity")))}));
 import crypto from "node:crypto";
 function awaitHash(b){return crypto.createHash("sha256").update(b).digest("hex")}
+test("sealed CSV template cannot claim human completion even after updating checksum",()=>withCopy(dir=>{
+ const file=path.join(dir,"review-decisions-template.csv"),original=fs.readFileSync(file,"utf8");
+ assert.ok(original.includes('"PENDING"'));
+ fs.writeFileSync(file,original.replace('"PENDING"','"supported"'));
+ const sums=path.join(dir,"SHA256SUMS.txt");
+ let text=fs.readFileSync(sums,"utf8");
+ text=text.replace(/^([a-f0-9]{64})(  review-decisions-template\.csv)$/m,awaitHash(fs.readFileSync(file))+"$2");
+ fs.writeFileSync(sums,text);
+ const result=verifyP1HumanHandoff(dir);
+ assert.equal(result.status,"FAIL");
+ assert.ok(result.errors.some(e=>e.includes("Sealed CSV template")));
+}));
