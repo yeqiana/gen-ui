@@ -67,7 +67,7 @@ export function buildP1ReviewPacket(dest=path.join(os.tmpdir(),"genui-p1-v6-huma
  put("manifest.json",JSON.stringify(summary,null,2)+"\n");
  put("review-items.json",JSON.stringify(all,null,2)+"\n");
  const md=["# GEN-UI P1 · 独立真人复核（80 项）","","**尚未签审，全部 PENDING；候选是审计/工作流模板，不是实际完成代码审计。**","",
- "请依次核对候选主张与下方冻结原文，记录 supported/unsupported/unclear、具体理由和剩余风险。文件不会自动记录签审，也不会联网。",""];
+ "请依次核对候选主张与下方冻结原文，记录 supported/unsupported/unclear、具体理由和剩余风险。文件不会自动记录签审，也不会联网。", "复制 review-decisions-template.csv 到审核包目录外填写，原始包中所有校验文件保持只读；填写结果需由真实审核者独立提交和签署。",""];
  for(const c of cases){
   md.push("## "+c.id+"（"+all.filter(x=>x.caseId===c.id).length+" 项）","");
   for(const x of all.filter(x=>x.caseId===c.id)){
@@ -77,8 +77,16 @@ export function buildP1ReviewPacket(dest=path.join(os.tmpdir(),"genui-p1-v6-huma
   }
  }
  put("review.md",md.join("\n")+"\n");
- const cards=all.map((x,i)=>"<details><summary>"+escape(String(i+1)+". ["+x.caseId+"] "+x.key+" — "+x.claim)+"</summary><p>"+escape(x.question)+"</p><ul>"+x.cites.map(y=>"<li><code>"+escape(y.ref)+"</code> "+escape(y.text)+"</li>").join("")+"</ul><p><strong>人工结论：PENDING</strong></p></details>").join("");
- const html='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GEN-UI P1 独立真人复核包</title><style>body{font:16px/1.65 system-ui,-apple-system,sans-serif;max-width:860px;padding:24px;margin:auto;color:#222;background:#fafafa}h1{font-size:1.55rem}p{overflow-wrap:anywhere}details{background:white;border:1px solid #ddd;border-radius:8px;padding:14px;margin:10px 0}summary{cursor:pointer;font-weight:600;overflow-wrap:anywhere}li{margin:5px 0;overflow-wrap:anywhere}code{font-size:.87em;background:#eee;padding:2px 4px}strong{color:#9a2e19} .lead{border-left:3px solid #777;padding-left:14px}</style></head><body><h1>GEN-UI P1 独立真人复核 · 80 项</h1><p class="lead">三项目当前候选已绑定 SHA-256。80 项全部待审；没有真人签署，也没有执行真实 Java 项目审计。本文件无外网依赖、无脚本。</p><p>分布：DSA 33、Agent Lead 28、PlanShip 19。展开条目可核对冻结源码行；记录判定请使用独立受控文档。</p>'+cards+'</body></html>';
+ const csvCell=value=>{const str=String(value??"");return '"'+(/^[=+\-@]/.test(str)?"'"+str:str).replaceAll('"','""')+'"';};
+ const csvRows=[["case_id","item_key","claim","source_refs","decision","reason","reviewer","reviewed_at"],...all.map(item=>[
+  item.caseId,item.key,clean(item.claim),item.cites.map(c=>c.ref).join(";"),"PENDING","","",""
+ ])];
+ put("review-decisions-template.csv","\uFEFF"+csvRows.map(row=>row.map(csvCell).join(",")).join("\r\n")+"\r\n");
+
+ const labels={"distributed-system-audit":"DSA","agent-lead":"Agent Lead","plan-ship":"PlanShip"};
+ const nav="<nav aria-label=\"项目审核导航\">"+cases.map(c=>"<a href=\"#"+c.id+"\">"+labels[c.id]+"（"+all.filter(x=>x.caseId===c.id).length+"）</a>").join(" · ")+"</nav>";
+ const cards=cases.map(c=>"<section id=\""+c.id+"\"><h2>"+labels[c.id]+" · "+all.filter(x=>x.caseId===c.id).length+" 项待审</h2>"+all.filter(x=>x.caseId===c.id).map(x=>"<details><summary>"+escape(x.key+" — "+x.claim)+"</summary><p>"+escape(x.question)+"</p><ul>"+x.cites.map(y=>"<li><code>"+escape(y.ref)+"</code> "+escape(y.text)+"</li>").join("")+"</ul><p><strong>人工结论：PENDING</strong></p></details>").join("")+"</section>").join("");
+ const html='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GEN-UI P1 独立真人复核包</title><style>body{font:16px/1.65 system-ui,-apple-system,sans-serif;max-width:860px;padding:24px;margin:auto;color:#222;background:#fafafa}h1{font-size:1.55rem}p{overflow-wrap:anywhere}details{background:white;border:1px solid #ddd;border-radius:8px;padding:14px;margin:10px 0}summary{cursor:pointer;font-weight:600;overflow-wrap:anywhere}li{margin:5px 0;overflow-wrap:anywhere}code{font-size:.87em;background:#eee;padding:2px 4px}strong{color:#9a2e19} .lead{border-left:3px solid #777;padding-left:14px}nav{margin:16px 0 24px}nav a{color:inherit}section{margin-top:28px}h2{font-size:1.2rem}</style></head><body><h1>GEN-UI P1 独立真人复核 · 80 项</h1><p class="lead">三项目当前候选已绑定 SHA-256。80 项全部待审；没有真人签署，也没有执行真实 Java 项目审计。本文件无外网依赖、无脚本。 需记录审核结果时，请先将 review-decisions-template.csv 复制到审核包之外再填写，以免修改封存校验清单。</p><p>分布：DSA 33、Agent Lead 28、PlanShip 19。展开条目可核对冻结源码行；记录判定请使用独立受控文档。</p>'+nav+cards+'</body></html>';
  put("index.html",html);
  const files=[];function visit(d){for(const x of fs.readdirSync(d,{withFileTypes:true})){const f=path.join(d,x.name);if(x.isDirectory())visit(f);else if(x.name!=="SHA256SUMS.txt")files.push(f)}}visit(dest);
  const banned=/(?:ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_-]{12,}|sk-[A-Za-z0-9_-]{25,}|Bearer\s+[A-Za-z0-9._-]{25,})/;
