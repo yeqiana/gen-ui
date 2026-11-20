@@ -72,6 +72,10 @@ export function verifyP1HumanHandoff(root=path.join(os.tmpdir(),"genui-p1-v6-hum
   if(line===undefined||normalized(line)!==cite.text)fail("Citation text/line mismatch: "+item.caseId+"/"+item.key);
  }
  const csvFile=path.join(root,"review-decisions-template.csv");
+ if(Object.hasOwn(manifest,"reviewTemplate")){
+  if(manifest.reviewTemplate!=="review-decisions-template.csv")fail("Unexpected review template declaration");
+  if(!fs.existsSync(csvFile))fail("Required review-decision CSV template missing");
+ }
  if(fs.existsSync(csvFile)&&Array.isArray(items)){
   const csvCell=value=>{const str=String(value??"");return '"'+(/^[=+\-@]/.test(str)?"'"+str:str).replaceAll('"','""')+'"';};
   const fields=[["case_id","item_key","claim","source_refs","decision","reason","reviewer","reviewed_at"],...items.map(item=>[

@@ -29,3 +29,32 @@ test("sealed CSV template cannot claim human completion even after updating chec
  assert.equal(result.status,"FAIL");
  assert.ok(result.errors.some(e=>e.includes("Sealed CSV template")));
 }));
+test("declared new CSV template is mandatory even if it is deleted and checksum list rewritten",()=>withCopy(dir=>{
+ const mf=path.join(dir,"manifest.json"),m=JSON.parse(fs.readFileSync(mf,"utf8"));
+ m.reviewTemplate="review-decisions-template.csv";fs.writeFileSync(mf,JSON.stringify(m,null,2)+"\n");
+ const csv=path.join(dir,"review-decisions-template.csv");fs.unlinkSync(csv);
+ const sf=path.join(dir,"SHA256SUMS.txt");let sums=fs.readFileSync(sf,"utf8").split(/\r?\n/).filter(Boolean);
+ sums=sums.filter(line=>!line.endsWith("  review-decisions-template.csv")).map(line=>line.endsWith("  manifest.json")?awaitHash(fs.readFileSync(mf))+"  manifest.json":line);
+ fs.writeFileSync(sf,sums.join("\n")+"\n");
+ const result=verifyP1HumanHandoff(dir);
+ assert.equal(result.status,"FAIL");
+ assert.ok(result.errors.some(x=>x.includes("Required review-decision CSV template missing")));
+}));
+test("declared template cannot be switched to arbitrary filename",()=>withCopy(dir=>{
+ const mf=path.join(dir,"manifest.json"),m=JSON.parse(fs.readFileSync(mf,"utf8"));
+ m.reviewTemplate="../review-decisions-template.csv";fs.writeFileSync(mf,JSON.stringify(m,null,2)+"\n");
+ const sf=path.join(dir,"SHA256SUMS.txt"),sums=fs.readFileSync(sf,"utf8").replace(/^([a-f0-9]{64})(  manifest\.json)$/m,awaitHash(fs.readFileSync(mf))+"$2");
+ fs.writeFileSync(sf,sums);
+ const result=verifyP1HumanHandoff(dir);
+ assert.equal(result.status,"FAIL");
+ assert.ok(result.errors.some(x=>x.includes("Unexpected review template declaration")));
+}));
+test("legacy packet without declared template remains verifiable without CSV",()=>withCopy(dir=>{
+ const mf=JSON.parse(fs.readFileSync(path.join(dir,"manifest.json"),"utf8"));
+ assert.equal(Object.hasOwn(mf,"reviewTemplate"),false);
+ fs.unlinkSync(path.join(dir,"review-decisions-template.csv"));
+ const sf=path.join(dir,"SHA256SUMS.txt");
+ const checks=fs.readFileSync(sf,"utf8").split(/\r?\n/).filter(line=>line&&!line.endsWith("  review-decisions-template.csv"));
+ fs.writeFileSync(sf,checks.join("\n")+"\n");
+ assert.equal(verifyP1HumanHandoff(dir).status,"PASS");
+}));
