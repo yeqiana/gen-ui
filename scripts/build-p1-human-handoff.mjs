@@ -63,7 +63,7 @@ export function buildP1ReviewPacket(dest=path.join(os.tmpdir(),"genui-p1-v6-huma
   put(path.join("candidates",x.caseId+".json"),fs.readFileSync(path.join(root,"evals",current.candidate)));
   put(path.join("handoffs",x.caseId+".json"),fs.readFileSync(path.join(root,"evals",current.handoff)));
  }
- const summary={schema:"genui-p1-v6-human-review-bundle/v1",created:"2026-11-20",reviewerType:"HUMAN_REQUESTED_NOT_COMPLETED",decision:"PENDING_80_OF_80",p1Release:"NO_GO",remoteCI:"NOT_VERIFIED",sourceCases:archive,items:80,candidateIntegrity:"PASS",paidModelCalls:0};
+ const summary={schema:"genui-p1-v6-human-review-bundle/v1",reviewTemplate:"review-decisions-template.csv",created:"2026-11-20",reviewerType:"HUMAN_REQUESTED_NOT_COMPLETED",decision:"PENDING_80_OF_80",p1Release:"NO_GO",remoteCI:"NOT_VERIFIED",sourceCases:archive,items:80,candidateIntegrity:"PASS",paidModelCalls:0};
  put("manifest.json",JSON.stringify(summary,null,2)+"\n");
  put("review-items.json",JSON.stringify(all,null,2)+"\n");
  const md=["# GEN-UI P1 · 独立真人复核（80 项）","","**尚未签审，全部 PENDING；候选是审计/工作流模板，不是实际完成代码审计。**","",

@@ -13,6 +13,8 @@ test("v6 human handoff has 80 frozen, sourced and unapproved records",()=>{
   assert.equal(items.length,80);assert.deepEqual(items.reduce((m,x)=>(m[x.caseId]=(m[x.caseId]||0)+1,m),{}),{"distributed-system-audit":33,"agent-lead":28,"plan-ship":19});
   assert.ok(items.every(x=>x.verdict==="PENDING"&&x.cites.length>0&&x.cites.every(y=>y.ref&&y.text!==undefined)));
   const html=fs.readFileSync(path.join(root,"index.html"),"utf8");assert.ok(html.includes("<details>"));assert.equal((html.match(/<details>/g)||[]).length,80);for(const id of ["distributed-system-audit","agent-lead","plan-ship"])assert.ok(html.includes('id="'+id+'"')&&html.includes('href="#'+id+'"'));assert.ok(!html.includes("<script"));
+  const manifest=JSON.parse(fs.readFileSync(path.join(root,"manifest.json"),"utf8"));
+  assert.equal(manifest.reviewTemplate,"review-decisions-template.csv");
   const csv=fs.readFileSync(path.join(root,"review-decisions-template.csv"),"utf8");assert.ok(csv.charCodeAt(0)===0xFEFF);assert.equal(csv.split(/\r?\n/).filter(Boolean).length,81);assert.equal((csv.match(/,"PENDING","","",""/g)||[]).length,80);
   const sums=fs.readFileSync(path.join(root,"SHA256SUMS.txt"),"utf8");assert.ok(sums.includes("index.html"));assert.ok(sums.includes("review-items.json"));assert.ok(sums.includes("review-decisions-template.csv"));
  }finally{fs.rmSync(root,{recursive:true,force:true})}
