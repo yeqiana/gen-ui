@@ -26,7 +26,7 @@ test("four reader scenarios cover ordinary language, numeric decisions, technolo
   for (const name of ["输入事实", "用户问题", "理解题", "防误导"]) {
     assert.equal((doc.match(new RegExp("\\*\\*" + name, "g")) ?? []).length, 4, name);
   }
-  for (const phrase of ["真实模型新 A/B 生成 0 对", "本轮真人读者 0", "理解增益未证明", "不合并 main"]) {
+  for (const phrase of ["真实模型新 A/B 生成 0 对", "本轮真人读者 0", "理解增益未证明", "不把 PR #13 的专项内容合并到 main"]) {
     assert.ok(doc.includes(phrase), "missing evidence boundary " + phrase);
   }
 });
