@@ -41,6 +41,23 @@ jobs:
       - name: Validate Skill package and examples
         shell: pwsh
         run: ./scripts/test-skill.ps1
+      - name: Build and verify P1 human-review packet
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $projectsRoot = [System.IO.Path]::GetFullPath((Join-Path $env:GITHUB_WORKSPACE "../.."))
+          $packet = Join-Path $env:RUNNER_TEMP "genui-p1-human-review-80"
+          & node ./scripts/build-p1-human-handoff.mjs $packet $projectsRoot
+          if ($LASTEXITCODE -ne 0) { throw "P1 human-review packet build failed" }
+          & node ./scripts/verify-p1-human-handoff.mjs $packet
+          if ($LASTEXITCODE -ne 0) { throw "P1 human-review packet verification failed" }
+      - name: Upload P1 human-review packet (80 pending items)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen-ui-p1-human-review-80-items
+          path: ${{ runner.temp }}/genui-p1-human-review-80/
+          if-no-files-found: error
+          retention-days: 30
 
   browser:
     name: Browser QA (Chrome, 375/768/1440px)
