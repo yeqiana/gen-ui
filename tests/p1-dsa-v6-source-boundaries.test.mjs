@@ -36,3 +36,23 @@ test("v6 retains 80 human decisions PENDING and formal P1 release NO_GO",()=>{
  assert.equal(handoff.modules.length+handoff.chapters.length+al.items.length+ps.edges.length+ps.globalReviewQuestions.length,80);
  const gate=assessP1PublishReadiness({dsa:handoff,agentLead:al,planShip:ps,previous:load("p1-four-slot-final-gate-2026-11-19.json")});assert.equal(gate.status,"NO_GO");
 });
+
+test("chapters 7-15 expose concrete SOP evidence and audit questions without claiming signoff",()=>{
+ const coverage={
+  7:[139,140,144,145,149,150,151,152],
+  8:[154,155,156,157,158,160,161,162],
+  9:[165,166,167,168,169,170,173,174],
+  10:[177,178,179,180,181,182,183,185],
+  11:[189,190,191,192,195,196,197,198,199],
+  12:[205,209,210,211,212,213,214,215,218,219,220],
+  13:[223,225],14:[228,235,237,239,241,242,243],
+  15:[246,249,250,251,252,253,254,255,256,257,258]
+ };
+ for(const [name,refs] of Object.entries(coverage)){
+  const chapter=handoff.chapters.find(x=>x.number===Number(name));
+  assert.ok(chapter,"chapter "+name);
+  for(const line of refs)assert.ok(chapter.sourceLines.includes(line),"chapter "+name+" missing source "+line);
+  assert.ok(chapter.question.length>=75,"chapter "+name+" still generic");
+  assert.equal(chapter.decision,"PENDING");
+ }
+});

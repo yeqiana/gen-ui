@@ -826,10 +826,25 @@
       "number": 7,
       "title": "Snapshot / Cache 脏数据矩阵",
       "sourceLines": [
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        139,
         140,
-        150
+        142,
+        144,
+        145,
+        146,
+        147,
+        149,
+        150,
+        151,
+        152
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "逐项确认脏数据输入覆盖 null/empty、malformed JSON、wrong type、旧schema、校验算法与弱校验碰撞、错对象、错误代次、删除复活、过期fence、内容/元数据缺失；核查精确invalid reason、拒绝/降级/回源、权限不放开、可达恢复和健康对象不受牵连。仅为待执行矩阵。",
       "decision": "PENDING",
       "reason": null
     },
@@ -839,9 +854,15 @@
       "title": "Reader / Reconcile 一致性检查",
       "sourceLines": [
         154,
-        160
+        155,
+        156,
+        157,
+        158,
+        160,
+        161,
+        162
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "以相同脏数据同时检查生产Reader、Reconcile health checker和Repair decision：Reader invalid 时 Reconcile 不能 healthy，broken 必有持久恢复或明确人工责任入口，Repair 后 Reader 满足原读取契约；没有实测就不能标通过。",
       "decision": "PENDING",
       "reason": null
     },
@@ -851,9 +872,17 @@
       "title": "Compatibility 矩阵",
       "sourceLines": [
         165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
         174
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "核对 old/new writer 与 reader 四种组合、中途滚动发布和回滚、适用模式/开关、旧新schema与checksum共存；发布顺序若为正确性前提，必须有可验证门禁或操作步骤，而非只有文档声明。",
       "decision": "PENDING",
       "reason": null
     },
@@ -862,10 +891,17 @@
       "number": 10,
       "title": "Job / Reconcile 假绿矩阵",
       "sourceLines": [
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
         184,
         185
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "用 lock conflict、空任务、unknown task、LIMIT0、局部扫描失败、缓存/投影读取失败、单shard失败和无实际工作等反例核对终态；方法正常返回不得冒充业务完成。",
       "decision": "PENDING",
       "reason": null
     },
@@ -875,9 +911,16 @@
       "title": "Recovery 四问",
       "sourceLines": [
         189,
-        192
+        190,
+        191,
+        192,
+        195,
+        196,
+        197,
+        198,
+        199
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "每个故障回答 Failure、Detection、Repair Owner、RTO 四问，并明确 retry policy、人工修复入口、告警阈值、残留清理和重放幂等；模板不能替代真实故障恢复证据。",
       "decision": "PENDING",
       "reason": null
     },
@@ -886,10 +929,23 @@
       "number": 12,
       "title": "Finding 模板",
       "sourceLines": [
+        205,
+        206,
+        208,
+        209,
         210,
-        212
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "逐项核对 Finding 的 Impact、Likelihood、Invariant、Reachable Path、Root Cause、Business Consequence、Source/Test/Production Evidence、真实性、改代码必要性、同根因合并、治理包、永久回归和验收标准；严禁将未取得的生产证据写成已确认缺陷。",
       "decision": "PENDING",
       "reason": null
     },
@@ -901,7 +957,7 @@
         223,
         225
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "二次评审应区分已确认/风险/测试缺口/误报，记录 Impact、Likelihood、级别、必须改/治理/测试/文档/运维/范围外等处置及治理包归属；不得把风险条目冒充真实缺陷。",
       "decision": "PENDING",
       "reason": null
     },
@@ -910,10 +966,23 @@
       "number": 14,
       "title": "治理包模板",
       "sourceLines": [
-        226,
-        241
+        228,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "治理包不止上线Gate：核对关联问题与根因、核心不变量、当前风险、修复目标、禁止方案、涉及模块、兼容/客户端影响、测试矩阵、回归范围、上线Gate、回滚方案和完成条件；未执行的方案保持待验证。",
       "decision": "PENDING",
       "reason": null
     },
@@ -922,10 +991,21 @@
       "number": 15,
       "title": "验收关闭标准",
       "sourceLines": [
-        245,
-        246
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258
       ],
-      "question": "此章节在图中的陈述是否忠实覆盖关键目标/不变量？直接引用是否不足以代表完整语义？",
+      "question": "关闭前按适用项核验代码修复、永久与关键调用方回归、反例/边界、竞态、故障注入、恢复收敛、可观测性、兼容性、回滚、文档契约；不能仅以代码已改或旧测试全绿宣布关闭。",
       "decision": "PENDING",
       "reason": null
     },
