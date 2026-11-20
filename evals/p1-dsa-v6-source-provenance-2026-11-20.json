@@ -1,0 +1,48 @@
+{
+  "schema": "genui-p1-dsa-v6-provenance/v1",
+  "oldCandidateSHA256": "850396c5d9ecca06735bd86ffd7eb00d4d91376117ab4c7a279582b3efc8534a",
+  "newCandidateSHA256": "3b717e52575deba3c2c27054bcc16023516751aba7fd6c34facc960a4284e91d",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "changes": [
+    {
+      "moduleId": "module-04",
+      "addedEvidenceSourceLines": [
+        93,
+        94
+      ],
+      "shortSourceLinesWithoutEvidenceId": [],
+      "chapterSourceLineCount": 12
+    },
+    {
+      "moduleId": "module-05",
+      "addedEvidenceSourceLines": [],
+      "shortSourceLinesWithoutEvidenceId": [
+        105,
+        106,
+        107,
+        109,
+        112
+      ],
+      "chapterSourceLineCount": 10
+    },
+    {
+      "moduleId": "module-06",
+      "addedEvidenceSourceLines": [
+        114,
+        121
+      ],
+      "shortSourceLinesWithoutEvidenceId": [
+        115,
+        126
+      ],
+      "chapterSourceLineCount": 16
+    }
+  ],
+  "sourceCheck": "STRUCTURAL_PASS_SEMANTIC_UNVERIFIED",
+  "chaptersWithDirectEvidence": 17,
+  "semanticIssues": 0,
+  "humanReview": "PENDING_33_OF_33",
+  "aiSecondOpinion": "NOT_RUN_ON_V6",
+  "noModelCalls": true,
+  "p1Release": "NO_GO"
+}

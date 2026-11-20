@@ -1,0 +1,378 @@
+{
+  "schema": "genui-panorama-candidate/v1",
+  "cases": [
+    {
+      "id": "distributed-system-audit",
+      "status": "documented",
+      "notes": "本页来自审计 SOP 的文档模板而非已执行验证。第16章扫描转修复须综合：约定范围无新高优先级发现、余项主要为测试/文档/可观测性、治理包稳定、继续扫描收益低于修复；只对已审范围收敛，未验证范围及证据缺口继续保留。第17章最终交付同时需报告范围、证据、上线 Gate、回滚与剩余风险。 作者审订 v3：模块11和16标题与直接引用行已按冻结 SOP 修正；真实 Claude 原件与v2候选未改；非第二次模型生成。 本图为审计SOP模板而非已执行扫描。第1章现象卡按需填写现象、时间、影响用户/对象、频率、复现、关联ID、错误码、DB/缓存/MQ状态、生产日志与指标，未取得的事实保持未验证。第16章须综合四项扫描转修复判据且仅对已审范围收敛，未验证环境和证据缺口保留。第17章交付模板要求范围、真实现象、核心不变量、已确认问题、排除/误报、治理包、修复顺序、测试证据、恢复闭环、上线Gate、回滚、剩余风险、结论；列出模板不代表已真正交付。 第2章按实际依赖和事务边界重画，逐层问写读、状态、唯一键、版本、重试、补偿、完成、告警。第3章覆盖claim条件、lease owner、过期steal、旧Worker、cursor单调性、失败重放、terminal和crash恢复，按契约保留无租约例外。第4章矩阵包含DB成功但Outbox/缓存/MQ/HTTP失败、外部副作用成功但DB回滚、Outbox落盘crash和commit前后crash。第5章验证A卡住过期B接管完成，A恢复旧写拒绝且B数据不被覆盖，留观察证据。第6章检查发布失败、broker超时、重复乱序消费、ACK/callback崩溃、部分接收者失败/重试与记录不一致，并守住durable intent及正确去重。上述均为审核模板要求，不代表真实测试执行。 本版是作者 v4 来源修订，不是第二次模型生成；旧 DeepSeek 的70支持/3不支持/7不确定只适用于历史候选，不可转嫁为本版复核已通过。 这些是按需选用的检查模板。 缺失的证据标为未验证。 第2章逐层询问谁写/谁读、状态存放位置、唯一键、generation、重试者、补偿者、完成判断者和告警责任人，真实对象名称不得凭模板猜测。第3章核查 lease owner/token/generation、retry limit、部分成功怎样记录及terminal是否可能提前出现；根据契约保留无租约执行器的合法例外。第5章留存A过期B完成A旧写拒绝的影响行数为0或等效存储协议的冲突证据，记录拒绝可观测性，不可把某指标名硬写为所有系统共有接口；这些均是待做测试，不是实际观测记录。第6章明确duplicate receiver event，检查消费/receiver 去重粒度不得吞掉其他合法对象的处理，保持durable intent与失败对象粒度恢复；没有宣称真实 MQ 测试已运行。 第4章按实际依赖选择待测矩阵：先用 DB 成功 + Outbox 成功作正向基线；再测 DB 成功而 Outbox 失败、缓存/投影失败（投影不得被缓存一词替代）、MQ 失败、HTTP 失败、外部副作用或所有权变更成功却 DB rollback、Outbox 落盘进程 crash、commit 前 crash 和 commit 后下游前 crash。合格目标是没有不可恢复半提交。这里仅列测试模板，没有实际执行生产测试。 第5章完整待测时序 A claim → A卡住 → lease过期 → B steal → B complete → A恢复后complete；A的过期写入必须被拒，B结果不得覆盖。数据库条件更新可用影响0行证明拒绝，其他存储或协议须给出等效可观察证据；记录拒绝/冲突而不能把某个指标名称当作所有项目固定接口。本项尚未真实执行。 第6章待测 publish fail、broker confirm timeout、duplicate consume、out-of-order、consumer ACK后crash、callback前crash、100 receivers: 99 success + 1 fail、failed receiver subset retry、duplicate receiver event，以及批次完成与单项处理记录不一致。不变量为durable delivery intent、按失败receiver粒度恢复、去重粒度不得吞掉其他合法对象的处理。仅为模板并未运行MQ测试。 作者离线 v6 定点来源修订；原模型审阅意见只对应历史候选，不得迁移为本版 AI 或真人签审。文中全部为待执行检查模板，缺失的实际项目证据依旧标记未验证。",
+      "layers": [
+        {
+          "title": "入口与状态契约（SOP 1–4）",
+          "modules": [
+            {
+              "id": "module-01",
+              "title": "现象卡采集现象/时间/影响/复现/关联标识、错误码及 DB/缓存/MQ/日志状态；待填项不算已验证",
+              "evidence": [
+                {
+                  "id": "EC48152680324"
+                },
+                {
+                  "id": "ECEFB8DB15FB6"
+                },
+                {
+                  "id": "EBFFB3B888EB1"
+                },
+                {
+                  "id": "E1C2AB541624B"
+                },
+                {
+                  "id": "EF42C54CC71D9"
+                },
+                {
+                  "id": "E92D608728BAC"
+                },
+                {
+                  "id": "E12807091525A"
+                }
+              ]
+            },
+            {
+              "id": "module-02",
+              "title": "全链路模板逐层询问谁写、谁读、状态存储处、唯一键、版本/generation、重试/补偿责任、完成判定与告警责任；实际答案待核证",
+              "evidence": [
+                {
+                  "id": "EBCECB8C4AF2A"
+                },
+                {
+                  "id": "E712BD91F0366"
+                },
+                {
+                  "id": "E9D45487012D7"
+                },
+                {
+                  "id": "EA7BC00DB0C72"
+                },
+                {
+                  "id": "E05D99D149DC2"
+                },
+                {
+                  "id": "E2E0A7E629C5F"
+                },
+                {
+                  "id": "E09798D75493D"
+                }
+              ]
+            },
+            {
+              "id": "module-03",
+              "title": "状态机核对 claim、lease owner/token/generation、过期接管、旧Worker、retry limit、cursor单调、部分成功表达、FAILED重放、terminal提前及crash恢复；保留无租约例外",
+              "evidence": [
+                {
+                  "id": "E289A9DAD8211"
+                },
+                {
+                  "id": "E4DC24A59338A"
+                },
+                {
+                  "id": "E519BECDD2D20"
+                },
+                {
+                  "id": "EAF3B6C402423"
+                },
+                {
+                  "id": "EFD6F81D9FA1A"
+                },
+                {
+                  "id": "E84AB07087117"
+                },
+                {
+                  "id": "E64F305111F79"
+                },
+                {
+                  "id": "ED4520E41F23F"
+                },
+                {
+                  "id": "E5F21E03545D8"
+                },
+                {
+                  "id": "EC5B47324B531"
+                },
+                {
+                  "id": "E6B794D90E83E"
+                }
+              ]
+            },
+            {
+              "id": "module-04",
+              "title": "事务矩阵按实际依赖先验 DB 成功 + Outbox 成功基线，再覆盖 Outbox/缓存或投影/MQ/HTTP 失败、外部成功 DB rollback 与 commit 前后 crash；避免不可恢复半提交",
+              "evidence": [
+                {
+                  "id": "EC124387788C9"
+                },
+                {
+                  "id": "EB823C9FD1650"
+                },
+                {
+                  "id": "ED26CEB833897"
+                },
+                {
+                  "id": "E0E0735000187"
+                },
+                {
+                  "id": "E156A1D31FB13"
+                },
+                {
+                  "id": "E8785E30B0BEF"
+                },
+                {
+                  "id": "EED7845256ABF"
+                },
+                {
+                  "id": "E595CEC8BC5A0"
+                },
+                {
+                  "id": "E6D4B61AD8B56"
+                },
+                {
+                  "id": "E69C5F3C5A5DF"
+                },
+                {
+                  "id": "E5C95D369815C"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "并发写入与交付一致性（SOP 5–8）",
+          "modules": [
+            {
+              "id": "module-05",
+              "title": "Lease 待测 A claim→A卡住→lease过期→B steal→B complete→A恢复complete；旧写拒绝、B结果不被覆盖，用0行或等效冲突证据，不固定指标名",
+              "evidence": [
+                {
+                  "id": "E8302FEEF15F3"
+                },
+                {
+                  "id": "E2BF5904D0B25"
+                },
+                {
+                  "id": "E8885783BAA1B"
+                },
+                {
+                  "id": "EEB6DCF20E305"
+                },
+                {
+                  "id": "E8FC8B4F5E179"
+                }
+              ]
+            },
+            {
+              "id": "module-06",
+              "title": "MQ/Delivery 待测 100 receivers: 99 success + 1 fail、失败子集重试、duplicate receiver event；durable intent 和对象级去重不得吞其他合法对象",
+              "evidence": [
+                {
+                  "id": "E67A53EEFD04D"
+                },
+                {
+                  "id": "E17E121257065"
+                },
+                {
+                  "id": "ED2BBE7506465"
+                },
+                {
+                  "id": "E5BDB5C2583A3"
+                },
+                {
+                  "id": "E5CAA9AEB458B"
+                },
+                {
+                  "id": "E621C0561AF0A"
+                },
+                {
+                  "id": "E8CE0DB468BBF"
+                },
+                {
+                  "id": "E767E9B5EC82B"
+                },
+                {
+                  "id": "EE187758FBA04"
+                },
+                {
+                  "id": "EB46921C75BAB"
+                },
+                {
+                  "id": "E70702879A19F"
+                },
+                {
+                  "id": "EF251A169C3A3"
+                },
+                {
+                  "id": "E7163ECC72A20"
+                },
+                {
+                  "id": "E8807BA001C1A"
+                }
+              ]
+            },
+            {
+              "id": "module-07",
+              "title": "缓存快照与权限隔离：错配按契约回源，降级不得放开访问",
+              "evidence": [
+                {
+                  "id": "E88CE10217F50"
+                },
+                {
+                  "id": "E686E729DE533"
+                }
+              ]
+            },
+            {
+              "id": "module-08",
+              "title": "Reader/Reconcile 同一正确性契约：Reader invalid ⇒ Reconcile 不得 healthy",
+              "evidence": [
+                {
+                  "id": "E3221CD5380B5"
+                },
+                {
+                  "id": "E11382D093F5F"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "兼容演进与可观测闭环（SOP 9–12）",
+          "modules": [
+            {
+              "id": "module-09",
+              "title": "兼容矩阵与发布顺序：正确性前提需实际门禁或可验证流程",
+              "evidence": [
+                {
+                  "id": "ED18401673A8F"
+                },
+                {
+                  "id": "ECD6D4BD733D9"
+                }
+              ]
+            },
+            {
+              "id": "module-10",
+              "title": "Job 假绿与真正完成：按状态契约区分完成、跳过、无任务、降级与失败",
+              "evidence": [
+                {
+                  "id": "E37C6685FB561"
+                },
+                {
+                  "id": "E5F11BC69D5E2"
+                }
+              ]
+            },
+            {
+              "id": "module-11",
+              "title": "Recovery 四问：Failure、Detection、Repair Owner、RTO 均需回答",
+              "evidence": [
+                {
+                  "id": "EF6C65FD7C96F"
+                },
+                {
+                  "id": "E1873FB79C8F9"
+                },
+                {
+                  "id": "E0EA0D475F2DD"
+                },
+                {
+                  "id": "EA19C44A279DC"
+                }
+              ]
+            },
+            {
+              "id": "module-12",
+              "title": "Finding 根因与证据：Root Cause 与 Source Evidence",
+              "evidence": [
+                {
+                  "id": "EC85F5FA4BB3F"
+                },
+                {
+                  "id": "E7A5F2FED47C0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "评审治理与交付验收（SOP 13–16+17）",
+          "modules": [
+            {
+              "id": "module-13",
+              "title": "二次评审表与处置：真实性、Impact、Likelihood、级别与治理包",
+              "evidence": [
+                {
+                  "id": "E32F4891110CC"
+                },
+                {
+                  "id": "E51B4BF7FDAD0"
+                }
+              ]
+            },
+            {
+              "id": "module-14",
+              "title": "治理包模板及上线 Gate",
+              "evidence": [
+                {
+                  "id": "E6B7493FD23A2"
+                },
+                {
+                  "id": "E43ACA498593D"
+                }
+              ]
+            },
+            {
+              "id": "module-15",
+              "title": "验收关闭不得仅凭旧测试：代码改了或原有测试全绿不能关闭",
+              "evidence": [
+                {
+                  "id": "E4708E4B17382"
+                },
+                {
+                  "id": "E2A1CB46C7C13"
+                }
+              ]
+            },
+            {
+              "id": "module-16",
+              "title": "停扫需已审无新高优先级、余项以测试/文档/可观测性为主、治理稳定、扫描收益低；保留未验证范围；交付列明 Gate/回滚/剩余风险",
+              "evidence": [
+                {
+                  "id": "E3D7515BD6908"
+                },
+                {
+                  "id": "E3BB7177AC212"
+                },
+                {
+                  "id": "EE0E9B12656E5"
+                },
+                {
+                  "id": "E0421BF316D0F"
+                },
+                {
+                  "id": "E2AAC7C2DF9D3"
+                },
+                {
+                  "id": "EBD85C6A27C29"
+                },
+                {
+                  "id": "E1FEED8DF9B6E"
+                },
+                {
+                  "id": "EA60EF216A80D"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "relations": []
+    }
+  ]
+}

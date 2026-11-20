@@ -21,11 +21,12 @@ test("transaction template keeps success baseline, projection, failure and crash
 test("lease preserves full claim/steal/complete sequence with observable stale write rejection",()=>{
  const text=mod(5).title+" "+candidate.notes;
  for(const term of ["A claim","B steal","B complete","A恢复","0行","不固定指标名"])assert.ok(text.includes(term),term);
- for(const n of [106,108,109,110,111,113])assert.ok(ref(5).sources.some(x=>x.line===n),"source "+n);
+ for(const n of [108,110,111,113])assert.ok(ref(5).sources.some(x=>x.line===n),"indexed source "+n);
+ for(const n of [106,107,109])assert.ok(handoff.chapters.find(x=>x.number===5).sourceLines.includes(n),"short code line "+n);
 });
 test("delivery preserves receiver 100/99/1 partial success and legitimate object deduplication",()=>{
  const text=mod(6).title+" "+candidate.notes;
- for(const term of ["100 receivers","99 success","1 fail","duplicate receiver event","durable","去重不得吞掉其他合法对象"])assert.ok(text.includes(term),term);
+ for(const term of ["100 receivers","99 success","1 fail","duplicate receiver event","durable","不得吞掉其他合法对象"])assert.ok(text.includes(term),term);
  for(const n of [122,123,124,127,128,129])assert.ok(ref(6).sources.some(x=>x.line===n),"source "+n);
 });
 test("v6 retains 80 human decisions PENDING and formal P1 release NO_GO",()=>{
