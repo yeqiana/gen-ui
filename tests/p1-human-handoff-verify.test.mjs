@@ -50,11 +50,13 @@ test("declared template cannot be switched to arbitrary filename",()=>withCopy(d
  assert.ok(result.errors.some(x=>x.includes("Unexpected review template declaration")));
 }));
 test("legacy packet without declared template remains verifiable without CSV",()=>withCopy(dir=>{
- const mf=JSON.parse(fs.readFileSync(path.join(dir,"manifest.json"),"utf8"));
- assert.equal(Object.hasOwn(mf,"reviewTemplate"),false);
+ const mfPath=path.join(dir,"manifest.json"),mf=JSON.parse(fs.readFileSync(mfPath,"utf8"));
+ assert.equal(mf.reviewTemplate,"review-decisions-template.csv");
+ delete mf.reviewTemplate;
+ fs.writeFileSync(mfPath,JSON.stringify(mf,null,2)+"\n");
  fs.unlinkSync(path.join(dir,"review-decisions-template.csv"));
  const sf=path.join(dir,"SHA256SUMS.txt");
- const checks=fs.readFileSync(sf,"utf8").split(/\r?\n/).filter(line=>line&&!line.endsWith("  review-decisions-template.csv"));
+ const checks=fs.readFileSync(sf,"utf8").split(/\r?\n/).filter(line=>line&&!line.endsWith("  review-decisions-template.csv")).map(line=>line.endsWith("  manifest.json")?awaitHash(fs.readFileSync(mfPath))+"  manifest.json":line);
  fs.writeFileSync(sf,checks.join("\n")+"\n");
  assert.equal(verifyP1HumanHandoff(dir).status,"PASS");
 }));
