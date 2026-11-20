@@ -22,6 +22,22 @@ jobs:
         with:
           node-version: "22"
           package-manager-cache: false
+      - name: Fetch exact public Git sources for offline P1 tests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $manifest = Get-Content ./evals/unseen-panorama-2026-11-17.json -Raw | ConvertFrom-Json
+          $allowed = @("agent-lead", "plan-ship", "distributed-system-audit")
+          $projectsRoot = [System.IO.Path]::GetFullPath((Join-Path $env:GITHUB_WORKSPACE "../.."))
+          foreach ($case in $manifest.cases) {
+            if ($case.repo -notin $allowed -or $case.commit -notmatch "^[a-f0-9]{40}$") { throw "Untrusted P1 source manifest" }
+            $target = Join-Path $projectsRoot $case.repo
+            if (Test-Path $target) { throw "Source target already exists: $target" }
+            & git -c credential.helper= clone --quiet --no-checkout "https://github.com/yeqiana/$($case.repo).git" $target
+            if ($LASTEXITCODE -ne 0) { throw "Cannot fetch public frozen repo: $($case.repo)" }
+            & git -C $target cat-file -e "$($case.commit)^{commit}"
+            if ($LASTEXITCODE -ne 0) { throw "Pinned commit unavailable: $($case.repo)" }
+          }
       - name: Validate Skill package and examples
         shell: pwsh
         run: ./scripts/test-skill.ps1
