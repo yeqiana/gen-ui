@@ -37,7 +37,7 @@ export function buildP1ReviewPacket(dest=path.join(os.tmpdir(),"genui-p1-v6-huma
    entries=handoff.items.map(x=>({key:x.key,claim:x.claim,refs:x.sources.map(z=>({file:z.file,line:z.line})),question:x.requiredQuestion}));
   }else{
    entries=handoff.edges.map((x,i)=>({key:"edge:"+i,claim:x.fromTitle+" → "+x.toTitle+(x.condition?"，条件："+x.condition:""),refs:[{file:x.sourceFile,line:x.sourceLine}],question:x.independentReviewerQuestion})).concat(
-    handoff.globalReviewQuestions.map((x,i)=>({key:"boundary:"+i,claim:x.rule,refs:[{file:x.sourceFile,line:x.line}],question:"正式交付是否完整、是否存在无来源豁免？"})));
+    handoff.globalReviewQuestions.map((x,i)=>({key:"boundary:"+i,claim:x.rule,refs:[{file:x.sourceFile,line:x.line}],question:x.requiredQuestion||"正式交付是否完整、是否存在无来源豁免？"})));
   }
   for(const e of entries){
    if(!e.refs.length)throw Error("Empty evidence "+c.id+"/"+e.key);
