@@ -1,6 +1,6 @@
 ---
 name: gen-ui
-description: Use when AI responses are dense, reviews require evidence continuity, or users request readable offline HTML. Markdown by default.
+description: Use when AI answers need to be easier to understand: explanations, comparisons, reviews, or offline HTML. Markdown by default.
 ---
 
 # Gen UI — Information Design Skill for AI Responses
@@ -13,9 +13,9 @@ For offline HTML, read [HTML essentials](references/html-report-essentials.md) a
 
 ## Purpose
 
-Gen UI reduces walls of text and reading friction. It is an **Information Design Skill**, not a coding or testing replacement.
+**North star: make AI answers easier to understand; reduce walls of text and reading friction.** Gen UI is an **Information Design Skill**, not a UI framework.
 
-**Goal:** make conclusions, evidence, limits, and next actions clear without losing facts. Follow the user's language; never invent results or sources.
+**Goal:** accurate, clear, reader-aware answers. Follow the user's language; never invent results or sources.
 
 ## Progressive capability routing
 
@@ -35,12 +35,12 @@ Markdown fallback: without a trusted renderer use Markdown. For HTML deliverable
 
 ## Reader-first transformation procedure
 
-1. **Identify the reader's decision:** what must be understood, compared, chosen, verified, or done?
-2. **Lead with the answer:** then give the minimum evidence, limits, risks, and next action.
-3. **Choose the smallest effective structure:** prose, tables, steps, evidence matrices or diagrams only when needed.
-4. **Preserve factual boundaries:** separate facts, proposals, unrun tests and unknown gates; keep all stop criteria/exceptions and stricter final-delivery gates.
-5. **Progressive detail:** remove filler and repetition, not facts, evidence, constraints, or required steps; expand when needed.
-6. **Validate:** one summary only, if requested, required by another Skill, or useful in long docs.
+1. **Know the reader:** goal and familiarity; adapt without assuming expertise.
+2. **Lead with the answer:** concise reasons, evidence, limits, next action.
+3. **Explain for understanding:** define unfamiliar terms in context; use an example or accurate analogy only if helpful, and state its limits. Don't force simplification on experts.
+4. **Choose the smallest effective structure:** prose first; tables, steps and diagrams only if needed.
+5. **Preserve factual boundaries:** distinguish facts, proposals and unrun tests; keep exact terms, numbers, exceptions and stop criteria.
+6. **Progressive detail:** remove filler and repetition, not facts, evidence, constraints, or required steps; expand only when needed.
 
 For ambiguous formats use [Information design](references/information-design-decision.md). For repeat reviews or risk/closure decisions, read [Reading layers](references/reading-layers.md); preserve issue IDs and prior evidence. Missing proof is not proof of missing implementation; don't equate changed, tested, or risk-accepted.
 
