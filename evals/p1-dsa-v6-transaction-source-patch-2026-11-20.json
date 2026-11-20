@@ -1,0 +1,25 @@
+{
+  "schema": "genui-p1-dsa-v6-offline-patch/v1",
+  "slot": "txn",
+  "parentCandidateSHA256": "850396c5d9ecca06735bd86ffd7eb00d4d91376117ab4c7a279582b3efc8534a",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "origin": "AUTHOR_EDIT_NOT_AI",
+  "moduleId": "module-04",
+  "previousTitle": "故障矩阵覆盖 Outbox/缓存/MQ/HTTP 失败、外部成功 DB 回滚、Outbox落盘 crash 和 commit 前后 crash；目标无不可恢复半提交",
+  "title": "事务矩阵按实际依赖先验 DB 成功 + Outbox 成功基线，再覆盖 Outbox/缓存或投影/MQ/HTTP 失败、外部成功 DB rollback 与 commit 前后 crash；避免不可恢复半提交",
+  "directSourceLines": [
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103
+  ],
+  "notesAppend": "第4章按实际依赖选择待测矩阵：先用 DB 成功 + Outbox 成功作正向基线；再测 DB 成功而 Outbox 失败、缓存/投影失败（投影不得被缓存一词替代）、MQ 失败、HTTP 失败、外部副作用或所有权变更成功却 DB rollback、Outbox 落盘进程 crash、commit 前 crash 和 commit 后下游前 crash。合格目标是没有不可恢复半提交。这里仅列测试模板，没有实际执行生产测试。",
+  "humanSignoff": "PENDING"
+}
