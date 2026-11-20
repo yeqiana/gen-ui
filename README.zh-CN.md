@@ -6,7 +6,7 @@
 
 [![Validate Skill](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml/badge.svg)](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml)
 
-**Gen UI 是面向 AI Coding Agent 的信息组织与阅读体验 Skill。** 它通过选择恰当的信息结构，改善代码评审、架构说明、实施计划、测试验收、技术分析和日常解释的阅读体验。优先使用宿主可直接阅读的 Markdown；只有在明确需要且宿主支持时，才使用离线 HTML 或经过验证的声明式交互。
+**Gen UI 是帮助 AI 把回答讲清楚的信息设计 Skill。** 面向日常解释、知识学习、方案比较、技术分析和工程评审等场景：先根据读者背景讲明白，必要时解释术语、举例或类比，再组织信息并选择合适呈现方式。优先使用 Markdown；只有明确需要且宿主支持时才使用 HTML 或交互。
 
 **2026-11-16 稳定基线：** 三个不同主题使用已安装的 Skill 并由本地 Runner 预置离线资源，完成 3/3 独立生成与 Chrome/排版验收；核心 Skill 保持轻量。详见 [验收与边界](evals/independent-html-stability-2026-11-16.md)。
 
@@ -26,6 +26,8 @@
 | 回答无法在终端和网页间复用 | 根据宿主选择 Markdown、静态图示或受控 HTML |
 
 **原则：不减少必要事实，不编造执行结果，不为了美观增加无意义组件。**
+
+**验收顺序：讲得对 → 讲得懂 → 呈现得好。** 简单问题不复杂化；专业术语可解释但不篡改；例子和类比服务理解而不是代替事实。
 
 ## 先看一个回答重构示例
 
