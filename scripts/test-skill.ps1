@@ -80,6 +80,7 @@ $required = @(
   "tests/dsa-editorial-v3-semantic-guard.test.mjs",
   "tests/p1-semantic-remediation-v4.test.mjs",
   "tests/p1-semantic-remediation-v5.test.mjs",
+  "tests/p1-dsa-v6-source-boundaries.test.mjs",
   "tests/agent-lead-review-gate.test.mjs",
   "tests/plan-ship-review-gate.test.mjs",
   "tests/p1-publish-readiness.test.mjs",
