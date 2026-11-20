@@ -163,12 +163,24 @@ test("证据 ID 只从冻结原文产生，保留旧对照提示，不覆盖旧�
  assert.match(prompt,/不能用 depends 表示无条件依赖/);
  assert.match(prompt,/condition 为该箭头的原样标签/);
  assert.match(prompt,/不能仅因为步骤先后就写 depends/);
+ assert.match(prompt,/信息压缩/);
+ assert.match(prompt,/8–12 个有代表性的模块/);
+ assert.match(prompt,/保留必需边界优先/);
  assert.ok(catalogue.entries.every(e=>new RegExp("^E[A-F0-9]{12}$").test(e.id)));
  for(const a of x.entry.anchors)assert.ok(catalogue.entries.some(e=>e.file===a.file&&e.quote.includes(a.quote)));
  assert.deepEqual(catalogue,evidenceCatalogue(frozenInputs(x.manifest,x.root)[0]));
  const schemaFile=path.join(x.out,x.entry.id,"evidence-ids.output-schema.json");
  const outputSchema=JSON.parse(fs.readFileSync(schemaFile,"utf8"));
  assert.deepEqual(outputSchema,evidenceIdOutputSchema(frozenInputs(x.manifest,x.root)[0]));
+ const compactSchema=JSON.parse(fs.readFileSync(path.join(x.out,x.entry.id,"evidence-ids.compact-output-schema.json"),"utf8"));
+ const compactBody=compactSchema.properties.cases.items.properties;
+ assert.equal(compactBody.layers.maxItems,4);
+ assert.equal(compactBody.layers.items.properties.modules.maxItems,4);
+ assert.equal(compactBody.layers.items.properties.modules.items.properties.evidence.maxItems,2);
+ assert.equal(compactBody.relations.maxItems,16);
+ assert.deepEqual(compactBody.layers.items.properties.modules.items.properties.evidence.items.properties.id.enum,
+  outputSchema.properties.cases.items.properties.layers.items.properties.modules.items.properties.evidence.items.properties.id.enum);
+ assert.equal(outputSchema.properties.cases.items.properties.layers.maxItems,8);
  assert.ok(outputSchema.properties.cases.items.properties.layers.items.properties.modules.items.properties.evidence.items.properties.id.enum.length>0);
  assert.throws(()=>prepareEvidenceIds({manifest:x.manifest,projectsRoot:x.root,outDir:x.out}),/Refusing evidence-ID overwrite/);
 });

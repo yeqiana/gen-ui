@@ -1,0 +1,471 @@
+{
+  "schema": "genui-p1-dsa-ai-second-reading/v1",
+  "reviewer": "GPT-6 AI second-source perspective (not independent human)",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "candidateSHA256": "da2bd16ccfb5d4ae84b1f4daff10a6dbbec0b86172d2f4d1f2fef22d68a8283b",
+  "items": [
+    {
+      "key": "module:0",
+      "claim": "现象卡与证据未验证：按需选用的检查模板，缺失证据标为未验证",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 3,
+          "quote": "这些是按需选用的检查模板，不是目标项目必须采用的架构或状态命名。沿实际调用图选择相关部分；不存在的组件标为不适用，缺失的证据标为未验证。生产注入、数据修改和本地探针遵循入口文件的执行边界。"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 19,
+          "quote": "生产日志/指标证据："
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:1",
+      "claim": "实际调用链与事务边界：按项目实际依赖重画",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 23,
+          "quote": "下面是可选组件示意，实际链路可能分支、并行或省略其中环节；按项目实际依赖和事务边界重画。"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 61,
+          "quote": "- 唯一键是什么？"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:2",
+      "claim": "状态机缺失租约的契约条件：无租约执行器不得误报",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 88,
+          "quote": "- FAILED 是否可重放"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 90,
+          "quote": "- 根据目标状态契约判断缺失租约、所有权或版本是否非法；无租约执行器、由其他机制保证所有权的任务，不能仅因 PROCESSING + null lease 报缺陷"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:3",
+      "claim": "半提交故障矩阵：目标不存在不可恢复半提交",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 99,
+          "quote": "- 外部副作用/所有权变更成功 + DB rollback"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 103,
+          "quote": "目标：不存在不可恢复半提交。"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:4",
+      "claim": "Lease 过期写入阻断：过期写入被拒绝、新结果不被覆盖",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 104,
+          "quote": "## 5. Lease / stale worker 矩阵"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 113,
+          "quote": "正确结果：A 的过期写入被拒绝，B 的结果不被覆盖。数据库条件更新可以用影响 0 行证明拒绝；其他存储或协议用等效可观察证据。记录拒绝或冲突的可观测性，不能把某个指标名当作所有项目的固定接口。"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:5",
+      "claim": "MQ 交付意图与去重：durable intent，去重不吞合法对象",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 127,
+          "quote": "- 有 durable delivery intent；"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 129,
+          "quote": "- 去重粒度不得吞掉其他合法对象的处理。"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:6",
+      "claim": "缓存快照与权限隔离：错配按契约回源，降级不得放开访问",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 140,
+          "quote": "- 索引/key 指向对象 A，但内容属于对象 B"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 150,
+          "quote": "- 按业务一致性契约拒绝、降级或回源，涉及权限/隔离的数据不得因降级放开访问；"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:7",
+      "claim": "Reader/Reconcile 同一正确性契约：Reader invalid ⇒ Reconcile 不得 healthy",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 154,
+          "quote": "建立同一份业务正确性契约的断言矩阵；不要求所有项目实现特定名称或结构的验证器。"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 160,
+          "quote": "- Reader invalid ⇒ Reconcile 不得 healthy；"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:8",
+      "claim": "兼容矩阵与发布顺序：正确性前提需实际门禁或可验证流程",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 165,
+          "quote": "- old writer + old reader"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 174,
+          "quote": "发布顺序若是正确性前提，核查是否有实际门禁或可验证的操作流程；不要假定仅有文档就一定会执行，也不预设必须引入新自动化系统。"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:9",
+      "claim": "Job 假绿与真正完成：按状态契约区分完成、跳过、无任务、降级与失败",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 184,
+          "quote": "- no work performed"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 185,
+          "quote": "根据目标项目的状态契约区分完成、跳过、无任务、降级和失败。表示业务完成的终态不能仅因“方法正常返回”就成立。"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:10",
+      "claim": "Recovery 四问：Failure 怎么坏、RTO 多久必须收敛等",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 189,
+          "quote": "Failure：怎么坏？"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 192,
+          "quote": "RTO：多久必须收敛？"
+        }
+      ],
+      "assessment": "PARTIAL_SUMMARY",
+      "rationale": "Recovery 四问的候选标题只明确 Failure 与 RTO，Detection、Repair Owner 以“等”带过；参照原文 189–192。适于导览，不等于完整检查清单。"
+    },
+    {
+      "key": "module:11",
+      "claim": "Finding 根因与证据：Root Cause 与 Source Evidence",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 210,
+          "quote": "Root Cause："
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 212,
+          "quote": "Source Evidence："
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:12",
+      "claim": "二次评审表与处置：真实性、Impact、Likelihood、级别与治理包",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 223,
+          "quote": "| 编号 | 真实性 | Impact | Likelihood | 建议级别 | 处理方式 | 合并治理包 |"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 225,
+          "quote": "| | 已确认/风险/测试缺口/误报 | | | | 必须改/治理/测试/文档/运维/范围外 | |"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:13",
+      "claim": "治理包模板及上线 Gate",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 226,
+          "quote": "## 14. 治理包模板"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 241,
+          "quote": "上线 Gate："
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:14",
+      "claim": "验收关闭不得仅凭旧测试：代码改了或原有测试全绿不能关闭",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 245,
+          "quote": "## 15. 验收关闭标准"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 246,
+          "quote": "不能因为“代码改了”或“原有测试全绿”关闭。"
+        }
+      ],
+      "assessment": "SUPPORTED_AS_CONCISE_NAVIGATION_NOT_FULL_SOP",
+      "rationale": "标题陈述与所引冻结行方向一致；这只是简短章节导航，无法据此断言本章所有故障/恢复检查点均被表达。"
+    },
+    {
+      "key": "module:15",
+      "claim": "扫描停止判据与最终交付：约定范围无新高优先级发现即停，报告含上线 Gate",
+      "evidence": [
+        {
+          "file": "references/audit-sop.md",
+          "line": 261,
+          "quote": "- 按约定覆盖范围复核后，没有新的高优先级发现；"
+        },
+        {
+          "file": "references/audit-sop.md",
+          "line": 278,
+          "quote": "【上线 Gate】"
+        }
+      ],
+      "assessment": "MATERIAL_SEMANTIC_RISK",
+      "rationale": "原文 259–266 的扫描停止是综合门槛：范围内无新高优先级、剩余主要是测试/文档/可观测性、治理包稳定、继续扫描收益低于修复，且必须保留未验证环境；标题“无新高优先级发现即停”可能把必要条件误读为单一充分条件。第17章还要求回滚/剩余风险，标题仅提 Gate。"
+    }
+  ],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "现象卡",
+      "citedSourceLines": [
+        19
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "现象卡引用了第19行生产证据字段，但未表达时间、用户/对象、频率、请求标识与状态等具体采集项（9–18）；章节信息只部分覆盖。"
+    },
+    {
+      "chapter": 2,
+      "title": "全链路模板",
+      "citedSourceLines": [
+        23,
+        61
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "重画真实调用链有明确来源；谁写、谁读、状态位置、版本、重试及谁判断完成等检查维度（57–65）未列出。"
+    },
+    {
+      "chapter": 3,
+      "title": "状态机检查模板",
+      "citedSourceLines": [
+        88,
+        90
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "强调无租约执行器不可误报正确，但状态终态、可恢复性、重试限制等章节其余检查未展开。"
+    },
+    {
+      "chapter": 4,
+      "title": "事务故障矩阵",
+      "citedSourceLines": [
+        99,
+        103
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "捕捉不可恢复半提交不变量；不同失败窗口、DB/Outbox/外部副作用组合未逐一呈现。"
+    },
+    {
+      "chapter": 5,
+      "title": "Lease / stale worker 矩阵",
+      "citedSourceLines": [
+        104,
+        113
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "准确表现过期写入拒绝；存储非数据库时的等效可观测证据未展开。"
+    },
+    {
+      "chapter": 6,
+      "title": "MQ / Delivery 矩阵",
+      "citedSourceLines": [
+        127,
+        129
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "意图持久性与去重粒度有来源；部分失败按失败粒度恢复（128）未纳入标题。"
+    },
+    {
+      "chapter": 7,
+      "title": "Snapshot / Cache 脏数据矩阵",
+      "citedSourceLines": [
+        140,
+        150
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "内容错配与降级权限隔离有依据；还需 invalid reason、可达恢复路径及好对象不被坏对象拖累（149–152）。"
+    },
+    {
+      "chapter": 8,
+      "title": "Reader / Reconcile 一致性检查",
+      "citedSourceLines": [
+        154,
+        160
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "Reader invalid 不应得到 healthy 被保留；Reconcile broken 的持久恢复任务/负责人及修复后 Reader 契约（161–162）未列出。"
+    },
+    {
+      "chapter": 9,
+      "title": "Compatibility 矩阵",
+      "citedSourceLines": [
+        165,
+        174
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "正确表达发布顺序必须有门禁；旧新 writer/reader 兼容组合及 rollback midway 测例（165–173）被压缩。"
+    },
+    {
+      "chapter": 10,
+      "title": "Job / Reconcile 假绿矩阵",
+      "citedSourceLines": [
+        184,
+        185
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "明确方法返回不等于业务完成，覆盖跳过/无任务/降级等关键假绿类型。"
+    },
+    {
+      "chapter": 11,
+      "title": "Recovery 四问",
+      "citedSourceLines": [
+        189,
+        192
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "只有 Failure 与 RTO 明列，Detection/Repair Owner 两项（190–191）没有具体表达，属于需要补强的章节导览。"
+    },
+    {
+      "chapter": 12,
+      "title": "Finding 模板",
+      "citedSourceLines": [
+        210,
+        212
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "Root Cause 与 Source Evidence 是 Finding 重要字段；Impact、后果、独立 Probe/Production Evidence、永久回归也属于原模板（205–220）。"
+    },
+    {
+      "chapter": 13,
+      "title": "二次评审表",
+      "citedSourceLines": [
+        223,
+        225
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "真实性、影响、可能性、处理方式有来源；这是风险处置表，不代表已执行二次审核。"
+    },
+    {
+      "chapter": 14,
+      "title": "治理包模板",
+      "citedSourceLines": [
+        226,
+        241
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "治理包 Gate 有来源，但根因/治理目标/禁用方案/测试矩阵/回滚方案（231–243）未展开。"
+    },
+    {
+      "chapter": 15,
+      "title": "验收关闭标准",
+      "citedSourceLines": [
+        245,
+        246
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "明确不能因修改代码或旧测试通过而关闭；新回归、故障注入、恢复、回滚等完整关闭标准（247–258）仍是必要上下文。"
+    },
+    {
+      "chapter": 16,
+      "title": "扫描停止判据",
+      "citedSourceLines": [
+        261
+      ],
+      "assessment": "MATERIAL_SEMANTIC_RISK",
+      "rationale": "重要：标题“无新高优先级发现即停”可能误述 259–266 多条件停止判据为单条件，且省略已审范围与未验证证据继续保留。"
+    },
+    {
+      "chapter": 17,
+      "title": "最终交付格式",
+      "citedSourceLines": [
+        278
+      ],
+      "assessment": "CITED_WITH_POSSIBLE_OMISSIONS",
+      "rationale": "仅强调交付上线 Gate，未呈现回滚、剩余风险、范围、问题与结论（269–281）；可作为导览，但不是完整交付格式。"
+    }
+  ],
+  "sourceSections": 17,
+  "sourceCitationsPresent": 17,
+  "materialRiskCount": 1,
+  "independentHumanSignoff": "NOT_PERFORMED",
+  "humanHandoffUnmodified": true,
+  "limitations": "AI review of previously highly scaffolded one-shot model result; no independent human signoff or generalization evidence."
+}

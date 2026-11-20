@@ -36,6 +36,7 @@ export function evidencePrompt(entry){
   "relations 如果非空，每条必须完整包含 from、to、type 和 evidence。from/to 必须引用已定义的两个不同模块 ID；type 必须是 depends、data、controls、composes、flow 之一，不允许省略。不具备明确关系来源就使用 relations:[]。",
   "当引用的 Mermaid 原文出现 -- Yes --> 或 -- No -->（含 True/False、是/否）时，这是带条件的控制分支：type 必须为 controls，另外必须设置 condition 为该箭头的原样标签，例如 {from:\"decision\",to:\"next\",type:\"controls\",condition:\"Yes\",evidence:[{id:\"E...\"}]}。不能用 depends 表示无条件依赖；没有明确条件箭头依据不得添加 condition。",
   "普通 Mermaid 流程图箭头（如 I --> P[Draft v0 plan]）代表流程转移时，type 使用 flow；不能仅因为步骤先后就写 depends。depends 仅用于原文确有依赖关系的情形，flow 也不能冒充生产执行已发生。",
+  "优先做信息压缩：尽可能用 2–4 层、约 8–12 个有代表性的模块表达事实；每个模块只选 1–2 条最直接的冻结 ID。不要把每个检查项或每行原文机械扩展成一个模块；保留必需边界优先于堆积节点。",
   "按原文事实组织 2–8 层，不虚构数据库、部署、跨 Provider 路由、执行成功或测试结果。status 仅 documented/planned/unknown。",
   "指定的来源边界必须分别在至少一个模块或关系的 evidence ID 中真正覆盖，不得只写 notes。",
   "严格只输出一份 JSON 对象，不要 Markdown 围栏、前言或额外解释。目标结构：",
@@ -49,9 +50,9 @@ export function evidencePrompt(entry){
 
 // Generation-time enum of IDs from verified Git. This is optional CLI guidance;
 // the existing resolver remains the final fail-closed check.
-export function evidenceIdOutputSchema(entry){
+export function evidenceIdOutputSchema(entry,{compact=false}={}){
  const ids=evidenceCatalogue(entry).entries.map(e=>e.id);
- const evidence={type:"array",minItems:1,maxItems:24,items:{
+ const evidence={type:"array",minItems:1,maxItems:compact?2:24,items:{
   type:"object",additionalProperties:false,required:["id"],
   properties:{id:{type:"string",enum:ids}}
  }};
@@ -72,12 +73,12 @@ export function evidenceIdOutputSchema(entry){
     id:{type:"string",const:entry.case.id},
     status:{type:"string",enum:["documented","planned","unknown"]},
     notes:{type:"string"},
-    layers:{type:"array",minItems:2,maxItems:8,items:{
+    layers:{type:"array",minItems:2,maxItems:compact?4:8,items:{
      type:"object",additionalProperties:false,required:["title","modules"],
      properties:{title:{type:"string",minLength:1},
-      modules:{type:"array",minItems:1,maxItems:150,items:module}}
+      modules:{type:"array",minItems:1,maxItems:compact?4:150,items:module}}
     }},
-    relations:{type:"array",maxItems:200,items:relation}
+    relations:{type:"array",maxItems:compact?16:200,items:relation}
    }
   }}
  }};

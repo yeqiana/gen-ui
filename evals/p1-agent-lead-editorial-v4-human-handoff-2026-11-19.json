@@ -1,0 +1,466 @@
+{
+  "schema": "genui-p1-independent-semantic-review-handoff/v1",
+  "caseId": "agent-lead",
+  "sourceCommit": "9857d08e7c726e72070876fc08c9403a84d16f9a",
+  "originalClaudeCandidateSHA256": "3d156541da9a04683beca8bde0e6efdb035af9b813b70fc93f542c56d17e98ad",
+  "editorialCandidateSHA256": "6edef594d13ab290d5e6fcedec2eee517a6e01afb3c8b70b9661b299251d37bc",
+  "candidateOrigin": "AUTHOR_EDITORIAL_V4_WITH_WITHDRAWN_RELATION_NOT_NEW_MODEL",
+  "editorialTitleChanges": [
+    {
+      "id": "project-skill-install",
+      "from": "项目级 Skill 安装",
+      "to": "项目级 Skill 目录放置与发现说明"
+    },
+    {
+      "id": "auto-mode-invocation",
+      "from": "auto 模式任务调用",
+      "to": "auto 模式提示词示例"
+    },
+    {
+      "id": "readonly-smoke-test",
+      "from": "测试仓库中的只读任务验证",
+      "to": "建议：测试仓库中的只读任务验证"
+    },
+    {
+      "id": "dev-regression-validation",
+      "from": "真实需求开发与回归测试验证",
+      "to": "建议：真实需求开发与回归测试验证"
+    }
+  ],
+  "items": [
+    {
+      "key": "module:0",
+      "kind": "module",
+      "claim": "单 Agent 优先原则",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 40
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:1",
+      "kind": "module",
+      "claim": "不依赖 MCP 的轻量协作 Skill",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 3
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:2",
+      "kind": "module",
+      "claim": "非跨 Provider 模型路由器边界",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 5
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:3",
+      "kind": "module",
+      "claim": "项目级 Skill 目录放置与发现说明",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 9
+        },
+        {
+          "file": "README.md",
+          "line": 14
+        }
+      ],
+      "requiredQuestion": "确认仅目录放置与发现说明，不应声称目标项目已安装/真实加载",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:4",
+      "kind": "module",
+      "claim": "SKILL.md 与 references 目录结构",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 15
+        },
+        {
+          "file": "README.md",
+          "line": 16
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:5",
+      "kind": "module",
+      "claim": "模型与推理策略参考文档",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 1
+        },
+        {
+          "file": "README.md",
+          "line": 17
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:6",
+      "kind": "module",
+      "claim": "auto 模式提示词示例",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 27
+        }
+      ],
+      "requiredQuestion": "auto 模式只是 README 提示词示例，不应声称命令真实调用",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:7",
+      "kind": "module",
+      "claim": "按任务覆盖模式与并发、推理强度",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 30
+        },
+        {
+          "file": "README.md",
+          "line": 33
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:8",
+      "kind": "module",
+      "claim": "无原生子 Agent 时的单 Agent 或显式多会话",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 36
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:9",
+      "kind": "module",
+      "claim": "动态参考已验证模型与推理档位",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 41
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:10",
+      "kind": "module",
+      "claim": "原生子 Agent、Worktree 会话与 CLI 的分类区分",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 43
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:11",
+      "kind": "module",
+      "claim": "只读分析可并行、修改与集成测试守序",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 44
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:12",
+      "kind": "module",
+      "claim": "密钥与公司代码数据边界",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 45
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:13",
+      "kind": "module",
+      "claim": "不绑定具体模型版本",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 3
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:14",
+      "kind": "module",
+      "claim": "能力盘点仅记录核实内容",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 5
+        },
+        {
+          "file": "references/model-routing.md",
+          "line": 10
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:15",
+      "kind": "module",
+      "claim": "模型与推理强度的自动选择规则",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 17
+        },
+        {
+          "file": "references/model-routing.md",
+          "line": 20
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:16",
+      "kind": "module",
+      "claim": "推理强度建议不代表模型一定支持",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 22
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:17",
+      "kind": "module",
+      "claim": "任务中途修改仅影响新任务或会话",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 24
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:18",
+      "kind": "module",
+      "claim": "unsupported_effort：强度不支持时报告不静默降档",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 43
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:19",
+      "kind": "module",
+      "claim": "provider_isolation：跨 Provider 不通时改用独立会话或单 Agent",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 44
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:20",
+      "kind": "module",
+      "claim": "unsupported_model：目标模型不在已核实候选",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 42
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:21",
+      "kind": "module",
+      "claim": "subagent_unavailable：降级为单 Agent 并明确报告",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 45
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:22",
+      "kind": "module",
+      "claim": "permission_denied：缺少权限时不尝试绕过",
+      "sources": [
+        {
+          "file": "references/model-routing.md",
+          "line": 46
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:23",
+      "kind": "module",
+      "claim": "建议：测试仓库中的只读任务验证",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 51
+        },
+        {
+          "file": "README.md",
+          "line": 54
+        }
+      ],
+      "requiredQuestion": "先做只读测试的建议不等于已完成",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:24",
+      "kind": "module",
+      "claim": "建议：真实需求开发与回归测试验证",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 57
+        }
+      ],
+      "requiredQuestion": "真实需求开发与回归是后续建议，不等于已实际跑通",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:25",
+      "kind": "module",
+      "claim": "validate-skill.ps1 静态校验",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 65
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "module:26",
+      "kind": "module",
+      "claim": "静态校验不等于真实调用或协作实测",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 57
+        },
+        {
+          "file": "README.md",
+          "line": 65
+        }
+      ],
+      "requiredQuestion": "是否由对应冻结原文直接支持？是否把指南、模板或建议误写成已实现/已验证事实？",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    },
+    {
+      "key": "relation:0",
+      "kind": "withdrawn_relation",
+      "claim": "原图把 SKILL.md/目录与模型路由参考文档建立了缺少直接证明的 composes 连线；新版候选已撤回，该来源只列出文件",
+      "sources": [
+        {
+          "file": "README.md",
+          "line": 17
+        },
+        {
+          "file": "README.md",
+          "line": 47
+        }
+      ],
+      "requiredQuestion": "当前候选 relations 必须为空：README:17仅列文件树、README:47仅链接参考文档，均不证明原图 composes/执行调用关系；撤回该边是证据不足的处理，不等于文档已被证实可调用。不得宣称实际多Agent编排通过。",
+      "reviewerDecision": "PENDING",
+      "reviewerReason": null
+    }
+  ],
+  "humanIndependentReviewStatus": "NOT_STARTED",
+  "reviewerIdentity": null,
+  "reviewDate": null,
+  "signoffEvidence": null,
+  "verificationLimits": "Unfilled worksheet; requires external independently appointed person to examine original files, actual evidence and hash-bound v2 candidate. Existing AI reviews cannot satisfy this gate. v4 撤回来源无法直接证明的关系；历史 DeepSeek unclear 保留，独立真人审核仍未进行。",
+  "editorialParentCandidateSHA256": "779d886072410a8ccddf3e72aaf952bdbee94df7e5089e10251ef795d34e9906"
+}

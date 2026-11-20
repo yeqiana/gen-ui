@@ -1,0 +1,315 @@
+{
+  "schema": "genui-panorama-candidate/v1",
+  "cases": [
+    {
+      "id": "agent-lead",
+      "status": "documented",
+      "notes": "所有模块均取自 README.md 与 references/model-routing.md 的冻结原文；status=documented 仅表示文档声明，不代表真实多模型调用、子 Agent 协作或外部 CLI 已实测通过。provider_isolation 与 unsupported_effort 作为独立异常处置约束保留，未与自动选择规则或执行方式分类建立 depends/flow 关系。 README 中的先只读验证、再选真实需求进行开发/回归，只是建议的测试顺序，不以图中的 flow 代表曾经执行；两个对应模块仍保留建议状态和原冻结来源。 作者修订v4：撤回无法由 README 文件列表证明的 SKILL.md/目录 --composes--> 模型路由参考文档关系。文档清单只证明文件存在，不证明关系谓词或方向；非新模型运行。",
+      "layers": [
+        {
+          "title": "产品定位与边界",
+          "modules": [
+            {
+              "id": "single-agent-first",
+              "title": "单 Agent 优先原则",
+              "evidence": [
+                {
+                  "id": "ECC748907F858"
+                }
+              ]
+            },
+            {
+              "id": "no-mcp-dependency",
+              "title": "不依赖 MCP 的轻量协作 Skill",
+              "evidence": [
+                {
+                  "id": "E119CEC58C17E"
+                }
+              ]
+            },
+            {
+              "id": "not-cross-provider-router",
+              "title": "非跨 Provider 模型路由器边界",
+              "evidence": [
+                {
+                  "id": "EB6A32DB15E45"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Skill 安装与目录结构",
+          "modules": [
+            {
+              "id": "project-skill-install",
+              "title": "项目级 Skill 目录放置与发现说明",
+              "evidence": [
+                {
+                  "id": "EA85C5CBEA863"
+                },
+                {
+                  "id": "E9A7521D54883"
+                }
+              ]
+            },
+            {
+              "id": "skill-file-structure",
+              "title": "SKILL.md 与 references 目录结构",
+              "evidence": [
+                {
+                  "id": "E71EAAC6191B3"
+                },
+                {
+                  "id": "E95BE449EBC4E"
+                }
+              ]
+            },
+            {
+              "id": "model-routing-reference",
+              "title": "模型与推理策略参考文档",
+              "evidence": [
+                {
+                  "id": "E4F28D8A3EBED"
+                },
+                {
+                  "id": "EEC5474A7B13A"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "调用与任务模式",
+          "modules": [
+            {
+              "id": "auto-mode-invocation",
+              "title": "auto 模式提示词示例",
+              "evidence": [
+                {
+                  "id": "E26785EA54B89"
+                }
+              ]
+            },
+            {
+              "id": "task-level-overrides",
+              "title": "按任务覆盖模式与并发、推理强度",
+              "evidence": [
+                {
+                  "id": "E695A4F21F711"
+                },
+                {
+                  "id": "EC95DA024D9AA"
+                }
+              ]
+            },
+            {
+              "id": "no-subagent-honesty",
+              "title": "无原生子 Agent 时的单 Agent 或显式多会话",
+              "evidence": [
+                {
+                  "id": "E529D7B42BEDA"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "协作规则与安全边界",
+          "modules": [
+            {
+              "id": "dynamic-capability-discovery",
+              "title": "动态参考已验证模型与推理档位",
+              "evidence": [
+                {
+                  "id": "EC8482FF17EA1"
+                }
+              ]
+            },
+            {
+              "id": "execution-mode-distinction",
+              "title": "原生子 Agent、Worktree 会话与 CLI 的分类区分",
+              "evidence": [
+                {
+                  "id": "E9800679E849D"
+                }
+              ]
+            },
+            {
+              "id": "readonly-parallel-ordering",
+              "title": "只读分析可并行、修改与集成测试守序",
+              "evidence": [
+                {
+                  "id": "E6704ADB285F8"
+                }
+              ]
+            },
+            {
+              "id": "secret-and-data-boundary",
+              "title": "密钥与公司代码数据边界",
+              "evidence": [
+                {
+                  "id": "E52D92747B9F0"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "模型与推理运行时策略",
+          "modules": [
+            {
+              "id": "no-pinned-model-versions",
+              "title": "不绑定具体模型版本",
+              "evidence": [
+                {
+                  "id": "E534525DEE7CE"
+                }
+              ]
+            },
+            {
+              "id": "capability-inventory",
+              "title": "能力盘点仅记录核实内容",
+              "evidence": [
+                {
+                  "id": "E03A9870826E0"
+                },
+                {
+                  "id": "E638E86380338"
+                }
+              ]
+            },
+            {
+              "id": "auto-selection-rules",
+              "title": "模型与推理强度的自动选择规则",
+              "evidence": [
+                {
+                  "id": "EF93092FAEEBD"
+                },
+                {
+                  "id": "E6F8DA164781B"
+                }
+              ]
+            },
+            {
+              "id": "effort-advice-not-guarantee",
+              "title": "推理强度建议不代表模型一定支持",
+              "evidence": [
+                {
+                  "id": "E88A098611CDC"
+                }
+              ]
+            },
+            {
+              "id": "mid-task-change-scope",
+              "title": "任务中途修改仅影响新任务或会话",
+              "evidence": [
+                {
+                  "id": "EBAD38FD278B2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "异常与降级处置",
+          "modules": [
+            {
+              "id": "unsupported-effort",
+              "title": "unsupported_effort：强度不支持时报告不静默降档",
+              "evidence": [
+                {
+                  "id": "E98AEF4980200"
+                }
+              ]
+            },
+            {
+              "id": "provider-isolation",
+              "title": "provider_isolation：跨 Provider 不通时改用独立会话或单 Agent",
+              "evidence": [
+                {
+                  "id": "ED9DCD3D2C2F1"
+                }
+              ]
+            },
+            {
+              "id": "unsupported-model",
+              "title": "unsupported_model：目标模型不在已核实候选",
+              "evidence": [
+                {
+                  "id": "EF5AABF034832"
+                }
+              ]
+            },
+            {
+              "id": "subagent-unavailable",
+              "title": "subagent_unavailable：降级为单 Agent 并明确报告",
+              "evidence": [
+                {
+                  "id": "E089712AE0B0C"
+                }
+              ]
+            },
+            {
+              "id": "permission-denied",
+              "title": "permission_denied：缺少权限时不尝试绕过",
+              "evidence": [
+                {
+                  "id": "E8EF47CA7A7ED"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "验证与校验",
+          "modules": [
+            {
+              "id": "readonly-smoke-test",
+              "title": "建议：测试仓库中的只读任务验证",
+              "evidence": [
+                {
+                  "id": "E9661C2E6734C"
+                },
+                {
+                  "id": "E7AD5D2D70EE8"
+                }
+              ]
+            },
+            {
+              "id": "dev-regression-validation",
+              "title": "建议：真实需求开发与回归测试验证",
+              "evidence": [
+                {
+                  "id": "E0C97765B82FF"
+                }
+              ]
+            },
+            {
+              "id": "static-validation-script",
+              "title": "validate-skill.ps1 静态校验",
+              "evidence": [
+                {
+                  "id": "ED1DF6F6B9A2C"
+                }
+              ]
+            },
+            {
+              "id": "documented-not-verified",
+              "title": "静态校验不等于真实调用或协作实测",
+              "evidence": [
+                {
+                  "id": "E0C97765B82FF"
+                },
+                {
+                  "id": "ED1DF6F6B9A2C"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "relations": []
+    }
+  ]
+}

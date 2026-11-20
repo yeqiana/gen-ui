@@ -6,7 +6,7 @@
 
 [![Validate Skill](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml/badge.svg)](https://github.com/yeqiana/gen-ui/actions/workflows/validate.yml)
 
-**Gen UI is an information-design Skill for AI coding assistants.** It makes technical explanations, code reviews, architecture decisions, implementation plans, and test evidence easier to follow. Markdown is the default; trusted offline HTML and validated interactive data are used only when the task and host support them.
+**Gen UI is an information-design Skill that makes AI answers easier to understand.** It serves everyday explanations, learning, option comparisons, technical decisions and engineering reviews. Explain unfamiliar terms for the reader, use accurate examples only when helpful, and preserve factual limits. Markdown is the default; HTML and interaction are used only when requested and supported.
 
 **2026-11-16 stable baseline:** Three independently authored offline HTML reports passed browser and typography checks with local asset staging; see the [evidence and limitations](evals/independent-html-stability-2026-11-16.md).
 
@@ -24,6 +24,8 @@ For iterative reviews, carry forward **what changed, the current review decision
 | The same answer must work across hosts | Host-aware Markdown, diagrams, or trusted offline HTML |
 
 **What matters:** Preserve facts and nuance. Never fabricate tests, code changes, or deployment outcomes. Do not add decorative widgets without a reading purpose.
+
+**Quality order: accurate → understandable → well presented.** See the [four-scenario comprehension acceptance and outstanding human evidence](evals/comprehension-closure-2026-11-20.md); no understanding improvement is claimed without a reader study.
 
 ## Before and after: a technical answer
 

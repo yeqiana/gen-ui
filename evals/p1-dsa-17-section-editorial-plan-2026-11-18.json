@@ -1,0 +1,128 @@
+{
+  "schema": "genui-p1-human-editorial-coverage-plan/v1",
+  "sourceCaseId": "distributed-system-audit",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "sourceFile": "references/audit-sop.md",
+  "origin": "GPT-6 authored editorial feasibility fixture; not a new model run and not verified by independent human",
+  "layers": 4,
+  "modules": [
+    {
+      "id": "editorial-1",
+      "title": "现象卡：记录证据并区分不适用/未验证",
+      "evidenceLineNumbers": [
+        7,
+        3
+      ]
+    },
+    {
+      "id": "editorial-2",
+      "title": "真实调用链按依赖边界重画",
+      "evidenceLineNumbers": [
+        23
+      ]
+    },
+    {
+      "id": "editorial-3",
+      "title": "状态机租约和所有权按目标契约判断",
+      "evidenceLineNumbers": [
+        90
+      ]
+    },
+    {
+      "id": "editorial-4",
+      "title": "事务故障矩阵：避免不可恢复半提交",
+      "evidenceLineNumbers": [
+        103
+      ]
+    },
+    {
+      "id": "editorial-5",
+      "title": "Lease 过期写入必须被拒绝",
+      "evidenceLineNumbers": [
+        113
+      ]
+    },
+    {
+      "id": "editorial-6",
+      "title": "MQ Delivery：持久化交付意图",
+      "evidenceLineNumbers": [
+        127
+      ]
+    },
+    {
+      "id": "editorial-7",
+      "title": "Snapshot/Cache 按业务一致性契约降级",
+      "evidenceLineNumbers": [
+        150
+      ]
+    },
+    {
+      "id": "editorial-8",
+      "title": "Reader invalid 不能对应 Reconcile healthy",
+      "evidenceLineNumbers": [
+        160
+      ]
+    },
+    {
+      "id": "editorial-9",
+      "title": "Compatibility 发布顺序与门禁核验",
+      "evidenceLineNumbers": [
+        174
+      ]
+    },
+    {
+      "id": "editorial-10",
+      "title": "Job/Reconcile 假绿：返回不代表完成",
+      "evidenceLineNumbers": [
+        185
+      ]
+    },
+    {
+      "id": "editorial-11",
+      "title": "Recovery 四问作为故障修复入口",
+      "evidenceLineNumbers": [
+        186,
+        187
+      ]
+    },
+    {
+      "id": "editorial-12",
+      "title": "Finding 中记录 Root Cause 与证据",
+      "evidenceLineNumbers": [
+        210,
+        212
+      ]
+    },
+    {
+      "id": "editorial-13",
+      "title": "二次评审表的真实性与处置类型",
+      "evidenceLineNumbers": [
+        225
+      ]
+    },
+    {
+      "id": "editorial-14",
+      "title": "治理包模板与上线 Gate",
+      "evidenceLineNumbers": [
+        226,
+        241
+      ]
+    },
+    {
+      "id": "editorial-15",
+      "title": "验收关闭不能仅凭改码或旧测试全绿",
+      "evidenceLineNumbers": [
+        246
+      ]
+    },
+    {
+      "id": "editorial-16",
+      "title": "扫描停止与最终交付上线 Gate",
+      "evidenceLineNumbers": [
+        266,
+        278
+      ]
+    }
+  ],
+  "sourceCount": 17
+}

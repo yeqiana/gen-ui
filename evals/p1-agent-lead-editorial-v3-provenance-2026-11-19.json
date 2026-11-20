@@ -1,0 +1,34 @@
+{
+  "schema": "genui-p1-agent-lead-editorial-v3-evidence/v1",
+  "sourceCommit": "9857d08e7c726e72070876fc08c9403a84d16f9a",
+  "originalClaudeCandidateSHA256": "3d156541da9a04683beca8bde0e6efdb035af9b813b70fc93f542c56d17e98ad",
+  "editorialV2SHA256": "ac3b878fc1771ecdf584b1ac3cc0e4fb2c1b1e7c78873bc3b59c31da4888a87f",
+  "editorialV3SHA256": "779d886072410a8ccddf3e72aaf952bdbee94df7e5089e10251ef795d34e9906",
+  "all27ModulesAndEvidenceUnchanged": true,
+  "removedRelationship": {
+    "from": "readonly-smoke-test",
+    "to": "dev-regression-validation",
+    "type": "flow",
+    "evidence": [
+      {
+        "id": "E0C97765B82FF"
+      }
+    ]
+  },
+  "remainingRelationship": {
+    "from": "skill-file-structure",
+    "to": "model-routing-reference",
+    "type": "composes",
+    "evidence": [
+      {
+        "id": "EEC5474A7B13A"
+      }
+    ]
+  },
+  "notesClarifySuggestionNotExecution": true,
+  "sourceGate": "STRUCTURAL_PASS_SEMANTIC_UNVERIFIED",
+  "sourceRiskFlags": 0,
+  "reviewItems": 28,
+  "humanSignoff": "NOT_STARTED",
+  "modelCallsAdded": 0
+}

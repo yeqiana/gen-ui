@@ -1,0 +1,62 @@
+import test,{before,after} from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import {buildP1ReviewPacket} from "../scripts/build-p1-human-handoff.mjs";
+import {verifyP1HumanHandoff} from "../scripts/verify-p1-human-handoff.mjs";
+const master=path.join(os.tmpdir(),"genui-p1-verify-master-"+process.pid);
+const copy=()=>{const target=fs.mkdtempSync(path.join(os.tmpdir(),"genui-p1-verify-case-"));fs.cpSync(master,target,{recursive:true});return target};
+const withCopy=fn=>{const dir=copy();try{fn(dir)}finally{fs.rmSync(dir,{recursive:true,force:true})}};
+before(()=>buildP1ReviewPacket(master));
+after(()=>fs.rmSync(master,{recursive:true,force:true}));
+test("80 item offline packet has complete checksums and real frozen source lines",()=>withCopy(dir=>{const r=verifyP1HumanHandoff(dir);assert.equal(r.status,"PASS");assert.equal(r.itemCount,80);assert.equal(r.release,"NO_GO");assert.equal(r.filesChecked,r.checksums)}));
+test("edited review claim fails source checksum even if HTML still looks fine",()=>withCopy(dir=>{const f=path.join(dir,"review-items.json");fs.appendFileSync(f," ");const r=verifyP1HumanHandoff(dir);assert.equal(r.status,"FAIL");assert.ok(r.errors.some(x=>x.includes("review-items.json")))}));
+test("malformed or duplicate SHA256SUMS entries cannot be accepted",()=>withCopy(dir=>{const f=path.join(dir,"SHA256SUMS.txt");const line=fs.readFileSync(f,"utf8").split(/\r?\n/).find(Boolean);fs.appendFileSync(f,line+"\n");assert.throws(()=>verifyP1HumanHandoff(dir),/Duplicate/)}));
+test("extra unindexed file is detected",()=>withCopy(dir=>{fs.writeFileSync(path.join(dir,"extra.txt"),"unexpected");const r=verifyP1HumanHandoff(dir);assert.equal(r.status,"FAIL");assert.ok(r.errors.some(x=>x.includes("Unlisted file")))}));
+test("edited human verdict stays blocked even after attacker regenerates checksum entry",()=>withCopy(dir=>{const f=path.join(dir,"review-items.json"),x=JSON.parse(fs.readFileSync(f));x[0].verdict="supported";fs.writeFileSync(f,JSON.stringify(x));const sums=path.join(dir,"SHA256SUMS.txt");let text=fs.readFileSync(sums,"utf8");const newHash=awaitHash(fs.readFileSync(f));text=text.replace(/^([a-f0-9]{64})(  review-items\.json)$/m,newHash+"$2");fs.writeFileSync(sums,text);const r=verifyP1HumanHandoff(dir);assert.equal(r.status,"FAIL");assert.ok(r.errors.some(x=>x.includes("Review item identity")))}));
+import crypto from "node:crypto";
+function awaitHash(b){return crypto.createHash("sha256").update(b).digest("hex")}
+test("sealed CSV template cannot claim human completion even after updating checksum",()=>withCopy(dir=>{
+ const file=path.join(dir,"review-decisions-template.csv"),original=fs.readFileSync(file,"utf8");
+ assert.ok(original.includes('"PENDING"'));
+ fs.writeFileSync(file,original.replace('"PENDING"','"supported"'));
+ const sums=path.join(dir,"SHA256SUMS.txt");
+ let text=fs.readFileSync(sums,"utf8");
+ text=text.replace(/^([a-f0-9]{64})(  review-decisions-template\.csv)$/m,awaitHash(fs.readFileSync(file))+"$2");
+ fs.writeFileSync(sums,text);
+ const result=verifyP1HumanHandoff(dir);
+ assert.equal(result.status,"FAIL");
+ assert.ok(result.errors.some(e=>e.includes("Sealed CSV template")));
+}));
+test("declared new CSV template is mandatory even if it is deleted and checksum list rewritten",()=>withCopy(dir=>{
+ const mf=path.join(dir,"manifest.json"),m=JSON.parse(fs.readFileSync(mf,"utf8"));
+ m.reviewTemplate="review-decisions-template.csv";fs.writeFileSync(mf,JSON.stringify(m,null,2)+"\n");
+ const csv=path.join(dir,"review-decisions-template.csv");fs.unlinkSync(csv);
+ const sf=path.join(dir,"SHA256SUMS.txt");let sums=fs.readFileSync(sf,"utf8").split(/\r?\n/).filter(Boolean);
+ sums=sums.filter(line=>!line.endsWith("  review-decisions-template.csv")).map(line=>line.endsWith("  manifest.json")?awaitHash(fs.readFileSync(mf))+"  manifest.json":line);
+ fs.writeFileSync(sf,sums.join("\n")+"\n");
+ const result=verifyP1HumanHandoff(dir);
+ assert.equal(result.status,"FAIL");
+ assert.ok(result.errors.some(x=>x.includes("Required review-decision CSV template missing")));
+}));
+test("declared template cannot be switched to arbitrary filename",()=>withCopy(dir=>{
+ const mf=path.join(dir,"manifest.json"),m=JSON.parse(fs.readFileSync(mf,"utf8"));
+ m.reviewTemplate="../review-decisions-template.csv";fs.writeFileSync(mf,JSON.stringify(m,null,2)+"\n");
+ const sf=path.join(dir,"SHA256SUMS.txt"),sums=fs.readFileSync(sf,"utf8").replace(/^([a-f0-9]{64})(  manifest\.json)$/m,awaitHash(fs.readFileSync(mf))+"$2");
+ fs.writeFileSync(sf,sums);
+ const result=verifyP1HumanHandoff(dir);
+ assert.equal(result.status,"FAIL");
+ assert.ok(result.errors.some(x=>x.includes("Unexpected review template declaration")));
+}));
+test("legacy packet without declared template remains verifiable without CSV",()=>withCopy(dir=>{
+ const mfPath=path.join(dir,"manifest.json"),mf=JSON.parse(fs.readFileSync(mfPath,"utf8"));
+ assert.equal(mf.reviewTemplate,"review-decisions-template.csv");
+ delete mf.reviewTemplate;
+ fs.writeFileSync(mfPath,JSON.stringify(mf,null,2)+"\n");
+ fs.unlinkSync(path.join(dir,"review-decisions-template.csv"));
+ const sf=path.join(dir,"SHA256SUMS.txt");
+ const checks=fs.readFileSync(sf,"utf8").split(/\r?\n/).filter(line=>line&&!line.endsWith("  review-decisions-template.csv")).map(line=>line.endsWith("  manifest.json")?awaitHash(fs.readFileSync(mfPath))+"  manifest.json":line);
+ fs.writeFileSync(sf,checks.join("\n")+"\n");
+ assert.equal(verifyP1HumanHandoff(dir).status,"PASS");
+}));

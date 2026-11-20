@@ -22,9 +22,42 @@ jobs:
         with:
           node-version: "22"
           package-manager-cache: false
+      - name: Fetch exact public Git sources for offline P1 tests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $manifest = Get-Content ./evals/unseen-panorama-2026-11-17.json -Raw | ConvertFrom-Json
+          $allowed = @("agent-lead", "plan-ship", "distributed-system-audit")
+          $projectsRoot = [System.IO.Path]::GetFullPath((Join-Path $env:GITHUB_WORKSPACE "../.."))
+          foreach ($case in $manifest.cases) {
+            if ($case.repo -notin $allowed -or $case.commit -notmatch "^[a-f0-9]{40}$") { throw "Untrusted P1 source manifest" }
+            $target = Join-Path $projectsRoot $case.repo
+            if (Test-Path $target) { throw "Source target already exists: $target" }
+            & git -c credential.helper= clone --quiet --no-checkout "https://github.com/yeqiana/$($case.repo).git" $target
+            if ($LASTEXITCODE -ne 0) { throw "Cannot fetch public frozen repo: $($case.repo)" }
+            & git -C $target cat-file -e "$($case.commit)^{commit}"
+            if ($LASTEXITCODE -ne 0) { throw "Pinned commit unavailable: $($case.repo)" }
+          }
       - name: Validate Skill package and examples
         shell: pwsh
         run: ./scripts/test-skill.ps1
+      - name: Build and verify P1 human-review packet
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $projectsRoot = [System.IO.Path]::GetFullPath((Join-Path $env:GITHUB_WORKSPACE "../.."))
+          $packet = Join-Path $env:RUNNER_TEMP "genui-p1-human-review-80"
+          & node ./scripts/build-p1-human-handoff.mjs $packet $projectsRoot
+          if ($LASTEXITCODE -ne 0) { throw "P1 human-review packet build failed" }
+          & node ./scripts/verify-p1-human-handoff.mjs $packet
+          if ($LASTEXITCODE -ne 0) { throw "P1 human-review packet verification failed" }
+      - name: Upload P1 human-review packet (80 pending items)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen-ui-p1-human-review-80-items
+          path: ${{ runner.temp }}/genui-p1-human-review-80/
+          if-no-files-found: error
+          retention-days: 30
 
   browser:
     name: Browser QA (Chrome, 375/768/1440px)

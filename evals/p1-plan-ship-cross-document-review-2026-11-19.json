@@ -1,0 +1,123 @@
+{
+  "schema": "genui-p1-plan-ship-cross-document-ai-review/v1",
+  "frozenCommit": "c2368e5fcbc4a75b2bf0da1def2246e9be06e480",
+  "sourceCandidateSHA256": "96175fb72b200a95f43724d0b8d8945bb8e007a38849182a4cd514f312d6e051",
+  "techSourceGate": "PASS",
+  "documentedEdges": [
+    {
+      "line": 7,
+      "from": "host-invocation",
+      "to": "inspect-project",
+      "condition": null,
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "Frozen Mermaid source matches this required transition; no claim that it executed in a real session."
+    },
+    {
+      "line": 8,
+      "from": "inspect-project",
+      "to": "draft-plan",
+      "condition": null,
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "Frozen Mermaid source matches this required transition; no claim that it executed in a real session."
+    },
+    {
+      "line": 9,
+      "from": "draft-plan",
+      "to": "review-revise",
+      "condition": null,
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "Frozen Mermaid source matches this required transition; no claim that it executed in a real session."
+    },
+    {
+      "line": 10,
+      "from": "review-revise",
+      "to": "plan-only-decision",
+      "condition": null,
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "Frozen Mermaid source matches this required transition; no claim that it executed in a real session."
+    },
+    {
+      "line": 11,
+      "from": "plan-only-decision",
+      "to": "publish-docs",
+      "condition": "Yes",
+      "verdict": "CROSS_DOCUMENT_PUBLISH_SCOPE_UNCLEAR",
+      "sourceNote": "源图说 plan-only Yes 发布技术MD+读者MD；但 quality-gates.md:58 的正式交付要求离线HTML和索引。是否只是简图省略，还是不同发布范围，需明确。"
+    },
+    {
+      "line": 12,
+      "from": "plan-only-decision",
+      "to": "missing-test-decision",
+      "condition": "No",
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "非plan-only继续进入缺测试用例检查，并不证明测试齐全或开发已完成。"
+    },
+    {
+      "line": 13,
+      "from": "missing-test-decision",
+      "to": "supplement-tests",
+      "condition": "Yes",
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "缺用例 Yes 需补齐并两次复核，不能跳过设计后直接实施。"
+    },
+    {
+      "line": 14,
+      "from": "missing-test-decision",
+      "to": "minimal-implementation",
+      "condition": "No",
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "缺用例 No 是实现入口，后面仍必须真实集成测试。"
+    },
+    {
+      "line": 15,
+      "from": "supplement-tests",
+      "to": "minimal-implementation",
+      "condition": null,
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "Frozen Mermaid source matches this required transition; no claim that it executed in a real session."
+    },
+    {
+      "line": 16,
+      "from": "minimal-implementation",
+      "to": "real-tests",
+      "condition": null,
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "集成后测试要求使用最终源码，不能用独立分支局部测试冒充。"
+    },
+    {
+      "line": 17,
+      "from": "real-tests",
+      "to": "acceptance-decision",
+      "condition": null,
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "真实测试后依旧需要证据与验收判定，JUnit或结构检查不自动代表业务正确。"
+    },
+    {
+      "line": 18,
+      "from": "acceptance-decision",
+      "to": "fail-blocked",
+      "condition": "No",
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "明确失败或阻断后记录证据并停止；原文第22行排除自动重试和自动发布指南。"
+    },
+    {
+      "line": 19,
+      "from": "acceptance-decision",
+      "to": "manual-acceptance",
+      "condition": "Yes",
+      "verdict": "MATCHES_DOCUMENTED_FLOW_NOT_EXECUTION",
+      "sourceNote": "Yes 分支产出人工验收指南，不等于已经有人验收签名；质量门禁的手动步骤仍需实做。"
+    }
+  ],
+  "globalBoundaryReview": 5,
+  "aiReviewer": "GPT-6 cross-source review; NOT independent human",
+  "newDiscrepancy": {
+    "status": "UNCLEAR_SCOPE_NOT_PROVEN_BUG",
+    "diagramFile": "docs/architecture.md",
+    "diagramLine": 11,
+    "otherFile": "docs/quality-gates.md",
+    "otherLine": 58,
+    "question": "Does the plan-only published technical+reader MD also require registered matching offline HTML and index for a formal docs release? Diagram lists MD only; quality-gates requires HTML."
+  },
+  "humanSignoff": "NOT_STARTED"
+}

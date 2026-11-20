@@ -1,0 +1,49 @@
+{
+  "kind": "EDITORIAL_ONLY_NOT_REAL_MODEL",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "originalClaudeCandidateSHA256": "da2bd16ccfb5d4ae84b1f4daff10a6dbbec0b86172d2f4d1f2fef22d68a8283b",
+  "editorialCandidateSHA256": "7bc5f85accc92f1fd1952abb9f0fc6bb7a1c65976d94c2cf3a42c200e6e66cbf",
+  "changedModules": [
+    16
+  ],
+  "module16Previous": {
+    "title": "扫描停止判据与最终交付：约定范围无新高优先级发现即停，报告含上线 Gate",
+    "evidence": [
+      {
+        "id": "E3BB7177AC212"
+      },
+      {
+        "id": "EA60EF216A80D"
+      }
+    ]
+  },
+  "module16Edited": {
+    "title": "扫描收口限定已审范围并保留未验证缺口；最终交付包含上线 Gate",
+    "evidence": [
+      {
+        "id": "EBD85C6A27C29"
+      },
+      {
+        "id": "EA60EF216A80D"
+      }
+    ]
+  },
+  "notesEdited": true,
+  "frozenLineNumbers": [
+    261,
+    262,
+    263,
+    264,
+    266,
+    278,
+    279,
+    280
+  ],
+  "structuralGate": "STRUCTURAL_PASS_SEMANTIC_UNVERIFIED",
+  "sourceAnchors": 4,
+  "directlyCitedChapters": 17,
+  "totalChapters": 17,
+  "actualHumanReview": "NOT_STARTED",
+  "reviewHandoff": "evals/p1-dsa-editorial-v2-human-handoff-2026-11-19.json",
+  "semanticRiskImprovedNotHumanVerified": true
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "genui-p1-dsa-v6-offline-patch/v1",
+  "slot": "lease-mq",
+  "parentCandidateSHA256": "850396c5d9ecca06735bd86ffd7eb00d4d91376117ab4c7a279582b3efc8534a",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "origin": "AUTHOR_EDIT_NOT_AI",
+  "modules": [
+    {
+      "moduleId": "module-05",
+      "previousTitle": "Lease故障模板：A过期后B完成，A旧写被拒且B不被覆盖；按条件更新0行或存储等效证据记录拒绝/冲突，不把指标名当固定接口",
+      "title": "Lease 待测 A claim→A卡住→lease过期→B steal→B complete→A恢复complete；旧写拒绝、B结果不被覆盖，用0行或等效冲突证据，不固定指标名",
+      "directSourceLines": [
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113
+      ],
+      "notesAppend": "第5章完整待测时序 A claim → A卡住 → lease过期 → B steal → B complete → A恢复后complete；A的过期写入必须被拒，B结果不得覆盖。数据库条件更新可用影响0行证明拒绝，其他存储或协议须给出等效可观察证据；记录拒绝/冲突而不能把某个指标名称当作所有项目固定接口。本项尚未真实执行。"
+    },
+    {
+      "moduleId": "module-06",
+      "previousTitle": "MQ/Delivery模板检查发布/确认/消费/ACK/receiver失败与恢复；明确duplicate receiver event、durable intent、按失败粒度恢复且去重不得误吞其他合法对象",
+      "title": "MQ/Delivery 待测 100 receivers: 99 success + 1 fail、失败子集重试、duplicate receiver event；durable intent 和对象级去重不得吞其他合法对象",
+      "directSourceLines": [
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129
+      ],
+      "notesAppend": "第6章待测 publish fail、broker confirm timeout、duplicate consume、out-of-order、consumer ACK后crash、callback前crash、100 receivers: 99 success + 1 fail、failed receiver subset retry、duplicate receiver event，以及批次完成与单项处理记录不一致。不变量为durable delivery intent、按失败receiver粒度恢复、去重粒度不得吞掉其他合法对象的处理。仅为模板并未运行MQ测试。"
+    }
+  ],
+  "humanSignoff": "PENDING"
+}

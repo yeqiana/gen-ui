@@ -1,0 +1,47 @@
+{
+  "schema": "genui-p1-four-slot-final-gate/v1",
+  "date": "2026-11-19",
+  "integrationBeforeFinalDoc": "d8c3571694bc4bdb5941786a4142d45409494ff8",
+  "baseline": "4a5c51c9f8a07819ae140adbba285a89b16106b6",
+  "frozenTagResolved": "762a137c97f3880565a49e8e51f176198490032a",
+  "skillSha256": "ca978309b388b62c68e0bd54e2e04f9ec1dd7d0c1ed2a57522c24b7e4e11ee48",
+  "skillBytes": 5099,
+  "DSA": {
+    "actualModelRun": true,
+    "skillActivated": true,
+    "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+    "modelSourceReferences": 32,
+    "chaptersCited": 17,
+    "totalChapters": 17,
+    "anchors": 4,
+    "aiSupported": 16,
+    "modelResultSHA256": "da2bd16ccfb5d4ae84b1f4daff10a6dbbec0b86172d2f4d1f2fef22d68a8283b",
+    "costReportedUSD": 0.075252,
+    "independentHumanReview": "PENDING",
+    "stronglyScaffoldedNotGeneralization": true
+  },
+  "AgentLead": {
+    "editorialOnly": true,
+    "items": 29,
+    "pending": 29,
+    "originalClaudeSha256": "3d156541da9a04683beca8bde0e6efdb035af9b813b70fc93f542c56d17e98ad",
+    "editorialSha256": "ac3b878fc1771ecdf584b1ac3cc0e4fb2c1b1e7c78873bc3b59c31da4888a87f"
+  },
+  "PlanShip": {
+    "frozenEdges": 13,
+    "independentPending": 18
+  },
+  "engineering": {
+    "nodeTestsPass": 231,
+    "officialSkillTestsPass": 193,
+    "threeProjectChromeScenesPass": 9,
+    "qaIsolatedTestsPass": 5,
+    "coreSkillUnchanged": true,
+    "newFilesScanned": 8,
+    "sensitivePatternHits": 0
+  },
+  "remoteCI": "NOT_RUN_ON_FINAL_COMMIT",
+  "technicalDecision": "ACCEPT_CANDIDATE_FOR_INDEPENDENT_REVIEW",
+  "officialP1ReleaseDecision": "NO_GO",
+  "warning": "Local tests and a one-shot heavily scaffolded Claude success cannot replace independent human semantic signoff or remote CI."
+}

@@ -1,0 +1,181 @@
+{
+  "schema": "genui-p1-frozen-line-selection/v1",
+  "caseId": "distributed-system-audit",
+  "sourceCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "frozenManifest": "evals/unseen-panorama-2026-11-17.json",
+  "inputOriginalIdCount": 167,
+  "selectedIdCount": 42,
+  "lines": [
+    {
+      "file": "references/audit-sop.md",
+      "line": 3
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 5
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 23
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 60
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 61
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 67
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 90
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 94
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 99
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 103
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 113
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 114
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 127
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 128
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 129
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 130
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 149
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 150
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 151
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 153
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 154
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 155
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 160
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 161
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 162
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 174
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 185
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 186
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 187
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 198
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 210
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 212
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 213
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 222
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 225
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 245
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 246
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 247
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 259
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 266
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 267
+    },
+    {
+      "file": "references/audit-sop.md",
+      "line": 278
+    }
+  ],
+  "promptSha256": "458c12991272f82770264510eae700e87f240106b516851afe095d04327c6db7",
+  "outputSchemaSha256": "a1f0607ebd90615b96d6e41c2b2965036b7fb6466fbd8439da6fca89f0c17a4a",
+  "claim": "Reproducibility metadata only. No raw model response, Git source text or user secrets."
+}

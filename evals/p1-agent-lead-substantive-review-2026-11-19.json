@@ -1,0 +1,391 @@
+{
+  "schema": "genui-agent-lead-ai-substantive-review/v1",
+  "sourceCommit": "9857d08e7c726e72070876fc08c9403a84d16f9a",
+  "candidateSHA256": "ac3b878fc1771ecdf584b1ac3cc0e4fb2c1b1e7c78873bc3b59c31da4888a87f",
+  "reviewer": "GPT-6 AI source recheck; not independent human",
+  "items": [
+    {
+      "key": "module:0",
+      "claim": "单 Agent 优先原则",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 40
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:1",
+      "claim": "不依赖 MCP 的轻量协作 Skill",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 3
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:2",
+      "claim": "非跨 Provider 模型路由器边界",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 5
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:3",
+      "claim": "项目级 Skill 目录放置与发现说明",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 9
+        },
+        {
+          "file": "README.md",
+          "line": 14
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "目录放置与可被发现不代表跨项目自动安装或宿主实测加载，编辑标题已避免此误述。"
+    },
+    {
+      "key": "module:4",
+      "claim": "SKILL.md 与 references 目录结构",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 15
+        },
+        {
+          "file": "README.md",
+          "line": 16
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:5",
+      "claim": "模型与推理策略参考文档",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 1
+        },
+        {
+          "file": "README.md",
+          "line": 17
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:6",
+      "claim": "auto 模式提示词示例",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 27
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "auto 模式命令仅是 README 用法示例，不应称为已经运行。"
+    },
+    {
+      "key": "module:7",
+      "claim": "按任务覆盖模式与并发、推理强度",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 30
+        },
+        {
+          "file": "README.md",
+          "line": 33
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:8",
+      "claim": "无原生子 Agent 时的单 Agent 或显式多会话",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 36
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "明确没有原生子Agent时的退化，禁止把串行伪称并发。"
+    },
+    {
+      "key": "module:9",
+      "claim": "动态参考已验证模型与推理档位",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 41
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "模型档位仅依赖实际核实；不能通过模型菜单推断工具与推理支持。"
+    },
+    {
+      "key": "module:10",
+      "claim": "原生子 Agent、Worktree 会话与 CLI 的分类区分",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 43
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "原生子Agent/Worktree/CLI各是不同执行方式，标题忠实。"
+    },
+    {
+      "key": "module:11",
+      "claim": "只读分析可并行、修改与集成测试守序",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 44
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:12",
+      "claim": "密钥与公司代码数据边界",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 45
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:13",
+      "claim": "不绑定具体模型版本",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 3
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:14",
+      "claim": "能力盘点仅记录核实内容",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 5
+        },
+        {
+          "file": "references/model-routing.md",
+          "line": 10
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:15",
+      "claim": "模型与推理强度的自动选择规则",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 17
+        },
+        {
+          "file": "references/model-routing.md",
+          "line": 20
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "模型自动选择属于规范策略，不证明某一次调用已生效。"
+    },
+    {
+      "key": "module:16",
+      "claim": "推理强度建议不代表模型一定支持",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 22
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:17",
+      "claim": "任务中途修改仅影响新任务或会话",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 24
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:18",
+      "claim": "unsupported_effort：强度不支持时报告不静默降档",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 43
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "不支持特定强度时不可默默降档，有原文明确支持。"
+    },
+    {
+      "key": "module:19",
+      "claim": "provider_isolation：跨 Provider 不通时改用独立会话或单 Agent",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 44
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "跨Provider无法原生统一路由时退化单Agent或独立会话。"
+    },
+    {
+      "key": "module:20",
+      "claim": "unsupported_model：目标模型不在已核实候选",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 42
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:21",
+      "claim": "subagent_unavailable：降级为单 Agent 并明确报告",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 45
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:22",
+      "claim": "permission_denied：缺少权限时不尝试绕过",
+      "citations": [
+        {
+          "file": "references/model-routing.md",
+          "line": 46
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "候选声明有冻结文档来源对应；属于使用说明或规则，不是自动调用的运行证据。"
+    },
+    {
+      "key": "module:23",
+      "claim": "建议：测试仓库中的只读任务验证",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 51
+        },
+        {
+          "file": "README.md",
+          "line": 54
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "README是建议验证，不是完成只读测试的实绩。"
+    },
+    {
+      "key": "module:24",
+      "claim": "建议：真实需求开发与回归测试验证",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 57
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "README是建议后续真实需求验收，不是已通过真实开发/回归。"
+    },
+    {
+      "key": "module:25",
+      "claim": "validate-skill.ps1 静态校验",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 65
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "文档描述静态脚本职责，不能以此证明运行成功。"
+    },
+    {
+      "key": "module:26",
+      "claim": "静态校验不等于真实调用或协作实测",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 57
+        },
+        {
+          "file": "README.md",
+          "line": 65
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "明确静态通过不能证明真实多模型或子Agent运行。"
+    },
+    {
+      "key": "relation:0",
+      "claim": "SKILL.md 与 references 目录结构 --composes--> 模型与推理策略参考文档",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 17
+        }
+      ],
+      "verdict": "SUPPORTED_AS_DOCUMENTATION_NOT_EXECUTION",
+      "rationale": "目录树的composes仅表示文件结构，无运行时依赖含义。"
+    },
+    {
+      "key": "relation:1",
+      "claim": "建议：测试仓库中的只读任务验证 --flow--> 建议：真实需求开发与回归测试验证",
+      "citations": [
+        {
+          "file": "README.md",
+          "line": 57
+        }
+      ],
+      "verdict": "SUPPORTED_WITH_FLOW_SEMANTICS_WARNING",
+      "rationale": "README的先/然后支持建议顺序；flow可能被误读为实际执行，需要强制保留建议属性。"
+    }
+  ],
+  "observedSourceContradictions": 0,
+  "runtimeProof": "NOT_TESTED",
+  "humanSignoff": "PENDING"
+}

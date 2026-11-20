@@ -23,11 +23,17 @@ const safeOut=dest=>{
  return out;
 };
 // Advisory only: flags prioritize human review, never auto-approve or auto-reject.
-export function semanticRiskFlags(kind,evidence,type,condition=null){
+export function semanticRiskFlags(kind,evidence,type,condition=null,claim=""){
  const quotes=(evidence||[]).filter(e=>e.valid).map(e=>e.quote||"");
  const flags=[];
  if(kind==="module"&&quotes.length>0&&quotes.every(x=>/^\s*#{1,6}\s+/.test(x)))
   flags.push("HEADING_ONLY_MODULE_EVIDENCE");
+ // Advisory: source instructions to test later are not evidence tests ran.
+ if(kind==="module"&&/(?:测试|验证|验收)/.test(claim)&&
+    !/(?:建议|计划|待验证|待测试|示例|指南)/.test(claim)&&
+    quotes.some(x=>/(?:先发出|然后再选|后再验证|建议.*(?:测试|验证)|计划.*(?:测试|验证))/.test(x))&&
+    !quotes.some(x=>/(?:已实际通过|实测通过|已完成测试|验收已通过)/.test(x)))
+  flags.push("PROPOSED_VALIDATION_AS_COMPLETED");
  if(kind==="relation"&&type==="depends"&&
     quotes.some(x=>/--\s*(?:Yes|No|True|False|是|否)\s*-->/i.test(x)))
   flags.push("CONDITIONAL_FLOW_LABELED_DEPENDS");
@@ -75,7 +81,7 @@ export function buildSemanticPacket({entry,candidateRaw}){
  for(const [i,m] of modules.entries()){
   const key="module:"+i,claim=typeof m.title==="string"?m.title:"";
   const refs=evidence(m.evidence,key);
-  items.push({key,kind:"module",claim,moduleId:m.id,evidence:refs,riskFlags:semanticRiskFlags("module",refs)});
+  items.push({key,kind:"module",claim,moduleId:m.id,evidence:refs,riskFlags:semanticRiskFlags("module",refs,null,null,claim)});
  }
  for(const [i,r] of (c.relations||[]).entries()){
   const key="relation:"+i;

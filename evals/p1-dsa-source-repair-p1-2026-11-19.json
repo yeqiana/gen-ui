@@ -1,0 +1,310 @@
+{
+  "schema": "genui-p1-dsa-source-remediation-patch/v1",
+  "slot": "DSA-P1",
+  "origin": "AUTHOR_EDITORIAL_NOT_MODEL_GENERATION",
+  "frozenCommit": "0a224f8f517ff7f380741b0880075a0f53eae64f",
+  "parentCandidateSHA256": "c39b033e7b9b3a6615ba0d3e638c3f2996d77f762ca7fc7db6586efe6eb86005",
+  "purpose": "补齐独立AI评为unclear的第2–6章重要边界，SOP条款≠执行通过",
+  "modules": [
+    {
+      "id": "module-02",
+      "title": "全链路按实际依赖/事务边界重画，逐层核对写读、状态/唯一键/版本、重试补偿、完成及告警",
+      "sourceLines": [
+        23,
+        31,
+        55,
+        61,
+        62,
+        65
+      ],
+      "evidence": [
+        {
+          "id": "EBCECB8C4AF2A"
+        },
+        {
+          "id": "E712BD91F0366"
+        },
+        {
+          "id": "E9D45487012D7"
+        },
+        {
+          "id": "EA7BC00DB0C72"
+        },
+        {
+          "id": "E05D99D149DC2"
+        },
+        {
+          "id": "E2E0A7E629C5F"
+        }
+      ]
+    },
+    {
+      "id": "module-03",
+      "title": "状态机检查 claim/lease/steal/旧Worker/cursor/重试/部分成功/terminal/crash 恢复；遵守无租约契约例外",
+      "sourceLines": [
+        81,
+        82,
+        83,
+        84,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91
+      ],
+      "evidence": [
+        {
+          "id": "E289A9DAD8211"
+        },
+        {
+          "id": "E4DC24A59338A"
+        },
+        {
+          "id": "E519BECDD2D20"
+        },
+        {
+          "id": "EAF3B6C402423"
+        },
+        {
+          "id": "EFD6F81D9FA1A"
+        },
+        {
+          "id": "E84AB07087117"
+        },
+        {
+          "id": "E64F305111F79"
+        },
+        {
+          "id": "ED4520E41F23F"
+        },
+        {
+          "id": "E5F21E03545D8"
+        },
+        {
+          "id": "EC5B47324B531"
+        }
+      ]
+    },
+    {
+      "id": "module-04",
+      "title": "故障矩阵覆盖 Outbox/缓存/MQ/HTTP 失败、外部成功 DB 回滚、Outbox落盘 crash 和 commit 前后 crash；目标无不可恢复半提交",
+      "sourceLines": [
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103
+      ],
+      "evidence": [
+        {
+          "id": "EC124387788C9"
+        },
+        {
+          "id": "EB823C9FD1650"
+        },
+        {
+          "id": "ED26CEB833897"
+        },
+        {
+          "id": "E0E0735000187"
+        },
+        {
+          "id": "E156A1D31FB13"
+        },
+        {
+          "id": "E8785E30B0BEF"
+        },
+        {
+          "id": "EED7845256ABF"
+        },
+        {
+          "id": "E595CEC8BC5A0"
+        },
+        {
+          "id": "E6D4B61AD8B56"
+        }
+      ]
+    },
+    {
+      "id": "module-05",
+      "title": "Lease 接管验证 A过期、B完成、A旧写被拒且B不被覆盖；提供存储等效可观察证据",
+      "sourceLines": [
+        104,
+        108,
+        110,
+        111,
+        113
+      ],
+      "evidence": [
+        {
+          "id": "E8302FEEF15F3"
+        },
+        {
+          "id": "E2BF5904D0B25"
+        },
+        {
+          "id": "E8885783BAA1B"
+        },
+        {
+          "id": "EEB6DCF20E305"
+        },
+        {
+          "id": "E8FC8B4F5E179"
+        }
+      ]
+    },
+    {
+      "id": "module-06",
+      "title": "MQ/Delivery 检查发布失败/确认超时/重复乱序/ACK crash/部分失败；保留 durable intent、失败粒度恢复及正确去重",
+      "sourceLines": [
+        116,
+        117,
+        118,
+        119,
+        120,
+        122,
+        123,
+        125,
+        127,
+        128,
+        129
+      ],
+      "evidence": [
+        {
+          "id": "E67A53EEFD04D"
+        },
+        {
+          "id": "E17E121257065"
+        },
+        {
+          "id": "ED2BBE7506465"
+        },
+        {
+          "id": "E5BDB5C2583A3"
+        },
+        {
+          "id": "E5CAA9AEB458B"
+        },
+        {
+          "id": "E621C0561AF0A"
+        },
+        {
+          "id": "E8CE0DB468BBF"
+        },
+        {
+          "id": "E767E9B5EC82B"
+        },
+        {
+          "id": "EE187758FBA04"
+        },
+        {
+          "id": "EB46921C75BAB"
+        },
+        {
+          "id": "E70702879A19F"
+        }
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "number": 2,
+      "sourceLines": [
+        21,
+        23,
+        31,
+        55,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66
+      ],
+      "requiredMeaning": "按实际依赖画链路、逐层核对写读、状态、唯一键、generation、重试、补偿、完成与告警"
+    },
+    {
+      "number": 3,
+      "sourceLines": [
+        67,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91
+      ],
+      "requiredMeaning": "claim、所有权、租约过期接管、旧worker、部分成功、cursor单调性、终态与crash恢复及无租约例外"
+    },
+    {
+      "number": 4,
+      "sourceLines": [
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103
+      ],
+      "requiredMeaning": "DB/Outbox/投影/MQ/HTTP失败组合，外部成功DB回滚，commit前后crash"
+    },
+    {
+      "number": 5,
+      "sourceLines": [
+        104,
+        106,
+        108,
+        109,
+        110,
+        111,
+        113
+      ],
+      "requiredMeaning": "A过期B接管完成，A旧写被拒且B不覆盖，观察真实冲突证据"
+    },
+    {
+      "number": 6,
+      "sourceLines": [
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129
+      ],
+      "requiredMeaning": "publish失败/确认超时、重复乱序、ACK crash、部分receiver失败与恢复，durable intent与正确去重"
+    }
+  ],
+  "notesAppend": "第2章按实际依赖和事务边界重画，逐层问写读、状态、唯一键、版本、重试、补偿、完成、告警。第3章覆盖claim条件、lease owner、过期steal、旧Worker、cursor单调性、失败重放、terminal和crash恢复，按契约保留无租约例外。第4章矩阵包含DB成功但Outbox/缓存/MQ/HTTP失败、外部副作用成功但DB回滚、Outbox落盘crash和commit前后crash。第5章验证A卡住过期B接管完成，A恢复旧写拒绝且B数据不被覆盖，留观察证据。第6章检查发布失败、broker超时、重复乱序消费、ACK/callback崩溃、部分接收者失败/重试与记录不一致，并守住durable intent及正确去重。上述均为审核模板要求，不代表真实测试执行。",
+  "humanSignoff": "PENDING"
+}

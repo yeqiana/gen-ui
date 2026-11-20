@@ -1,0 +1,124 @@
+{
+  "schema": "genui-mermaid-frozen-edge-golden/v1",
+  "caseId": "plan-ship",
+  "commit": "c2368e5fcbc4a75b2bf0da1def2246e9be06e480",
+  "edges": [
+    {
+      "file": "docs/architecture.md",
+      "line": 7,
+      "sourceFrom": "A",
+      "sourceTo": "I",
+      "from": "host-invocation",
+      "to": "inspect-project",
+      "condition": null
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 8,
+      "sourceFrom": "I",
+      "sourceTo": "P",
+      "from": "inspect-project",
+      "to": "draft-plan",
+      "condition": null
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 9,
+      "sourceFrom": "P",
+      "sourceTo": "R",
+      "from": "draft-plan",
+      "to": "review-revise",
+      "condition": null
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 10,
+      "sourceFrom": "R",
+      "sourceTo": "G",
+      "from": "review-revise",
+      "to": "plan-only-decision",
+      "condition": null
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 11,
+      "sourceFrom": "G",
+      "sourceTo": "D",
+      "from": "plan-only-decision",
+      "to": "publish-docs",
+      "condition": "Yes"
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 12,
+      "sourceFrom": "G",
+      "sourceTo": "T",
+      "from": "plan-only-decision",
+      "to": "missing-test-decision",
+      "condition": "No"
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 13,
+      "sourceFrom": "T",
+      "sourceTo": "T2",
+      "from": "missing-test-decision",
+      "to": "supplement-tests",
+      "condition": "Yes"
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 14,
+      "sourceFrom": "T",
+      "sourceTo": "B",
+      "from": "missing-test-decision",
+      "to": "minimal-implementation",
+      "condition": "No"
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 15,
+      "sourceFrom": "T2",
+      "sourceTo": "B",
+      "from": "supplement-tests",
+      "to": "minimal-implementation",
+      "condition": null
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 16,
+      "sourceFrom": "B",
+      "sourceTo": "RT",
+      "from": "minimal-implementation",
+      "to": "real-tests",
+      "condition": null
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 17,
+      "sourceFrom": "RT",
+      "sourceTo": "V",
+      "from": "real-tests",
+      "to": "acceptance-decision",
+      "condition": null
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 18,
+      "sourceFrom": "V",
+      "sourceTo": "X",
+      "from": "acceptance-decision",
+      "to": "fail-blocked",
+      "condition": "No"
+    },
+    {
+      "file": "docs/architecture.md",
+      "line": 19,
+      "sourceFrom": "V",
+      "sourceTo": "M",
+      "from": "acceptance-decision",
+      "to": "manual-acceptance",
+      "condition": "Yes"
+    }
+  ]
+}

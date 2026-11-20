@@ -67,6 +67,33 @@ $required = @(
   "evals/render-unseen-panorama.mjs",
   "evals/unseen-panorama-workflow-2026-11-17.md",
   "tests/unseen-panorama-workflow.test.mjs",
+  "tests/semantic-temporal-risk.test.mjs",
+  "tests/mermaid-edge-audit.test.mjs",
+  "evals/mermaid-edge-audit.mjs",
+  "evals/frozen-section-coverage.mjs",
+  "tests/frozen-section-coverage.test.mjs",
+  "evals/dsa-review-gate.mjs",
+  "evals/agent-lead-review-gate.mjs",
+  "evals/plan-ship-review-gate.mjs",
+  "evals/p1-publish-readiness.mjs",
+  "tests/dsa-review-gate.test.mjs",
+  "tests/dsa-editorial-v3-semantic-guard.test.mjs",
+  "tests/p1-semantic-remediation-v4.test.mjs",
+  "tests/p1-semantic-remediation-v5.test.mjs",
+  "tests/p1-dsa-v6-source-boundaries.test.mjs",
+  "tests/p1-v6-frozen-sop-invariants.test.mjs",
+  "tests/p1-current-evidence-gate.test.mjs",
+  "tests/p1-human-handoff-bundle.test.mjs",
+  "scripts/verify-p1-human-handoff.mjs",
+  "tests/p1-human-handoff-verify.test.mjs",
+  "tests/p1-ci-public-source-fetch.test.mjs",
+  "evals/p1-current-evidence-gate.mjs",
+  "scripts/build-p1-human-handoff.mjs",
+  "tests/agent-lead-review-gate.test.mjs",
+  "tests/plan-ship-review-gate.test.mjs",
+  "tests/p1-publish-readiness.test.mjs",
+  "evals/p1-dsa-independent-review-handoff-2026-11-19.json",
+  "evals/p1-plan-ship-golden-edges-2026-11-18.json",
   "tests/chrome-unseen-panorama-smoke.mjs",
   "tests/unseen-panorama.test.mjs",
   "tests/chrome-heading-break-smoke.mjs",
@@ -218,6 +245,18 @@ if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama source evidence scorer syntax 
 if ($LASTEXITCODE -ne 0) { throw "Unseen-panorama workflow syntax failed" }
 & node --check (Join-Path $root "evals/evidence-id-map.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Frozen evidence-ID mapping syntax failed" }
+& node --check (Join-Path $root "evals/frozen-section-coverage.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Frozen SOP section coverage syntax failed" }
+& node --check (Join-Path $root "evals/dsa-review-gate.mjs")
+if ($LASTEXITCODE -ne 0) { throw "DSA review gate syntax failed" }
+& node --check (Join-Path $root "evals/agent-lead-review-gate.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Agent Lead review gate syntax failed" }
+& node --check (Join-Path $root "evals/plan-ship-review-gate.mjs")
+if ($LASTEXITCODE -ne 0) { throw "PlanShip review gate syntax failed" }
+& node --check (Join-Path $root "evals/p1-publish-readiness.mjs")
+if ($LASTEXITCODE -ne 0) { throw "P1 publish gate syntax failed" }
+& node --check (Join-Path $root "evals/mermaid-edge-audit.mjs")
+if ($LASTEXITCODE -ne 0) { throw "Pinned Mermaid edge audit syntax failed" }
 & node --check (Join-Path $root "evals/semantic-review.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Frozen semantic review syntax failed" }
 & node --check (Join-Path $root "evals/render-unseen-panorama.mjs")
@@ -253,6 +292,6 @@ Write-Output "[PASS] Standalone HTML delivery gate"
 if ($LASTEXITCODE -ne 0) { throw "Real HTML interaction delivery gate syntax failed" }
 Write-Output "[PASS] Optional Chrome HTML interaction gate syntax (browser checks are on demand)"
 
-& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs") (Join-Path $root "tests/product-panorama-cases.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/typography-contract.test.mjs") (Join-Path $root "tests/unseen-panorama.test.mjs") (Join-Path $root "tests/unseen-panorama-workflow.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs")
+& node --test (Join-Path $root "tests/semantic-diagrams.test.mjs") (Join-Path $root "tests/architecture-views.test.mjs") (Join-Path $root "tests/product-architecture-panorama.test.mjs") (Join-Path $root "tests/product-panorama-cases.test.mjs") (Join-Path $root "tests/media-contract.test.mjs") (Join-Path $root "tests/code-blocks.test.mjs") (Join-Path $root "tests/documents.test.mjs") (Join-Path $root "tests/renderer.test.mjs") (Join-Path $root "tests/repository.test.mjs") (Join-Path $root "tests/discovery.test.mjs") (Join-Path $root "tests/report.test.mjs") (Join-Path $root "tests/agent-evaluation.test.mjs") (Join-Path $root "tests/portal.test.mjs") (Join-Path $root "tests/portal-complex.test.mjs") (Join-Path $root "tests/agent-evidence.test.mjs") (Join-Path $root "tests/portal-security.test.mjs") (Join-Path $root "tests/workflow-guard.test.mjs") (Join-Path $root "tests/fourth-round.test.mjs") (Join-Path $root "tests/html-report-delivery.test.mjs") (Join-Path $root "tests/typography-contract.test.mjs") (Join-Path $root "tests/unseen-panorama.test.mjs") (Join-Path $root "tests/unseen-panorama-workflow.test.mjs") (Join-Path $root "tests/semantic-temporal-risk.test.mjs") (Join-Path $root "tests/mermaid-edge-audit.test.mjs") (Join-Path $root "tests/frozen-section-coverage.test.mjs") (Join-Path $root "tests/dsa-review-gate.test.mjs") (Join-Path $root "tests/dsa-editorial-v3-semantic-guard.test.mjs") (Join-Path $root "tests/p1-semantic-remediation-v4.test.mjs") (Join-Path $root "tests/p1-semantic-remediation-v5.test.mjs") (Join-Path $root "tests/p1-dsa-v6-source-boundaries.test.mjs") (Join-Path $root "tests/p1-v6-frozen-sop-invariants.test.mjs") (Join-Path $root "tests/p1-current-evidence-gate.test.mjs") (Join-Path $root "tests/p1-human-handoff-bundle.test.mjs") (Join-Path $root "tests/p1-human-handoff-verify.test.mjs") (Join-Path $root "tests/p1-ci-public-source-fetch.test.mjs") (Join-Path $root "tests/agent-lead-review-gate.test.mjs") (Join-Path $root "tests/plan-ship-review-gate.test.mjs") (Join-Path $root "tests/p1-publish-readiness.test.mjs") (Join-Path $root "tests/skill-ab-runner.test.mjs") (Join-Path $root "tests/information-design.test.mjs") (Join-Path $root "tests/understandability-guidance.test.mjs")
 if ($LASTEXITCODE -ne 0) { throw "Node.js tests failed" }
 Write-Output "[PASS] Node.js 协议、交互、仓库规范测试"

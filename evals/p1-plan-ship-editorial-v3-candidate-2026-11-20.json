@@ -1,0 +1,452 @@
+{
+  "schema": "genui-panorama-candidate/v1",
+  "cases": [
+    {
+      "id": "plan-ship",
+      "status": "documented",
+      "notes": "结构与关系全部取自冻结的 docs/architecture.md 与 docs/quality-gates.md：图中每条箭头被原文定义为『required transition』，不表示任何真实会话已执行、实现已合并或测试已通过（status=documented）。强制来源边界分别落在模块证据上：EA844F4DE0B9D（no server, database, scheduler or model API）、EE2FAF445CC83（A plan-only request never modifies business code）、EC9CFA103C59A（不得用分支测试冒充集成测试）、EFFDB53A92833（自动结构检查通过不等于业务验收通过）、E4E6073F1471E（RT[Real tests on final integrated source]）、EFF804737632D（V -- No --> X[FAIL or BLOCKED: record evidence; never claim pass]）。带 -- Yes/-- No --> 的箭头以 controls 表示，未出现的分支一律不补。 正式文档验收依据 docs/quality-gates.md:58，需要同名离线 HTML 与索引；这不能被流程图 plan-only 简写为双版 MD 所替代，也不意味着任何实际交付已完成。 正式交付必须同时核验技术版MD、读者版MD、同名离线HTML及索引；HTML缺失、被篡改或内容仍是旧版本将阻断正式文档交付。它是验收规则而不是实际交付通过；不能从该单条规则推出plan-only的豁免条件，或推断仅索引缺失时的独立处置。",
+      "layers": [
+        {
+          "title": "便携 Skill 运行边界",
+          "modules": [
+            {
+              "id": "portable-skill",
+              "title": "Portable standalone Markdown Skill（无 server / database / scheduler / model API）",
+              "evidence": [
+                {
+                  "id": "EA844F4DE0B9D"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Skill 契约与可选组件",
+          "modules": [
+            {
+              "id": "skill-contract",
+              "title": "SKILL.md 权威规范契约（英文优先、双语触发词）",
+              "evidence": [
+                {
+                  "id": "EF0709928CC7D"
+                }
+              ]
+            },
+            {
+              "id": "optional-discovery",
+              "title": "可选 Codex 发现元数据 agents/openai.yaml（非保证的运行时钩子）",
+              "evidence": [
+                {
+                  "id": "EE922739C38AB"
+                }
+              ]
+            },
+            {
+              "id": "stage-rules",
+              "title": "references/ 阶段细则与限制",
+              "evidence": [
+                {
+                  "id": "E9118E68AD7E1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "PlanShip 工作流阶段",
+          "modules": [
+            {
+              "id": "host-invocation",
+              "title": "Codex 或 Claude 调用 PlanShip",
+              "evidence": [
+                {
+                  "id": "E38EA928EEA06"
+                }
+              ]
+            },
+            {
+              "id": "inspect-project",
+              "title": "检查真实项目与可选 test-dir",
+              "evidence": [
+                {
+                  "id": "E38EA928EEA06"
+                }
+              ]
+            },
+            {
+              "id": "draft-plan",
+              "title": "起草 v0 方案",
+              "evidence": [
+                {
+                  "id": "E3F406F0176E9"
+                }
+              ]
+            },
+            {
+              "id": "review-revise",
+              "title": "至少两轮评审与修订",
+              "evidence": [
+                {
+                  "id": "ED3F204C7D5B8"
+                }
+              ]
+            },
+            {
+              "id": "plan-only-decision",
+              "title": "Plan-only 请求判定（不修改业务代码）",
+              "evidence": [
+                {
+                  "id": "E6B196D366C69"
+                },
+                {
+                  "id": "EE2FAF445CC83"
+                }
+              ]
+            },
+            {
+              "id": "publish-docs",
+              "title": "Plan-only双版MD；正式交付核验技术/读者版MD、同名离线HTML及索引，HTML缺失/被篡改/仍为旧版均阻断",
+              "evidence": [
+                {
+                  "id": "ED98800C9CF37"
+                },
+                {
+                  "id": "E0896BEB35E3C"
+                }
+              ]
+            },
+            {
+              "id": "missing-test-decision",
+              "title": "缺失测试用例判定",
+              "evidence": [
+                {
+                  "id": "E5FDF21BAA90C"
+                }
+              ]
+            },
+            {
+              "id": "supplement-tests",
+              "title": "补齐用例、两轮评审并更新方案",
+              "evidence": [
+                {
+                  "id": "EFC36743EB6FA"
+                }
+              ]
+            },
+            {
+              "id": "minimal-implementation",
+              "title": "最小实现 + 本地集成",
+              "evidence": [
+                {
+                  "id": "E3223AEDA3A5E"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "真实验证与验收阶段",
+          "modules": [
+            {
+              "id": "real-tests",
+              "title": "RT：在最终集成源码上运行真实测试",
+              "evidence": [
+                {
+                  "id": "E4E6073F1471E"
+                }
+              ]
+            },
+            {
+              "id": "acceptance-decision",
+              "title": "证据与验收是否通过的判定",
+              "evidence": [
+                {
+                  "id": "E2D6297F54D3D"
+                }
+              ]
+            },
+            {
+              "id": "fail-blocked",
+              "title": "FAIL or BLOCKED：记录证据，绝不宣称通过",
+              "evidence": [
+                {
+                  "id": "EFF804737632D"
+                }
+              ]
+            },
+            {
+              "id": "manual-acceptance",
+              "title": "人工验收指南 + 大白话版 MD",
+              "evidence": [
+                {
+                  "id": "E38EEFF404697"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "质量门禁",
+          "modules": [
+            {
+              "id": "build-integration-gate",
+              "title": "B · Build/integration 门禁（不得用分支测试冒充集成测试）",
+              "evidence": [
+                {
+                  "id": "EC9CFA103C59A"
+                }
+              ]
+            },
+            {
+              "id": "actual-test-gate",
+              "title": "A · Actual tests 门禁（真实测试框架运行并绑定新鲜报告与指纹）",
+              "evidence": [
+                {
+                  "id": "E1E59C0E16D29"
+                }
+              ]
+            },
+            {
+              "id": "structural-check",
+              "title": "自动结构检查通过 ≠ 业务验收通过",
+              "evidence": [
+                {
+                  "id": "EFFDB53A92833"
+                }
+              ]
+            },
+            {
+              "id": "counterfactual-gate",
+              "title": "反事实验收门禁 --gate acceptance（变异 JUnit XML、测试、日志 SHA-256、恢复 RUN）",
+              "evidence": [
+                {
+                  "id": "E5E0608F6925C"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "辅助验证脚本",
+          "modules": [
+            {
+              "id": "preflight",
+              "title": "scripts/preflight.py：识别 Skill 文件，不证明 Agent 真正遵循",
+              "evidence": [
+                {
+                  "id": "EBC935063F7AA"
+                }
+              ]
+            },
+            {
+              "id": "test-input-probe",
+              "title": "scripts/test_input_probe.py：盘点可选输入样本且不无条件提问",
+              "evidence": [
+                {
+                  "id": "ED1B396CB4DB7"
+                }
+              ]
+            },
+            {
+              "id": "doc-registry",
+              "title": "scripts/doc_registry.py：稳定编号、成对发布与恢复",
+              "evidence": [
+                {
+                  "id": "E6B43FA16211B"
+                }
+              ]
+            },
+            {
+              "id": "run-and-record",
+              "title": "scripts/run_and_record.py：运行真实测试命令并捕获证据",
+              "evidence": [
+                {
+                  "id": "EB3D0ABD55B6D"
+                }
+              ]
+            },
+            {
+              "id": "validate-evidence",
+              "title": "scripts/validate_evidence.py：校验代码/测试/方案一致性，不提供独立正确性",
+              "evidence": [
+                {
+                  "id": "EB6759670EF2B"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "数据与操作边界",
+          "modules": [
+            {
+              "id": "local-runtime",
+              "title": "用户任务与项目文件留存于 Agent 授权本地运行时，测试证据写入 `<project>/.idea/docs/<plan-name>/evidence/`",
+              "evidence": [
+                {
+                  "id": "EF237801536AF"
+                }
+              ]
+            },
+            {
+              "id": "git-boundary",
+              "title": "Git 操作边界：业务工作流仅本地 branch/worktree/commit/merge，禁止远端分支、推送、PR",
+              "evidence": [
+                {
+                  "id": "EC51BA30692CE"
+                }
+              ]
+            },
+            {
+              "id": "plain-language-doc",
+              "title": "大白话文档：让非技术读者说清目标、前后变化、流程、异常与验证操作",
+              "evidence": [
+                {
+                  "id": "E987CA0FE1C00"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "from": "host-invocation",
+          "to": "inspect-project",
+          "type": "flow",
+          "evidence": [
+            {
+              "id": "E38EA928EEA06"
+            }
+          ]
+        },
+        {
+          "from": "inspect-project",
+          "to": "draft-plan",
+          "type": "flow",
+          "evidence": [
+            {
+              "id": "E3F406F0176E9"
+            }
+          ]
+        },
+        {
+          "from": "draft-plan",
+          "to": "review-revise",
+          "type": "flow",
+          "evidence": [
+            {
+              "id": "ED3F204C7D5B8"
+            }
+          ]
+        },
+        {
+          "from": "review-revise",
+          "to": "plan-only-decision",
+          "type": "flow",
+          "evidence": [
+            {
+              "id": "E6B196D366C69"
+            }
+          ]
+        },
+        {
+          "from": "plan-only-decision",
+          "to": "publish-docs",
+          "type": "controls",
+          "condition": "Yes",
+          "evidence": [
+            {
+              "id": "ED98800C9CF37"
+            }
+          ]
+        },
+        {
+          "from": "plan-only-decision",
+          "to": "missing-test-decision",
+          "type": "controls",
+          "condition": "No",
+          "evidence": [
+            {
+              "id": "E5FDF21BAA90C"
+            }
+          ]
+        },
+        {
+          "from": "missing-test-decision",
+          "to": "supplement-tests",
+          "type": "controls",
+          "condition": "Yes",
+          "evidence": [
+            {
+              "id": "EFC36743EB6FA"
+            }
+          ]
+        },
+        {
+          "from": "missing-test-decision",
+          "to": "minimal-implementation",
+          "type": "controls",
+          "condition": "No",
+          "evidence": [
+            {
+              "id": "E3223AEDA3A5E"
+            }
+          ]
+        },
+        {
+          "from": "supplement-tests",
+          "to": "minimal-implementation",
+          "type": "flow",
+          "evidence": [
+            {
+              "id": "EA33BA44DFA35"
+            }
+          ]
+        },
+        {
+          "from": "minimal-implementation",
+          "to": "real-tests",
+          "type": "flow",
+          "evidence": [
+            {
+              "id": "E4E6073F1471E"
+            }
+          ]
+        },
+        {
+          "from": "real-tests",
+          "to": "acceptance-decision",
+          "type": "flow",
+          "evidence": [
+            {
+              "id": "E2D6297F54D3D"
+            }
+          ]
+        },
+        {
+          "from": "acceptance-decision",
+          "to": "fail-blocked",
+          "type": "controls",
+          "condition": "No",
+          "evidence": [
+            {
+              "id": "EFF804737632D"
+            }
+          ]
+        },
+        {
+          "from": "acceptance-decision",
+          "to": "manual-acceptance",
+          "type": "controls",
+          "condition": "Yes",
+          "evidence": [
+            {
+              "id": "E38EEFF404697"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -95,7 +95,7 @@ export function prepareEvidenceIds({manifest,projectsRoot,outDir}){
     entry.files.some(f=>!planned.sources?.some(s=>s.file===f.file&&s.sha256===f.sha256)))
    throw Error("Frozen trial plan source mismatch: "+entry.case.id);
   const dirCase=path.join(dir,entry.case.id);
-  for(const name of ["evidence-ids.prompt.md","evidence-ids.catalogue.json","evidence-ids.output-schema.json"])
+  for(const name of ["evidence-ids.prompt.md","evidence-ids.catalogue.json","evidence-ids.output-schema.json","evidence-ids.compact-output-schema.json"])
    if(fs.existsSync(path.join(dirCase,name)))throw Error("Refusing evidence-ID overwrite: "+entry.case.id+"/"+name);
  }
  for(const entry of sources){
@@ -103,6 +103,7 @@ export function prepareEvidenceIds({manifest,projectsRoot,outDir}){
   fs.writeFileSync(path.join(dirCase,"evidence-ids.prompt.md"),evidencePrompt(entry),"utf8");
   fs.writeFileSync(path.join(dirCase,"evidence-ids.catalogue.json"),JSON.stringify(evidenceCatalogue(entry),null,2)+"\n");
   fs.writeFileSync(path.join(dirCase,"evidence-ids.output-schema.json"),JSON.stringify(evidenceIdOutputSchema(entry),null,2)+"\n");
+  fs.writeFileSync(path.join(dirCase,"evidence-ids.compact-output-schema.json"),JSON.stringify(evidenceIdOutputSchema(entry,{compact:true}),null,2)+"\n");
  }
  return {schema:"genui-evidence-id-preparation/v1",state:"prepared-not-executed",
   cases:sources.map(e=>({id:e.case.id,entries:evidenceCatalogue(e).entries.length})),
