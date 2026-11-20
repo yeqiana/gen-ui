@@ -446,9 +446,13 @@
         {
           "file": "README.md",
           "line": 17
+        },
+        {
+          "file": "README.md",
+          "line": 47
         }
       ],
-      "requiredQuestion": "确认新版 candidate.relations 为空且旧关系被撤回；不把撤回当作源文支持旧关系",
+      "requiredQuestion": "当前候选 relations 必须为空：README:17仅列文件树、README:47仅链接参考文档，均不证明原图 composes/执行调用关系；撤回该边是证据不足的处理，不等于文档已被证实可调用。不得宣称实际多Agent编排通过。",
       "reviewerDecision": "PENDING",
       "reviewerReason": null
     }

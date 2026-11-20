@@ -239,7 +239,8 @@
       "line": 58,
       "rule": "正式交付需核验技术版 MD、读者版 MD、同名离线 HTML 和索引；HTML 缺失、篡改或旧版未更新会阻断。不能据此推断 plan-only 豁免或索引单独缺失的处置。",
       "humanDecision": "PENDING",
-      "reason": null
+      "reason": null,
+      "requiredQuestion": "按冻结 quality-gates.md:58 核对技术版 MD、读者版 MD、同名离线 HTML 与索引的正式交付门禁；HTML缺失、篡改、旧版未更新都阻断。不能仅凭其他文档中的 plan-only 预览或索引单独存在推定豁免，静态证据不等于受控执行和人审。"
     }
   ],
   "independentHumanReview": "NOT_STARTED",
