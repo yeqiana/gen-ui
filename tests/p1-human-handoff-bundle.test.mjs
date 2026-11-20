@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import {fileURLToPath} from "node:url";
 import {buildP1ReviewPacket} from "../scripts/build-p1-human-handoff.mjs";
 test("v6 human handoff has 80 frozen, sourced and unapproved records",()=>{
  const root=path.join(os.tmpdir(),"genui-p1-review-smoke-"+process.pid);
@@ -14,4 +15,16 @@ test("v6 human handoff has 80 frozen, sourced and unapproved records",()=>{
   const html=fs.readFileSync(path.join(root,"index.html"),"utf8");assert.ok(html.includes("<details>"));assert.equal((html.match(/<details>/g)||[]).length,80);assert.ok(!html.includes("<script"));
   const sums=fs.readFileSync(path.join(root,"SHA256SUMS.txt"),"utf8");assert.ok(sums.includes("index.html"));assert.ok(sums.includes("review-items.json"));
  }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+test("independent reviewer can specify source repository root",()=>{
+ const project=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+ const sourceRoot=path.resolve(project,"../..");
+ const out=path.join(os.tmpdir(),"genui-p1-review-explicit-root-"+process.pid);
+ const missing=path.join(os.tmpdir(),"genui-p1-source-root-missing-"+process.pid);
+ try{
+  const result=buildP1ReviewPacket(out,sourceRoot);
+  assert.equal(result.items,80);assert.equal(result.release,"NO_GO");
+  assert.equal(fs.existsSync(path.join(out,"index.html")),true);
+  assert.throws(()=>buildP1ReviewPacket(path.join(out,"nested"),missing),/git|source|ENOENT|repository/i);
+ }finally{fs.rmSync(out,{recursive:true,force:true})}
 });

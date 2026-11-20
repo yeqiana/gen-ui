@@ -16,12 +16,12 @@ const cases=[
  {id:"agent-lead",candidate:"p1-agent-lead-editorial-v4-candidate-2026-11-20.json",handoff:"p1-agent-lead-editorial-v4-human-handoff-2026-11-19.json"},
  {id:"plan-ship",candidate:"p1-plan-ship-editorial-v3-candidate-2026-11-20.json",handoff:"p1-plan-ship-editorial-v3-human-handoff-2026-11-19.json"}
 ];
-export function buildP1ReviewPacket(dest=path.join(os.tmpdir(),"genui-p1-v6-human-review-20261120")){
+export function buildP1ReviewPacket(dest=path.join(os.tmpdir(),"genui-p1-v6-human-review-20261120"),projectsRoot=path.resolve(root,"../..")){
  const identity=assessCurrentP1Evidence();
  if(identity.artifactIntegrity!=="PASS")throw Error("Current candidate identity is not verified: "+identity.findings.join(" | "));
  if(fs.existsSync(dest))throw Error("Destination exists; will not overwrite: "+dest);
  const manifest=read(path.join(root,"evals/unseen-panorama-2026-11-17.json"));
- const frozen=frozenInputs(manifest,path.resolve(root,"../.."));
+ const frozen=frozenInputs(manifest,projectsRoot);
  const byId=new Map(frozen.map(x=>[x.case.id,x]));
  const all=[],archive=[];
  for(const c of cases){
@@ -87,5 +87,5 @@ export function buildP1ReviewPacket(dest=path.join(os.tmpdir(),"genui-p1-v6-huma
  return {dir:dest,items:all.length,sourceFiles:archive.reduce((n,x)=>n+x.sourceFiles.length,0),files:files.length+1,htmlBytes:Buffer.byteLength(html),release:"NO_GO"};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
- try{console.log(JSON.stringify(buildP1ReviewPacket(process.argv[2]),null,2))}catch(e){console.error(e.message);process.exitCode=1}
+ try{console.log(JSON.stringify(buildP1ReviewPacket(process.argv[2],process.argv[3]?path.resolve(process.argv[3]):undefined),null,2))}catch(e){console.error(e.message);process.exitCode=1}
 }
