@@ -12,3 +12,8 @@ node_modules/
 
 # Cross-domain original source snapshots and sealed review keys
 /evals/artifacts/cross-domain-codex-2026-11-16/
+
+# Historical browser screenshots belong in revision archives, not the current tree.
+/evals/artifacts/**/*.png
+/evals/visual-brand-*/
+/evals/visual-refresh-*/
