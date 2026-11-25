@@ -127,10 +127,12 @@ After tightening the structure contract, three local native Codex representative
 
 ## Install
 
+For normal use, download the lightweight install ZIP from [Releases](https://github.com/yeqiana/gen-ui/releases) when available and extract its gen-ui/ directory into your Skills directory. The ZIP omits developer tests and historical screenshots; offline HTML examples and runtime assets remain included. For source development, use a shallow clone:
+
 Windows PowerShell, Codex (user-level Agent Skills directory):
 
 ~~~powershell
-git clone https://github.com/yeqiana/gen-ui.git "$HOME\.agents\skills\gen-ui"
+git clone --depth 1 --single-branch --branch main https://github.com/yeqiana/gen-ui.git "$HOME\.agents\skills\gen-ui"
 ~~~
 
 For one project only, use `<project>/.agents/skills/gen-ui/`. Older Codex installations may use `~/.codex/skills/`; follow the discovery path supported by your actual host and verify that `$gen-ui` is loaded.

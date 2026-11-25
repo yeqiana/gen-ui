@@ -137,10 +137,12 @@ node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --req
 
 ## 安装与使用
 
+日常使用优先从 [Releases](https://github.com/yeqiana/gen-ui/releases) 下载轻量安装 ZIP（如已发布），将其中的 gen-ui/ 目录解压到 Skill 目录。安装包不含开发测试及历史截图，保留离线 HTML 示例和运行资源。参与开发可使用浅克隆：
+
 Windows PowerShell 中安装到 Codex 用户级 Agent Skills 目录：
 
 ~~~powershell
-git clone https://github.com/yeqiana/gen-ui.git "$HOME\.agents\skills\gen-ui"
+git clone --depth 1 --single-branch --branch main https://github.com/yeqiana/gen-ui.git "$HOME\.agents\skills\gen-ui"
 ~~~
 
 仅在某个项目中使用时安装到 `<项目>/.agents/skills/gen-ui/`。旧版 Codex 可能使用 `~/.codex/skills/`，请以当前宿主实际支持的发现路径为准，并验证 `$gen-ui` 已被加载。
