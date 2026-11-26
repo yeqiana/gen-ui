@@ -127,7 +127,7 @@ After tightening the structure contract, three local native Codex representative
 
 ## Install
 
-For normal use, download the lightweight install ZIP from [Releases](https://github.com/yeqiana/gen-ui/releases) when available and extract its gen-ui/ directory into your Skills directory. The ZIP omits developer tests and historical screenshots; offline HTML examples and runtime assets remain included. For source development, use a shallow clone:
+For normal use, download the [current lightweight install ZIP](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/gen-ui-lite-2026-11-26.zip) and extract its gen-ui/ directory into your Skills directory. The ZIP omits developer tests and historical screenshots; offline HTML examples and runtime assets remain included. For source development, use a shallow clone:
 
 Windows PowerShell, Codex (user-level Agent Skills directory):
 
