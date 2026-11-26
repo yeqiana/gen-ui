@@ -104,3 +104,11 @@ At each weekly check, log date, engine/surface, query ID, whether GEN-UI is ment
 
 - Owner-authorized local GitHub authentication succeeded with administrator permissions. Repository description, About homepage https://yeqiana.github.io/gen-ui/, and 12 Topics were updated and independently read back via the GitHub API. Stars and forks were still 0 at this check.
 - Verified existing owner fork yeqiana/awesome-claude-skills and add-gen-ui branch against upstream main: exactly one README entry, one commit, no deletions. Opened https://github.com/BehiSecc/awesome-claude-skills/pull/1577 and verified open / not merged. Directory inclusion remains pending maintainer review. No simulated traffic or adoption claims.
+
+## Traffic baseline and second directory submission — 2026-11-26
+
+- GitHub traffic API, rolling 14-day aggregate: 115 views / 3 unique viewers; 925 clones / 262 unique cloners. The counts can include maintainer checks, CI, automated scanning and installers; they are not verified human adoption. Top returned referrer: github.com, 41 views / 3 unique viewers. Stars 0, forks 0, open issues 0, latest release asset download counter 3.
+- Public homepage, sitemap and Google verification file returned HTTP 200. Skills.sh still returned a soft 404 with noindex. No verified Google index coverage or Bing property status in this check.
+- First external PR https://github.com/BehiSecc/awesome-claude-skills/pull/1577 remains open, unmerged, no comments and clean mergeability at the check.
+- Second directory junminhong/awesome-agent-skills explicitly allows self-nominations with no minimum stars and requires synchronized bilingual listings and verified commits. Initial REST commit was unsigned; no PR was opened from that branch. GitHub documented createCommitOnBranch produced verified commit 0ae9117dcc3f3875d6f0335570c6e469cdcfb5bf; exact diff: two README files, one added entry each, zero deletions. Submitted https://github.com/junminhong/awesome-agent-skills/pull/142; verified open and not merged.
+- Community posts and third-party submission forms remain unpublished/unsubmitted. No synthetic installs, stars or traffic.

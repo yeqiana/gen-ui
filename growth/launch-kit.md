@@ -102,3 +102,17 @@ First public trial: use the existing before/after demo and invite developers to 
 ## Directory submission status — 2026-11-26
 
 GitHub About description, website and 12 Topics are now applied and verified. The earlier permission blocker was resolved using the owner-authorized local authentication. The first directory recommendation is submitted as [PR #1577](https://github.com/BehiSecc/awesome-claude-skills/pull/1577), open and not merged. Do not create duplicates or contact maintainers repeatedly. Google sitemap submission and Bing property import are still unconfirmed; community drafts remain unpublished.
+
+## Second directory submission and next distribution channels — 2026-11-26
+
+Two active external recommendations: [BehiSecc #1577](https://github.com/BehiSecc/awesome-claude-skills/pull/1577) and [junminhong #142](https://github.com/junminhong/awesome-agent-skills/pull/142). Both are open, not merged. The latter follows its bilingual, links-only and verified-signature requirements; author affiliation is disclosed. Do not duplicate or repeatedly nudge.
+
+Qualified manual submission channels (public forms verified; not yet submitted):
+
+- [Agent Skills Hub](https://agentskillshub.top/submit/): free standard queue; requires README, license and at least 10 stars or active commits. GEN-UI has ongoing commits but approval remains at their discretion. Do not pay for prioritization.
+- [SkillMill](https://skillmill.ai/submit): public GitHub URL review form; final step requests submitter contact information. Owner must supply their own contact details and confirm submission.
+- [Awesome Skills](https://www.awesomeskills.dev/en): live directory submission link on homepage. Use canonical repository URL https://github.com/yeqiana/gen-ui. No guarantee of acceptance.
+
+ComposioHQ/awesome-claude-skills is deferred: its contribution guide requests a hosted skill implementation and tested practical use cases, rather than a simple external listing. Keep the canonical GEN-UI project lightweight; no copied distribution tree.
+
+Community first release remains a human-authored maintainer post with one before/after example, real usage request and link. No community accounts are connected for publishing here.
