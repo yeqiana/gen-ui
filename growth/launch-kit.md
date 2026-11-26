@@ -98,3 +98,7 @@ PR body: I maintain GEN-UI, an MIT-licensed Agent Skill for clearer technical an
 Defer VoltAgent/awesome-agent-skills: https://github.com/VoltAgent/awesome-agent-skills/blob/main/CONTRIBUTING.md requires real community usage, which is not established. Do not bypass directory contribution rules or manufacture stars.
 
 First public trial: use the existing before/after demo and invite developers to test one real coding-agent answer. Publish only through the maintainer account and according to each community rule. No posts sent in this round.
+
+## Directory submission status — 2026-11-26
+
+GitHub About description, website and 12 Topics are now applied and verified. The earlier permission blocker was resolved using the owner-authorized local authentication. The first directory recommendation is submitted as [PR #1577](https://github.com/BehiSecc/awesome-claude-skills/pull/1577), open and not merged. Do not create duplicates or contact maintainers repeatedly. Google sitemap submission and Bing property import are still unconfirmed; community drafts remain unpublished.

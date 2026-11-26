@@ -99,3 +99,8 @@ At each weekly check, log date, engine/surface, query ID, whether GEN-UI is ment
 - Owner reported Google HTML-file verification passed, live URL eligible for indexing, and Request indexing clicked. Sitemap submission, actual indexing and Bing import remain unconfirmed.
 - API snapshot: 0 stars, 0 forks, release download counter 3 (not necessarily organic); repository About homepage still empty, original three topics. Skills.sh detail still soft 404 with noindex.
 - BehiSecc/awesome-claude-skills: public README checked, 10,489 stars at the time of API check, no GEN-UI entry; fork API returned 403 and duplicate issue search API returned 422. Recommendation prepared in growth/launch-kit.md, not submitted. VoltAgent directory deferred due to its real-community-usage requirement.
+
+## Repository metadata and directory submission — 2026-11-26
+
+- Owner-authorized local GitHub authentication succeeded with administrator permissions. Repository description, About homepage https://yeqiana.github.io/gen-ui/, and 12 Topics were updated and independently read back via the GitHub API. Stars and forks were still 0 at this check.
+- Verified existing owner fork yeqiana/awesome-claude-skills and add-gen-ui branch against upstream main: exactly one README entry, one commit, no deletions. Opened https://github.com/BehiSecc/awesome-claude-skills/pull/1577 and verified open / not merged. Directory inclusion remains pending maintainer review. No simulated traffic or adoption claims.
