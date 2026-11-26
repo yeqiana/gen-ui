@@ -67,7 +67,7 @@ def build(output):
             local = (page.parent / unquote(parts.path)).resolve()
             if not local.is_relative_to(output) or not local.exists():
                 raise ValueError(f"{page.relative_to(output)}: missing or unsafe {key}={value}")
-    urls = ["", "zh.html", "demo/before-after.en.html", "demo/before-after.zh.html",
+    urls = ["", "zh.html", "guide.html", "guide.zh.html", "demo/before-after.en.html", "demo/before-after.zh.html",
             "demo/documents/index.html", "demo/documents/en/index.html", "demo/report.html", "demo/report.en.html"]
     for lang in ("", "en/"):
         for name in ("project-analysis", "architecture-design", "implementation-plan", "test-acceptance"):

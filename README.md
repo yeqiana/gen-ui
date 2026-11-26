@@ -8,9 +8,13 @@
 
 **Gen UI is an information-design Skill that makes AI answers easier to understand.** It serves everyday explanations, learning, option comparisons, technical decisions and engineering reviews. Explain unfamiliar terms for the reader, use accurate examples only when helpful, and preserve factual limits. Markdown is the default; HTML and interaction are used only when requested and supported.
 
-**Get started:** [See before / after](demo/before-after.en.html) · [Browse four technical document examples](demo/documents/en/index.html) · [Install the lightweight Skill](#install) · [Skills.sh directory](https://www.skills.sh/yeqiana/gen-ui/gen-ui)
+**Get started:** [See before / after](demo/before-after.en.html) · [Browse four technical document examples](demo/documents/en/index.html) · [Install the lightweight Skill](#install).
 
 For Codex and Claude Code, GEN-UI offers an Agent Skill for clearer AI explanations, Markdown comparisons, readable HTML reports and architecture diagrams. It is not a UI framework or a separate model service.
+
+**Try it in your current project:** `npx skills add yeqiana/gen-ui --skill gen-ui`
+
+[Share practical feedback](https://github.com/yeqiana/gen-ui/issues) on installation, missing facts or unclear output.
 
 **2026-11-16 stable baseline:** Three independently authored offline HTML reports passed browser and typography checks with local asset staging; see the [evidence and limitations](evals/independent-html-stability-2026-11-16.md).
 

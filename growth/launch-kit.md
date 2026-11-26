@@ -13,7 +13,6 @@ Title: 我做了一个让 AI 回答更容易理解的开源 Skill（Codex / Clau
 仓库有优化前后对比、项目分析、架构设计、实施计划和测试验收等示例。所有示例都是说明材料，不冒充真实项目的生产测试结果。
 
 GitHub: https://github.com/yeqiana/gen-ui
-Skills.sh: https://www.skills.sh/yeqiana/gen-ui/gen-ui
 
 Install: npx skills add yeqiana/gen-ui --skill gen-ui
 
@@ -30,7 +29,6 @@ It is a lightweight, open-source information-design Skill, not a frontend framew
 The repository includes before/after examples and four technical-document examples in English and Chinese.
 
 Source: https://github.com/yeqiana/gen-ui
-Directory: https://www.skills.sh/yeqiana/gen-ui/gen-ui
 
 Install: npx skills add yeqiana/gen-ui --skill gen-ui
 
@@ -51,10 +49,10 @@ Use the existing screenshot and example links. Do not claim a reader-study benef
 
 ## Distribution checklist
 
-- V2EX or 掘金: post the Chinese draft once, using the author's account and community rules. Prefer a real before/after example rather than promotional repetition.
-- Hacker News Show HN: check the current rules and make the demo accessible before posting. A maintainer should be available to answer comments.
+- V2EX 分享创造 (https://www.v2ex.com/go/create) or 掘金: post the Chinese draft once, using the author's account and community rules. Prefer a real before/after example rather than promotional repetition.
+- Hacker News Show HN: follow https://news.ycombinator.com/showhn.html and make the demo accessible before posting. A maintainer should be available to answer comments.
 - Other communities: adapt a useful technical walkthrough, disclose authorship, and follow self-promotion rules. No unsolicited mass posts.
-- Skills directory: use the verified detail URL. No fake installs, no paid stars, no repeated telemetry.
+- Skills directory: only link the detail URL after visible listing content is verified; currently it returns a soft 404. No fake installs, no paid stars, no repeated telemetry.
 - On the first week after public launch, track real unique visitors, stars, forks, release downloads where available, substantive issues, and independent mentions. Never equate downloads or clone events with unique users.
 
 ## Repository administration
