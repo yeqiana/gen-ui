@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Browser smoke test for fixed, trusted technical-document examples only.
 import fs from "node:fs";
+import {saveLosslessPreview} from "../scripts/save-lossless-preview.mjs";
 import os from "node:os";
 import net from "node:net";
 import path from "node:path";
@@ -68,8 +69,8 @@ async function main(){
     if(capture&&width===1440&&["project-analysis","architecture-design","implementation-plan","test-acceptance"].includes(spec.id)){
      const clip=await evalPage("(()=>{const x=document.querySelector('.genui-product-panorama'),v=x.querySelector('.panorama-scroll');x.style.maxWidth='none';x.style.width='1050px';v.style.maxWidth='none';v.style.width='1050px';v.style.overflow='visible';x.scrollIntoView({block:'start'});const r=x.getBoundingClientRect();return{x:Math.max(0,Math.floor(r.left+scrollX)),y:Math.max(0,Math.floor(r.top+scrollY)),width:Math.ceil(r.width),height:Math.ceil(r.height)}})()");
      const shot=await cmd("Page.captureScreenshot",{format:"png",captureBeyondViewport:true,fromSurface:true,clip:{...clip,scale:1}});
-     const file=path.join(base,"assets","product-panorama-"+spec.id+"-preview.png");
-     fs.writeFileSync(file,Buffer.from(shot.data,"base64"));
+     const file=path.join(base,"assets","product-panorama-"+spec.id+"-preview.webp");
+     saveLosslessPreview(file,Buffer.from(shot.data,"base64"));
      check("case panorama preview "+spec.id,fs.statSync(file).size,clip.width>=1000&&clip.height>=900&&fs.statSync(file).size>18000);
     }
     if(spec.panorama){
@@ -83,8 +84,8 @@ async function main(){
     if(capture&&width===1440&&spec.panorama){
      await sleep(200);
      const shot=await cmd("Page.captureScreenshot",{format:"png",captureBeyondViewport:true,fromSurface:true});
-     const file=path.join(root,"demo","assets","product-architecture-panorama-preview.png");
-     fs.writeFileSync(file,Buffer.from(shot.data,"base64"));
+     const file=path.join(root,"demo","assets","product-architecture-panorama-preview.webp");
+     saveLosslessPreview(file,Buffer.from(shot.data,"base64"));
      check("product panorama screenshot source",fs.statSync(file).size,fs.statSync(file).size>16000);
     }
     if(spec.fixture){
@@ -99,8 +100,8 @@ async function main(){
       await evalPage("document.getElementById('arch-2').scrollIntoView({block:'start'})");
       await sleep(260);
       const shot=await cmd("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});
-      const file=path.join(base,"assets","architecture-patterns-preview.png");
-      fs.writeFileSync(file,Buffer.from(shot.data,"base64"));
+      const file=path.join(base,"assets","architecture-patterns-preview.webp");
+      saveLosslessPreview(file,Buffer.from(shot.data,"base64"));
       check("architecture screenshot source",fs.statSync(file).size,fs.statSync(file).size>16000);
      }
      if(spec.custom){const custom=await evalPage("(()=>({entities:document.querySelectorAll('[data-semantic-diagram=er] .semantic-entity').length,messages:document.querySelectorAll('[data-semantic-diagram=sequence] .semantic-edge[data-message-index]').length}))()");check("自定义 JSON 图/"+width,custom,state.semantic===2&&custom.entities===2&&custom.messages===3);}
@@ -122,7 +123,7 @@ async function main(){
       await sleep(350);
       const y=anchor?await evalPage("(()=>{const e=document.querySelector(location.hash);return e?Math.max(0,Math.round(e.getBoundingClientRect().top+scrollY-20)):0})()"):0;
       const shot=await cmd("Page.captureScreenshot",{format:"png",captureBeyondViewport:!!anchor,...(anchor?{clip:{x:0,y,width:1440,height:1000,scale:1}}:{})});
-      const file=path.join(base,"assets",spec.id+"-preview.png");fs.writeFileSync(file,Buffer.from(shot.data,"base64"));
+      const file=path.join(base,"assets",spec.id+"-preview.webp");saveLosslessPreview(file,Buffer.from(shot.data,"base64"));
       check("preview image "+spec.id,{file,size:fs.statSync(file).size},fs.statSync(file).size>8000);
      }
     }

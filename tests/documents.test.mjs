@@ -1,3 +1,4 @@
+import {losslessWebpDimensions} from "./preview-format.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -20,9 +21,9 @@ test("Four standalone technical document HTML deliverables exist",()=>{
   assert.doesNotMatch(t,/<script\s+[^>]*src\s*=\s*["']?https?:/i);
   assert.doesNotMatch(t,/<link[^>]+href=["']https?:/i);
   assert.doesNotMatch(t,/https?:\/\/(?!www\.w3\.org\/2000\/svg)/i);
-  const preview=fs.readFileSync(path.join(root,"demo/documents/assets",id+"-preview.png"));
+  const preview=fs.readFileSync(path.join(root,"demo/documents/assets",id+"-preview.webp"));
   assert.ok(preview.byteLength>8000,id+" preview image too small");
-  assert.equal(preview.toString("hex",0,8),"89504e470d0a1a0a");
+  assert.ok(losslessWebpDimensions(preview).width>0);
   assert.match(t,/非真实项目|示例|未执行|待评审/);
  }
 });
@@ -89,8 +90,8 @@ test("English README links only English HTML examples and English screenshots",(
     assert.ok(en.includes("]("+english+")"),"English README missing "+english);
     assert.ok(!zh.includes("]("+english+")"),"Chinese README should not link to English examples");
     assert.ok(zh.includes("](demo/documents/"+id+".html)"),"Chinese README missing Chinese document "+id);
-    const englishImage="demo/documents/assets/en-"+id+"-preview.png";
-    const chineseImage="demo/documents/assets/"+id+"-preview.png";
+    const englishImage="demo/documents/assets/en-"+id+"-preview.webp";
+    const chineseImage="demo/documents/assets/"+id+"-preview.webp";
     assert.ok(en.includes(englishImage),"English preview missing "+id);
     assert.ok(zh.includes(chineseImage),"Chinese preview missing "+id);
     const h=read(english);
@@ -101,7 +102,7 @@ test("English README links only English HTML examples and English screenshots",(
     assert.doesNotMatch(h,/[一-鿿]/,"English page contains Chinese text "+id);
     const image=fs.readFileSync(path.join(root,englishImage));
     assert.ok(image.length>8000,"English screenshot too small "+id);
-    assert.equal(image.toString("hex",0,8),"89504e470d0a1a0a");
+    assert.ok(losslessWebpDimensions(image).width>0);
   }
 });
 test("Chinese report demonstrates all ten information-design use cases",()=>{
@@ -120,9 +121,9 @@ test("Chinese report demonstrates all ten information-design use cases",()=>{
   assert.match(html,/id="column-picker"/);
   assert.match(html,/id="flow-fullscreen"/);
   assert.match(style,/\.case-directory/);
-  const snap=fs.readFileSync(path.join(root,"demo/assets/report-information-design-preview.png"));
+  const snap=fs.readFileSync(path.join(root,"demo/assets/report-information-design-preview.webp"));
   assert.ok(snap.length>8000);
-  assert.equal(snap.toString("hex",0,8),"89504e470d0a1a0a");
+  assert.ok(losslessWebpDimensions(snap).width>0);
 });
 test("Skill focuses on reading comprehension rather than UI decoration",()=>{
  const skill=read("SKILL.md");
@@ -144,8 +145,8 @@ test("English case gallery has ten real, English-language information-design exa
  assert.match(h,/class="language-sql"/);
  assert.match(h,/Not run/);
  assert.ok(en.includes("demo/report.en.html"));
- assert.ok(en.includes("demo/documents/assets/en-report-preview.png"));
- const img=fs.readFileSync(path.join(root,"demo/documents/assets/en-report-preview.png"));
+ assert.ok(en.includes("demo/documents/assets/en-report-preview.webp"));
+ const img=fs.readFileSync(path.join(root,"demo/documents/assets/en-report-preview.webp"));
  assert.ok(img.length>8000);
- assert.equal(img.toString("hex",0,8),"89504e470d0a1a0a");
+ assert.ok(losslessWebpDimensions(img).width>0);
 });

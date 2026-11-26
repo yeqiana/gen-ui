@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Chrome regression of trusted repo demo only; never run arbitrary agent HTML here.
 import fs from "node:fs";
+import {saveLosslessPreview} from "../scripts/save-lossless-preview.mjs";
 import path from "node:path";
 import os from "node:os";
 import net from "node:net";
@@ -114,7 +115,7 @@ async function run(){
         await evaluate("(()=>{document.documentElement.style.scrollBehavior='auto'; const y=document.getElementById('showcase').getBoundingClientRect().top+scrollY-8;window.scrollTo({top:y,behavior:'instant'});})()");
         await sleep(160);
         const shot=await send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});
-        fs.writeFileSync(path.join(screenshotDir,"report-information-design-preview.png"),Buffer.from(shot.data,"base64"));
+        saveLosslessPreview(path.join(screenshotDir,"report-information-design-preview.webp"),Buffer.from(shot.data,"base64"));
       }
 
       if(screenshotDir){fs.mkdirSync(screenshotDir,{recursive:true});const shot=await send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});fs.writeFileSync(path.join(screenshotDir,"report-"+width+".png"),Buffer.from(shot.data,"base64"));}
@@ -265,7 +266,7 @@ async function run(){
     const closed=await evaluate("(()=>({hidden:document.querySelector('.genui-image-overlay').hidden,focus:document.activeElement===document.querySelector('.genui-image-open')}))()");
     check("图片 Esc 关闭并恢复焦点",closed,closed.hidden&&closed.focus);
     evidence.imageViewer={image,closed};
-    const imageLink=await evaluate("(()=>{const anchor=document.createElement('a'),main=document.getElementById('main'),start=location.href;anchor.href='./documents/assets/architecture-design-preview.png';anchor.textContent='查看示例图片地址';main.appendChild(anchor);anchor.click();const dialog=document.querySelector('.genui-image-overlay');const result={samePage:location.href===start,inPlace:!dialog.hidden,percent:dialog.querySelector('[data-image-percent]').textContent,fullscreen:!!dialog.querySelector('[data-image-fullscreen]')};dialog.querySelector('[data-image-close]').click();anchor.remove();return result})()");
+    const imageLink=await evaluate("(()=>{const anchor=document.createElement('a'),main=document.getElementById('main'),start=location.href;anchor.href='./documents/assets/architecture-design-preview.webp';anchor.textContent='查看示例图片地址';main.appendChild(anchor);anchor.click();const dialog=document.querySelector('.genui-image-overlay');const result={samePage:location.href===start,inPlace:!dialog.hidden,percent:dialog.querySelector('[data-image-percent]').textContent,fullscreen:!!dialog.querySelector('[data-image-fullscreen]')};dialog.querySelector('[data-image-close]').click();anchor.remove();return result})()");
     check("图片链接在当前页面遮罩打开，不允许跳转裸图片",imageLink,imageLink.samePage&&imageLink.inPlace&&imageLink.percent==="100%"&&imageLink.fullscreen);
     evidence.imageViewer.imageLink=imageLink;
 

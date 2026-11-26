@@ -43,4 +43,7 @@ node tests/chrome-documents-smoke.mjs
 
 The main [Chinese interactive report](../demo/report.html) demonstrates ten ways to reorganize AI answers: answer-first summaries, comparisons, procedures, code reviews, implementation plans, test evidence, troubleshooting, host-aware output, long-form technical documents, and a feature-to-purpose map. The interface components exist to support these reading tasks; they are not the product goal.
 
-Chinese documentation uses the four [Chinese technical documents](../demo/documents/index.html) and corresponding screenshots. English documentation uses four **independent English examples** in [demo/documents/en/](../demo/documents/en/index.html), with matching English screenshots in `demo/documents/assets/en-*-preview.png`. These are fictional, illustrative artifacts, not verified results from a private repository.
+Chinese documentation uses the four [Chinese technical documents](../demo/documents/index.html) and corresponding screenshots. English documentation uses four **independent English examples** in [demo/documents/en/](../demo/documents/en/index.html), with matching English screenshots in `demo/documents/assets/en-*-preview.webp`. These are fictional, illustrative artifacts, not verified results from a private repository.
+
+
+Preview images are pixel-identical lossless WebP conversions of the original Chrome PNG captures. Explicit preview regeneration requires Python with Pillow; ordinary Skill use and browser QA do not. Historical tags have had obsolete PNG blobs removed to reduce clone size; they are not full archival snapshots. The original history was preserved separately before the migration.

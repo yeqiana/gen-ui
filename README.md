@@ -35,7 +35,7 @@ For iterative reviews, carry forward **what changed, the current review decision
 
 This is an example of information structure, not production sizing advice.
 
-[![The same engineering facts before and after GEN-UI information design](demo/assets/before-after-en-preview.png)](demo/before-after.en.html)
+[![The same engineering facts before and after GEN-UI information design](demo/assets/before-after-en-preview.webp)](demo/before-after.en.html)
 
 This real HTML preview compares **the same asynchronous workflow reliability facts** as dense prose versus an answer-first summary, risk/control table, and next action. [View the English Before/After example](demo/before-after.en.html).
 
@@ -45,25 +45,25 @@ The following examples are **English content with English page previews**, not l
 
 ### 01 · Project analysis report
 
-[![English project analysis report preview](demo/documents/assets/en-project-analysis-preview.png)](demo/documents/en/project-analysis.html)
+[![English project analysis report preview](demo/documents/assets/en-project-analysis-preview.webp)](demo/documents/en/project-analysis.html)
 
 **Preview focus: business mind map.** Context, module responsibilities, workflow boundaries, risks, and recommendations. [Read the project analysis](demo/documents/en/project-analysis.html).
 
 ### 02 · System architecture design
 
-[![English system architecture design preview](demo/documents/assets/en-architecture-design-preview.png)](demo/documents/en/architecture-design.html)
+[![English system architecture design preview](demo/documents/assets/en-architecture-design-preview.webp)](demo/documents/en/architecture-design.html)
 
 **Preview focus: message sequence and deployment topology.** Task states, component responsibilities, fenced execution, transactional delivery, and recovery. [Read the architecture design](demo/documents/en/architecture-design.html).
 
 ### 03 · Technical implementation plan
 
-[![English implementation plan preview](demo/documents/assets/en-implementation-plan-preview.png)](demo/documents/en/implementation-plan.html)
+[![English implementation plan preview](demo/documents/assets/en-implementation-plan-preview.webp)](demo/documents/en/implementation-plan.html)
 
 **Preview focus: activity paths and responsibility lanes.** Phases, dependencies, database migration, rollout, rollback, and evidence-based exit criteria. [Read the implementation plan](demo/documents/en/implementation-plan.html).
 
 ### 04 · Test and acceptance plan
 
-[![English test and acceptance plan preview](demo/documents/assets/en-test-acceptance-preview.png)](demo/documents/en/test-acceptance.html)
+[![English test and acceptance plan preview](demo/documents/assets/en-test-acceptance-preview.webp)](demo/documents/en/test-acceptance.html)
 
 **Preview focus: test-case matrix and failure injection.** Risk-based test cases, fault injection, performance evaluation, and acceptance gates. [Read the test plan](demo/documents/en/test-acceptance.html).
 
@@ -71,7 +71,7 @@ The following examples are **English content with English page previews**, not l
 
 ### Ten English information-design examples
 
-[![English information-design case gallery](demo/documents/assets/en-report-preview.png)](demo/report.en.html)
+[![English information-design case gallery](demo/documents/assets/en-report-preview.webp)](demo/report.en.html)
 
 [Explore ten English reading scenarios](demo/report.en.html): answer-first summaries, decision tables, procedures, reviews, task statuses, acceptance evidence, troubleshooting, host adaptation, long documents, and purposeful interaction. The [complete interactive Chinese report](demo/report.html) separately demonstrates the full offline HTML control set.
 
@@ -181,14 +181,14 @@ MIT License · [LICENSE](LICENSE).
 
 **Product architecture panorama:** [Open the offline layered architecture example](demo/product-architecture-panorama.html), with top-level access channels, a shared entry point, six horizontal capability bands, dual middle platforms, and supporting rails on both sides. It follows the existing GEN-UI SVG visual language (quiet white surfaces, fine outlines, blue accents). Modules are fictional layout examples, not a verified deployment.
 
-![Chrome preview of the product architecture panorama](demo/assets/product-architecture-panorama-preview.png)
+![Chrome preview of the product architecture panorama](demo/assets/product-architecture-panorama-preview.webp)
 
 **Four case-specific architecture panoramas:** [Project analysis](demo/documents/project-analysis.html#overview), [Architecture design](demo/documents/architecture-design.html#architecture), [Implementation plan](demo/documents/implementation-plan.html#roadmap), and [Test acceptance](demo/documents/test-acceptance.html#matrix). Each uses its own document content and labels design plans versus verified evidence; these are illustrative cases, not deployment records.
 
 
 Real-project examples: [Yopu / StoryOS / IM architecture gallery](demo/architecture-patterns.html), covering eight viewpoints and 24 explicit directional relationships. The diagrams are based on local module structures and design documents, not proof of deployed production topology.
 
-![Yopu, StoryOS and IM layered architecture examples](demo/documents/assets/architecture-patterns-preview.png)
+![Yopu, StoryOS and IM layered architecture examples](demo/documents/assets/architecture-patterns-preview.webp)
 
 See also: [Eight architecture views — layered/container models](demo/architecture-patterns.html) and [Lightweight Skill principles](docs/skill-principles.md).
 

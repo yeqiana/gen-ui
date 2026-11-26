@@ -18,14 +18,14 @@ def build(output):
     assert all((ROOT/p).is_file() and not (ROOT/p).is_symlink() for p in files), "missing or symlinked tracked file"
     total=sum((ROOT/p).stat().st_size for p in files)
     if total>MAX_TREE: raise ValueError(f"source tree {total} exceeds {MAX_TREE}")
-    selected={p for p in files if p in EXTRA|RUNTIME_SCRIPTS or p.startswith(("agents/","assets/","references/","docs/","examples/")) or (p.startswith("demo/") and not p.endswith((".png",".zip")))}
+    selected={p for p in files if p in EXTRA|RUNTIME_SCRIPTS or p.startswith(("agents/","assets/","references/","docs/","examples/")) or (p.startswith("demo/") and not p.endswith((".png",".webp",".zip")))}
     # Preserve local image dependencies of the offline HTML, not README marketing previews.
     for p in sorted(selected):
         if not p.endswith((".html",".css",".js")): continue
         text=(ROOT/p).read_text(encoding="utf-8")
-        for target in re.findall(r'''(?:src|href)\s*=\s*["']([^"']+\.(?:png|zip))["']''',text,re.I):
+        for target in re.findall(r'''(?:src|href)\s*=\s*["']([^"']+\.(?:png|webp|zip))["']''',text,re.I):
             local=posixpath.normpath(posixpath.join(posixpath.dirname(p),target))
-            if local in files and not (local.startswith("demo/unseen-panorama/assets/") and local.endswith(("-375.png","-768.png"))): selected.add(local)
+            if local in files and not (local.startswith("demo/unseen-panorama/assets/") and local.endswith(("-375.webp","-768.webp"))): selected.add(local)
     assert EXTRA|RUNTIME_SCRIPTS <= selected
     data={}
     for p in sorted(selected):
@@ -43,7 +43,7 @@ def build(output):
             raw=re.sub(r"\]\(([^)\s]+)\)",link,raw.decode("utf-8")).encode("utf-8")
         if p=="demo/unseen-panorama/index.html":
             text=raw.decode("utf-8")
-            text,count=re.subn(r'<p>另有 <a href="assets/[^"]+-375\.png">375px</a> · <a href="assets/[^"]+-768\.png">768px</a> 视口预览图。</p>', '<p>移动端可直接打开上方离线架构图查看；历史视口截图见源仓库。</p>',text)
+            text,count=re.subn(r'<p>另有 <a href="assets/[^"]+-375\.webp">375px</a> · <a href="assets/[^"]+-768\.webp">768px</a> 视口预览图。</p>', '<p>移动端可直接打开上方离线架构图查看；历史视口截图见源仓库。</p>',text)
             if count!=3: raise ValueError("gallery preview format changed")
             raw=text.encode("utf-8")
         data[p]=raw

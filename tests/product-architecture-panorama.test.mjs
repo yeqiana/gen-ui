@@ -1,3 +1,4 @@
+import {losslessWebpDimensions} from "./preview-format.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -11,12 +12,12 @@ const spec=read("references/product-architecture-panorama.md");
 const arch=read("references/architecture-patterns.md");
 const svgTheme=read("assets/product-panorama-svg-theme.css");
 
-const panoramaPreview=fs.readFileSync(path.join(root,"demo/assets/product-architecture-panorama-preview.png"));
-test("产品全景图截图来自真实 Chrome PNG 并包含完整画布",()=>{
-  assert.equal(panoramaPreview.subarray(0,8).toString("hex"),"89504e470d0a1a0a");
+const panoramaPreview=fs.readFileSync(path.join(root,"demo/assets/product-architecture-panorama-preview.webp"));
+test("产品全景图截图来自真实 Chrome 无损 WebP 并包含完整画布",()=>{
+  assert.ok(losslessWebpDimensions(panoramaPreview).width>0);
   assert.ok(panoramaPreview.length>16000);
-  assert.ok(panoramaPreview.readUInt32BE(16)>=1000);
-  assert.ok(panoramaPreview.readUInt32BE(20)>=1100);
+  assert.ok(losslessWebpDimensions(panoramaPreview).width>=1000);
+  assert.ok(losslessWebpDimensions(panoramaPreview).height>=1100);
 });
 
 test("产品架构全景板保留渠道、统一入口、完整横向层次和左右支撑",()=>{

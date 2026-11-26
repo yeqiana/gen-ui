@@ -1,3 +1,4 @@
+import {losslessWebpDimensions} from "./preview-format.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -56,11 +57,11 @@ test("四页不能误用通用商贸产品样例，也不能覆盖已有内容",
 test("四张架构全景预览源于 Chrome 截图，可从中文 README 打开",()=>{
  const readme=fs.readFileSync(path.join(root,"README.zh-CN.md"),"utf8");
  for(const [id] of cases){
-  const file="demo/documents/assets/product-panorama-"+id+"-preview.png";
+  const file="demo/documents/assets/product-panorama-"+id+"-preview.webp";
   const b=fs.readFileSync(path.join(root,file));
-  assert.equal(b.subarray(0,8).toString("hex"),"89504e470d0a1a0a",id);
-  assert.equal(b.readUInt32BE(16),1050,id+" width");
-  assert.ok(b.readUInt32BE(20)>=1000,id+" height");
+  assert.ok(losslessWebpDimensions(b).width>0);
+  assert.equal(losslessWebpDimensions(b).width,1050,id+" width");
+  assert.ok(losslessWebpDimensions(b).height>=1000,id+" height");
   assert.ok(b.length>18000,id+" size");
   assert.ok(readme.includes(file),id+" readme link");
  }

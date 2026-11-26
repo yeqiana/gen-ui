@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Native Chrome verification for offline panorama HTML. No Playwright or network.
 import fs from "node:fs";
+import {saveLosslessPreview} from "../scripts/save-lossless-preview.mjs";
 import path from "node:path";
 import os from "node:os";
 import net from "node:net";
@@ -89,7 +90,7 @@ async function run(){
     if(width<=768)ensure(state.regionScroll>state.regionClient+50,"narrow diagram does not scroll internally",{file,width,state});
     if(captureDir){
      const shot=await call("Page.captureScreenshot",{format:"png",fromSurface:true,captureBeyondViewport:false});
-     fs.writeFileSync(path.join(captureDir,tag+"-"+width+".png"),Buffer.from(shot.data,"base64"));
+     if(path.resolve(captureDir)===path.join(root,"demo","unseen-panorama","assets"))saveLosslessPreview(path.join(captureDir,tag+"-"+width+".webp"),Buffer.from(shot.data,"base64"));else fs.writeFileSync(path.join(captureDir,tag+"-"+width+".png"),Buffer.from(shot.data,"base64"));
     }
     samples.push({case:tag,width,viewport:state.viewport,bodyScroll:state.bodyScroll,diagramClient:state.regionClient,diagramScroll:state.regionScroll,nodes:state.modules});
    }

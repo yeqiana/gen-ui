@@ -4,7 +4,7 @@
 
 ## 主案例：完整的中文 HTML 信息重构报告
 
-[![信息重构案例实机截图](assets/report-information-design-preview.png)](report.html)
+[![信息重构案例实机截图](assets/report-information-design-preview.webp)](report.html)
 
 **[demo/report.html](report.html)** 汇总 Skill 的主要设计规则，并将它们映射到实际可操作的页面：
 

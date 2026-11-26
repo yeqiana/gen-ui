@@ -37,13 +37,13 @@
 
 这是信息组织方式的示例，不是生产环境的线程池配置建议。
 
-[![同一份技术信息：原始文字墙与 GEN-UI 结构化说明对比](demo/assets/before-after-zh-preview.png)](demo/before-after.zh.html)
+[![同一份技术信息：原始文字墙与 GEN-UI 结构化说明对比](demo/assets/before-after-zh-preview.webp)](demo/before-after.zh.html)
 
 这张截图使用**同一组异步任务可靠性信息**做左右对比：左边是长段文字，右边把结论、风险和下一步拆开；[打开中文对比 HTML](demo/before-after.zh.html)。
 
 ## HTML 完整展示 · 十类阅读场景
 
-[![中文信息重构案例与交互报告](demo/assets/report-information-design-preview.png)](demo/report.html)
+[![中文信息重构案例与交互报告](demo/assets/report-information-design-preview.webp)](demo/report.html)
 
 [**查看交互式完整报告**](demo/report.html) · 包含结论提炼、方案对比、执行步骤、代码评审、实施任务、测试验收、排障分析、宿主适配、技术文档导航、功能覆盖矩阵共 **10 类案例**。
 
@@ -55,25 +55,25 @@
 
 ### 01 · 项目分析报告
 
-[![项目分析报告中文预览](demo/documents/assets/project-analysis-preview.png)](demo/documents/project-analysis.html)
+[![项目分析报告中文预览](demo/documents/assets/project-analysis-preview.webp)](demo/documents/project-analysis.html)
 
 **截图重点：业务思维导图。** 业务背景、模块职责、系统边界、领域模型、核心链路与风险。 [阅读项目分析](demo/documents/project-analysis.html)
 
 ### 02 · 系统架构设计方案
 
-[![架构设计方案中文预览](demo/documents/assets/architecture-design-preview.png)](demo/documents/architecture-design.html)
+[![架构设计方案中文预览](demo/documents/assets/architecture-design-preview.webp)](demo/documents/architecture-design.html)
 
 **截图重点：消息时序与部署拓扑。** 任务状态机、模块边界、Outbox、执行权围栏和断点恢复。 [阅读架构设计](demo/documents/architecture-design.html)
 
 ### 03 · 技术实施方案
 
-[![技术实施方案中文预览](demo/documents/assets/implementation-plan-preview.png)](demo/documents/implementation-plan.html)
+[![技术实施方案中文预览](demo/documents/assets/implementation-plan-preview.webp)](demo/documents/implementation-plan.html)
 
 **截图重点：活动路径与责任泳道。** 阶段计划、依赖关系、迁移、灰度、回滚与验收门禁。 [阅读实施方案](demo/documents/implementation-plan.html)
 
 ### 04 · 测试与验收方案
 
-[![测试与验收方案中文预览](demo/documents/assets/test-acceptance-preview.png)](demo/documents/test-acceptance.html)
+[![测试与验收方案中文预览](demo/documents/assets/test-acceptance-preview.webp)](demo/documents/test-acceptance.html)
 
 **截图重点：测试用例矩阵与故障注入。** 覆盖矩阵、故障注入、待执行用例、性能测试计划和证据要求。 [阅读测试验收](demo/documents/test-acceptance.html)
 
@@ -193,20 +193,20 @@ MIT License · [LICENSE](LICENSE)。
 
 **产品架构全景图新版式：** [查看六层能力、双中台与两侧支撑体系的离线全景板](demo/product-architecture-panorama.html)。采用 SVG 系列白底点阵、蓝/绿/紫/琥珀/青浅色分层及四边等粗细描边（**无左侧高亮竖线**）；商贸模块均为虚构示例，具体项目应按来源替换，不把示意当成部署事实。
 
-![本地 Chrome 实测的产品架构全景板预览：六层能力、双中台和两侧支撑体系](demo/assets/product-architecture-panorama-preview.png)
+![本地 Chrome 实测的产品架构全景板预览：六层能力、双中台和两侧支撑体系](demo/assets/product-architecture-panorama-preview.webp)
 
 **四个技术案例的专属产品架构图：** [项目分析](demo/documents/project-analysis.html#overview) · [架构设计](demo/documents/architecture-design.html#architecture) · [实施计划](demo/documents/implementation-plan.html#roadmap) · [测试验收](demo/documents/test-acceptance.html#matrix)。每张均基于其案例正文整理，保留六层能力、两侧支撑和设计/验收证据界限。
 
 | 项目分析 | 架构设计 |
 | --- | --- |
-| [![项目分析：业务能力架构全景](demo/documents/assets/product-panorama-project-analysis-preview.png)](demo/documents/project-analysis.html#overview) | [![架构设计：目标能力蓝图](demo/documents/assets/product-panorama-architecture-design-preview.png)](demo/documents/architecture-design.html#architecture) |
+| [![项目分析：业务能力架构全景](demo/documents/assets/product-panorama-project-analysis-preview.webp)](demo/documents/project-analysis.html#overview) | [![架构设计：目标能力蓝图](demo/documents/assets/product-panorama-architecture-design-preview.webp)](demo/documents/architecture-design.html#architecture) |
 | 实施计划 | 测试验收 |
-| [![实施计划：分阶段产品蓝图](demo/documents/assets/product-panorama-implementation-plan-preview.png)](demo/documents/implementation-plan.html#roadmap) | [![测试验收：能力覆盖全景](demo/documents/assets/product-panorama-test-acceptance-preview.png)](demo/documents/test-acceptance.html#matrix) |
+| [![实施计划：分阶段产品蓝图](demo/documents/assets/product-panorama-implementation-plan-preview.webp)](demo/documents/implementation-plan.html#roadmap) | [![测试验收：能力覆盖全景](demo/documents/assets/product-panorama-test-acceptance-preview.webp)](demo/documents/test-acceptance.html#matrix) |
 
 
 真实项目案例：[Yopu / StoryOS / IM 八类架构视图](demo/architecture-patterns.html)。按实际模块分层，并展示 24 条带方向的关键协作链路；图中是结构与设计资料的示意，不代表生产环境部署验收。
 
-![Yopu、StoryOS 与 IM 架构分层及容器链路示例](demo/documents/assets/architecture-patterns-preview.png)
+![Yopu、StoryOS 与 IM 架构分层及容器链路示例](demo/documents/assets/architecture-patterns-preview.webp)
 
 延伸阅读：[八类架构图的分层/容器示例](demo/architecture-patterns.html) · [轻量化 Skill 设计原则](docs/skill-principles.md)。
 
