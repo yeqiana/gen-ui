@@ -12,6 +12,10 @@ Title: 我做了一个让 AI 回答更容易理解的开源 Skill（Codex / Clau
 
 仓库有优化前后对比、项目分析、架构设计、实施计划和测试验收等示例。所有示例都是说明材料，不冒充真实项目的生产测试结果。
 
+在线对比：https://yeqiana.github.io/gen-ui/demo/before-after.zh.html
+
+实操教程：https://yeqiana.github.io/gen-ui/guide.zh.html
+
 GitHub: https://github.com/yeqiana/gen-ui
 
 Install: npx skills add yeqiana/gen-ui --skill gen-ui
@@ -27,6 +31,10 @@ I built GEN-UI because AI coding agents can produce long answers in which the de
 It is a lightweight, open-source information-design Skill, not a frontend framework. Markdown is the default; offline HTML, diagrams, and interaction are optional when the task calls for them. The goal is to make the same information easier to understand without losing facts or inventing verification results.
 
 The repository includes before/after examples and four technical-document examples in English and Chinese.
+
+Try the demo: https://yeqiana.github.io/gen-ui/demo/before-after.en.html
+
+Walkthrough: https://yeqiana.github.io/gen-ui/guide.html
 
 Source: https://github.com/yeqiana/gen-ui
 
@@ -65,3 +73,10 @@ agent-skills, ai-coding, generative-ui, codex, claude-code, information-design, 
 
 Pages:
 Settings > Pages > Build and deployment > Source > GitHub Actions. Run the existing Deploy GEN-UI public site workflow. Verify the public homepage and sitemap before setting the About Website or submitting indexing requests. The available API credential returned 403; do not attempt to bypass that permission boundary.
+
+## Search Console handoff (owner action)
+
+- Google Search Console: https://search.google.com/search-console — add URL-prefix property https://yeqiana.github.io/gen-ui/ (not the whole shared github.io domain). Choose HTML tag verification and retain the provided tag on the English homepage, or upload the provided verification file to site/. Do not invent a verification token. After verification, submit sitemap.xml and inspect the homepage and both walkthroughs.
+- Bing Webmaster Tools: https://www.bing.com/webmasters/ — import the verified Google property, or verify independently and submit the same sitemap.
+- IndexNow: the public key is hosted under /gen-ui/; only submit actual changed/new GEN-UI sitemap URLs. The key is a public verification identifier, not a private account credential. An accepted submission is not proof of indexing.
+- About website: https://yeqiana.github.io/gen-ui/ (publicly verified). Metadata and account login remain owner actions if the available permission cannot change them.
