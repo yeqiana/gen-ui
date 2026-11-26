@@ -8,6 +8,8 @@
 
 **Gen UI is an information-design Skill that makes AI answers easier to understand.** It serves everyday explanations, learning, option comparisons, technical decisions and engineering reviews. Explain unfamiliar terms for the reader, use accurate examples only when helpful, and preserve factual limits. Markdown is the default; HTML and interaction are used only when requested and supported.
 
+**[Live website](https://yeqiana.github.io/gen-ui/)** · [Practical walkthrough](https://yeqiana.github.io/gen-ui/guide.html)
+
 **Get started:** [See before / after](demo/before-after.en.html) · [Browse four technical document examples](demo/documents/en/index.html) · [Install the lightweight Skill](#install).
 
 For Codex and Claude Code, GEN-UI offers an Agent Skill for clearer AI explanations, Markdown comparisons, readable HTML reports and architecture diagrams. It is not a UI framework or a separate model service.

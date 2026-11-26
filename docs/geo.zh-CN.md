@@ -33,3 +33,7 @@ Topics：`generative-ui`、`agent-skills`、`coding-agents`、`ai-coding`、`mar
 已准备双语静态官网和 Pages 部署流程，复用现有案例，不引入前端依赖。仓库设置接口返回 403，需维护者在 Settings → Pages 中选择 GitHub Actions 并运行部署流程。实际上线后再填写 About 网站地址。
 
 已定位旧 SKILL.md 的 YAML 描述解析错误，修复后本地 Skills CLI 可发现并安装到 Codex、Claude Code 隔离目录。关闭测试遥测，不将测试安装计入真实用户增长。
+
+## 2026-11-26 — 官网上线核验
+
+GitHub Pages 已启用并成功部署。官网 https://yeqiana.github.io/gen-ui/ 、Sitemap 及其 18 个页面逐一验证 HTTP 200，标题匹配；这不等于已被搜索引擎收录。About 网站地址和 Topics 仍需管理员权限。

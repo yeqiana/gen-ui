@@ -80,3 +80,9 @@ At each weekly check, log date, engine/surface, query ID, whether GEN-UI is ment
 - Outreach drafts: growth/launch-kit.md (not posted). Recheck using the same queries after site launch; do not infer ranking improvements from code changes.
 
 - Added bilingual practical walkthroughs and expanded the sitemap; local build must pass all exported HTML link checks. Public indexing is not measured.
+
+## Public launch — 2026-11-26
+
+- GitHub Pages enabled by maintainer; deployment run 45779364470 succeeded (build and deploy).
+- https://yeqiana.github.io/gen-ui/sitemap.xml returned HTTP 200; all 18 listed URLs returned HTTP 200 with matching page titles.
+- Search engine indexing and independent AI citations: not yet measured.

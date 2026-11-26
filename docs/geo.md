@@ -77,3 +77,7 @@ No optimization guarantees inclusion in an AI answer or a particular search posi
 The bilingual static landing pages live in [site/index.html](../site/index.html) and [site/zh.html](../site/zh.html). The Pages workflow is prepared, not a live site until deployment is verified. GitHub About metadata and Pages activation returned HTTP 403 with the available credential; manual application required. Enable Settings → Pages → Source: GitHub Actions, then run Deploy GEN-UI public site. Only set the Website after the URL responds successfully.
 
 Skills CLI discovery failed on the prior unquoted YAML description. The quoted description passed local discovery and isolated installation into both Codex and Claude Code folders, with telemetry disabled. This is not evidence of public listing or organic installs.
+
+## 2026-11-26 — Public launch verification
+
+GitHub Pages is enabled and deployed. https://yeqiana.github.io/gen-ui/ and its sitemap were verified; all 18 sitemap pages returned HTTP 200 with matching titles. This does not establish search indexing. About homepage and Topics still require administrator permission.
