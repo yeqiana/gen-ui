@@ -93,3 +93,9 @@ At each weekly check, log date, engine/surface, query ID, whether GEN-UI is ment
 - Public English and Chinese homepages and sitemap returned HTTP 200, with no noindex directive; host-root robots.txt returned HTTP 404. Skills.sh still displayed a soft 404 and noindex. Sample branded and site-restricted web searches did not establish indexing.
 - IndexNow public verification file under /gen-ui/ returned HTTP 200 with exact matching contents. Submitted all 18 unique sitemap URLs in one scoped POST to https://api.indexnow.org/indexnow. HTTP 202: accepted, key validation pending. No retry spam, no indexing or ranking claims.
 - Google Search Console verification and Bing Webmaster Tools property import remain owner actions. Community drafts include live links; no external posts were sent.
+
+## Owner verification and first directory outreach — 2026-11-26
+
+- Owner reported Google HTML-file verification passed, live URL eligible for indexing, and Request indexing clicked. Sitemap submission, actual indexing and Bing import remain unconfirmed.
+- API snapshot: 0 stars, 0 forks, release download counter 3 (not necessarily organic); repository About homepage still empty, original three topics. Skills.sh detail still soft 404 with noindex.
+- BehiSecc/awesome-claude-skills: public README checked, 10,489 stars at the time of API check, no GEN-UI entry; fork API returned 403 and duplicate issue search API returned 422. Recommendation prepared in growth/launch-kit.md, not submitted. VoltAgent directory deferred due to its real-community-usage requirement.

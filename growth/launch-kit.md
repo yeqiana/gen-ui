@@ -80,3 +80,21 @@ Settings > Pages > Build and deployment > Source > GitHub Actions. Run the exist
 - Bing Webmaster Tools: https://www.bing.com/webmasters/ — import the verified Google property, or verify independently and submit the same sitemap.
 - IndexNow: the public key is hosted under /gen-ui/; only submit actual changed/new GEN-UI sitemap URLs. The key is a public verification identifier, not a private account credential. An accepted submission is not proof of indexing.
 - About website: https://yeqiana.github.io/gen-ui/ (publicly verified). Metadata and account login remain owner actions if the available permission cannot change them.
+
+## First distribution wave — 2026-11-26
+
+Owner-reported Google Search Console HTML-file verification passed; live URL test reported eligible for indexing and the owner clicked Request indexing. Preserve site/googlef141db2b4203cc74.html and the current verification meta tag. Google sitemap submission is not yet confirmed; Bing property import is not yet confirmed. No repeated indexing requests.
+
+Priority 1: BehiSecc/awesome-claude-skills (https://github.com/BehiSecc/awesome-claude-skills#-contribution). Its public README invites fork-and-PR contributions and states no minimum star count. As checked today, its README does not yet list yeqiana/gen-ui. API fork attempt returned HTTP 403; owner action required. Before submitting, check open PRs again for duplicates (search API returned 422). No PR was opened.
+
+Suggested location: end of Document Skills, before Development & Code Tools. Add only the following line, following the existing list style:
+
+- [gen-ui](https://github.com/yeqiana/gen-ui) - Structures AI answers as readable Markdown or offline HTML reports while preserving evidence and uncertainty.
+
+PR title: Add GEN-UI to Document Skills
+
+PR body: I maintain GEN-UI, an MIT-licensed Agent Skill for clearer technical answers and optional offline HTML reports. The repository has a SKILL.md, installation instructions and live bilingual examples (https://yeqiana.github.io/gen-ui/). This change adds a single entry; there is no claim of community adoption.
+
+Defer VoltAgent/awesome-agent-skills: https://github.com/VoltAgent/awesome-agent-skills/blob/main/CONTRIBUTING.md requires real community usage, which is not established. Do not bypass directory contribution rules or manufacture stars.
+
+First public trial: use the existing before/after demo and invite developers to test one real coding-agent answer. Publish only through the maintainer account and according to each community rule. No posts sent in this round.
