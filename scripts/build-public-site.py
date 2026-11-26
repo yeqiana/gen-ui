@@ -56,17 +56,17 @@ def build(output):
             dest.write_text(text, encoding="utf-8")
         else:
             shutil.copyfile(ROOT / name, dest)
-    # Landing pages must have all local images, styles and demo targets.
-    for name in ("index.html", "zh.html"):
+    # Verify all exported HTML resource and navigation links, not just the homepage.
+    for page in sorted(output.rglob("*.html")):
         parser = Links()
-        parser.feed((output / name).read_text(encoding="utf-8"))
+        parser.feed(page.read_text(encoding="utf-8"))
         for tag, key, value in parser.links:
             parts = urlsplit(value)
             if parts.scheme or parts.netloc or not parts.path:
                 continue
-            local = output / unquote(parts.path)
-            if not local.is_file():
-                raise ValueError(f"{name}: missing {key}={value}")
+            local = (page.parent / unquote(parts.path)).resolve()
+            if not local.is_relative_to(output) or not local.exists():
+                raise ValueError(f"{page.relative_to(output)}: missing or unsafe {key}={value}")
     urls = ["", "zh.html", "demo/before-after.en.html", "demo/before-after.zh.html",
             "demo/documents/index.html", "demo/documents/en/index.html", "demo/report.html", "demo/report.en.html"]
     for lang in ("", "en/"):
@@ -77,7 +77,7 @@ def build(output):
     sitemap += "".join("<url><loc>" + escape(BASE + p) + "</loc></url>\n" for p in urls)
     (output / "sitemap.xml").write_text(sitemap + "</urlset>\n", encoding="utf-8")
     (output / ".nojekyll").touch()
-    print(f"public site: {len(urls)} indexable URLs; {sum(p.stat().st_size for p in output.rglob('*') if p.is_file())} bytes")
+    print(f"public site: {len(urls)} sitemap URLs; {len(list(output.rglob('*.html')))} HTML pages validated; {sum(p.stat().st_size for p in output.rglob('*') if p.is_file())} bytes")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

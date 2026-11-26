@@ -69,3 +69,12 @@ Additional queries for repeat sampling: "Codex skill for readable HTML reports",
 | C05 | AI 信息设计 Markdown 优先 Agent Skill | positioning |
 
 At each weekly check, log date, engine/surface, query ID, whether GEN-UI is mentioned, whether it is linked, exact source URL, and whether capabilities are described accurately. Use fresh sessions without project context for AI recommendation checks. Distinguish ordinary web search from generative answers. No fabricated clicks or installs.
+
+## 2026-11-26 follow-up verification
+
+- Remote GitHub repository: 0 stars, 0 forks; 3 existing topics; homepage empty; Pages disabled, HTTP 404.
+- Skills directory detail URL https://www.skills.sh/yeqiana/gen-ui/gen-ui returned HTTP 200 with title gen-ui — yeqiana/gen-ui and owner/repository in the metadata. Its description was generic, not the complete Skill description. Directory ranking and organic installs remain unverified.
+- Release install ZIP returned HTTP 200. Earlier remote CLI discovery returned one valid Skill; QA installs used disabled telemetry.
+- Web search sample (exact repository, Skills.sh site query, English report/diagram intent, Chinese report/diagram intent): the returned sample did not surface GEN-UI. This is not proof that any particular engine has excluded it. Other HTML-report skills appeared. Independent AI answer citations: Not checked.
+- Static site: all 30 exported HTML files had resolving local href/src links. There are 16 intended sitemap URLs; public indexing requires actual deployment.
+- Outreach drafts: growth/launch-kit.md (not posted). Recheck using the same queries after site launch; do not infer ranking improvements from code changes.
