@@ -10,7 +10,7 @@
 
 Description：
 
-> Markdown-first Gen UI Skill for AI coding agents, with evidence-based reports and safe interactive UI fallbacks.
+> Agent Skill for Codex and Claude Code: turn dense AI answers into clear Markdown, readable HTML reports, and diagrams. Information design, not UI decoration.
 
 Topics：`generative-ui`、`agent-skills`、`coding-agents`、`ai-coding`、`markdown`、`developer-tools`、`codex`、`claude-code`、`interactive-ui`。
 
@@ -28,3 +28,8 @@ Topics：`generative-ui`、`agent-skills`、`coding-agents`、`ai-coding`、`mar
 对于 Google AI 搜索，官方强调原始优质内容和基本 SEO；额外的 `llms.txt` 并非进入搜索的必要条件。若后续建立独立文档站，再单独处理索引、robots.txt 与可访问性。
 
 详情和外部官方资料链接见 [英文 GEO 规范](geo.md)。
+## 2026-11-26 分发改进
+
+已准备双语静态官网和 Pages 部署流程，复用现有案例，不引入前端依赖。仓库设置接口返回 403，需维护者在 Settings → Pages 中选择 GitHub Actions 并运行部署流程。实际上线后再填写 About 网站地址。
+
+已定位旧 SKILL.md 的 YAML 描述解析错误，修复后本地 Skills CLI 可发现并安装到 Codex、Claude Code 隔离目录。关闭测试遥测，不将测试安装计入真实用户增长。

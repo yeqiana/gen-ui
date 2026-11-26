@@ -18,7 +18,7 @@ const docs = [
 
 test("English-first normative Skill, Chinese response support, safe fallback", () => {
   const content = read("SKILL.md");
-  assert.match(content, /^---\r?\nname: gen-ui\r?\ndescription: Use when /);
+  assert.match(content, /^---\r?\nname: gen-ui\r?\ndescription: "Use when [^"\r\n]+"\r?\n---/);
   assert.match(content, /Follow the user's language/);
   assert.match(content, /Markdown fallback/i);
   assert.match(content, /scripts\/test-skill\.ps1/);
@@ -79,4 +79,28 @@ test("GEO materials do not claim a live site or guaranteed rankings", () => {
   assert.match(geo, /No optimization guarantees/);
   assert.doesNotMatch(read("README.zh-CN.md"), /GEO|搜索排名|搜索优化/i);
   assert.doesNotMatch(read("README.md"), /GEO|SEO|search ranking/i);
+});
+
+test("Skill description uses a YAML-safe quoted scalar",()=>{
+ const metadata=read("SKILL.md").split("---")[1];
+ const line=metadata.split(String.fromCharCode(10)).find(x=>x.startsWith("description: "));
+ assert.ok(line,"description must exist");
+ const scalar=line.slice("description: ".length).trim();
+ assert.ok(scalar.startsWith('"')&&scalar.endsWith('"'),"description must be quoted");
+ assert.equal(typeof JSON.parse(scalar),"string");
+});
+
+test("Public landing pages are bilingual, crawlable and reuse existing demos", () => {
+  for (const [page,lang] of [["site/index.html","en"],["site/zh.html","zh-CN"]]) {
+    const content=read(page);
+    assert.ok(content.includes('lang="'+lang+'"'));
+    assert.match(content, /<meta name="description" content="[^"]+"/);
+    assert.match(content, /rel="canonical"/);
+    assert.match(content, /hreflang="zh-CN"/);
+    assert.match(content, /hreflang="en"/);
+    assert.match(content, /npx skills add yeqiana\/gen-ui --skill gen-ui/);
+    assert.doesNotMatch(content, /<script\b|<iframe\b/);
+    for(const id of ["project-analysis","architecture-design","implementation-plan","test-acceptance"])
+      assert.ok(content.includes(id+".html"),page+" missing "+id);
+  }
 });

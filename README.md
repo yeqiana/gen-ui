@@ -8,6 +8,10 @@
 
 **Gen UI is an information-design Skill that makes AI answers easier to understand.** It serves everyday explanations, learning, option comparisons, technical decisions and engineering reviews. Explain unfamiliar terms for the reader, use accurate examples only when helpful, and preserve factual limits. Markdown is the default; HTML and interaction are used only when requested and supported.
 
+**Get started:** [See before / after](demo/before-after.en.html) · [Browse four technical document examples](demo/documents/en/index.html) · [Install the lightweight Skill](#install).
+
+For Codex and Claude Code, GEN-UI offers an Agent Skill for clearer AI explanations, Markdown comparisons, readable HTML reports and architecture diagrams. It is not a UI framework or a separate model service.
+
 **2026-11-16 stable baseline:** Three independently authored offline HTML reports passed browser and typography checks with local asset staging; see the [evidence and limitations](evals/independent-html-stability-2026-11-16.md).
 
 For iterative reviews, carry forward **what changed, the current review decision, and outstanding evidence** without confusing implementation, verification, or explicitly scoped risk acceptance. See the [review-continuity evidence](evals/reading-continuity-2026-11-16.md) and [Claude Code invocation guidance](docs/claude-code-skill-loading.md).
@@ -127,7 +131,13 @@ After tightening the structure contract, three local native Codex representative
 
 ## Install
 
-For normal use, download the [current lightweight install ZIP](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/gen-ui-lite-2026-11-26.zip) and extract its gen-ui/ directory into your Skills directory. The ZIP omits developer tests and historical screenshots; offline HTML examples and runtime assets remain included. For source development, use a shallow clone:
+Install with the Skills CLI (select your target agent when prompted):
+
+~~~bash
+npx skills add yeqiana/gen-ui --skill gen-ui
+~~~
+
+Or download the [lightweight install ZIP](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-install-2026-11-26/gen-ui-lite.zip) and extract its gen-ui/ directory into your Skills directory. The ZIP omits developer tests and historical screenshots; offline HTML examples and runtime assets remain included. For source development, use a shallow clone:
 
 Windows PowerShell, Codex (user-level Agent Skills directory):
 

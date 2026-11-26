@@ -8,6 +8,10 @@
 
 **Gen UI 是帮助 AI 把回答讲清楚的信息设计 Skill。** 面向日常解释、知识学习、方案比较、技术分析和工程评审等场景：先根据读者背景讲明白，必要时解释术语、举例或类比，再组织信息并选择合适呈现方式。优先使用 Markdown；只有明确需要且宿主支持时才使用 HTML 或交互。
 
+**快速上手：** [查看优化前后对比](demo/before-after.zh.html) · [浏览四个技术文档示例](demo/documents/index.html) · [安装轻量 Skill](#安装与使用)。
+
+面向 Codex 和 Claude Code 等 AI Agent，GEN-UI 帮助生成更易理解的解释、Markdown 对比、易读 HTML 报告及架构图。它不是 UI 框架，也不需要独立的模型服务。
+
 **2026-11-16 稳定基线：** 三个不同主题使用已安装的 Skill 并由本地 Runner 预置离线资源，完成 3/3 独立生成与 Chrome/排版验收；核心 Skill 保持轻量。详见 [验收与边界](evals/independent-html-stability-2026-11-16.md)。
 
 多轮设计评审可以只呈现**本轮变化、当前收口判断与未决证据**，不把「已修改」误判为「已验收」，也不替用户接受残留风险。参阅 [续评专项验收](evals/reading-continuity-2026-11-16.md) 和 [Claude Code 调用/权限指引](docs/claude-code-skill-loading.md)。
@@ -137,7 +141,13 @@ node scripts/accept-html-delivery.mjs path/to/report.html path/to/evidence --req
 
 ## 安装与使用
 
-日常使用优先下载[当前轻量安装 ZIP](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/gen-ui-lite-2026-11-26.zip)，将其中的 gen-ui/ 目录解压到 Skill 目录。安装包不含开发测试及历史截图，保留离线 HTML 示例和运行资源。参与开发可使用浅克隆：
+使用 Skills CLI 安装（按提示选择宿主）：
+
+~~~bash
+npx skills add yeqiana/gen-ui --skill gen-ui
+~~~
+
+或下载[轻量安装 ZIP](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-install-2026-11-26/gen-ui-lite.zip)，将其中 gen-ui/ 目录解压到 Skill 目录。安装包不含开发测试及历史截图，保留离线 HTML 示例和运行资源。参与开发可使用浅克隆：
 
 Windows PowerShell 中安装到 Codex 用户级 Agent Skills 目录：
 

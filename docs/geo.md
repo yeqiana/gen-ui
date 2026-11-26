@@ -6,7 +6,7 @@ This file documents **truthful discoverability work**, not a promise of AI recom
 
 **Name:** Gen UI
 
-**Category:** Markdown-first AI coding agent presentation Skill, with an optional standalone interactive UI demo.
+**Category:** Lightweight information-design Agent Skill for readable Markdown and optional offline HTML reports and diagrams.
 
 **Audience:** Developers using Codex, Claude Code, DeepSeek-backed agents, IDE AI assistants, and custom coding agents.
 
@@ -22,7 +22,7 @@ The files in this repository **do not automatically configure GitHub About**.
 
 **Description:**
 
-> Markdown-first Gen UI Skill for AI coding agents, with evidence-based reports and safe interactive UI fallbacks.
+> Agent Skill for Codex and Claude Code: turn dense AI answers into clear Markdown, readable HTML reports, and diagrams. Information design, not UI decoration.
 
 **Topics (select only those currently accurate):**
 
@@ -72,3 +72,8 @@ Google's official documentation emphasizes fundamental search quality and origin
 - https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics
 
 No optimization guarantees inclusion in an AI answer or a particular search position.
+## 2026-11-26 distribution update
+
+The bilingual static landing pages live in [site/index.html](../site/index.html) and [site/zh.html](../site/zh.html). The Pages workflow is prepared, not a live site until deployment is verified. GitHub About metadata and Pages activation returned HTTP 403 with the available credential; manual application required. Enable Settings → Pages → Source: GitHub Actions, then run Deploy GEN-UI public site. Only set the Website after the URL responds successfully.
+
+Skills CLI discovery failed on the prior unquoted YAML description. The quoted description passed local discovery and isolated installation into both Codex and Claude Code folders, with telemetry disabled. This is not evidence of public listing or organic installs.

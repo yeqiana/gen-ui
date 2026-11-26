@@ -1,6 +1,6 @@
 ---
 name: gen-ui
-description: Use when AI answers need to be easier to understand: explanations, comparisons, reviews, or offline HTML. Markdown by default.
+description: "Use when AI answers need to be easier to understand: explanations, comparisons, reviews, or offline HTML. Markdown by default."
 ---
 
 # Gen UI — Information Design Skill for AI Responses

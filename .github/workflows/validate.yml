@@ -25,6 +25,8 @@ jobs:
       - name: Validate Skill package and examples
         shell: pwsh
         run: ./scripts/test-skill.ps1
+      - name: Build and check static public site
+        run: python3 scripts/build-public-site.py "$RUNNER_TEMP/gen-ui-site"
       - name: Build lightweight Skill and enforce size limits
         run: python3 scripts/build-skill-package.py "$RUNNER_TEMP/gen-ui-lite.zip"
       - uses: actions/upload-artifact@v4

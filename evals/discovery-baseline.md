@@ -43,3 +43,29 @@ Evidence screenshot / notes:
 Initial result: **no visibility or ranking baseline has been measured**. Repository metadata and this documentation are recommended actions, not evidence of ranking improvement.
 
 Avoid artificial mentions, automated spam, fabricated testimonials, or false third-party citations.
+## 2026-11-26 initial observations (partial baseline)
+
+- GitHub API: 0 stars, 0 forks, no homepage, Pages disabled, topics agent-skills / ai-coding / generative-ui. Repository metadata is observed; broad search placement remains NOT MEASURED.
+- Web search sample: "GEN-UI yeqiana agent skill readable AI answers"; "Codex Claude Code skill readable HTML reports architecture diagrams agent skills"; "site:skills.sh/yeqiana/gen-ui gen-ui". No result linking the target repository appeared in the returned sample; this is not proof of non-indexing. AI answer citations: Not checked.
+- Skills CLI: remote discovery before fix returned SKILLS_NO_VALID_SKILLS (YAML parse error); isolated local discovery and install after fix succeeded. Remote post-fix check and public directory listing are separate.
+
+Additional queries for repeat sampling: "Codex skill for readable HTML reports", "Claude Code skill for structured technical documentation", "AI answer readability agent skill", "Codex HTML report and architecture diagram skill", "AI 回答可视化 Skill", "Codex HTML 技术报告生成 Skill", "Claude Code 技术文档排版 Skill". Record actual citation URLs and whether the described feature matches the project. Do not count maintainer tests as installs.
+
+## Repeatable query set
+
+| ID | Query | Intent |
+| --- | --- | --- |
+| B01 | "yeqiana/gen-ui" "GEN-UI" skill | exact project |
+| E01 | Codex skill readable HTML reports AI architecture diagrams Markdown information design | English discovery |
+| E02 | Claude Code skill generate readable HTML technical report architecture diagram | English discovery |
+| C01 | Codex Skill AI 回答更容易理解 HTML 报告 结构化 架构图 | Chinese discovery |
+| S01 | site:skills.sh/yeqiana/gen-ui | directory |
+| E03 | open source agent skill for clearer AI explanations and readable Markdown | general |
+| E04 | how to make long AI coding answers easier to understand | pain point |
+| E05 | Codex and Claude Code skill for offline HTML technical documentation | task |
+| C02 | 怎么让 AI 的长篇技术回答更容易理解 | pain point |
+| C03 | Claude Code 生成易读 HTML 技术报告的开源 Skill | task |
+| C04 | Codex 结构化技术方案和架构图 Skill | task |
+| C05 | AI 信息设计 Markdown 优先 Agent Skill | positioning |
+
+At each weekly check, log date, engine/surface, query ID, whether GEN-UI is mentioned, whether it is linked, exact source URL, and whether capabilities are described accurately. Use fresh sessions without project context for AI recommendation checks. Distinguish ordinary web search from generative answers. No fabricated clicks or installs.
