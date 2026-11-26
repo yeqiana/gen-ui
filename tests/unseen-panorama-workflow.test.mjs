@@ -404,7 +404,7 @@ test("输出路径即使以 .. 开头也必须拒绝写入公开仓库",t=>{
  assert.equal(fs.existsSync(forbidden),false);
 });
 
-test("已发布三份陌生项目独立 HTML 与九张 Chrome 截图且不携带本机凭据",()=>{
+test("三份陌生项目独立 HTML、桌面截图及六张归档视口证据索引",()=>{
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),".."),dir=path.join(root,"demo/unseen-panorama"),idx=fs.readFileSync(path.join(dir,"index.html"),"utf8");
  for(const name of ["agent-lead","plan-ship","distributed-system-audit"]){
   assert.ok(idx.includes(name+".html"));
@@ -414,10 +414,15 @@ test("已发布三份陌生项目独立 HTML 与九张 Chrome 截图且不携带
   assert.match(page,/结构校验不代表真实模型执行|来源引文结构检查不等于独立语义审查/);
   assert.doesNotMatch(page,/<script\b|<iframe\b|github_pat_|Bearer\s+/i);
   assert.ok(!page.includes("C:\\Users\\")&&!page.includes("D:\\workspace\\"));
-  for(const width of [375,768,1440]){
-   const png=fs.readFileSync(path.join(dir,"assets",name+"-"+width+".webp"));
-   assert.ok(losslessWebpDimensions(png).width>0);
-   assert.ok(png.length>20000);
+  const image=fs.readFileSync(path.join(dir,"assets",name+"-1440.webp"));
+  assert.equal(losslessWebpDimensions(image).width,1440);
+  assert.ok(image.length>20000);
+  const manifest=JSON.parse(fs.readFileSync(path.join(root,"evals/optional-evidence-manifest.json"),"utf8"));
+  assert.match(manifest.archive,/optional-evidence-2026-11-26\.zip$/);
+  for(const width of [375,768]){
+   const item=manifest.files.find(x=>x.path==="demo/unseen-panorama/assets/"+name+"-"+width+".webp");
+   assert.ok(item);assert.equal(item.width,width);assert.ok(item.height>0&&item.bytes>20000);
+   assert.match(item.sha256,/^[a-f0-9]{64}$/);
   }
  }
 });

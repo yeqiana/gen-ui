@@ -1,0 +1,72 @@
+{
+  "schema": "gen-ui-optional-evidence/v1",
+  "archive": "https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/optional-evidence-2026-11-26.zip",
+  "files": [
+    {
+      "path": "demo/unseen-panorama/assets/agent-lead-375.webp",
+      "bytes": 22026,
+      "sha256": "0572ed543ffd82ab1cd1a26c826330e945a563fcfef46f756eb63e4e6b8539f0",
+      "width": 375,
+      "height": 980
+    },
+    {
+      "path": "demo/unseen-panorama/assets/agent-lead-768.webp",
+      "bytes": 28922,
+      "sha256": "bdfa9e13918cb552c7f490c205f03ac7a0e5e248bbbfe7f307eac7b5f595b4f1",
+      "width": 768,
+      "height": 980
+    },
+    {
+      "path": "demo/unseen-panorama/assets/distributed-system-audit-375.webp",
+      "bytes": 23138,
+      "sha256": "369fa0a363d4bbfafdaf27970a7a56d9734e2991da2becc1d0a2231715738598",
+      "width": 375,
+      "height": 980
+    },
+    {
+      "path": "demo/unseen-panorama/assets/distributed-system-audit-768.webp",
+      "bytes": 29290,
+      "sha256": "4853f57651bf80fd7b009a878bdc82d1af2f12906b18f4c54509333d036963ba",
+      "width": 768,
+      "height": 980
+    },
+    {
+      "path": "demo/unseen-panorama/assets/plan-ship-375.webp",
+      "bytes": 22280,
+      "sha256": "ad33854d9079da5b1b390c04db3db42a3bb8e289dde0daca3cf5523cb8342aff",
+      "width": 375,
+      "height": 980
+    },
+    {
+      "path": "demo/unseen-panorama/assets/plan-ship-768.webp",
+      "bytes": 29080,
+      "sha256": "b0bef76ad23b8f8740e91c0c34ba8b7ee4008bcf79d97e536417728ae5ad6a04",
+      "width": 768,
+      "height": 980
+    },
+    {
+      "path": "evals/artifacts/layout-fold-regression-2026-11-16/StoryOS-GEN-UI-folded-reading-fixed.zip",
+      "bytes": 29284,
+      "sha256": "933eac74a33bc20606c45f812998023da53577252c13db6d5401905ea30adcf0"
+    },
+    {
+      "path": "evals/artifacts/storyos-real-html-acceptance-2026-11-14/StoryOS-GEN-UI-offline.zip",
+      "bytes": 31011,
+      "sha256": "a207f827faa90713bffe59c23111b1cadee1f13f5f24ef0a5d0a31851e8b9116"
+    },
+    {
+      "path": "evals/portal-preview-1440.webp",
+      "bytes": 21242,
+      "sha256": "32144fab7dd954bc0fe29afb9b4b4b0bd569b6d8602c9a76d854cec2510b5865",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "path": "evals/portal-preview-http-1440.webp",
+      "bytes": 21010,
+      "sha256": "fdae59d315086343252b490786d670ad6ef5db599ef8d5cc5a4e3aae59ead253",
+      "width": 1440,
+      "height": 900
+    }
+  ]
+}

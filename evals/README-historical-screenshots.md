@@ -23,3 +23,7 @@ The following immutable evidence is retained in [the SHA-256 indexed historical 
 - [evals/visual-refresh-2026-11-06/report-1440.png](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/report-1440.png）
 - [evals/visual-refresh-2026-11-06/report-375.png](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/report-375.png）
 - [evals/visual-refresh-2026-11-06/report-768.png](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/report-768.png）
+
+## Optional evidence / 补充历史证据
+
+[Download archive](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/optional-evidence-2026-11-26.zip) · [SHA-256 manifest](optional-evidence-manifest.json). Contains six secondary viewport screenshots, two portal previews and two historical offline ZIP files. The live offline HTML and executable test fixtures remain in this repository.

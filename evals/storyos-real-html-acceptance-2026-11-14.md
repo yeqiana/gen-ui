@@ -6,7 +6,7 @@
 
 - **原生模型输出**：`evals/artifacts/codex-typography-blind-2026-11-13/storyos/report-v3.html`，2026-11-13 原生 Codex 生成的 StoryOS 架构设计分析，包含 Run / Node / Task / Attempt、Outbox、Fencing Token、恢复、失败与风险。
 - **本轮交付适配版**：`evals/artifacts/storyos-real-html-acceptance-2026-11-14/report.html`。保留原有正文，仅修正本地相对路径、接入公共图片查看器，并补充标有“概念示意、非业务运行证据”的 SVG 图。**不是本轮模型重新生成**。
-- **可独立离线打开的报告包**：`evals/artifacts/storyos-real-html-acceptance-2026-11-14/StoryOS-GEN-UI-offline.zip`，含入口 `report.html`、本地 CSS/JS、示意图及来源说明。解压后用 Chrome/Edge 打开即可。
+- **可独立离线打开的报告包**：[下载历史归档](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/optional-evidence-2026-11-26.zip)（ZIP 内：evals/artifacts/storyos-real-html-acceptance-2026-11-14/StoryOS-GEN-UI-offline.zip），含入口 `report.html`、本地 CSS/JS、示意图及来源说明。解压后用 Chrome/Edge 打开即可。
 - **不属于本轮的证据**：Skill 在全新上下文自行发现/加载的成功率，业务源码事实、数据库结构或实际线上任务执行情况。本轮未调用新的模型，不消耗 Codex 推理配额。
 
 ## 二、发现的误判与根因

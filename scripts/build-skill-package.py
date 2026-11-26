@@ -2,7 +2,7 @@ from pathlib import Path
 import io, posixpath, re, subprocess, tempfile, zipfile
 ROOT=Path(__file__).resolve().parents[1]
 MAX_ZIP=1024*1024
-MAX_TREE=5*1024*1024
+MAX_TREE=3*1024*1024
 RUNTIME_SCRIPTS={
  "scripts/prepare-html-assets.mjs","scripts/validate-html-report.mjs",
  "scripts/accept-html-delivery.mjs","scripts/build-html-portal.mjs",
@@ -25,7 +25,7 @@ def build(output):
         text=(ROOT/p).read_text(encoding="utf-8")
         for target in re.findall(r'''(?:src|href)\s*=\s*["']([^"']+\.(?:png|webp|zip))["']''',text,re.I):
             local=posixpath.normpath(posixpath.join(posixpath.dirname(p),target))
-            if local in files and not (local.startswith("demo/unseen-panorama/assets/") and local.endswith(("-375.webp","-768.webp"))): selected.add(local)
+            if local in files: selected.add(local)
     assert EXTRA|RUNTIME_SCRIPTS <= selected
     data={}
     for p in sorted(selected):
@@ -41,11 +41,6 @@ def build(output):
                     return "]("+ "https://github.com/yeqiana/gen-ui/blob/main/"+local+("#"+target.split("#",1)[1] if "#" in target else "")+")"
                 return m.group(0)
             raw=re.sub(r"\]\(([^)\s]+)\)",link,raw.decode("utf-8")).encode("utf-8")
-        if p=="demo/unseen-panorama/index.html":
-            text=raw.decode("utf-8")
-            text,count=re.subn(r'<p>另有 <a href="assets/[^"]+-375\.webp">375px</a> · <a href="assets/[^"]+-768\.webp">768px</a> 视口预览图。</p>', '<p>移动端可直接打开上方离线架构图查看；历史视口截图见源仓库。</p>',text)
-            if count!=3: raise ValueError("gallery preview format changed")
-            raw=text.encode("utf-8")
         data[p]=raw
     for p,raw in data.items():
         if not p.endswith(".html"): continue

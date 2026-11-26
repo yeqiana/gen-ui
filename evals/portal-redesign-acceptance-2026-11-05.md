@@ -36,8 +36,8 @@ node scripts/serve-html-portal.mjs --dir "D:\reports" --port 8765
 - [递归构建、安全边界与兼容性测试](../tests/portal.test.mjs)：10/10 通过。
 - [Chrome 静态模式回归](chrome-portal-baseline-2026-11-05.json)：375/768/1440px 均加载 4 个独立页面、8 个小标题的导航，真实 iframe CSS 计算字体为 14px，无遮挡与外层溢出；桌面折叠和移动关闭正常。
 - [Chrome 本地 HTTP 交互回归](chrome-portal-http-baseline-2026-11-05.json)：独立 iframe 中 JS 标记执行，外部 CSS 背景和字体大小正确，父页面无法读取子页面 DOM。
-- [桌面实际渲染截图](portal-preview-1440.webp)：来自 Chrome，纯模拟示例。
-- [本机 HTTP 交互预览截图](portal-preview-http-1440.webp)：对照验证沙盒隔离预览的视觉效果。
+- [桌面实际渲染截图](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/optional-evidence-2026-11-26.zip)（ZIP 内：evals/portal-preview-1440.webp）：来自 Chrome，纯模拟示例。
+- [本机 HTTP 交互预览截图](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/optional-evidence-2026-11-26.zip)（ZIP 内：evals/portal-preview-http-1440.webp）：对照验证沙盒隔离预览的视觉效果。
 - [原单页报告回归脚本](../tests/chrome-report-smoke.mjs)：旧表格筛选、分页、长文本、弹窗等继续验证。
 - 自动化入口：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-skill.ps1`。
 
