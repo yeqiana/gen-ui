@@ -26,10 +26,10 @@
 
 | 页面 | 375px | 768px | 1440px |
 | --- | --- | --- | --- |
-| 单页报告 | [手机](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-refresh-2026-11-06/report-375.png) | [平板](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-refresh-2026-11-06/report-768.png) | [桌面](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-refresh-2026-11-06/report-1440.png) |
-| 递归门户 | [手机](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-refresh-2026-11-06/portal-375.png) | [平板](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-refresh-2026-11-06/portal-768.png) | [桌面](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-refresh-2026-11-06/portal-1440.png) |
+| 单页报告 | [手机](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/report-375.png） | [平板](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/report-768.png） | [桌面](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/report-1440.png） |
+| 递归门户 | [手机](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/portal-375.png） | [平板](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/portal-768.png） | [桌面](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/portal-1440.png） |
 
-[流程图全屏实测截图](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-refresh-2026-11-06/flow-fullscreen-1440.png)
+[流程图全屏实测截图](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-refresh-2026-11-06/flow-fullscreen-1440.png）
 
 ## 边界
 

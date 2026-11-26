@@ -26,8 +26,8 @@
 
 | 页面 | 375px | 768px | 1440px |
 | --- | --- | --- | --- |
-| 单页报告 | [手机](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-brand-2026-11-06/report-375.png) | [平板](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-brand-2026-11-06/report-768.png) | [桌面](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-brand-2026-11-06/report-1440.png) |
-| 递归门户 | [手机](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-brand-2026-11-06/portal-375.png) | [平板](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-brand-2026-11-06/portal-768.png) | [桌面](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/visual-brand-2026-11-06/portal-1440.png) |
+| 单页报告 | [手机](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-brand-2026-11-06/report-375.png） | [平板](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-brand-2026-11-06/report-768.png） | [桌面](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-brand-2026-11-06/report-1440.png） |
+| 递归门户 | [手机](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-brand-2026-11-06/portal-375.png） | [平板](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-brand-2026-11-06/portal-768.png） | [桌面](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/visual-brand-2026-11-06/portal-1440.png） |
 
 人工检查发现并已修正：原 1440px 单页侧栏中品牌名称换行；原 375px 门户页眉状态与导航拥挤。重新截取的最终截图中，两处已改善。
 

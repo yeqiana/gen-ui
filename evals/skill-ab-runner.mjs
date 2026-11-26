@@ -9,7 +9,7 @@ import {spawn} from "node:child_process";
 import {spawnSync} from "node:child_process";
 
 const root=path.resolve(import.meta.dirname,"..");
-const historical="cc5c3c9";
+const historical="7070cac20ffa4c1a199828b1ed25ddf2ed782fb5"; // Same historical SKILL.md bytes after PNG-only history migration.
 const old=spawnSync("git",["show",historical+":SKILL.md"],{cwd:root,encoding:"utf8",maxBuffer:100000});
 if(old.status!==0)throw Error("Historical SKILL.md unavailable; verify git history");
 const currentCommit=spawnSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"});

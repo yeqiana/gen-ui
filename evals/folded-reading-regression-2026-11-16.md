@@ -34,9 +34,9 @@
 
 ## 对照截图与查看
 
-- [折叠 M：修复前](artifacts/layout-fold-regression-2026-11-16/before-folded-M.png) / [修复后](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/artifacts/layout-fold-regression-2026-11-16/after-folded-M.png) / [鼠标悬停](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/artifacts/layout-fold-regression-2026-11-16/after-M-hover.png)
+- [折叠 M：修复前](artifacts/layout-fold-regression-2026-11-16/before-folded-M.png) / [修复后](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/artifacts/layout-fold-regression-2026-11-16/after-folded-M.png） / [鼠标悬停](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/artifacts/layout-fold-regression-2026-11-16/after-M-hover.png）
 - [图后正文：修复前](artifacts/layout-fold-regression-2026-11-16/before-figure-prose.png) / [修复后](artifacts/layout-fold-regression-2026-11-16/after-figure-prose.png)
-- [引用块与表后正文：修复前](artifacts/layout-fold-regression-2026-11-16/before-quote-table-prose.png) / [修复后](https://github.com/yeqiana/gen-ui/blob/b086f6acbabbf6cdf2112d14e3292c897a8b9087/evals/artifacts/layout-fold-regression-2026-11-16/after-quote-table-prose.png)
+- [引用块与表后正文：修复前](artifacts/layout-fold-regression-2026-11-16/before-quote-table-prose.png) / [修复后](https://github.com/yeqiana/gen-ui/releases/download/gen-ui-lite-2026-11-25/historical-screenshots.zip)（ZIP 内：evals/artifacts/layout-fold-regression-2026-11-16/after-quote-table-prose.png）
 
 截图中的长引用段为**专门构造的回归测试文本**，不是模型对 StoryOS 的业务论断。原生模型输出内容和本次 CSS 修复效果分别有来源记录，不应将它们混为“模型生成内容全部自动通过”。
 
