@@ -86,3 +86,10 @@ At each weekly check, log date, engine/surface, query ID, whether GEN-UI is ment
 - GitHub Pages enabled by maintainer; deployment run 45779364470 succeeded (build and deploy).
 - https://yeqiana.github.io/gen-ui/sitemap.xml returned HTTP 200; all 18 listed URLs returned HTTP 200 with matching page titles.
 - Search engine indexing and independent AI citations: not yet measured.
+
+## Search discovery submission — 2026-11-26
+
+- Repository snapshot before this round: 0 stars, 0 forks, 3 topics, no About homepage; Pages enabled. Previous commit 6718e87 validation CI succeeded. Release download counter: 3, including possible maintainer QA; not a user count.
+- Public English and Chinese homepages and sitemap returned HTTP 200, with no noindex directive; host-root robots.txt returned HTTP 404. Skills.sh still displayed a soft 404 and noindex. Sample branded and site-restricted web searches did not establish indexing.
+- IndexNow public verification file under /gen-ui/ returned HTTP 200 with exact matching contents. Submitted all 18 unique sitemap URLs in one scoped POST to https://api.indexnow.org/indexnow. HTTP 202: accepted, key validation pending. No retry spam, no indexing or ranking claims.
+- Google Search Console verification and Bing Webmaster Tools property import remain owner actions. Community drafts include live links; no external posts were sent.
